@@ -1,0 +1,16 @@
+{
+  "name": "esports-manager",
+  "version": "0.0.1",
+  "description": "GUI for eSports Manager game",
+  "main": "index.js",
+  "dependencies": {
+    "electron": "^8.0.1",
+    "python-shell": "^1.0.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "sturdy-robot",
+  "license": "GPL-3.0-or-later"
+}

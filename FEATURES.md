@@ -1,7 +1,8 @@
 # FEATURES
 
-This game has many planned features. In this document we will go over features that should be implemented
-or that have already been implemented in the game.
+This game has many planned features. In this document we will go over 
+features that should be implemented or that have already been implemented 
+in the game.
 
 ### IMPLEMENTED
 No features yet.

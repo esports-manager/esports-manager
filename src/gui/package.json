@@ -4,7 +4,11 @@
   "description": "GUI for eSports Manager game",
   "main": "index.js",
   "dependencies": {
+    "@popperjs/core": "^2.1.0",
+    "bootstrap": "^4.4.1",
     "electron": "^8.0.1",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.4.1",
     "python-shell": "^1.0.8"
   },
   "devDependencies": {},

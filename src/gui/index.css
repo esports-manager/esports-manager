@@ -1,0 +1,16 @@
+.e-btn{
+    background-color: rgb(150, 128, 6);
+    border-radius: 12px; 
+    color: white; 
+    transition-duration: 0.4s;
+}
+
+.navbar-esports {
+    background-color: rgba(5, 0, 73, 0.333);
+    color: black;
+}
+
+.e-btn:hover {
+    background-color: rgb(255, 196, 87);
+    color: white;
+}

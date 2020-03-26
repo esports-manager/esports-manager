@@ -1,11 +1,10 @@
 import time
 import sys
-import random
 
-from team import Team
-from player import Player
-from champion import Champion
-from match import Match
+from core.team import Team
+from core.player import Player
+from core.champion import Champion
+from core.match import Match
 
 names_team = ["Impact", "bengi", "Faker", "Piglet", "PoohManDuH", "Looper", "DanDy", "PawN", "imp", "Mata"]
 skill_team = [92, 93, 95, 92, 90, 90, 92, 93, 90, 91]
@@ -46,3 +45,6 @@ generate_team(players_team1, 0)
 generate_team(players_team2, 1)
 
 match = Match(1, 1, teams[0], teams[1])
+match.match_live()
+for position in match.team1.formation:
+    print(position)

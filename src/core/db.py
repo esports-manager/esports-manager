@@ -1,6 +1,7 @@
 import sqlite3
 from sqlite3 import Error
 
+
 def create_connection(db_file):
     conn = None
     try:
@@ -8,8 +9,9 @@ def create_connection(db_file):
         return conn
     except Error as e:
         print(e)
-    
+
     return conn
+
 
 def create_table(conn, create_table_sql):
     try:
@@ -19,5 +21,5 @@ def create_table(conn, create_table_sql):
         print(e)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

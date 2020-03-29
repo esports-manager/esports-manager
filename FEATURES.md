@@ -5,9 +5,11 @@ features that should be implemented or that have already been implemented
 in the game.
 
 ### IMPLEMENTED
+
 No features yet.
 
 ### TO DO
+
 - [ ] Select an eSport (MOBA, RTS, FPS) - this has to be a generic eSport with fictional players
 - [ ] Give the user the ability to modify the eSport in a separate editor or config files (so he
 can implement his favorite eSport in the genre, adding champions/heroes or races)

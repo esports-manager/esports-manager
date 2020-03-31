@@ -5,7 +5,7 @@ class Team:
 
         Arguments:
             name {string} -- team name.
-            list_players {List<Player>} -- list of players
+            list_players {list<Player>} -- list of players
         """
         self.name = name
         self.list_players = list_players
@@ -28,3 +28,12 @@ class Team:
             "bot": None,
             "sup": None,
         }
+        
+    def get_team_aggr(self):
+        aggr = 0.0
+        for player in self.list_players:
+            aggr += player.aggression
+        
+        aggr = float(aggr/len(self.list_players))
+        
+        return aggr

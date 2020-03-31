@@ -71,5 +71,5 @@ generate_player()
 generate_team(players_team1, 0)
 generate_team(players_team2, 1)
 
-match = Match(1, 1, teams[0], teams[1], True, 3)
+match = Match(1, 1, teams[0], teams[1], True, 1)
 match.match_live()

@@ -1,4 +1,4 @@
-from esports_manager.core.match import Match
+from esm.core.match import Match
 
 
 def start_match(team1, team2):

@@ -2,9 +2,9 @@ import json
 import os
 import random
 
-from .get_names import *
-# To run this file here, the ".get_names" should be changed to "get_names"
-# I left the . because I think it might break if I need it later
+from .get_names import get_br_first_names, get_kr_first_names, get_usa_first_names
+from .get_names import get_br_last_names, get_kr_last_names, get_usa_last_names
+
 
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
@@ -141,7 +141,3 @@ def generate(file):
     """
     players = generate_player_list()
     generate_file(players, file)
-
-
-if __name__ == '__main__':
-    generate(JSON_FILE)

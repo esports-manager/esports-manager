@@ -2,8 +2,7 @@ import json
 import os
 import random
 
-from esm.resources.generator.generate_players import NUM_PLAYERS, generate_nickname, JSON_FILE, THIS_FOLDER
-from esm.resources.generator.generate_players import generate_file
+from .generate_players import NUM_PLAYERS, generate_nickname, JSON_FILE, THIS_FOLDER, generate_file
 
 
 def get_players():

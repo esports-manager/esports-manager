@@ -89,14 +89,14 @@ def get_players_skills(nationality):
     :return skill: int
     """
     if nationality == "br":
-        mu = 45
+        mu = 50
         sigma = 20
     elif nationality == "kr":
-        mu = 75
-        sigma = 5
+        mu = 80
+        sigma = 10
     elif nationality == "usa":
         mu = 65
-        sigma = 10
+        sigma = 20
     else:
         mu = 50
         sigma = 10
@@ -104,7 +104,9 @@ def get_players_skills(nationality):
     skill = random.gauss(mu, sigma)
 
     if skill > 99:
-        skill = 99    
+        skill = 99
+    elif skill < 1 or skill < 30:
+        skill = 30
     
     return skill
 
@@ -135,9 +137,9 @@ def generate_file(list_objects, file):
         json.dump(list_objects, fp, sort_keys=True, indent=4)
 
 
-def generate(file):
+def generate():
     """
     Runs the entire thing
     """
     players = generate_player_list()
-    generate_file(players, file)
+    generate_file(players, JSON_FILE)

@@ -3,6 +3,5 @@ class Champion:
         self.champion_id = champion_id
         self.name = name
         
-        # TODO: implement attributes dictionary
-        
+        # TODO: implement attributes dictionary for skill
         self.skill = skill

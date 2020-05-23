@@ -1,58 +1,28 @@
-import json
-import os
 import random
 
-import src.core.match_live
-import src.core.match
-import src.core.team
-import src.core.player
-
-THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
-
-
-def read_file(file):
-    with open(file, 'r') as fp:
-        content = json.load(fp)
-
-    return content
-
-
-def get_teams_from_db():
-    team_file = os.path.join(THIS_FOLDER, 'resources/db/teams.json')
-    teams = read_file(team_file)
-
-    return teams
-
-
-def get_team(team_id, teams):
-    for team in teams:
-        if team["id"] == team_id:
-            return team
-
-
-def get_players_from_db():
-    player_file = os.path.join(THIS_FOLDER, 'resources/db/players.json')
-    players = read_file(player_file)
-
-    return players
-
-
-def get_players(team, players):
-    team_players = []
-
-    for player_id in team["roster"]:
-        for player in players:
-            if player_id == player["id"]:
-                team_players.append(player)
-                break
-
-    return team_players
+from src.core.match_live import start_match
 
 
 if __name__ == '__main__':
-    teams_list = get_teams_from_db()
-    team1 = get_team(5, teams_list)
-    team2 = get_team(7, teams_list)
-    players_list = get_players_from_db()
-    for player in players_list:
-        print(player["first_name"] + " " + player["last_name"] + ": " + player["nick_name"])
+    list_ids = list()
+
+    for i in range(20):
+        list_ids.append(i)
+
+    # Guarantees that team1 ID is not the same from team2 ID
+    team1_id = random.choice(list_ids)
+    list_ids.remove(team1_id)
+    team2_id = random.choice(list_ids)
+
+    match = start_match(team1_id, team2_id, 1, True, 1, 6)
+
+    print(match.match_id)
+    print("Team 1 name: " + match.team1.name)
+    for player in match.team1.list_players:
+        print(player.first_name + ' ' + player.last_name + ' (' + player.nick_name + ')')
+        print('Champion: ' + player.champion.name)
+
+    print("Team 2 name: " + match.team2.name)
+    for player in match.team2.list_players:
+        print(player.first_name + " " + player.last_name + ' (' + player.nick_name + ')')
+        print('Champion: ' + player.champion.name)

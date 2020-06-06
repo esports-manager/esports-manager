@@ -1,8 +1,10 @@
 import json
 import os
 import random
+from math import floor
 
-from .generate_players import NUM_PLAYERS, generate_nickname, JSON_FILE, THIS_FOLDER, generate_file
+from .generate_players import NUM_PLAYERS, JSON_FILE, THIS_FOLDER, generate_file
+from .get_names import gen_nick_or_team_name
 
 
 def get_players():
@@ -12,6 +14,7 @@ def get_players():
     return players
 
 
+# TODO: let teams have a bigger roster than 5 players
 def choose_five_players(players):
     chosen_players_id = []
 
@@ -24,7 +27,7 @@ def choose_five_players(players):
 
 
 def generate_each_team(players):
-    team_name = generate_nickname()
+    team_name = gen_nick_or_team_name("team_names.txt")
     roster_id = choose_five_players(players)
     team = {"name": team_name,
             "roster_id": roster_id
@@ -34,7 +37,7 @@ def generate_each_team(players):
 
 
 def generate_teams(players):
-    num_teams = int(NUM_PLAYERS / 5)
+    num_teams = floor(int(NUM_PLAYERS / 5))
 
     teams = []
     for i in range(num_teams):

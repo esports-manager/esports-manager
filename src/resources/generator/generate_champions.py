@@ -164,9 +164,9 @@ champion_names = [
 
 def generate_champion_dict(champion_name, counter):
     if champion_name == "TEEMO":
-        skill = random.randint(0,50)
+        skill = random.randint(0, 50)
     else:
-        skill = random.randint(50,99)
+        skill = random.randint(50, 99)
     
     champion = {"name": champion_name,
                 "id": counter,

@@ -9,6 +9,10 @@ autopep8 = "*"
 [packages]
 numpy = "*"
 pylint = "*"
+astroid = "*"
+autopep8 = "*"
+pysimplegui = "*"
+pysimpleguiqt = "*"
 
 [requires]
 python_version = "3.8"

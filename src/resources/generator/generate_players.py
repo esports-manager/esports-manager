@@ -3,14 +3,14 @@ import os
 import random
 
 from .get_names import get_br_first_names, get_kr_first_names, get_usa_first_names
-from .get_names import get_br_last_names, get_kr_last_names, get_usa_last_names
+from .get_names import get_br_last_names, get_kr_last_names, get_usa_last_names, gen_nick_or_team_name
 
 
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
 JSON_FILE = os.path.join(THIS_FOLDER, '../db/players.json')
 
-NUM_PLAYERS = 100
+NUM_PLAYERS = 200
 
 
 def get_players_nationalities():
@@ -25,27 +25,6 @@ def get_players_nationalities():
     ]
 
     return nationalities
-
-
-def generate_nickname():
-    min_length = 6
-    max_length = 10
-
-    en_vowels = ('a', 'e', 'i', 'o', 'u', 'y')
-    en_consonants = ('b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z',
-                     'sh', 'zh', 'ch', 'kh', 'th')
-
-    is_vowels_first = bool(random.randint(0, 1))
-    result = ''
-
-    for i in range(0, random.randint(min_length, max_length)):
-        is_even = i % 2 == 0
-        if (is_vowels_first and is_even) or (not is_vowels_first and not is_even):
-            result += random.choice(en_vowels)
-        else:
-            result += random.choice(en_consonants)
-
-    return result.title()
 
 
 def generate_player(nationality):
@@ -66,7 +45,7 @@ def generate_player(nationality):
 
     first_name = random.choice(first_names)
     last_name = random.choice(last_names)
-    nick_name = generate_nickname()
+    nick_name = gen_nick_or_team_name("nicknames.txt")
 
     skill = get_players_skills(nationality)
     skill = int(skill)
@@ -105,7 +84,7 @@ def get_players_skills(nationality):
 
     if skill > 99:
         skill = 99
-    elif skill < 1 or skill < 30:
+    elif skill < 30:
         skill = 30
     
     return skill

@@ -23,35 +23,17 @@ def get_from_file(file_name):
     return dictionary
 
 
-def get_team_list():
+def get_dict_list(filepath):
     """
-    Reads the teams.json file, to get every information about the teams
-    returning the team list and their dictionaries
+    Reads a specified file (champions, player or team json) and
+    returns the list from that file
+    :param filepath:
     :return:
     """
-    teams_file = os.path.join(THIS_FOLDER, "../resources/db/teams.json")
-    team_list = get_from_file(teams_file)
+    file = os.path.join(THIS_FOLDER, filepath)
+    dict_list = get_from_file(file)
 
-    return team_list
-
-
-def get_player_list():
-    """
-    Reads the players.json file, to get every information about the players
-    returning the player list and their dictionaries
-    :return:
-    """
-    players_file = os.path.join(THIS_FOLDER, "../resources/db/players.json")
-    player_list = get_from_file(players_file)
-
-    return player_list
-
-
-def get_champion_list():
-    champions_file = os.path.join(THIS_FOLDER, "../resources/db/champions.json")
-    champion_list = get_from_file(champions_file)
-
-    return champion_list
+    return dict_list
 
 
 def get_team(team_id, list_teams):
@@ -166,8 +148,8 @@ def initialize_match(team1_id, team2_id, match_id, show_commentary, match_speed,
     :return:
     """
     # Gets both lists to use it on the appropriate functions
-    team_list = get_team_list()
-    player_list = get_player_list()
+    team_list = get_dict_list("../resources/db/teams.json")
+    player_list = get_dict_list("../resources/db/players.json")
 
     # Creates both teams dictionaries to create their objects
     team1_dict, team2_dict = get_teams_dictionaries(team1_id, team2_id, team_list)
@@ -183,7 +165,7 @@ def initialize_match(team1_id, team2_id, match_id, show_commentary, match_speed,
 
 
 def picks_and_bans(match):
-    champion_list = get_champion_list()
+    champion_list = get_dict_list("../resources/db/champions.json")
 
     # TODO: implement proper picks an bans
 

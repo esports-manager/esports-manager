@@ -1,6 +1,16 @@
 import random
+import PySimpleGUIQt as sg
 
 from src.core.match_live import start_match
+
+
+def get_match_info(team):
+    team_names = []
+    for player in team.list_players:
+        name = player.first_name + ' ' + player.last_name + ' ' + str(player.skill)
+        team_names.append(name)
+
+    return team_names
 
 
 if __name__ == '__main__':
@@ -16,13 +26,17 @@ if __name__ == '__main__':
 
     match = start_match(team1_id, team2_id, 1, True, 1, 6)
 
-    print(match.match_id)
-    print("Team 1 name: " + match.team1.name)
-    for player in match.team1.list_players:
-        print(player.first_name + ' ' + player.last_name + ' (' + player.nick_name + ')')
-        print('Champion: ' + player.champion.name)
+    sg.theme('Reddit')
+    team1_names = get_match_info(match.team1)
+    team2_names = get_match_info(match.team2)
 
-    print("Team 2 name: " + match.team2.name)
-    for player in match.team2.list_players:
-        print(player.first_name + " " + player.last_name + ' (' + player.nick_name + ')')
-        print('Champion: ' + player.champion.name)
+    layout = [[sg.Text('MATCH INFO', text_color="red", justification="center")],
+              [sg.Text(match.team1.name, justification="center"), sg.Text(match.team2.name, justification="center")],
+              [sg.Listbox(values=team1_names, size=(30, 6)),
+               sg.Listbox(values=team2_names, size=(30, 6))]
+              ]
+
+    window = sg.Window('eSports Manager', layout)
+    event, values = window.read()
+    window.close()
+

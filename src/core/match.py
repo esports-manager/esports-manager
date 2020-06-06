@@ -33,6 +33,4 @@ class Match:
     def calculate_event(self):
         factor = random.gauss(0, 1)
 
-    def update_game_time(self):
-        pass
 

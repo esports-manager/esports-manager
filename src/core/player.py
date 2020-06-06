@@ -11,7 +11,10 @@ class Player:
         # TODO: replace skill by attribute dictionary
         self.skill = skill
 
-        # Live Match-related variables. It will be changed in the future.
+        # TODO: players should have a "potential" value too. This value tells the game that the player
+        # can improve his overall skill to a certain level
+
+        # Live Match-related variables
         self.champion = None
         self.kills = 0
         self.deaths = 0

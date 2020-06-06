@@ -1,222 +1,442 @@
 [
     {
         "id": 0,
-        "name": "Xixojele",
+        "name": "Marlins",
         "roster_id": [
-            59,
-            22,
-            25,
-            4,
-            82
+            107,
+            78,
+            151,
+            62,
+            65
         ]
     },
     {
         "id": 1,
-        "name": "Hufugyh",
+        "name": "Bears",
         "roster_id": [
-            21,
-            60,
-            9,
-            7,
-            53
+            152,
+            27,
+            193,
+            38,
+            111
         ]
     },
     {
         "id": 2,
-        "name": "Ajucuzo",
+        "name": "Weed Wackers",
         "roster_id": [
-            10,
-            1,
-            54,
-            77,
-            95
-        ]
-    },
-    {
-        "id": 3,
-        "name": "Ocykhuzhu",
-        "roster_id": [
-            84,
-            72,
-            58,
-            86,
-            52
-        ]
-    },
-    {
-        "id": 4,
-        "name": "Shodimi",
-        "roster_id": [
-            40,
-            42,
-            75,
-            6,
+            156,
+            138,
+            128,
+            199,
             14
         ]
     },
     {
-        "id": 5,
-        "name": "Ikicopa",
+        "id": 3,
+        "name": "Animals",
         "roster_id": [
-            0,
-            68,
-            50,
-            64,
-            71
+            195,
+            31,
+            177,
+            173,
+            146
+        ]
+    },
+    {
+        "id": 4,
+        "name": "Cereal Killers",
+        "roster_id": [
+            15,
+            90,
+            154,
+            110,
+            127
+        ]
+    },
+    {
+        "id": 5,
+        "name": "Rays",
+        "roster_id": [
+            197,
+            181,
+            184,
+            79,
+            155
         ]
     },
     {
         "id": 6,
-        "name": "Uxusefikh",
+        "name": "Blaze",
         "roster_id": [
-            89,
-            15,
-            76,
-            78,
-            17
+            191,
+            139,
+            141,
+            187,
+            48
         ]
     },
     {
         "id": 7,
-        "name": "Lyruse",
+        "name": "Pioneers",
         "roster_id": [
-            70,
-            46,
-            20,
-            45,
-            69
+            64,
+            168,
+            161,
+            135,
+            0
         ]
     },
     {
         "id": 8,
-        "name": "Byqigojoche",
+        "name": "Texans",
         "roster_id": [
-            11,
-            34,
-            81,
-            3,
-            66
+            51,
+            125,
+            176,
+            121,
+            21
         ]
     },
     {
         "id": 9,
-        "name": "Aqodyzhug",
+        "name": "Bookworms",
         "roster_id": [
-            56,
-            61,
-            63,
-            12,
-            90
+            49,
+            68,
+            113,
+            85,
+            114
         ]
     },
     {
         "id": 10,
-        "name": "Olerego",
+        "name": "Inferno",
         "roster_id": [
-            74,
-            55,
-            41,
-            33,
-            88
+            86,
+            63,
+            76,
+            17,
+            61
         ]
     },
     {
         "id": 11,
-        "name": "Rezheqihaxi",
+        "name": "Fairies",
         "roster_id": [
-            44,
-            96,
-            26,
-            83,
-            29
+            3,
+            2,
+            119,
+            106,
+            145
         ]
     },
     {
         "id": 12,
-        "name": "Ilelekile",
+        "name": "Bisons",
         "roster_id": [
-            39,
-            35,
-            73,
-            65,
-            47
+            147,
+            87,
+            58,
+            133,
+            166
         ]
     },
     {
         "id": 13,
-        "name": "Dowawezhoq",
+        "name": "Masters",
         "roster_id": [
-            19,
-            62,
-            23,
-            67,
-            92
+            40,
+            16,
+            71,
+            99,
+            37
         ]
     },
     {
         "id": 14,
-        "name": "Tizhapumetha",
+        "name": "Bane of Your Existence",
         "roster_id": [
-            57,
-            31,
-            98,
-            5,
-            91
+            118,
+            34,
+            30,
+            55,
+            47
         ]
     },
     {
         "id": 15,
-        "name": "Ydykefo",
+        "name": "Padres",
         "roster_id": [
-            24,
-            99,
-            85,
-            48,
-            2
+            189,
+            35,
+            97,
+            101,
+            59
         ]
     },
     {
         "id": 16,
-        "name": "Cehevo",
+        "name": "Savage Joes",
         "roster_id": [
-            28,
-            38,
-            49,
-            87,
-            8
+            84,
+            75,
+            112,
+            165,
+            116
         ]
     },
     {
         "id": 17,
-        "name": "Cyduqin",
+        "name": "Connected",
         "roster_id": [
-            51,
-            18,
-            94,
-            32,
-            80
+            164,
+            82,
+            50,
+            70,
+            123
         ]
     },
     {
         "id": 18,
-        "name": "Ysudewosech",
+        "name": "Mud Hens",
         "roster_id": [
-            93,
-            97,
-            13,
-            16,
-            79
+            5,
+            56,
+            95,
+            115,
+            137
         ]
     },
     {
         "id": 19,
-        "name": "Shaceqoduma",
+        "name": "Sledgehammers",
         "roster_id": [
+            150,
+            6,
+            10,
+            42,
+            198
+        ]
+    },
+    {
+        "id": 20,
+        "name": "Rocket Launchers",
+        "roster_id": [
+            46,
+            44,
+            88,
+            1,
+            66
+        ]
+    },
+    {
+        "id": 21,
+        "name": "Gorillas",
+        "roster_id": [
+            175,
+            9,
+            54,
+            185,
+            92
+        ]
+    },
+    {
+        "id": 22,
+        "name": "Gravity",
+        "roster_id": [
+            11,
+            180,
+            7,
+            190,
+            172
+        ]
+    },
+    {
+        "id": 23,
+        "name": "Sultans",
+        "roster_id": [
+            89,
             36,
-            27,
-            37,
+            19,
+            153,
+            73
+        ]
+    },
+    {
+        "id": 24,
+        "name": "Will Work For Food",
+        "roster_id": [
+            20,
+            158,
+            69,
+            170,
+            108
+        ]
+    },
+    {
+        "id": 25,
+        "name": "Adrenaline",
+        "roster_id": [
+            33,
+            132,
+            91,
+            12,
+            188
+        ]
+    },
+    {
+        "id": 26,
+        "name": "Royals",
+        "roster_id": [
+            159,
+            22,
+            94,
+            126,
+            140
+        ]
+    },
+    {
+        "id": 27,
+        "name": "Rock Stars",
+        "roster_id": [
+            179,
+            98,
+            157,
+            100,
+            103
+        ]
+    },
+    {
+        "id": 28,
+        "name": "Bobcats",
+        "roster_id": [
+            60,
+            148,
+            183,
+            45,
+            144
+        ]
+    },
+    {
+        "id": 29,
+        "name": "Showboats",
+        "roster_id": [
+            4,
+            131,
+            24,
+            39,
+            178
+        ]
+    },
+    {
+        "id": 30,
+        "name": "Power",
+        "roster_id": [
+            93,
+            28,
+            124,
+            96,
+            142
+        ]
+    },
+    {
+        "id": 31,
+        "name": "Foxes",
+        "roster_id": [
+            18,
+            136,
+            194,
+            192,
+            52
+        ]
+    },
+    {
+        "id": 32,
+        "name": "Crazy 8\u00e2\u20ac\u2122s",
+        "roster_id": [
             43,
-            30
+            160,
+            53,
+            26,
+            29
+        ]
+    },
+    {
+        "id": 33,
+        "name": "Full Out",
+        "roster_id": [
+            77,
+            169,
+            143,
+            32,
+            25
+        ]
+    },
+    {
+        "id": 34,
+        "name": "Bane of Your Existence",
+        "roster_id": [
+            83,
+            109,
+            72,
+            81,
+            174
+        ]
+    },
+    {
+        "id": 35,
+        "name": "Kings",
+        "roster_id": [
+            196,
+            122,
+            134,
+            13,
+            130
+        ]
+    },
+    {
+        "id": 36,
+        "name": "Voyagers",
+        "roster_id": [
+            162,
+            104,
+            102,
+            129,
+            186
+        ]
+    },
+    {
+        "id": 37,
+        "name": "No Mercy",
+        "roster_id": [
+            149,
+            74,
+            57,
+            105,
+            120
+        ]
+    },
+    {
+        "id": 38,
+        "name": "Boulders",
+        "roster_id": [
+            182,
+            167,
+            117,
+            67,
+            8
+        ]
+    },
+    {
+        "id": 39,
+        "name": "River Rats",
+        "roster_id": [
+            163,
+            171,
+            23,
+            41,
+            80
         ]
     }
 ]

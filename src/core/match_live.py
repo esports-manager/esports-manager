@@ -42,7 +42,7 @@ def get_team(team_id, list_teams):
     dictionary
     :param team_id:
     :param list_teams:
-    :return:
+    :return: team dictionary
     """
     obtained_team = None
 
@@ -106,6 +106,11 @@ def create_player_object(player_dict):
 
 
 def create_champion_object(champion_dict):
+    """
+    Creates the champion object to insert it on the player choice
+    :param champion_dict: champion dictionary obtained from json file
+    :return: champion object
+    """
     champion_id = champion_dict["id"]
     name = champion_dict["name"]
     skill = champion_dict["skill"]
@@ -121,10 +126,11 @@ def get_roster(list_of_players, all_players):
     object based on the player dictionary, returning this object
     :param list_of_players: list of players from the roster
     :param all_players: entire player list database
-    :return:
+    :return: list of players
     """
     roster = list()
 
+    # Is there a more pythonic way to do this? List comprehensions would solve it?
     for player_id in list_of_players:
         for player_dict in all_players:
             if player_dict["id"] == player_id:
@@ -165,6 +171,11 @@ def initialize_match(team1_id, team2_id, match_id, show_commentary, match_speed,
 
 
 def picks_and_bans(match):
+    """
+    Dummy picks and bans implementation. Will be changed in the future.
+    :param match:
+    :return:
+    """
     champion_list = get_dict_list("../resources/db/champions.json")
 
     # TODO: implement proper picks an bans
@@ -176,6 +187,39 @@ def picks_and_bans(match):
             champion_list.remove(champion_dict)
             champion = create_champion_object(champion_dict)
             player.champion = champion
+
+
+def get_match_info(team):
+    """
+    Function used for testing purposes. Might be useful in the future, though.
+    :param team:
+    :return:
+    """
+
+    team_names = []
+    for player in team.list_players:
+        name = player.first_name + ' ' + player.last_name + ' ' + str(player.skill)
+        team_names.append(name)
+
+    return team_names
+
+
+def get_match_obj():
+    """
+    This function is used to get random teams from the db, and then get match obj.
+    In the future this might be trashed.
+    :return:
+    """
+    list_ids = [i for i in range(20)]
+
+    # Guarantees that team1 ID is not the same from team2 ID
+    team1_id = random.choice(list_ids)
+    list_ids.remove(team1_id)
+    team2_id = random.choice(list_ids)
+
+    match = start_match(team1_id, team2_id, 1, True, 1, 6)
+
+    return match
 
 
 def start_match(team1_id, team2_id, match_id, show_commentary, match_speed, ch_id):

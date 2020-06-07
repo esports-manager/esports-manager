@@ -16,6 +16,15 @@ class Player:
 
         # Live Match-related variables
         self.champion = None
+        self._points = 0
         self.kills = 0
         self.deaths = 0
         self.assists = 0
+
+    @property
+    def points(self):
+        return self._points
+
+    @points.setter
+    def points(self, add_pts):
+        self._points += add_pts

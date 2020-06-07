@@ -7,7 +7,13 @@ class Match:
     the user's team or not.
     """
 
-    def __init__(self, match_id, championship_id, team1, team2, show_commentary, match_speed):
+    def __init__(self,
+                 match_id: int,
+                 championship_id: int,
+                 team1: "Team",
+                 team2: "Team",
+                 show_commentary: bool,
+                 match_speed: int):
         """
         Initializes elements of the match
         :param match_id: match ID
@@ -31,6 +37,5 @@ class Match:
         self.is_match_over = False
 
     def calculate_event(self):
-        factor = random.gauss(0, 1)
-
+        pass
 

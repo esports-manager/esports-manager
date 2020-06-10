@@ -2,11 +2,11 @@ import os
 import random
 import json
 
-from .match import Match
-from .team import Team
-from .player import Player
-from .champion import Champion
-
+from src.core.match import Match
+from src.core.team import Team
+from src.core.player import Player
+from src.core.champion import Champion
+from src.core.event import Event
 
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
@@ -222,8 +222,106 @@ def get_match_obj():
     return match
 
 
+def initialize_event_list():
+    events = ["START_MATCH"]
+    return events
+
+
+def add_events(match, events):
+    if match.game_time == 1.0:
+        events.remove("START_MATCH")
+        events.append("INVADE")
+    elif match.game_time == 2.0:
+        events.remove("INVADE")
+        events.append("GANK")
+        events.append("TEAM_FIGHT")
+    elif match.game_time == 15.0:
+        events.append("TOWER_ASSAULT")
+        events.append("MAJOR_JUNGLE")
+        events.remove("GANK")
+    elif match.game_time == 20.0:
+        events.append("SUPER_JUNGLE")
+
+    if not match.team1.are_all_towers_up() or not match.team2.are_all_towers_up():
+        events.append("INHIBITOR_ASSAULT")
+
+    if not match.team1.are_all_inhibitors_up() or not match.team2.are_all_inhibitors_up():
+        events.append("BASE_TOWERS_ASSAULT")
+
+    if not match.team1.is_tower_up("base") or not match.team2.is_tower_up("base"):
+        events.append("BASE_ASSAULT")
+
+
+def get_event(match, events):
+    add_events(match, events)
+
+    # TODO: this cannot be randomly chosen, there should be some weight calculation going on
+    event = Event(random.choice(events))
+
+    return event
+
+
+def define_atk_team(match):
+    prob = random.gauss(0, 1)
+
+    if match.team1.points > match.team2.points:
+        if -1 < prob < 1:
+            atk_team = match.team1
+            def_team = match.team2
+        else:
+            atk_team = match.team2
+            def_team = match.team1
+    elif match.team2.points > match.team1.points:
+        if -1 < prob < 1:
+            atk_team = match.team2
+            def_team = match.team1
+        else:
+            atk_team = match.team1
+            def_team = match.team2
+    else:
+        atk_team = random.choice(match.teams)
+        if atk_team == match.team1:
+            def_team = match.team2
+        else:
+            def_team = match.team1
+
+    return atk_team, def_team
+
+
+def evaluate_event(match, event):
+    if event.name == "START_MATCH":
+        print("Match is starting between {} and {}".format(match.team1.name, match.team2.name))
+    elif event.name == "INVADE":
+        match.event_invade()
+    elif event.name == "GANK":
+        match.event_gank()
+    elif event.name == "TEAM_FIGHT":
+        atk_team, def_team = define_atk_team(match)
+        match.event_team_fight(atk_team, def_team)
+    elif event.name == "TOWER_ASSAULT":
+        match.event_tower_assault()
+    elif event.name == "MAJOR_JUNGLE":
+        match.event_major_jungle()
+    elif event.name == "SUPER_JUNGLE":
+        match.event_super_jungle()
+    elif event.name == "INHIBITOR_ASSAULT":
+        match.event_inhib_assault()
+    elif event.name == "BASE_TOWERS_ASSAULT":
+        match.event_base_towers_assault()
+    elif event.name == "BASE ASSAULT":
+        match.event_base_assault()
+
+    match.game_time += 1
+
+
 def start_match(team1_id, team2_id, match_id, show_commentary, match_speed, ch_id):
     match = initialize_match(team1_id, team2_id, match_id, show_commentary, match_speed, ch_id)
     picks_and_bans(match)
+
+    events = initialize_event_list()
+
+    event = get_event(match, events)
+
+    # TODO: implement match loop
 
     return match

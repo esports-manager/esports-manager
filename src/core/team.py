@@ -7,11 +7,58 @@ class Team:
             name {string} -- team name.
             list_players {list<Player>} -- list of players
         """
+        self._points = 0
         self.team_id = team_id
         self.name = name
 
+        self.towers = {
+            "top": 3,
+            "mid": 3,
+            "bot": 3,
+            "base": 2
+        }
+        self.inhibitors = {
+            "top": 1,
+            "mid": 1,
+            "bot": 1
+        }
+
         # list of all players in the roster
         self.list_players = list_players
+
+    def is_tower_up(self, lane):
+        if self.towers[lane] == 0:
+            return False
+        else:
+            return True
+
+    def are_all_towers_up(self):
+        for lane, num in self.towers.items():
+            if num == 0:
+                return False
+
+        return True
+
+    def is_inhibitor_up(self, lane):
+        if self.inhibitors[lane] == 0:
+            return False
+        else:
+            return True
+
+    def are_all_inhibitors_up(self):
+        for lane, num in self.inhibitors.items():
+            if num == 0:
+                return False
+
+        return True
+
+    @property
+    def points(self):
+        self._points = 0
+        for player in self.list_players:
+            self._points += player.points
+
+        return self._points
 
     @property
     def avg_player_skill(self):

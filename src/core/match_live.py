@@ -198,7 +198,8 @@ def get_match_info(team):
 
     team_names = []
     for player in team.list_players:
-        name = player.first_name + ' ' + player.last_name + ' ' + str(player.skill)
+        name = player.first_name + ' "' + player.nick_name + '" ' + player.last_name + ' ' + str(player.skill) + ' ' \
+               + player.nationality
         team_names.append(name)
 
     return team_names
@@ -312,6 +313,15 @@ def evaluate_event(match, event):
         match.event_base_assault()
 
     match.game_time += 1
+
+
+def event_team_fight(atk_team, def_team):
+    prob = random.gauss(0, 1)
+
+    duel_pl_factor = atk_team.player_overall / def_team.player_overall
+    duel_ch_factor = atk_team.champion_overall / def_team.champion_overall
+
+
 
 
 def start_match(team1_id, team2_id, match_id, show_commentary, match_speed, ch_id):

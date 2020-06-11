@@ -35,14 +35,6 @@ class Match:
         self.match_speed = match_speed
         self.is_match_over = False
 
-    def event_team_fight(self, atk_team, def_team):
-        prob = random.gauss(0, 1)
-
-        duel_pl_factor = atk_team.avg_player_skill / def_team.avg_player_skill
-        duel_ch_factor = atk_team.avg_champion_skill / def_team.avg_champion_skill
-
-        # TODO: FINISH THIS LOGIC FOR TEAM FIGHT
-
     def event_invade(self):
         prob = random.gauss(0, 1)
         if prob > 1:

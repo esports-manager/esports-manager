@@ -13,6 +13,9 @@ astroid = "*"
 autopep8 = "*"
 pysimplegui = "*"
 pysimpleguiqt = "*"
+pysimpleguiwx = "*"
+wxpython = "*"
+pysimpleguiweb = "*"
 
 [requires]
 python_version = "3.8"

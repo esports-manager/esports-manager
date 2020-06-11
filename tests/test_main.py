@@ -12,8 +12,8 @@ class MyTestCase(unittest.TestCase):
     def test_get_pl_skill(self):
         match = get_match_obj()
 
-        team1_pl_skill = match.team1.avg_player_skill
-        team2_pl_skill = match.team2.avg_player_skill
+        team1_pl_skill = match.team1.player_overall
+        team2_pl_skill = match.team2.player_overall
 
         self.assertIsNotNone(team1_pl_skill)
         self.assertIsNotNone(team2_pl_skill)
@@ -21,8 +21,8 @@ class MyTestCase(unittest.TestCase):
     def test_get_ch_skill(self):
         match = get_match_obj()
 
-        team1_ch_skill = match.team1.avg_champion_skill
-        team2_ch_skill = match.team2.avg_champion_skill
+        team1_ch_skill = match.team1.champion_overall
+        team2_ch_skill = match.team2.champion_overall
 
         self.assertIsNotNone(team1_ch_skill)
         self.assertIsNotNone(team2_ch_skill)

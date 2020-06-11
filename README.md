@@ -1,5 +1,7 @@
 **NOTE:** *THIS PROJECT IS STILL UNDER DEVELOPMENT, AND IS NOT READY FOR GAMEPLAY YET. AS SOON AS GAMEPLAY FEATURES ARE IMPLEMENTED, THIS NOTE WILL BE REMOVED AND NEW INFO WILL BE ADDED TO THIS REPOSITORY.*
 
+![eSports Manager Logo](src/resources/images/logo/esportsmanager.png)
+
 # eSports Manager
 
 **eSports Manager** aims to become a free and open source eSports management game, licensed under the [GPLv3](LICENSE.md), based on titles like Football Manager and the deceased Championship Manager.

@@ -3,8 +3,8 @@ import os
 import random
 from math import floor
 
-from .generate_players import NUM_PLAYERS, JSON_FILE, THIS_FOLDER, generate_file
-from .get_names import gen_nick_or_team_name
+from src.resources.generator.generate_players import NUM_PLAYERS, JSON_FILE, THIS_FOLDER, generate_file
+from src.resources.generator.get_names import gen_nick_or_team_name
 
 
 def get_players():

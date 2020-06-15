@@ -2,8 +2,8 @@ import json
 import os
 import random
 
-from .get_names import get_br_first_names, get_kr_first_names, get_usa_first_names
-from .get_names import get_br_last_names, get_kr_last_names, get_usa_last_names, gen_nick_or_team_name
+from src.resources.generator.get_names import get_br_first_names, get_kr_first_names, get_usa_first_names, \
+    get_br_last_names, get_kr_last_names, get_usa_last_names, gen_nick_or_team_name
 
 
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
@@ -82,8 +82,8 @@ def get_players_skills(nationality):
         
     skill = random.gauss(mu, sigma)
 
-    if skill > 99:
-        skill = 99
+    if skill > 93:
+        skill = 90
     elif skill < 30:
         skill = 30
     

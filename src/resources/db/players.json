@@ -1,1602 +1,1602 @@
 [
     {
-        "first_name": "Mario",
+        "first_name": "Mateus",
         "id": 0,
-        "last_name": "Neves",
+        "last_name": "Rodrigues",
         "nationality": "br",
-        "nick_name": "Venom",
-        "skill": 30
-    },
-    {
-        "first_name": "Carl",
-        "id": 1,
-        "last_name": "Lee",
-        "nationality": "usa",
-        "nick_name": "Alien",
-        "skill": 88
-    },
-    {
-        "first_name": "Alex",
-        "id": 2,
-        "last_name": "Oliveira",
-        "nationality": "br",
-        "nick_name": "Demise",
-        "skill": 30
-    },
-    {
-        "first_name": "Jin-seong",
-        "id": 3,
-        "last_name": "Song",
-        "nationality": "kr",
-        "nick_name": "Carbine",
-        "skill": 77
-    },
-    {
-        "first_name": "Sang-hyeok",
-        "id": 4,
-        "last_name": "Lee",
-        "nationality": "kr",
-        "nick_name": "Selkie",
-        "skill": 97
-    },
-    {
-        "first_name": "Ha-joon",
-        "id": 5,
-        "last_name": "Lee",
-        "nationality": "kr",
-        "nick_name": "Deviant",
-        "skill": 67
-    },
-    {
-        "first_name": "Ji-ho",
-        "id": 6,
-        "last_name": "Park",
-        "nationality": "kr",
-        "nick_name": "Siren",
-        "skill": 80
-    },
-    {
-        "first_name": "Henrique",
-        "id": 7,
-        "last_name": "Novaes",
-        "nationality": "br",
-        "nick_name": "Head-Knocker",
-        "skill": 44
-    },
-    {
-        "first_name": "Stephen",
-        "id": 8,
-        "last_name": "Hill",
-        "nationality": "usa",
-        "nick_name": "Firecracker",
-        "skill": 58
-    },
-    {
-        "first_name": "Joe",
-        "id": 9,
-        "last_name": "Walker",
-        "nationality": "usa",
-        "nick_name": "Haunter",
-        "skill": 60
-    },
-    {
-        "first_name": "Charles",
-        "id": 10,
-        "last_name": "Rogers",
-        "nationality": "usa",
-        "nick_name": "Dux",
-        "skill": 37
-    },
-    {
-        "first_name": "Marcos",
-        "id": 11,
-        "last_name": "Xavier",
-        "nationality": "br",
-        "nick_name": "Razor",
-        "skill": 79
-    },
-    {
-        "first_name": "Anthony",
-        "id": 12,
-        "last_name": "Lewis",
-        "nationality": "usa",
-        "nick_name": "K-9",
-        "skill": 58
-    },
-    {
-        "first_name": "Bernardo",
-        "id": 13,
-        "last_name": "Couto",
-        "nationality": "br",
-        "nick_name": "Detroit",
-        "skill": 70
-    },
-    {
-        "first_name": "Jin-seong",
-        "id": 14,
-        "last_name": "Lee",
-        "nationality": "kr",
-        "nick_name": "Soleus",
-        "skill": 69
-    },
-    {
-        "first_name": "Eric",
-        "id": 15,
-        "last_name": "Moore",
-        "nationality": "usa",
-        "nick_name": "Nefertiti",
-        "skill": 77
-    },
-    {
-        "first_name": "Austin",
-        "id": 16,
-        "last_name": "Rogers",
-        "nationality": "usa",
-        "nick_name": "Predator",
-        "skill": 52
-    },
-    {
-        "first_name": "Eric",
-        "id": 17,
-        "last_name": "Lopez",
-        "nationality": "usa",
-        "nick_name": "Hatchet",
-        "skill": 43
-    },
-    {
-        "first_name": "Myeong",
-        "id": 18,
-        "last_name": "Heo",
-        "nationality": "kr",
-        "nick_name": "Gunner",
-        "skill": 87
-    },
-    {
-        "first_name": "Lu\u00eds Felipe",
-        "id": 19,
-        "last_name": "Abreu",
-        "nationality": "br",
-        "nick_name": "Saboteur",
-        "skill": 70
-    },
-    {
-        "first_name": "Ji-hoon",
-        "id": 20,
-        "last_name": "Song",
-        "nationality": "kr",
-        "nick_name": "Hellcat",
-        "skill": 94
-    },
-    {
-        "first_name": "Jae",
-        "id": 21,
-        "last_name": "Cho",
-        "nationality": "kr",
-        "nick_name": "Menace",
-        "skill": 64
-    },
-    {
-        "first_name": "Peter",
-        "id": 22,
-        "last_name": "Morrison",
-        "nationality": "usa",
-        "nick_name": "Crown Heights",
+        "nick_name": "Viper",
         "skill": 40
     },
     {
-        "first_name": "Adriano",
-        "id": 23,
-        "last_name": "Abreu",
-        "nationality": "br",
-        "nick_name": "Wrench",
-        "skill": 31
-    },
-    {
-        "first_name": "Jason",
-        "id": 24,
-        "last_name": "Hill",
-        "nationality": "usa",
-        "nick_name": "Longbow",
-        "skill": 55
-    },
-    {
-        "first_name": "Min-seung",
-        "id": 25,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Panic",
-        "skill": 74
-    },
-    {
-        "first_name": "Rafael",
-        "id": 26,
-        "last_name": "Santos",
-        "nationality": "br",
-        "nick_name": "O'Doyle",
-        "skill": 57
-    },
-    {
-        "first_name": "Ye-jun",
-        "id": 27,
-        "last_name": "Song",
-        "nationality": "kr",
-        "nick_name": "War Hammer",
-        "skill": 93
-    },
-    {
-        "first_name": "Young-ho",
-        "id": 28,
-        "last_name": "An",
-        "nationality": "kr",
-        "nick_name": "Hero",
-        "skill": 81
-    },
-    {
-        "first_name": "Seung",
-        "id": 29,
-        "last_name": "An",
-        "nationality": "kr",
-        "nick_name": "Radical",
-        "skill": 85
-    },
-    {
-        "first_name": "Bernardo",
-        "id": 30,
-        "last_name": "Coutinho",
-        "nationality": "br",
-        "nick_name": "Slaughter",
-        "skill": 67
-    },
-    {
-        "first_name": "Alan",
-        "id": 31,
-        "last_name": "da Silva",
-        "nationality": "br",
-        "nick_name": "Night Terror",
-        "skill": 57
-    },
-    {
-        "first_name": "Diego",
-        "id": 32,
-        "last_name": "Silveira",
-        "nationality": "br",
-        "nick_name": "Vainglory",
-        "skill": 30
-    },
-    {
-        "first_name": "Joon-woo",
-        "id": 33,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Maniac",
-        "skill": 67
-    },
-    {
-        "first_name": "Matthew",
-        "id": 34,
-        "last_name": "Hill",
-        "nationality": "usa",
-        "nick_name": "Grave",
-        "skill": 57
-    },
-    {
-        "first_name": "Eric",
-        "id": 35,
-        "last_name": "Moore",
-        "nationality": "usa",
-        "nick_name": "X-Skull",
-        "skill": 46
-    },
-    {
-        "first_name": "Lu\u00eds Adriano",
-        "id": 36,
-        "last_name": "Faria",
-        "nationality": "br",
-        "nick_name": "Sasquatch",
-        "skill": 43
-    },
-    {
-        "first_name": "Jonathan",
-        "id": 37,
-        "last_name": "Rogers",
-        "nationality": "usa",
-        "nick_name": "Darko",
-        "skill": 54
-    },
-    {
-        "first_name": "Sean",
-        "id": 38,
-        "last_name": "Johnson",
-        "nationality": "usa",
-        "nick_name": "Agony",
-        "skill": 59
-    },
-    {
-        "first_name": "Joon-woo",
-        "id": 39,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Abyss",
-        "skill": 78
-    },
-    {
-        "first_name": "Gary",
-        "id": 40,
-        "last_name": "Bell",
-        "nationality": "usa",
-        "nick_name": "Strike Eagle",
-        "skill": 99
-    },
-    {
-        "first_name": "Alan",
-        "id": 41,
-        "last_name": "Souza",
-        "nationality": "br",
-        "nick_name": "Bullet",
-        "skill": 31
-    },
-    {
-        "first_name": "Arthur",
-        "id": 42,
-        "last_name": "Baker",
-        "nationality": "usa",
-        "nick_name": "Empress",
-        "skill": 30
-    },
-    {
         "first_name": "Suk",
-        "id": 43,
+        "id": 1,
         "last_name": "An",
         "nationality": "kr",
-        "nick_name": "Raven",
-        "skill": 82
-    },
-    {
-        "first_name": "Carlson",
-        "id": 44,
-        "last_name": "Moore",
-        "nationality": "usa",
-        "nick_name": "Crucible",
-        "skill": 68
-    },
-    {
-        "first_name": "Sung-ho",
-        "id": 45,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Pursuit",
-        "skill": 87
-    },
-    {
-        "first_name": "Edward",
-        "id": 46,
-        "last_name": "Harris",
-        "nationality": "usa",
-        "nick_name": "Bowser",
-        "skill": 84
-    },
-    {
-        "first_name": "Tae-min",
-        "id": 47,
-        "last_name": "Cho",
-        "nationality": "kr",
-        "nick_name": "Wraith",
-        "skill": 78
-    },
-    {
-        "first_name": "Kevin",
-        "id": 48,
-        "last_name": "Scott",
-        "nationality": "usa",
-        "nick_name": "Annihilator",
-        "skill": 61
-    },
-    {
-        "first_name": "Seung",
-        "id": 49,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Lance",
-        "skill": 95
-    },
-    {
-        "first_name": "Sang-hyeok",
-        "id": 50,
-        "last_name": "Song",
-        "nationality": "kr",
-        "nick_name": "Ambush",
-        "skill": 93
-    },
-    {
-        "first_name": "Bernardo",
-        "id": 51,
-        "last_name": "Castello",
-        "nationality": "br",
-        "nick_name": "Virtual",
-        "skill": 77
-    },
-    {
-        "first_name": "Do-yun",
-        "id": 52,
-        "last_name": "Heo",
-        "nationality": "kr",
-        "nick_name": "Shoeless",
-        "skill": 77
-    },
-    {
-        "first_name": "Lu\u00eds Eduardo",
-        "id": 53,
-        "last_name": "Bolsonaro",
-        "nationality": "br",
-        "nick_name": "Bowser",
-        "skill": 62
-    },
-    {
-        "first_name": "Stephen",
-        "id": 54,
-        "last_name": "Harris",
-        "nationality": "usa",
-        "nick_name": "Goshawk",
-        "skill": 62
-    },
-    {
-        "first_name": "Myeong",
-        "id": 55,
-        "last_name": "Park",
-        "nationality": "kr",
-        "nick_name": "Hero",
-        "skill": 93
-    },
-    {
-        "first_name": "Young-ho",
-        "id": 56,
-        "last_name": "Kim",
-        "nationality": "kr",
-        "nick_name": "Crazed",
-        "skill": 63
-    },
-    {
-        "first_name": "Steve",
-        "id": 57,
-        "last_name": "Gilbert",
-        "nationality": "usa",
-        "nick_name": "Paramour",
-        "skill": 60
-    },
-    {
-        "first_name": "Lu\u00eds Adriano",
-        "id": 58,
-        "last_name": "Neto",
-        "nationality": "br",
-        "nick_name": "Flack",
-        "skill": 85
-    },
-    {
-        "first_name": "Lucas",
-        "id": 59,
-        "last_name": "Castello",
-        "nationality": "br",
-        "nick_name": "Enigma",
-        "skill": 51
-    },
-    {
-        "first_name": "Jae",
-        "id": 60,
-        "last_name": "Lee",
-        "nationality": "kr",
-        "nick_name": "Abyss",
-        "skill": 80
-    },
-    {
-        "first_name": "Rafael",
-        "id": 61,
-        "last_name": "Xavier",
-        "nationality": "br",
-        "nick_name": "Howitzer",
-        "skill": 65
-    },
-    {
-        "first_name": "James",
-        "id": 62,
-        "last_name": "Henderson",
-        "nationality": "usa",
-        "nick_name": "Stiletto",
-        "skill": 53
-    },
-    {
-        "first_name": "Andr\u00e9",
-        "id": 63,
-        "last_name": "Faria",
-        "nationality": "br",
-        "nick_name": "Roadkill",
-        "skill": 60
-    },
-    {
-        "first_name": "Alex",
-        "id": 64,
-        "last_name": "Abreu",
-        "nationality": "br",
-        "nick_name": "Quarterstaff",
-        "skill": 55
-    },
-    {
-        "first_name": "Bruno",
-        "id": 65,
-        "last_name": "do Valle",
-        "nationality": "br",
-        "nick_name": "Creep",
-        "skill": 99
-    },
-    {
-        "first_name": "Jacob",
-        "id": 66,
-        "last_name": "Bryant",
-        "nationality": "usa",
-        "nick_name": "Insurgent",
-        "skill": 71
-    },
-    {
-        "first_name": "Jacob",
-        "id": 67,
-        "last_name": "Garcia",
-        "nationality": "usa",
-        "nick_name": "Ultra",
-        "skill": 78
-    },
-    {
-        "first_name": "Anderson",
-        "id": 68,
-        "last_name": "Feitosa",
-        "nationality": "br",
-        "nick_name": "Razor",
-        "skill": 61
-    },
-    {
-        "first_name": "Myung",
-        "id": 69,
-        "last_name": "Song",
-        "nationality": "kr",
-        "nick_name": "Gunner",
-        "skill": 75
-    },
-    {
-        "first_name": "F\u00e1bio",
-        "id": 70,
-        "last_name": "Barbosa",
-        "nationality": "br",
-        "nick_name": "Torpedo",
-        "skill": 33
-    },
-    {
-        "first_name": "Jos\u00e9",
-        "id": 71,
-        "last_name": "Neves",
-        "nationality": "br",
-        "nick_name": "Scream",
-        "skill": 57
-    },
-    {
-        "first_name": "Hyuk-kyu",
-        "id": 72,
-        "last_name": "Cho",
-        "nationality": "kr",
-        "nick_name": "ATL",
+        "nick_name": "Panther",
         "skill": 90
     },
     {
-        "first_name": "U-jin",
-        "id": 73,
-        "last_name": "Heo",
+        "first_name": "Young-ho",
+        "id": 2,
+        "last_name": "Park",
         "nationality": "kr",
-        "nick_name": "Medb",
-        "skill": 66
+        "nick_name": "Xenon",
+        "skill": 60
     },
     {
-        "first_name": "Alex",
-        "id": 74,
-        "last_name": "Castello",
-        "nationality": "br",
-        "nick_name": "Malice",
-        "skill": 90
-    },
-    {
-        "first_name": "Sang-hyeok",
-        "id": 75,
-        "last_name": "Lee",
+        "first_name": "Young-soo",
+        "id": 3,
+        "last_name": "Jung",
         "nationality": "kr",
-        "nick_name": "Beretta",
-        "skill": 75
-    },
-    {
-        "first_name": "Benjamin",
-        "id": 76,
-        "last_name": "Green",
-        "nationality": "usa",
-        "nick_name": "Lance",
-        "skill": 53
-    },
-    {
-        "first_name": "Frank",
-        "id": 77,
-        "last_name": "Lopez",
-        "nationality": "usa",
-        "nick_name": "Siren",
-        "skill": 48
-    },
-    {
-        "first_name": "Mateus",
-        "id": 78,
-        "last_name": "da Silva",
-        "nationality": "br",
-        "nick_name": "Lotus",
-        "skill": 72
-    },
-    {
-        "first_name": "U-jin",
-        "id": 79,
-        "last_name": "Moon",
-        "nationality": "kr",
-        "nick_name": "Darko",
-        "skill": 87
-    },
-    {
-        "first_name": "Donald",
-        "id": 80,
-        "last_name": "Rogers",
-        "nationality": "usa",
-        "nick_name": "Jesse James",
-        "skill": 39
-    },
-    {
-        "first_name": "Jos\u00e9",
-        "id": 81,
-        "last_name": "Barbosa",
-        "nationality": "br",
-        "nick_name": "Behemoth",
-        "skill": 77
-    },
-    {
-        "first_name": "M\u00e1rcio",
-        "id": 82,
-        "last_name": "Silveira",
-        "nationality": "br",
-        "nick_name": "Rimfire",
-        "skill": 30
-    },
-    {
-        "first_name": "Carlson",
-        "id": 83,
-        "last_name": "Lee",
-        "nationality": "usa",
-        "nick_name": "Boar",
-        "skill": 58
-    },
-    {
-        "first_name": "Jong",
-        "id": 84,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Enigma",
-        "skill": 81
+        "nick_name": "Madam",
+        "skill": 79
     },
     {
         "first_name": "Do-yun",
-        "id": 85,
-        "last_name": "Lee",
-        "nationality": "kr",
-        "nick_name": "Wildcat",
-        "skill": 77
-    },
-    {
-        "first_name": "Eric",
-        "id": 86,
-        "last_name": "Faria",
-        "nationality": "br",
-        "nick_name": "Javelin",
-        "skill": 45
-    },
-    {
-        "first_name": "George",
-        "id": 87,
-        "last_name": "Gilbert",
-        "nationality": "usa",
-        "nick_name": "Firecracker",
-        "skill": 57
-    },
-    {
-        "first_name": "Yu-jun",
-        "id": 88,
-        "last_name": "Heo",
-        "nationality": "kr",
-        "nick_name": "Beretta",
-        "skill": 74
-    },
-    {
-        "first_name": "Thiago",
-        "id": 89,
-        "last_name": "Soares",
-        "nationality": "br",
-        "nick_name": "Agrippa",
-        "skill": 86
-    },
-    {
-        "first_name": "Richard",
-        "id": 90,
-        "last_name": "Lopez",
-        "nationality": "usa",
-        "nick_name": "Iron-Cut",
-        "skill": 72
-    },
-    {
-        "first_name": "Alex",
-        "id": 91,
-        "last_name": "Castro",
-        "nationality": "br",
-        "nick_name": "Velvet",
-        "skill": 30
-    },
-    {
-        "first_name": "Rodrigo",
-        "id": 92,
-        "last_name": "Faria",
-        "nationality": "br",
-        "nick_name": "Mutant",
-        "skill": 30
-    },
-    {
-        "first_name": "Adam",
-        "id": 93,
-        "last_name": "Martin",
-        "nationality": "usa",
-        "nick_name": "Dux",
-        "skill": 56
-    },
-    {
-        "first_name": "Ant\u00f4nio",
-        "id": 94,
-        "last_name": "Guimar\u00e3es",
-        "nationality": "br",
-        "nick_name": "Dirty Dirty",
-        "skill": 63
-    },
-    {
-        "first_name": "Dong-ha",
-        "id": 95,
-        "last_name": "An",
-        "nationality": "kr",
-        "nick_name": "Camden",
-        "skill": 85
-    },
-    {
-        "first_name": "Justin",
-        "id": 96,
-        "last_name": "Mason",
-        "nationality": "usa",
-        "nick_name": "Obliterator",
-        "skill": 57
-    },
-    {
-        "first_name": "Sean",
-        "id": 97,
-        "last_name": "Rogers",
-        "nationality": "usa",
-        "nick_name": "Lightning",
-        "skill": 59
-    },
-    {
-        "first_name": "Michael",
-        "id": 98,
-        "last_name": "Garcia",
-        "nationality": "usa",
-        "nick_name": "Madness",
-        "skill": 60
-    },
-    {
-        "first_name": "Marcelo",
-        "id": 99,
-        "last_name": "Feitosa",
-        "nationality": "br",
-        "nick_name": "Minotaur",
-        "skill": 35
-    },
-    {
-        "first_name": "Fabr\u00edcio",
-        "id": 100,
-        "last_name": "Neto",
-        "nationality": "br",
-        "nick_name": "Boar",
-        "skill": 42
-    },
-    {
-        "first_name": "U-jin",
-        "id": 101,
-        "last_name": "Park",
-        "nationality": "kr",
-        "nick_name": "Bone",
-        "skill": 78
-    },
-    {
-        "first_name": "Daniel",
-        "id": 102,
-        "last_name": "Baker",
-        "nationality": "usa",
-        "nick_name": "Black Mamba",
-        "skill": 38
-    },
-    {
-        "first_name": "Fabiano",
-        "id": 103,
-        "last_name": "Neto",
-        "nationality": "br",
-        "nick_name": "Hero",
-        "skill": 69
-    },
-    {
-        "first_name": "Gary",
-        "id": 104,
-        "last_name": "Lee",
-        "nationality": "usa",
-        "nick_name": "Mutant",
-        "skill": 30
-    },
-    {
-        "first_name": "Andr\u00e9",
-        "id": 105,
-        "last_name": "Campos",
-        "nationality": "br",
-        "nick_name": "Bellona",
-        "skill": 87
-    },
-    {
-        "first_name": "Paul",
-        "id": 106,
-        "last_name": "Anderson",
-        "nationality": "usa",
-        "nick_name": "Wolverine",
-        "skill": 60
-    },
-    {
-        "first_name": "Noah",
-        "id": 107,
-        "last_name": "Williams",
-        "nationality": "usa",
-        "nick_name": "Daredevil",
-        "skill": 46
-    },
-    {
-        "first_name": "Sung",
-        "id": 108,
-        "last_name": "Jung",
-        "nationality": "kr",
-        "nick_name": "Empress",
-        "skill": 77
-    },
-    {
-        "first_name": "Ji-woo",
-        "id": 109,
-        "last_name": "Heo",
-        "nationality": "kr",
-        "nick_name": "Anomoly",
-        "skill": 91
-    },
-    {
-        "first_name": "Ha-joon",
-        "id": 110,
-        "last_name": "Heo",
-        "nationality": "kr",
-        "nick_name": "Mad Dog",
-        "skill": 79
-    },
-    {
-        "first_name": "Arthur",
-        "id": 111,
-        "last_name": "Williams",
-        "nationality": "usa",
-        "nick_name": "Dagger",
-        "skill": 64
-    },
-    {
-        "first_name": "Jong",
-        "id": 112,
-        "last_name": "Jung",
-        "nationality": "kr",
-        "nick_name": "Siddhartha",
-        "skill": 81
-    },
-    {
-        "first_name": "Ant\u00f4nio",
-        "id": 113,
-        "last_name": "Neves",
-        "nationality": "br",
-        "nick_name": "Vein",
-        "skill": 30
-    },
-    {
-        "first_name": "Francisco",
-        "id": 114,
-        "last_name": "Silva",
-        "nationality": "br",
-        "nick_name": "Indominus",
-        "skill": 99
-    },
-    {
-        "first_name": "Won-seok",
-        "id": 115,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Demolition",
-        "skill": 81
-    },
-    {
-        "first_name": "Jin-seong",
-        "id": 116,
+        "id": 4,
         "last_name": "Song",
         "nationality": "kr",
-        "nick_name": "Socket",
-        "skill": 84
-    },
-    {
-        "first_name": "Jason",
-        "id": 117,
-        "last_name": "Smith",
-        "nationality": "usa",
-        "nick_name": "Gorgon",
-        "skill": 30
-    },
-    {
-        "first_name": "Mariano",
-        "id": 118,
-        "last_name": "do Valle",
-        "nationality": "br",
-        "nick_name": "Ire",
-        "skill": 30
-    },
-    {
-        "first_name": "John",
-        "id": 119,
-        "last_name": "Clark",
-        "nationality": "usa",
-        "nick_name": "Hazzard",
-        "skill": 54
-    },
-    {
-        "first_name": "Francisco",
-        "id": 120,
-        "last_name": "Faria",
-        "nationality": "br",
-        "nick_name": "Hero",
-        "skill": 42
-    },
-    {
-        "first_name": "Joon-woo",
-        "id": 121,
-        "last_name": "Jung",
-        "nationality": "kr",
-        "nick_name": "Hatchet",
-        "skill": 72
-    },
-    {
-        "first_name": "Matthew",
-        "id": 122,
-        "last_name": "Bryant",
-        "nationality": "usa",
-        "nick_name": "Sever",
-        "skill": 50
-    },
-    {
-        "first_name": "Brandon",
-        "id": 123,
-        "last_name": "Anderson",
-        "nationality": "usa",
-        "nick_name": "Garrot",
-        "skill": 99
-    },
-    {
-        "first_name": "Bruno",
-        "id": 124,
-        "last_name": "Barroso",
-        "nationality": "br",
-        "nick_name": "Die-hard",
-        "skill": 30
-    },
-    {
-        "first_name": "Dong-ha",
-        "id": 125,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Delirious",
-        "skill": 67
-    },
-    {
-        "first_name": "Anderson",
-        "id": 126,
-        "last_name": "Mendon\u00e7a",
-        "nationality": "br",
-        "nick_name": "Baal",
-        "skill": 55
-    },
-    {
-        "first_name": "Joe",
-        "id": 127,
-        "last_name": "Hill",
-        "nationality": "usa",
-        "nick_name": "Claw",
-        "skill": 95
-    },
-    {
-        "first_name": "Ant\u00f4nio",
-        "id": 128,
-        "last_name": "Xavier",
-        "nationality": "br",
-        "nick_name": "Demolition",
-        "skill": 30
-    },
-    {
-        "first_name": "Jong",
-        "id": 129,
-        "last_name": "Lee",
-        "nationality": "kr",
-        "nick_name": "Orthros",
-        "skill": 82
-    },
-    {
-        "first_name": "Sung",
-        "id": 130,
-        "last_name": "An",
-        "nationality": "kr",
-        "nick_name": "Vile",
-        "skill": 71
-    },
-    {
-        "first_name": "Roberto",
-        "id": 131,
-        "last_name": "Oliveira",
-        "nationality": "br",
-        "nick_name": "Terminator",
-        "skill": 49
-    },
-    {
-        "first_name": "Nicholas",
-        "id": 132,
-        "last_name": "Davis",
-        "nationality": "usa",
-        "nick_name": "Anomoly",
-        "skill": 52
-    },
-    {
-        "first_name": "Si-woo",
-        "id": 133,
-        "last_name": "Kim",
-        "nationality": "kr",
-        "nick_name": "Kneecap",
-        "skill": 69
-    },
-    {
-        "first_name": "Jun-seo",
-        "id": 134,
-        "last_name": "Cho",
-        "nationality": "kr",
-        "nick_name": "Maniac",
-        "skill": 83
-    },
-    {
-        "first_name": "Nicolas",
-        "id": 135,
-        "last_name": "Santana",
-        "nationality": "br",
-        "nick_name": "Roulette",
-        "skill": 32
-    },
-    {
-        "first_name": "Andr\u00e9",
-        "id": 136,
-        "last_name": "Chagas",
-        "nationality": "br",
-        "nick_name": "Beretta",
-        "skill": 30
-    },
-    {
-        "first_name": "Bruno",
-        "id": 137,
-        "last_name": "do Valle",
-        "nationality": "br",
-        "nick_name": "Steel Foil",
-        "skill": 65
-    },
-    {
-        "first_name": "Tae-min",
-        "id": 138,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Mad Dog",
-        "skill": 77
-    },
-    {
-        "first_name": "Young-ho",
-        "id": 139,
-        "last_name": "An",
-        "nationality": "kr",
-        "nick_name": "Atilla",
-        "skill": 87
-    },
-    {
-        "first_name": "Nicolau",
-        "id": 140,
-        "last_name": "Alencar",
-        "nationality": "br",
-        "nick_name": "Resin",
-        "skill": 60
-    },
-    {
-        "first_name": "Yu-jun",
-        "id": 141,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Haunter",
-        "skill": 79
-    },
-    {
-        "first_name": "Bernardo",
-        "id": 142,
-        "last_name": "Couto",
-        "nationality": "br",
-        "nick_name": "Terror",
-        "skill": 57
-    },
-    {
-        "first_name": "Jacob",
-        "id": 143,
-        "last_name": "Scott",
-        "nationality": "usa",
-        "nick_name": "Iron Heart",
-        "skill": 74
-    },
-    {
-        "first_name": "Frank",
-        "id": 144,
-        "last_name": "Jackson",
-        "nationality": "usa",
-        "nick_name": "Shadow",
-        "skill": 79
-    },
-    {
-        "first_name": "Michael",
-        "id": 145,
-        "last_name": "Anderson",
-        "nationality": "usa",
-        "nick_name": "Venom",
-        "skill": 78
-    },
-    {
-        "first_name": "Daniel",
-        "id": 146,
-        "last_name": "Santos",
-        "nationality": "br",
-        "nick_name": "Valkyrie",
-        "skill": 30
-    },
-    {
-        "first_name": "Jae",
-        "id": 147,
-        "last_name": "An",
-        "nationality": "kr",
-        "nick_name": "Ironsides",
-        "skill": 72
-    },
-    {
-        "first_name": "Felipe",
-        "id": 148,
-        "last_name": "Mendon\u00e7a",
-        "nationality": "br",
-        "nick_name": "Orthros",
-        "skill": 35
-    },
-    {
-        "first_name": "Lu\u00eds Felipe",
-        "id": 149,
-        "last_name": "Santos",
-        "nationality": "br",
-        "nick_name": "Cannon",
-        "skill": 57
-    },
-    {
-        "first_name": "Min-ju",
-        "id": 150,
-        "last_name": "Song",
-        "nationality": "kr",
-        "nick_name": "Killer",
-        "skill": 85
-    },
-    {
-        "first_name": "M\u00e1rcio",
-        "id": 151,
-        "last_name": "Naz\u00e1rio",
-        "nationality": "br",
-        "nick_name": "Enchantress",
-        "skill": 41
-    },
-    {
-        "first_name": "U-jin",
-        "id": 152,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Zero",
-        "skill": 78
-    },
-    {
-        "first_name": "Ji-hoon",
-        "id": 153,
-        "last_name": "Heo",
-        "nationality": "kr",
-        "nick_name": "Zealot",
+        "nick_name": "Crusher",
         "skill": 73
     },
     {
-        "first_name": "Roberto",
-        "id": 154,
-        "last_name": "Vieira",
-        "nationality": "br",
-        "nick_name": "Fender",
+        "first_name": "Min-ju",
+        "id": 5,
+        "last_name": "Moon",
+        "nationality": "kr",
+        "nick_name": "Malice",
+        "skill": 65
+    },
+    {
+        "first_name": "Frank",
+        "id": 6,
+        "last_name": "Lewis",
+        "nationality": "usa",
+        "nick_name": "NYC",
         "skill": 54
     },
     {
-        "first_name": "Fabr\u00edcio",
-        "id": 155,
-        "last_name": "Pires",
+        "first_name": "Ji-hoon",
+        "id": 7,
+        "last_name": "Lee",
+        "nationality": "kr",
+        "nick_name": "Siren",
+        "skill": 83
+    },
+    {
+        "first_name": "Felipe",
+        "id": 8,
+        "last_name": "Rodrigues",
         "nationality": "br",
+        "nick_name": "Lightning",
+        "skill": 30
+    },
+    {
+        "first_name": "Marcos",
+        "id": 9,
+        "last_name": "Miranda",
+        "nationality": "br",
+        "nick_name": "Leonidas",
+        "skill": 37
+    },
+    {
+        "first_name": "Anderson",
+        "id": 10,
+        "last_name": "dos Santos",
+        "nationality": "br",
+        "nick_name": "Fury",
+        "skill": 80
+    },
+    {
+        "first_name": "F\u00e1bio",
+        "id": 11,
+        "last_name": "Castro",
+        "nationality": "br",
+        "nick_name": "Bullet-Proof",
+        "skill": 43
+    },
+    {
+        "first_name": "Seung",
+        "id": 12,
+        "last_name": "Park",
+        "nationality": "kr",
+        "nick_name": "Mr. Blonde",
+        "skill": 83
+    },
+    {
+        "first_name": "Arthur",
+        "id": 13,
+        "last_name": "Lewis",
+        "nationality": "usa",
+        "nick_name": "Half Pint",
+        "skill": 60
+    },
+    {
+        "first_name": "Aldo",
+        "id": 14,
+        "last_name": "Carvalho",
+        "nationality": "br",
+        "nick_name": "Radical",
+        "skill": 30
+    },
+    {
+        "first_name": "Do-yun",
+        "id": 15,
+        "last_name": "Kim",
+        "nationality": "kr",
+        "nick_name": "Hashtag",
+        "skill": 79
+    },
+    {
+        "first_name": "Min-ju",
+        "id": 16,
+        "last_name": "Kim",
+        "nationality": "kr",
+        "nick_name": "Cougar",
+        "skill": 89
+    },
+    {
+        "first_name": "U-jin",
+        "id": 17,
+        "last_name": "Heo",
+        "nationality": "kr",
+        "nick_name": "Dagger",
+        "skill": 86
+    },
+    {
+        "first_name": "Lu\u00eds Eduardo",
+        "id": 18,
+        "last_name": "Guimar\u00e3es",
+        "nationality": "br",
+        "nick_name": "Kevlar",
+        "skill": 52
+    },
+    {
+        "first_name": "Seung",
+        "id": 19,
+        "last_name": "Kim",
+        "nationality": "kr",
+        "nick_name": "Shovel",
+        "skill": 77
+    },
+    {
+        "first_name": "Seung",
+        "id": 20,
+        "last_name": "Song",
+        "nationality": "kr",
+        "nick_name": "Resin",
+        "skill": 82
+    },
+    {
+        "first_name": "Gabriel",
+        "id": 21,
+        "last_name": "Soares",
+        "nationality": "br",
+        "nick_name": "Surge",
+        "skill": 34
+    },
+    {
+        "first_name": "Si-woo",
+        "id": 22,
+        "last_name": "Heo",
+        "nationality": "kr",
+        "nick_name": "Lash",
+        "skill": 73
+    },
+    {
+        "first_name": "Donald",
+        "id": 23,
+        "last_name": "Bryant",
+        "nationality": "usa",
+        "nick_name": "Wracker",
+        "skill": 42
+    },
+    {
+        "first_name": "Joon-woo",
+        "id": 24,
+        "last_name": "Park",
+        "nationality": "kr",
+        "nick_name": "Poison",
+        "skill": 80
+    },
+    {
+        "first_name": "Marcos",
+        "id": 25,
+        "last_name": "Gon\u00e7alves",
+        "nationality": "br",
+        "nick_name": "Javelin",
+        "skill": 37
+    },
+    {
+        "first_name": "Ye-jun",
+        "id": 26,
+        "last_name": "Cho",
+        "nationality": "kr",
+        "nick_name": "Infinity",
+        "skill": 85
+    },
+    {
+        "first_name": "Alex",
+        "id": 27,
+        "last_name": "Barbosa",
+        "nationality": "br",
+        "nick_name": "Wrecker",
+        "skill": 69
+    },
+    {
+        "first_name": "Fabr\u00edcio",
+        "id": 28,
+        "last_name": "Kardec",
+        "nationality": "br",
+        "nick_name": "Hauteur",
+        "skill": 30
+    },
+    {
+        "first_name": "Christopher",
+        "id": 29,
+        "last_name": "Bell",
+        "nationality": "usa",
+        "nick_name": "Nail",
+        "skill": 60
+    },
+    {
+        "first_name": "Matthew",
+        "id": 30,
+        "last_name": "Garcia",
+        "nationality": "usa",
+        "nick_name": "Siren",
+        "skill": 68
+    },
+    {
+        "first_name": "Adam",
+        "id": 31,
+        "last_name": "Moore",
+        "nationality": "usa",
+        "nick_name": "Pile Driver",
+        "skill": 67
+    },
+    {
+        "first_name": "Carl",
+        "id": 32,
+        "last_name": "Baker",
+        "nationality": "usa",
+        "nick_name": "Vanity",
+        "skill": 44
+    },
+    {
+        "first_name": "Gary",
+        "id": 33,
+        "last_name": "Hill",
+        "nationality": "usa",
+        "nick_name": "Hero",
+        "skill": 87
+    },
+    {
+        "first_name": "Alexander",
+        "id": 34,
+        "last_name": "Harris",
+        "nationality": "usa",
+        "nick_name": "Banshee",
+        "skill": 60
+    },
+    {
+        "first_name": "Jin-seong",
+        "id": 35,
+        "last_name": "Cho",
+        "nationality": "kr",
+        "nick_name": "Dragon",
+        "skill": 78
+    },
+    {
+        "first_name": "Paul",
+        "id": 36,
+        "last_name": "Washington",
+        "nationality": "usa",
+        "nick_name": "Viper",
+        "skill": 71
+    },
+    {
+        "first_name": "Jae",
+        "id": 37,
+        "last_name": "Song",
+        "nationality": "kr",
+        "nick_name": "Darko",
+        "skill": 90
+    },
+    {
+        "first_name": "Suk",
+        "id": 38,
+        "last_name": "Song",
+        "nationality": "kr",
+        "nick_name": "Steelshot",
+        "skill": 59
+    },
+    {
+        "first_name": "Lu\u00eds Adriano",
+        "id": 39,
+        "last_name": "Castro",
+        "nationality": "br",
+        "nick_name": "Suleiman",
+        "skill": 48
+    },
+    {
+        "first_name": "Michael",
+        "id": 40,
+        "last_name": "Johnson",
+        "nationality": "usa",
+        "nick_name": "Tempest",
+        "skill": 58
+    },
+    {
+        "first_name": "Ye-jun",
+        "id": 41,
+        "last_name": "Kang",
+        "nationality": "kr",
+        "nick_name": "Alien",
+        "skill": 67
+    },
+    {
+        "first_name": "Joon-woo",
+        "id": 42,
+        "last_name": "Heo",
+        "nationality": "kr",
+        "nick_name": "Socket",
+        "skill": 90
+    },
+    {
+        "first_name": "Mario",
+        "id": 43,
+        "last_name": "Couto",
+        "nationality": "br",
+        "nick_name": "Panther",
+        "skill": 30
+    },
+    {
+        "first_name": "Rafael",
+        "id": 44,
+        "last_name": "Faria",
+        "nationality": "br",
+        "nick_name": "Kafka",
+        "skill": 56
+    },
+    {
+        "first_name": "Aldo",
+        "id": 45,
+        "last_name": "Alves",
+        "nationality": "br",
+        "nick_name": "Chicanery",
+        "skill": 81
+    },
+    {
+        "first_name": "Sung-ho",
+        "id": 46,
+        "last_name": "An",
+        "nationality": "kr",
+        "nick_name": "Falcon",
+        "skill": 79
+    },
+    {
+        "first_name": "Fabiano",
+        "id": 47,
+        "last_name": "Esp\u00ednola",
+        "nationality": "br",
+        "nick_name": "Enchantress",
+        "skill": 81
+    },
+    {
+        "first_name": "Michael",
+        "id": 48,
+        "last_name": "Butler",
+        "nationality": "usa",
+        "nick_name": "Void",
+        "skill": 76
+    },
+    {
+        "first_name": "C\u00e9sar",
+        "id": 49,
+        "last_name": "Batista",
+        "nationality": "br",
+        "nick_name": "Geronimo",
+        "skill": 40
+    },
+    {
+        "first_name": "Diego",
+        "id": 50,
+        "last_name": "Tavares",
+        "nationality": "br",
+        "nick_name": "Agony",
+        "skill": 68
+    },
+    {
+        "first_name": "Jae",
+        "id": 51,
+        "last_name": "Jung",
+        "nationality": "kr",
+        "nick_name": "Caltrop",
+        "skill": 89
+    },
+    {
+        "first_name": "Paul",
+        "id": 52,
+        "last_name": "Bryant",
+        "nationality": "usa",
+        "nick_name": "Slasher",
+        "skill": 51
+    },
+    {
+        "first_name": "Dong-ha",
+        "id": 53,
+        "last_name": "An",
+        "nationality": "kr",
+        "nick_name": "K-9",
+        "skill": 73
+    },
+    {
+        "first_name": "Felipe",
+        "id": 54,
+        "last_name": "Sales",
+        "nationality": "br",
+        "nick_name": "Trip",
+        "skill": 86
+    },
+    {
+        "first_name": "Ha-joon",
+        "id": 55,
+        "last_name": "Moon",
+        "nationality": "kr",
+        "nick_name": "Mania",
+        "skill": 72
+    },
+    {
+        "first_name": "Seung",
+        "id": 56,
+        "last_name": "Song",
+        "nationality": "kr",
+        "nick_name": "Demise",
+        "skill": 87
+    },
+    {
+        "first_name": "Rodrigo",
+        "id": 57,
+        "last_name": "Barbosa",
+        "nationality": "br",
+        "nick_name": "Mortar",
+        "skill": 70
+    },
+    {
+        "first_name": "Seung",
+        "id": 58,
+        "last_name": "Heo",
+        "nationality": "kr",
+        "nick_name": "Grizzly",
+        "skill": 82
+    },
+    {
+        "first_name": "Carlson",
+        "id": 59,
+        "last_name": "Butler",
+        "nationality": "usa",
+        "nick_name": "Spitefulness",
+        "skill": 30
+    },
+    {
+        "first_name": "Jonathan",
+        "id": 60,
+        "last_name": "Martin",
+        "nationality": "usa",
+        "nick_name": "Bellona",
+        "skill": 67
+    },
+    {
+        "first_name": "Sean",
+        "id": 61,
+        "last_name": "Gilbert",
+        "nationality": "usa",
+        "nick_name": "Katana",
+        "skill": 71
+    },
+    {
+        "first_name": "Lu\u00eds Adriano",
+        "id": 62,
+        "last_name": "Toffoli",
+        "nationality": "br",
+        "nick_name": "Chicanery",
+        "skill": 70
+    },
+    {
+        "first_name": "Daniel",
+        "id": 63,
+        "last_name": "Scott",
+        "nationality": "usa",
+        "nick_name": "Figment",
+        "skill": 77
+    },
+    {
+        "first_name": "Nicolas",
+        "id": 64,
+        "last_name": "Tavares",
+        "nationality": "br",
+        "nick_name": "Horror",
+        "skill": 83
+    },
+    {
+        "first_name": "Won-seok",
+        "id": 65,
+        "last_name": "Kang",
+        "nationality": "kr",
+        "nick_name": "Howitzer",
+        "skill": 77
+    },
+    {
+        "first_name": "Felipe",
+        "id": 66,
+        "last_name": "Silveira",
+        "nationality": "br",
+        "nick_name": "Bruise",
+        "skill": 30
+    },
+    {
+        "first_name": "Sean",
+        "id": 67,
+        "last_name": "Martin",
+        "nationality": "usa",
+        "nick_name": "Sniper",
+        "skill": 75
+    },
+    {
+        "first_name": "William",
+        "id": 68,
+        "last_name": "Johnson",
+        "nationality": "usa",
+        "nick_name": "Claw",
+        "skill": 69
+    },
+    {
+        "first_name": "Min-ju",
+        "id": 69,
+        "last_name": "Heo",
+        "nationality": "kr",
+        "nick_name": "Strike Eagle",
+        "skill": 72
+    },
+    {
+        "first_name": "Yu-jun",
+        "id": 70,
+        "last_name": "Song",
+        "nationality": "kr",
+        "nick_name": "Boomslang",
+        "skill": 77
+    },
+    {
+        "first_name": "Eric",
+        "id": 71,
+        "last_name": "Jackson",
+        "nationality": "usa",
+        "nick_name": "Albatross",
+        "skill": 56
+    },
+    {
+        "first_name": "Paul",
+        "id": 72,
+        "last_name": "Moore",
+        "nationality": "usa",
+        "nick_name": "Subversion",
+        "skill": 59
+    },
+    {
+        "first_name": "Aldo",
+        "id": 73,
+        "last_name": "Barroso",
+        "nationality": "br",
+        "nick_name": "Alien",
+        "skill": 46
+    },
+    {
+        "first_name": "Robert",
+        "id": 74,
+        "last_name": "Scott",
+        "nationality": "usa",
+        "nick_name": "Vile",
+        "skill": 59
+    },
+    {
+        "first_name": "Sung-ho",
+        "id": 75,
+        "last_name": "An",
+        "nationality": "kr",
+        "nick_name": "Ratchet",
+        "skill": 92
+    },
+    {
+        "first_name": "Ji-ho",
+        "id": 76,
+        "last_name": "Park",
+        "nationality": "kr",
+        "nick_name": "Bellona",
+        "skill": 90
+    },
+    {
+        "first_name": "Noah",
+        "id": 77,
+        "last_name": "Brown",
+        "nationality": "usa",
+        "nick_name": "Stabber",
+        "skill": 73
+    },
+    {
+        "first_name": "Edward",
+        "id": 78,
+        "last_name": "Stevenson",
+        "nationality": "usa",
+        "nick_name": "Midnight",
+        "skill": 62
+    },
+    {
+        "first_name": "Mariano",
+        "id": 79,
+        "last_name": "Barroso",
+        "nationality": "br",
+        "nick_name": "Shoeless",
+        "skill": 30
+    },
+    {
+        "first_name": "Si-woo",
+        "id": 80,
+        "last_name": "Jung",
+        "nationality": "kr",
+        "nick_name": "Infinity",
+        "skill": 70
+    },
+    {
+        "first_name": "Timothy",
+        "id": 81,
+        "last_name": "Bryant",
+        "nationality": "usa",
+        "nick_name": "Spear",
+        "skill": 86
+    },
+    {
+        "first_name": "Jonathan",
+        "id": 82,
+        "last_name": "Bell",
+        "nationality": "usa",
         "nick_name": "Leviathan",
-        "skill": 61
+        "skill": 91
+    },
+    {
+        "first_name": "Luiz",
+        "id": 83,
+        "last_name": "Neto",
+        "nationality": "br",
+        "nick_name": "Scheme",
+        "skill": 63
+    },
+    {
+        "first_name": "Tiago",
+        "id": 84,
+        "last_name": "Campos",
+        "nationality": "br",
+        "nick_name": "Deception",
+        "skill": 45
+    },
+    {
+        "first_name": "William",
+        "id": 85,
+        "last_name": "Lee",
+        "nationality": "usa",
+        "nick_name": "Crafty",
+        "skill": 76
+    },
+    {
+        "first_name": "James",
+        "id": 86,
+        "last_name": "Adams",
+        "nationality": "usa",
+        "nick_name": "Mad Max",
+        "skill": 77
+    },
+    {
+        "first_name": "Ant\u00f4nio",
+        "id": 87,
+        "last_name": "Menezes",
+        "nationality": "br",
+        "nick_name": "Aero",
+        "skill": 32
+    },
+    {
+        "first_name": "James",
+        "id": 88,
+        "last_name": "Hill",
+        "nationality": "usa",
+        "nick_name": "Wolf",
+        "skill": 52
+    },
+    {
+        "first_name": "Anderson",
+        "id": 89,
+        "last_name": "Toffoli",
+        "nationality": "br",
+        "nick_name": "Finisher",
+        "skill": 36
+    },
+    {
+        "first_name": "Kyle",
+        "id": 90,
+        "last_name": "Johnson",
+        "nationality": "usa",
+        "nick_name": "Morgue",
+        "skill": 68
+    },
+    {
+        "first_name": "Daniel",
+        "id": 91,
+        "last_name": "Rogers",
+        "nationality": "usa",
+        "nick_name": "Knuckles",
+        "skill": 64
+    },
+    {
+        "first_name": "U-jin",
+        "id": 92,
+        "last_name": "Song",
+        "nationality": "kr",
+        "nick_name": "Void",
+        "skill": 72
+    },
+    {
+        "first_name": "Ju-won",
+        "id": 93,
+        "last_name": "Song",
+        "nationality": "kr",
+        "nick_name": "Vex",
+        "skill": 68
+    },
+    {
+        "first_name": "Pedro",
+        "id": 94,
+        "last_name": "Feitosa",
+        "nationality": "br",
+        "nick_name": "Glock",
+        "skill": 55
+    },
+    {
+        "first_name": "Lu\u00eds Felipe",
+        "id": 95,
+        "last_name": "de Souza",
+        "nationality": "br",
+        "nick_name": "Countess",
+        "skill": 65
+    },
+    {
+        "first_name": "Paulo",
+        "id": 96,
+        "last_name": "Feitosa",
+        "nationality": "br",
+        "nick_name": "Rabid",
+        "skill": 53
+    },
+    {
+        "first_name": "Ji-ho",
+        "id": 97,
+        "last_name": "Park",
+        "nationality": "kr",
+        "nick_name": "Leonidas",
+        "skill": 86
+    },
+    {
+        "first_name": "Sung",
+        "id": 98,
+        "last_name": "Kim",
+        "nationality": "kr",
+        "nick_name": "Carbon",
+        "skill": 90
+    },
+    {
+        "first_name": "Henrique",
+        "id": 99,
+        "last_name": "Feitosa",
+        "nationality": "br",
+        "nick_name": "Infinity",
+        "skill": 92
+    },
+    {
+        "first_name": "Dong-ha",
+        "id": 100,
+        "last_name": "Moon",
+        "nationality": "kr",
+        "nick_name": "Breaker",
+        "skill": 84
+    },
+    {
+        "first_name": "C\u00e9sar",
+        "id": 101,
+        "last_name": "Pinto",
+        "nationality": "br",
+        "nick_name": "Cannon",
+        "skill": 45
+    },
+    {
+        "first_name": "Timothy",
+        "id": 102,
+        "last_name": "Lewis",
+        "nationality": "usa",
+        "nick_name": "Chainsaw",
+        "skill": 59
+    },
+    {
+        "first_name": "C\u00e9sar",
+        "id": 103,
+        "last_name": "Carvalho",
+        "nationality": "br",
+        "nick_name": "Hero",
+        "skill": 31
+    },
+    {
+        "first_name": "Myung",
+        "id": 104,
+        "last_name": "Cho",
+        "nationality": "kr",
+        "nick_name": "Pumps",
+        "skill": 90
+    },
+    {
+        "first_name": "Roberto",
+        "id": 105,
+        "last_name": "Azevedo",
+        "nationality": "br",
+        "nick_name": "Hannibal",
+        "skill": 30
+    },
+    {
+        "first_name": "Bernardo",
+        "id": 106,
+        "last_name": "Barroso",
+        "nationality": "br",
+        "nick_name": "Steel Forge",
+        "skill": 30
+    },
+    {
+        "first_name": "J\u00falio",
+        "id": 107,
+        "last_name": "Carvalho",
+        "nationality": "br",
+        "nick_name": "Prodigy",
+        "skill": 49
+    },
+    {
+        "first_name": "F\u00e1bio",
+        "id": 108,
+        "last_name": "Chagas",
+        "nationality": "br",
+        "nick_name": "Lithium",
+        "skill": 39
+    },
+    {
+        "first_name": "Lucas",
+        "id": 109,
+        "last_name": "Chagas",
+        "nationality": "br",
+        "nick_name": "Ambush",
+        "skill": 43
+    },
+    {
+        "first_name": "Thiago",
+        "id": 110,
+        "last_name": "Kardec",
+        "nationality": "br",
+        "nick_name": "Aero",
+        "skill": 30
+    },
+    {
+        "first_name": "Ji-soo",
+        "id": 111,
+        "last_name": "Moon",
+        "nationality": "kr",
+        "nick_name": "Crown Heights",
+        "skill": 92
+    },
+    {
+        "first_name": "William",
+        "id": 112,
+        "last_name": "Mason",
+        "nationality": "usa",
+        "nick_name": "Amazon",
+        "skill": 53
+    },
+    {
+        "first_name": "Michael",
+        "id": 113,
+        "last_name": "Jackson",
+        "nationality": "usa",
+        "nick_name": "Skull Crusher",
+        "skill": 59
+    },
+    {
+        "first_name": "Jonathan",
+        "id": 114,
+        "last_name": "Garcia",
+        "nationality": "usa",
+        "nick_name": "Tiger Claw",
+        "skill": 83
+    },
+    {
+        "first_name": "Jacob",
+        "id": 115,
+        "last_name": "Moore",
+        "nationality": "usa",
+        "nick_name": "Countess",
+        "skill": 81
     },
     {
         "first_name": "Augusto",
-        "id": 156,
-        "last_name": "Silveira",
+        "id": 116,
+        "last_name": "Souza",
         "nationality": "br",
-        "nick_name": "Cougar",
-        "skill": 35
+        "nick_name": "Ironsides",
+        "skill": 54
+    },
+    {
+        "first_name": "Eric",
+        "id": 117,
+        "last_name": "Bryant",
+        "nationality": "usa",
+        "nick_name": "Baroness",
+        "skill": 69
+    },
+    {
+        "first_name": "Myeong",
+        "id": 118,
+        "last_name": "Kim",
+        "nationality": "kr",
+        "nick_name": "Steel Forge",
+        "skill": 87
+    },
+    {
+        "first_name": "Ji-ho",
+        "id": 119,
+        "last_name": "Moon",
+        "nationality": "kr",
+        "nick_name": "Ripley",
+        "skill": 90
+    },
+    {
+        "first_name": "Fabr\u00edcio",
+        "id": 120,
+        "last_name": "de Oliveira",
+        "nationality": "br",
+        "nick_name": "Torque",
+        "skill": 60
+    },
+    {
+        "first_name": "Zachary",
+        "id": 121,
+        "last_name": "Martinez",
+        "nationality": "usa",
+        "nick_name": "Black Beauty",
+        "skill": 81
+    },
+    {
+        "first_name": "Myeong",
+        "id": 122,
+        "last_name": "Cho",
+        "nationality": "kr",
+        "nick_name": "Bone",
+        "skill": 76
+    },
+    {
+        "first_name": "Sung-ho",
+        "id": 123,
+        "last_name": "Cho",
+        "nationality": "kr",
+        "nick_name": "Fire-Bred",
+        "skill": 81
+    },
+    {
+        "first_name": "Ji-woo",
+        "id": 124,
+        "last_name": "Lee",
+        "nationality": "kr",
+        "nick_name": "Power Train",
+        "skill": 71
+    },
+    {
+        "first_name": "Min-ju",
+        "id": 125,
+        "last_name": "Kang",
+        "nationality": "kr",
+        "nick_name": "Carbon",
+        "skill": 73
+    },
+    {
+        "first_name": "J\u00falio",
+        "id": 126,
+        "last_name": "Menezes",
+        "nationality": "br",
+        "nick_name": "Iron Heart",
+        "skill": 38
+    },
+    {
+        "first_name": "Young-ho",
+        "id": 127,
+        "last_name": "Kang",
+        "nationality": "kr",
+        "nick_name": "Poison",
+        "skill": 75
+    },
+    {
+        "first_name": "Noah",
+        "id": 128,
+        "last_name": "Johnson",
+        "nationality": "usa",
+        "nick_name": "Alien",
+        "skill": 68
+    },
+    {
+        "first_name": "Christopher",
+        "id": 129,
+        "last_name": "Rogers",
+        "nationality": "usa",
+        "nick_name": "Glock",
+        "skill": 86
+    },
+    {
+        "first_name": "Young-soo",
+        "id": 130,
+        "last_name": "Moon",
+        "nationality": "kr",
+        "nick_name": "Inferno",
+        "skill": 77
+    },
+    {
+        "first_name": "Lu\u00eds Adriano",
+        "id": 131,
+        "last_name": "dos Santos",
+        "nationality": "br",
+        "nick_name": "Night Terror",
+        "skill": 78
+    },
+    {
+        "first_name": "Jun-seo",
+        "id": 132,
+        "last_name": "Kim",
+        "nationality": "kr",
+        "nick_name": "Goshawk",
+        "skill": 84
+    },
+    {
+        "first_name": "Joe",
+        "id": 133,
+        "last_name": "Taylor",
+        "nationality": "usa",
+        "nick_name": "Stiletto",
+        "skill": 55
+    },
+    {
+        "first_name": "Gary",
+        "id": 134,
+        "last_name": "Mason",
+        "nationality": "usa",
+        "nick_name": "Napoleon",
+        "skill": 70
+    },
+    {
+        "first_name": "John",
+        "id": 135,
+        "last_name": "Fowler",
+        "nationality": "usa",
+        "nick_name": "Lotus",
+        "skill": 60
+    },
+    {
+        "first_name": "Hyuk-kyu",
+        "id": 136,
+        "last_name": "Kang",
+        "nationality": "kr",
+        "nick_name": "Finisher",
+        "skill": 77
+    },
+    {
+        "first_name": "Frank",
+        "id": 137,
+        "last_name": "Lewis",
+        "nationality": "usa",
+        "nick_name": "Demise",
+        "skill": 63
+    },
+    {
+        "first_name": "Ha-joon",
+        "id": 138,
+        "last_name": "Lee",
+        "nationality": "kr",
+        "nick_name": "Manticore",
+        "skill": 90
+    },
+    {
+        "first_name": "Edward",
+        "id": 139,
+        "last_name": "Harris",
+        "nationality": "usa",
+        "nick_name": "Leviathan",
+        "skill": 73
+    },
+    {
+        "first_name": "Felipe",
+        "id": 140,
+        "last_name": "de Oliveira",
+        "nationality": "br",
+        "nick_name": "Dissent",
+        "skill": 74
+    },
+    {
+        "first_name": "Michael",
+        "id": 141,
+        "last_name": "Mason",
+        "nationality": "usa",
+        "nick_name": "Minx",
+        "skill": 84
+    },
+    {
+        "first_name": "Ji-hoon",
+        "id": 142,
+        "last_name": "Song",
+        "nationality": "kr",
+        "nick_name": "Razor",
+        "skill": 82
+    },
+    {
+        "first_name": "Tae-min",
+        "id": 143,
+        "last_name": "Jung",
+        "nationality": "kr",
+        "nick_name": "Exterminator",
+        "skill": 73
+    },
+    {
+        "first_name": "Jonathan",
+        "id": 144,
+        "last_name": "Brown",
+        "nationality": "usa",
+        "nick_name": "Venom",
+        "skill": 37
+    },
+    {
+        "first_name": "Marcelo",
+        "id": 145,
+        "last_name": "do Valle",
+        "nationality": "br",
+        "nick_name": "Billy the Butcher",
+        "skill": 30
+    },
+    {
+        "first_name": "Roberto",
+        "id": 146,
+        "last_name": "Kardec",
+        "nationality": "br",
+        "nick_name": "Centerfire",
+        "skill": 38
+    },
+    {
+        "first_name": "Jong",
+        "id": 147,
+        "last_name": "Cho",
+        "nationality": "kr",
+        "nick_name": "Kafka",
+        "skill": 74
+    },
+    {
+        "first_name": "Jin-seong",
+        "id": 148,
+        "last_name": "Cho",
+        "nationality": "kr",
+        "nick_name": "Poleaxe",
+        "skill": 81
+    },
+    {
+        "first_name": "Stephen",
+        "id": 149,
+        "last_name": "Adams",
+        "nationality": "usa",
+        "nick_name": "Paramour",
+        "skill": 90
+    },
+    {
+        "first_name": "Rodrigo",
+        "id": 150,
+        "last_name": "Pires",
+        "nationality": "br",
+        "nick_name": "Fang",
+        "skill": 58
+    },
+    {
+        "first_name": "Arthur",
+        "id": 151,
+        "last_name": "Stevenson",
+        "nationality": "usa",
+        "nick_name": "T-Back",
+        "skill": 84
+    },
+    {
+        "first_name": "Joo-won",
+        "id": 152,
+        "last_name": "Song",
+        "nationality": "kr",
+        "nick_name": "Velvet",
+        "skill": 90
+    },
+    {
+        "first_name": "John",
+        "id": 153,
+        "last_name": "Brown",
+        "nationality": "usa",
+        "nick_name": "Narcissus",
+        "skill": 90
+    },
+    {
+        "first_name": "Zachary",
+        "id": 154,
+        "last_name": "Adams",
+        "nationality": "usa",
+        "nick_name": "Wicked",
+        "skill": 67
+    },
+    {
+        "first_name": "Bernardo",
+        "id": 155,
+        "last_name": "Guimar\u00e3es",
+        "nationality": "br",
+        "nick_name": "Sever",
+        "skill": 90
+    },
+    {
+        "first_name": "Sean",
+        "id": 156,
+        "last_name": "Johnson",
+        "nationality": "usa",
+        "nick_name": "Demented",
+        "skill": 49
     },
     {
         "first_name": "Eric",
         "id": 157,
-        "last_name": "de Souza",
+        "last_name": "Souza",
         "nationality": "br",
-        "nick_name": "Mirage",
-        "skill": 42
+        "nick_name": "Howitzer",
+        "skill": 44
     },
     {
-        "first_name": "Austin",
+        "first_name": "Dong-ha",
         "id": 158,
-        "last_name": "Rodriguez",
-        "nationality": "usa",
-        "nick_name": "Blaze",
-        "skill": 80
-    },
-    {
-        "first_name": "C\u00e9sar",
-        "id": 159,
-        "last_name": "Abreu",
-        "nationality": "br",
-        "nick_name": "Espada",
-        "skill": 67
-    },
-    {
-        "first_name": "Ji-woo",
-        "id": 160,
-        "last_name": "Kang",
+        "last_name": "Moon",
         "nationality": "kr",
-        "nick_name": "Kneecap",
-        "skill": 87
-    },
-    {
-        "first_name": "Nicolau",
-        "id": 161,
-        "last_name": "Silveira",
-        "nationality": "br",
-        "nick_name": "Rubble",
-        "skill": 80
-    },
-    {
-        "first_name": "Donald",
-        "id": 162,
-        "last_name": "Harris",
-        "nationality": "usa",
-        "nick_name": "Lightning",
-        "skill": 59
-    },
-    {
-        "first_name": "Sang-hyeok",
-        "id": 163,
-        "last_name": "Park",
-        "nationality": "kr",
-        "nick_name": "Vulture",
-        "skill": 72
-    },
-    {
-        "first_name": "Paul",
-        "id": 164,
-        "last_name": "Lee",
-        "nationality": "usa",
-        "nick_name": "Calamity Jane",
-        "skill": 99
-    },
-    {
-        "first_name": "Kyle",
-        "id": 165,
-        "last_name": "Green",
-        "nationality": "usa",
-        "nick_name": "Wicked",
+        "nick_name": "Cascade",
         "skill": 65
     },
     {
-        "first_name": "Ju-won",
-        "id": 166,
-        "last_name": "Lee",
-        "nationality": "kr",
-        "nick_name": "Fire-Bred",
+        "first_name": "Fabiano",
+        "id": 159,
+        "last_name": "Xavier",
+        "nationality": "br",
+        "nick_name": "Unstoppable",
+        "skill": 48
+    },
+    {
+        "first_name": "Fernando",
+        "id": 160,
+        "last_name": "Couto",
+        "nationality": "br",
+        "nick_name": "Alien",
         "skill": 91
     },
     {
-        "first_name": "Fabr\u00edcio",
-        "id": 167,
-        "last_name": "Tavares",
-        "nationality": "br",
-        "nick_name": "Eternity",
-        "skill": 59
-    },
-    {
-        "first_name": "Young",
-        "id": 168,
-        "last_name": "Jung",
-        "nationality": "kr",
-        "nick_name": "Egomania",
-        "skill": 89
-    },
-    {
-        "first_name": "Hyuk-kyu",
-        "id": 169,
-        "last_name": "Kim",
-        "nationality": "kr",
-        "nick_name": "Behemoth",
-        "skill": 89
-    },
-    {
         "first_name": "Suk",
-        "id": 170,
-        "last_name": "An",
+        "id": 161,
+        "last_name": "Cho",
         "nationality": "kr",
-        "nick_name": "Spear",
-        "skill": 77
-    },
-    {
-        "first_name": "Joo-won",
-        "id": 171,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Bullet",
-        "skill": 95
-    },
-    {
-        "first_name": "Ye-jun",
-        "id": 172,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Half Pint",
-        "skill": 72
-    },
-    {
-        "first_name": "Adriano",
-        "id": 173,
-        "last_name": "Toffoli",
-        "nationality": "br",
-        "nick_name": "ATL",
-        "skill": 55
-    },
-    {
-        "first_name": "Si-woo",
-        "id": 174,
-        "last_name": "Park",
-        "nationality": "kr",
-        "nick_name": "Grudge",
-        "skill": 75
-    },
-    {
-        "first_name": "Eric",
-        "id": 175,
-        "last_name": "Bolsonaro",
-        "nationality": "br",
-        "nick_name": "Pike",
-        "skill": 30
-    },
-    {
-        "first_name": "Jo\u00e3o",
-        "id": 176,
-        "last_name": "Carvalho",
-        "nationality": "br",
-        "nick_name": "Goshawk",
-        "skill": 46
-    },
-    {
-        "first_name": "Ju-won",
-        "id": 177,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Banshee",
-        "skill": 52
-    },
-    {
-        "first_name": "Sang-hyeok",
-        "id": 178,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Geronimo",
-        "skill": 84
-    },
-    {
-        "first_name": "F\u00e1bio",
-        "id": 179,
-        "last_name": "Coutinho",
-        "nationality": "br",
-        "nick_name": "Goddess",
-        "skill": 47
-    },
-    {
-        "first_name": "Michael",
-        "id": 180,
-        "last_name": "Butler",
-        "nationality": "usa",
-        "nick_name": "Crazed",
-        "skill": 82
-    },
-    {
-        "first_name": "Ji-woo",
-        "id": 181,
-        "last_name": "Kang",
-        "nationality": "kr",
-        "nick_name": "Subversion",
-        "skill": 75
-    },
-    {
-        "first_name": "Nicholas",
-        "id": 182,
-        "last_name": "Chapman",
-        "nationality": "usa",
-        "nick_name": "McKinley",
-        "skill": 99
-    },
-    {
-        "first_name": "Gustavo",
-        "id": 183,
-        "last_name": "Kardec",
-        "nationality": "br",
-        "nick_name": "Medb",
-        "skill": 61
-    },
-    {
-        "first_name": "Pedro",
-        "id": 184,
-        "last_name": "Toffoli",
-        "nationality": "br",
-        "nick_name": "Dementor",
-        "skill": 49
-    },
-    {
-        "first_name": "Seung",
-        "id": 185,
-        "last_name": "An",
-        "nationality": "kr",
-        "nick_name": "Rimfire",
-        "skill": 73
-    },
-    {
-        "first_name": "Jo\u00e3o",
-        "id": 186,
-        "last_name": "Toffoli",
-        "nationality": "br",
-        "nick_name": "Scalp",
-        "skill": 74
-    },
-    {
-        "first_name": "Joe",
-        "id": 187,
-        "last_name": "Brown",
-        "nationality": "usa",
-        "nick_name": "Bender",
-        "skill": 67
-    },
-    {
-        "first_name": "Rafael",
-        "id": 188,
-        "last_name": "Aparecido",
-        "nationality": "br",
-        "nick_name": "Terror",
-        "skill": 39
-    },
-    {
-        "first_name": "Rodrigo",
-        "id": 189,
-        "last_name": "de Souza",
-        "nationality": "br",
-        "nick_name": "Viper",
-        "skill": 74
-    },
-    {
-        "first_name": "Bernardo",
-        "id": 190,
-        "last_name": "Souza",
-        "nationality": "br",
-        "nick_name": "Selkie",
-        "skill": 30
-    },
-    {
-        "first_name": "Anthony",
-        "id": 191,
-        "last_name": "Walker",
-        "nationality": "usa",
-        "nick_name": "Hellcat",
-        "skill": 87
-    },
-    {
-        "first_name": "Alex",
-        "id": 192,
-        "last_name": "Sales",
-        "nationality": "br",
-        "nick_name": "Tusk",
+        "nick_name": "Matchlock",
         "skill": 64
     },
     {
-        "first_name": "Ted",
-        "id": 193,
-        "last_name": "Rogers",
-        "nationality": "usa",
-        "nick_name": "Isis",
-        "skill": 57
-    },
-    {
-        "first_name": "Adam",
-        "id": 194,
-        "last_name": "Washington",
-        "nationality": "usa",
-        "nick_name": "Malevolence",
-        "skill": 85
-    },
-    {
-        "first_name": "Si-woo",
-        "id": 195,
+        "first_name": "U-jin",
+        "id": 162,
         "last_name": "An",
         "nationality": "kr",
-        "nick_name": "Countess",
+        "nick_name": "Siege",
         "skill": 73
     },
     {
-        "first_name": "Carlson",
-        "id": 196,
-        "last_name": "Garcia",
+        "first_name": "Andr\u00e9",
+        "id": 163,
+        "last_name": "Neves",
+        "nationality": "br",
+        "nick_name": "McKinley",
+        "skill": 30
+    },
+    {
+        "first_name": "Charles",
+        "id": 164,
+        "last_name": "Wilson",
         "nationality": "usa",
-        "nick_name": "Leonidas",
-        "skill": 61
-    },
-    {
-        "first_name": "Mario",
-        "id": 197,
-        "last_name": "Feliciano",
-        "nationality": "br",
-        "nick_name": "Half Pint",
-        "skill": 42
-    },
-    {
-        "first_name": "Cl\u00e9ber",
-        "id": 198,
-        "last_name": "Xavier",
-        "nationality": "br",
-        "nick_name": "Destroyer",
-        "skill": 32
+        "nick_name": "Avenger",
+        "skill": 82
     },
     {
         "first_name": "Roberto",
-        "id": 199,
-        "last_name": "Chagas",
+        "id": 165,
+        "last_name": "Barbosa",
         "nationality": "br",
-        "nick_name": "Falcon",
-        "skill": 67
+        "nick_name": "Shiver",
+        "skill": 58
+    },
+    {
+        "first_name": "Bruno",
+        "id": 166,
+        "last_name": "de Oliveira",
+        "nationality": "br",
+        "nick_name": "Sledgehammer",
+        "skill": 50
+    },
+    {
+        "first_name": "Matthew",
+        "id": 167,
+        "last_name": "Brown",
+        "nationality": "usa",
+        "nick_name": "Reaper",
+        "skill": 30
+    },
+    {
+        "first_name": "Eduardo",
+        "id": 168,
+        "last_name": "Silva",
+        "nationality": "br",
+        "nick_name": "Cobra",
+        "skill": 30
+    },
+    {
+        "first_name": "Sung-ho",
+        "id": 169,
+        "last_name": "An",
+        "nationality": "kr",
+        "nick_name": "Hero",
+        "skill": 80
+    },
+    {
+        "first_name": "Francisco",
+        "id": 170,
+        "last_name": "Souza",
+        "nationality": "br",
+        "nick_name": "Hua Mulan",
+        "skill": 30
+    },
+    {
+        "first_name": "Nicholas",
+        "id": 171,
+        "last_name": "Lewis",
+        "nationality": "usa",
+        "nick_name": "Matrix",
+        "skill": 54
+    },
+    {
+        "first_name": "Aaron",
+        "id": 172,
+        "last_name": "Wheeler",
+        "nationality": "usa",
+        "nick_name": "Dementor",
+        "skill": 66
+    },
+    {
+        "first_name": "Alexander",
+        "id": 173,
+        "last_name": "Jackson",
+        "nationality": "usa",
+        "nick_name": "Razor",
+        "skill": 90
+    },
+    {
+        "first_name": "Ji-soo",
+        "id": 174,
+        "last_name": "Kang",
+        "nationality": "kr",
+        "nick_name": "Demolition",
+        "skill": 90
+    },
+    {
+        "first_name": "Nicolas",
+        "id": 175,
+        "last_name": "Barroso",
+        "nationality": "br",
+        "nick_name": "Unstoppable",
+        "skill": 82
+    },
+    {
+        "first_name": "Alexander",
+        "id": 176,
+        "last_name": "Mason",
+        "nationality": "usa",
+        "nick_name": "Scorpion",
+        "skill": 59
+    },
+    {
+        "first_name": "Brandon",
+        "id": 177,
+        "last_name": "Rogers",
+        "nationality": "usa",
+        "nick_name": "Figment",
+        "skill": 64
+    },
+    {
+        "first_name": "Seung",
+        "id": 178,
+        "last_name": "Lee",
+        "nationality": "kr",
+        "nick_name": "Mace",
+        "skill": 90
+    },
+    {
+        "first_name": "Austin",
+        "id": 179,
+        "last_name": "Adams",
+        "nationality": "usa",
+        "nick_name": "Atilla",
+        "skill": 90
+    },
+    {
+        "first_name": "Suk",
+        "id": 180,
+        "last_name": "Kang",
+        "nationality": "kr",
+        "nick_name": "Grim",
+        "skill": 90
+    },
+    {
+        "first_name": "Bruno",
+        "id": 181,
+        "last_name": "Miranda",
+        "nationality": "br",
+        "nick_name": "Audacity",
+        "skill": 65
+    },
+    {
+        "first_name": "Joo-won",
+        "id": 182,
+        "last_name": "Moon",
+        "nationality": "kr",
+        "nick_name": "Craniax",
+        "skill": 84
+    },
+    {
+        "first_name": "Diego",
+        "id": 183,
+        "last_name": "Miranda",
+        "nationality": "br",
+        "nick_name": "Tomcat",
+        "skill": 68
+    },
+    {
+        "first_name": "Min-seung",
+        "id": 184,
+        "last_name": "Song",
+        "nationality": "kr",
+        "nick_name": "Cleo",
+        "skill": 78
+    },
+    {
+        "first_name": "Ye-jun",
+        "id": 185,
+        "last_name": "An",
+        "nationality": "kr",
+        "nick_name": "Devi",
+        "skill": 91
+    },
+    {
+        "first_name": "Adam",
+        "id": 186,
+        "last_name": "Wheeler",
+        "nationality": "usa",
+        "nick_name": "Vainglory",
+        "skill": 32
+    },
+    {
+        "first_name": "Kyle",
+        "id": 187,
+        "last_name": "Baker",
+        "nationality": "usa",
+        "nick_name": "Fanatic",
+        "skill": 48
+    },
+    {
+        "first_name": "F\u00e1bio",
+        "id": 188,
+        "last_name": "Feitosa",
+        "nationality": "br",
+        "nick_name": "Calamity Jane",
+        "skill": 73
+    },
+    {
+        "first_name": "Augusto",
+        "id": 189,
+        "last_name": "Castro",
+        "nationality": "br",
+        "nick_name": "Lotus",
+        "skill": 30
+    },
+    {
+        "first_name": "Min-seung",
+        "id": 190,
+        "last_name": "Song",
+        "nationality": "kr",
+        "nick_name": "Delirious",
+        "skill": 80
+    },
+    {
+        "first_name": "Mariano",
+        "id": 191,
+        "last_name": "Tavares",
+        "nationality": "br",
+        "nick_name": "Deceit",
+        "skill": 77
+    },
+    {
+        "first_name": "Do-yun",
+        "id": 192,
+        "last_name": "An",
+        "nationality": "kr",
+        "nick_name": "Breaker",
+        "skill": 87
+    },
+    {
+        "first_name": "Mariano",
+        "id": 193,
+        "last_name": "Naz\u00e1rio",
+        "nationality": "br",
+        "nick_name": "Scalp",
+        "skill": 30
+    },
+    {
+        "first_name": "Frank",
+        "id": 194,
+        "last_name": "Martinez",
+        "nationality": "usa",
+        "nick_name": "Grave",
+        "skill": 68
+    },
+    {
+        "first_name": "Min-ju",
+        "id": 195,
+        "last_name": "An",
+        "nationality": "kr",
+        "nick_name": "Head-Knocker",
+        "skill": 90
+    },
+    {
+        "first_name": "Sung-ho",
+        "id": 196,
+        "last_name": "Kim",
+        "nationality": "kr",
+        "nick_name": "Socket",
+        "skill": 90
+    },
+    {
+        "first_name": "Daniel",
+        "id": 197,
+        "last_name": "Sales",
+        "nationality": "br",
+        "nick_name": "Demise",
+        "skill": 79
+    },
+    {
+        "first_name": "Ant\u00f4nio",
+        "id": 198,
+        "last_name": "Carvalho",
+        "nationality": "br",
+        "nick_name": "Duchess",
+        "skill": 90
+    },
+    {
+        "first_name": "Do-yun",
+        "id": 199,
+        "last_name": "An",
+        "nationality": "kr",
+        "nick_name": "Lightning",
+        "skill": 82
     }
 ]

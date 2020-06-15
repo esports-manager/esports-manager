@@ -1,39 +1,11 @@
-import os
 import random
-import json
 
-from src.core.match import Match
-from src.core.team import Team
-from src.core.player import Player
 from src.core.champion import Champion
 from src.core.event import Event
-
-THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
-
-
-def get_from_file(file_name):
-    """
-    General function used to read a JSON file, extracting its data to a dictionary/list
-    :param file_name:
-    :return:
-    """
-    with open(file_name, "r") as fp:
-        dictionary = json.load(fp)
-
-    return dictionary
-
-
-def get_dict_list(filepath):
-    """
-    Reads a specified file (champions, player or team json) and
-    returns the list from that file
-    :param filepath:
-    :return:
-    """
-    file = os.path.join(THIS_FOLDER, filepath)
-    dict_list = get_from_file(file)
-
-    return dict_list
+from src.core.match import Match
+from src.core.player import Player
+from src.core.team import Team
+from src.resources.utils import get_dict_list
 
 
 def get_team(team_id, list_teams):
@@ -154,8 +126,8 @@ def initialize_match(team1_id, team2_id, match_id, show_commentary, match_speed,
     :return:
     """
     # Gets both lists to use it on the appropriate functions
-    team_list = get_dict_list("../resources/db/teams.json")
-    player_list = get_dict_list("../resources/db/players.json")
+    team_list = get_dict_list("./resources/db/teams.json")
+    player_list = get_dict_list("./resources/db/players.json")
 
     # Creates both teams dictionaries to create their objects
     team1_dict, team2_dict = get_teams_dictionaries(team1_id, team2_id, team_list)
@@ -176,7 +148,7 @@ def picks_and_bans(match):
     :param match:
     :return:
     """
-    champion_list = get_dict_list("../resources/db/champions.json")
+    champion_list = get_dict_list("./resources/db/champions.json")
 
     # TODO: implement proper picks an bans
 
@@ -187,22 +159,6 @@ def picks_and_bans(match):
             champion_list.remove(champion_dict)
             champion = create_champion_object(champion_dict)
             player.champion = champion
-
-
-def get_match_info(team):
-    """
-    Function used for testing purposes. Might be useful in the future, though.
-    :param team:
-    :return:
-    """
-
-    team_names = []
-    for player in team.list_players:
-        name = player.first_name + ' "' + player.nick_name + '" ' + player.last_name + ' ' + str(player.skill) + ' ' \
-               + player.nationality
-        team_names.append(name)
-
-    return team_names
 
 
 def get_match_obj():
@@ -320,8 +276,6 @@ def event_team_fight(atk_team, def_team):
 
     duel_pl_factor = atk_team.player_overall / def_team.player_overall
     duel_ch_factor = atk_team.champion_overall / def_team.champion_overall
-
-
 
 
 def start_match(team1_id, team2_id, match_id, show_commentary, match_speed, ch_id):

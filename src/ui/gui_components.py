@@ -71,7 +71,7 @@ def esm_input_combo(values=None, font='Helvetica 14', key=None, pad=None, size=(
     return input_combo
 
 
-def esm_listbox(values=None, font='Helvetica 14', key=None, pad=None, size=(25, 10), enable_events=False):
+def esm_listbox(values=None, font='Helvetica 14', key=None, pad=None, size=(35, 20), enable_events=False):
     listbox = sg.Listbox(values=values,
                          background_color='white',
                          enable_events=enable_events,

@@ -12,6 +12,12 @@ def app():
         elif event == 'new_game':
             window['main_screen'].update(visible=False)
             window['create_manager'].update(visible=True)
+        elif event == 'load_game_main':
+            window['main_screen'].update(visible=False)
+            window['load_game'].update(visible=True)
+        elif event == 'cancel_load':
+            window['load_game'].update(visible=False)
+            window['main_screen'].update(visible=True)
         print(event, values)
 
     window.close()

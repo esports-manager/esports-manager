@@ -19,7 +19,7 @@ def create_window():
 
     create_look_and_feel()
     sg.theme('EsmTheme')
-    window = sg.Window('eSports Manager', get_layouts(), icon=icon_path, resizable=True)
+    window = sg.Window('eSports Manager', element_justification='center', layout=get_layouts(), icon=icon_path, resizable=True)
 
     return window
 
@@ -91,15 +91,17 @@ def load_game_layout():
     :return:
     """
     saved_games = [
-        [esm_form_text('Saved Game 1')],
-        [esm_form_text('Saved Game 2')],
-        [esm_form_text('Saved Game 3')]
+        'Saved Game 1',
+        'Saved Game 2',
+        'Saved Game 3'
     ]
 
     layout = [
         [esm_title_text('Load Game')],
         [esm_form_text('Saved Games: ')],
-        [esm_listbox(saved_games)]
+        [esm_listbox(saved_games)],
+        [esm_button('Load Game', key='load_game_btn'),
+         esm_button('Cancel', key='cancel_load')]
     ]
 
     return layout
@@ -122,8 +124,17 @@ def get_layouts():
                                    element_justification="center"
                                    )
 
+    col_load_game = sg.Column(load_game_layout(),
+                              key='load_game',
+                              visible=False,
+                              element_justification="center"
+                              )
+
     layout = [
-        [sg.Pane([col_main_screen, col_create_manager], relief=sg.RELIEF_FLAT, show_handle=False)]
+        [sg.Pane([col_main_screen,
+                  col_create_manager,
+                  col_load_game],
+                 relief=sg.RELIEF_FLAT, show_handle=False)]
     ]
 
     return layout

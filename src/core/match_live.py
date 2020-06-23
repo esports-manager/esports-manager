@@ -3,12 +3,12 @@ import random
 from src.core.champion import Champion
 from src.core.event import Event
 from src.core.match import Match
-from src.core.player import Player
+from src.core.player import MobaPlayer
 from src.core.team import Team
 from src.resources.utils import get_dict_list
 
 
-def get_team(team_id, list_teams):
+def get_team(team_id, list_teams) -> dict:
     """
     Extracts the desired team from the list of teams, returning the team's
     dictionary
@@ -27,7 +27,7 @@ def get_team(team_id, list_teams):
         raise Exception("Team was not found!")
 
 
-def get_teams_dictionaries(team1_id, team2_id, list_of_teams):
+def get_teams_dictionaries(team1_id, team2_id, list_of_teams) -> dict:
     """
     Used to return both teams dictionaries, based on their team IDs
     :param team1_id:
@@ -41,7 +41,7 @@ def get_teams_dictionaries(team1_id, team2_id, list_of_teams):
     return team1, team2
 
 
-def create_team_object(team_dict, all_players):
+def create_team_object(team_dict, all_players) -> Team:
     """
     Creates the team object based on the Team class. It also gets the roster
     and uses the get_roster() function to create the players list
@@ -59,7 +59,7 @@ def create_team_object(team_dict, all_players):
     return team
 
 
-def create_player_object(player_dict):
+def create_player_object(player_dict) -> MobaPlayer:
     """
     Creates the player object
     :param player_dict:
@@ -72,12 +72,12 @@ def create_player_object(player_dict):
     nick_name = player_dict["nick_name"]
     skill = player_dict["skill"]
 
-    player = Player(player_id, nationality, first_name, last_name, nick_name, skill)
+    player = MobaPlayer(player_id, nationality, first_name, last_name, nick_name, skill)
 
     return player
 
 
-def create_champion_object(champion_dict):
+def create_champion_object(champion_dict) -> Champion:
     """
     Creates the champion object to insert it on the player choice
     :param champion_dict: champion dictionary obtained from json file
@@ -92,7 +92,7 @@ def create_champion_object(champion_dict):
     return champion
 
 
-def get_roster(list_of_players, all_players):
+def get_roster(list_of_players, all_players) -> list:
     """
     Searches for each player ID on the player's list, creates the player
     object based on the player dictionary, returning this object
@@ -113,7 +113,7 @@ def get_roster(list_of_players, all_players):
     return roster
 
 
-def initialize_match(team1_id, team2_id, match_id, show_commentary, match_speed, ch_id):
+def initialize_match(team1_id, team2_id, match_id, show_commentary, match_speed, ch_id) -> Match:
     """
     Instantiate each object that is going to be used by the match, returning
     the match object.
@@ -161,7 +161,7 @@ def picks_and_bans(match):
             player.champion = champion
 
 
-def get_match_obj():
+def get_match_obj() -> Match:
     """
     This function is used to get random teams from the db, and then get match obj.
     In the future this might be trashed.
@@ -179,7 +179,7 @@ def get_match_obj():
     return match
 
 
-def initialize_event_list():
+def initialize_event_list() -> list:
     events = ["START_MATCH"]
     return events
 
@@ -209,7 +209,7 @@ def add_events(match, events):
         events.append("BASE_ASSAULT")
 
 
-def get_event(match, events):
+def get_event(match, events) -> Event:
     add_events(match, events)
 
     # TODO: this cannot be randomly chosen, there should be some weight calculation going on
@@ -278,7 +278,7 @@ def event_team_fight(atk_team, def_team):
     duel_ch_factor = atk_team.champion_overall / def_team.champion_overall
 
 
-def start_match(team1_id, team2_id, match_id, show_commentary, match_speed, ch_id):
+def start_match(team1_id, team2_id, match_id, show_commentary, match_speed, ch_id) -> Match:
     match = initialize_match(team1_id, team2_id, match_id, show_commentary, match_speed, ch_id)
     picks_and_bans(match)
 

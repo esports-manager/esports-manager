@@ -27,7 +27,7 @@ def get_players_nationalities():
     return nationalities
 
 
-def generate_player(nationality):
+def generate_player(nationality) -> dict:
     """
     Generates player dictionary
     :param nationality: string
@@ -61,7 +61,7 @@ def generate_player(nationality):
     return player
 
 
-def get_players_skills(nationality):
+def get_players_skills(nationality) -> int:
     """
     Randomly generates players skills according to their nationality
     :param nationality: string

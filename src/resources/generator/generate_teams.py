@@ -15,7 +15,7 @@ def get_players():
 
 
 # TODO: let teams have a bigger roster than 5 players
-def choose_five_players(players):
+def choose_five_players(players) -> list:
     chosen_players_id = []
 
     for i in range(5):
@@ -26,7 +26,7 @@ def choose_five_players(players):
     return chosen_players_id
 
 
-def generate_each_team(players):
+def generate_each_team(players) -> dict:
     team_name = gen_nick_or_team_name("team_names.txt")
     roster_id = choose_five_players(players)
     team = {"name": team_name,
@@ -36,7 +36,7 @@ def generate_each_team(players):
     return team
 
 
-def generate_teams(players):
+def generate_teams(players) -> list:
     num_teams = floor(int(NUM_PLAYERS / 5))
 
     teams = []

@@ -162,7 +162,7 @@ champion_names = [
 ]
 
 
-def generate_champion_dict(champion_name, counter):
+def generate_champion_dict(champion_name, counter) -> dict:
     if champion_name == "TEEMO":
         skill = random.randint(0, 50)
     else:
@@ -176,7 +176,7 @@ def generate_champion_dict(champion_name, counter):
     return champion
 
 
-def create_champions_list():
+def create_champions_list() -> list:
     list_of_champions = []
     counter = 0
     

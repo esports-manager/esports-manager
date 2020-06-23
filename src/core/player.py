@@ -1,5 +1,11 @@
 class Player:
-    def __init__(self, player_id, nationality, first_name, last_name, nick_name, skill):
+    def __init__(self,
+                 player_id: int,
+                 nationality: str,
+                 first_name: str,
+                 last_name: str,
+                 nick_name: str,
+                 skill: int):
         self.player_id = player_id
 
         self.first_name = first_name
@@ -13,6 +19,11 @@ class Player:
 
         # TODO: players should have a "potential" value too. This value tells the game that the player
         # can improve his overall skill to a certain level
+
+
+class MobaPlayer(Player):
+    def __init__(self, player_id, nationality, first_name, last_name, nick_name, skill):
+        super().__init__(player_id, nationality, first_name, last_name, nick_name, skill)
 
         # Live Match-related variables
         self.champion = None

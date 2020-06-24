@@ -13,7 +13,7 @@ JSON_FILE = os.path.join(THIS_FOLDER, '../db/players.json')
 NUM_PLAYERS = 200
 
 
-def get_players_nationalities():
+def get_players_nationalities() -> list:
     """
     Defines nationalities
     :return nationality: string
@@ -27,7 +27,7 @@ def get_players_nationalities():
     return nationalities
 
 
-def generate_player(nationality) -> dict:
+def generate_player(nationality: str) -> dict:
     """
     Generates player dictionary
     :param nationality: string
@@ -61,7 +61,7 @@ def generate_player(nationality) -> dict:
     return player
 
 
-def get_players_skills(nationality) -> int:
+def get_players_skills(nationality: str) -> int:
     """
     Randomly generates players skills according to their nationality
     :param nationality: string
@@ -90,7 +90,7 @@ def get_players_skills(nationality) -> int:
     return skill
 
 
-def generate_player_list():
+def generate_player_list() -> list:
     """
     Generates each player and adds to a list
     :return player_list:
@@ -107,16 +107,17 @@ def generate_player_list():
     return players_list
 
 
-def generate_file(list_objects, file):
+def generate_file(list_objects: list, file: str) -> None:
     """
     Writes list to a json file
+    :param file:
     :param list_objects: player list
     """
     with open(file, "w") as fp:
         json.dump(list_objects, fp, sort_keys=True, indent=4)
 
 
-def generate():
+def generate() -> None:
     """
     Runs the entire thing
     """

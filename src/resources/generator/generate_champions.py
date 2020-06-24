@@ -177,20 +177,20 @@ def generate_champion_dict(champion_name, counter) -> dict:
 
 
 def create_champions_list() -> list:
-    list_of_champions = []
+    list_champions = []
     counter = 0
     
     for champion_name in champion_names:
         champion = generate_champion_dict(champion_name, counter)
-        list_of_champions.append(champion)
+        list_champions.append(champion)
         counter += 1 
 
-    return list_of_champions
+    return list_champions
 
 
-def write_to_json(list_of_champions):
+def write_to_json(ch_list) -> None:
     with open(JSON_FILE, 'w') as fp:
-        json.dump(list_of_champions, fp, sort_keys=True, indent=4)
+        json.dump(ch_list, fp, sort_keys=True, indent=4)
 
 
 if __name__ == '__main__':

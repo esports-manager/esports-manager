@@ -1,4 +1,5 @@
 import random
+from typing import Tuple
 
 from src.core.champion import Champion
 from src.core.event import Event
@@ -16,18 +17,17 @@ def get_team(team_id, list_teams) -> dict:
     :param list_teams:
     :return: team dictionary
     """
-    obtained_team = None
 
     for team in list_teams:
         if team["id"] == team_id:
             obtained_team = team
             return obtained_team
 
-    if obtained_team is None:
-        raise Exception("Team was not found!")
+    else:
+        raise ValueError("Team was not found!")
 
 
-def get_teams_dictionaries(team1_id, team2_id, list_of_teams) -> dict:
+def get_teams_dictionaries(team1_id, team2_id, list_of_teams) -> Tuple[dict, dict]:
     """
     Used to return both teams dictionaries, based on their team IDs
     :param team1_id:
@@ -41,7 +41,7 @@ def get_teams_dictionaries(team1_id, team2_id, list_of_teams) -> dict:
     return team1, team2
 
 
-def create_team_object(team_dict, all_players) -> Team:
+def create_team_object(team_dict: dict, all_players: list) -> Team:
     """
     Creates the team object based on the Team class. It also gets the roster
     and uses the get_roster() function to create the players list
@@ -59,7 +59,7 @@ def create_team_object(team_dict, all_players) -> Team:
     return team
 
 
-def create_player_object(player_dict) -> MobaPlayer:
+def create_player_object(player_dict: dict) -> MobaPlayer:
     """
     Creates the player object
     :param player_dict:
@@ -77,7 +77,7 @@ def create_player_object(player_dict) -> MobaPlayer:
     return player
 
 
-def create_champion_object(champion_dict) -> Champion:
+def create_champion_object(champion_dict: dict) -> Champion:
     """
     Creates the champion object to insert it on the player choice
     :param champion_dict: champion dictionary obtained from json file
@@ -92,7 +92,7 @@ def create_champion_object(champion_dict) -> Champion:
     return champion
 
 
-def get_roster(list_of_players, all_players) -> list:
+def get_roster(list_of_players: list, all_players: list) -> list:
     """
     Searches for each player ID on the player's list, creates the player
     object based on the player dictionary, returning this object
@@ -102,7 +102,7 @@ def get_roster(list_of_players, all_players) -> list:
     """
     roster = list()
 
-    # Is there a more pythonic way to do this? List comprehensions would solve it?
+    # Is there a more pythonic way to do this?
     for player_id in list_of_players:
         for player_dict in all_players:
             if player_dict["id"] == player_id:
@@ -113,7 +113,12 @@ def get_roster(list_of_players, all_players) -> list:
     return roster
 
 
-def initialize_match(team1_id, team2_id, match_id, show_commentary, match_speed, ch_id) -> Match:
+def initialize_match(team1_id: int,
+                     team2_id: int,
+                     match_id: int,
+                     show_commentary: bool,
+                     match_speed: int,
+                     ch_id: int) -> Match:
     """
     Instantiate each object that is going to be used by the match, returning
     the match object.
@@ -142,7 +147,7 @@ def initialize_match(team1_id, team2_id, match_id, show_commentary, match_speed,
     return match
 
 
-def picks_and_bans(match):
+def picks_and_bans(match: Match) -> None:
     """
     Dummy picks and bans implementation. Will be changed in the future.
     :param match:
@@ -161,7 +166,7 @@ def picks_and_bans(match):
             player.champion = champion
 
 
-def get_match_obj() -> Match:
+def get_match_obj_test() -> Match:
     """
     This function is used to get random teams from the db, and then get match obj.
     In the future this might be trashed.
@@ -174,7 +179,8 @@ def get_match_obj() -> Match:
     list_ids.remove(team1_id)
     team2_id = random.choice(list_ids)
 
-    match = start_match(team1_id, team2_id, 1, True, 1, 6)
+    match = initialize_match(team1_id, team2_id, 1, True, 1, 6)
+    picks_and_bans(match)
 
     return match
 
@@ -184,7 +190,7 @@ def initialize_event_list() -> list:
     return events
 
 
-def add_events(match, events):
+def add_events(match: Match, events: list):
     if match.game_time == 1.0:
         events.remove("START_MATCH")
         events.append("INVADE")
@@ -209,7 +215,7 @@ def add_events(match, events):
         events.append("BASE_ASSAULT")
 
 
-def get_event(match, events) -> Event:
+def get_event(match: Match, events: list) -> Event:
     add_events(match, events)
 
     # TODO: this cannot be randomly chosen, there should be some weight calculation going on
@@ -218,7 +224,7 @@ def get_event(match, events) -> Event:
     return event
 
 
-def define_atk_team(match):
+def define_atk_team(match: Match) -> Tuple[Team, Team]:
     prob = random.gauss(0, 1)
 
     if match.team1.points > match.team2.points:
@@ -245,7 +251,7 @@ def define_atk_team(match):
     return atk_team, def_team
 
 
-def evaluate_event(match, event):
+def evaluate_event(match: Match, event: Event) -> None:
     if event.name == "START_MATCH":
         print("Match is starting between {} and {}".format(match.team1.name, match.team2.name))
     elif event.name == "INVADE":
@@ -271,14 +277,20 @@ def evaluate_event(match, event):
     match.game_time += 1
 
 
-def event_team_fight(atk_team, def_team):
+def event_team_fight(atk_team: Team, def_team: Team) -> None:
     prob = random.gauss(0, 1)
 
     duel_pl_factor = atk_team.player_overall / def_team.player_overall
     duel_ch_factor = atk_team.champion_overall / def_team.champion_overall
 
 
-def start_match(team1_id, team2_id, match_id, show_commentary, match_speed, ch_id) -> Match:
+def start_match(team1_id: int,
+                team2_id: int,
+                match_id: int,
+                show_commentary: bool,
+                match_speed: int,
+                ch_id: int) -> Match:
+
     match = initialize_match(team1_id, team2_id, match_id, show_commentary, match_speed, ch_id)
     picks_and_bans(match)
 

@@ -7,7 +7,7 @@ from src.resources.generator.generate_players import NUM_PLAYERS, JSON_FILE, THI
 from src.resources.generator.get_names import gen_nick_or_team_name
 
 
-def get_players():
+def get_players() -> None:
     with open(JSON_FILE, "r") as fp:
         players = json.load(fp)
 
@@ -29,9 +29,8 @@ def choose_five_players(players) -> list:
 def generate_each_team(players) -> dict:
     team_name = gen_nick_or_team_name("team_names.txt")
     roster_id = choose_five_players(players)
-    team = {"name": team_name,
-            "roster_id": roster_id
-            }
+
+    team = {"name": team_name, "roster_id": roster_id}
 
     return team
 
@@ -48,7 +47,7 @@ def generate_teams(players) -> list:
     return teams
 
 
-def run_generation():
+def run_generation() -> None:
     team_file = os.path.join(THIS_FOLDER, '../db/teams.json')
     players = get_players()
     teams = generate_teams(players)

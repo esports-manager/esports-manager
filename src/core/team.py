@@ -26,26 +26,26 @@ class Team:
         # list of all players in the roster
         self.list_players = list_players
 
-    def is_tower_up(self, lane):
+    def is_tower_up(self, lane) -> bool:
         if self.towers[lane] == 0:
             return False
         else:
             return True
 
-    def are_all_towers_up(self):
+    def are_all_towers_up(self) -> bool:
         for lane, num in self.towers.items():
             if num == 0:
                 return False
 
         return True
 
-    def is_inhibitor_up(self, lane):
+    def is_inhibitor_up(self, lane) -> bool:
         if self.inhibitors[lane] == 0:
             return False
         else:
             return True
 
-    def are_all_inhibitors_up(self):
+    def are_all_inhibitors_up(self) -> bool:
         for lane, num in self.inhibitors.items():
             if num == 0:
                 return False
@@ -53,7 +53,7 @@ class Team:
         return True
 
     @property
-    def points(self):
+    def points(self) -> int:
         self._points = 0
         for player in self.list_players:
             self._points += player.points
@@ -61,7 +61,7 @@ class Team:
         return self._points
 
     @property
-    def player_overall(self):
+    def player_overall(self) -> int:
         """
         This method is calculating team's overall
         :return:
@@ -82,11 +82,11 @@ class Team:
         return self._player_overall
 
     @property
-    def champion_overall(self):
+    def champion_overall(self) -> int:
         self._avg_champion_skill = 0
         for player in self.list_players:
             self._avg_champion_skill += player.champion.skill
 
-        self._avg_champion_skill = self._avg_champion_skill / len(self.list_players)
+        self._avg_champion_skill = int(self._avg_champion_skill / len(self.list_players))
 
         return self._avg_champion_skill

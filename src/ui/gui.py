@@ -19,9 +19,13 @@ def create_window():
 
     create_look_and_feel()
     sg.theme('EsmTheme')
-    window = sg.Window('eSports Manager', element_justification='center', layout=get_layouts(), icon=icon_path, resizable=True)
-
-    return window
+    return sg.Window(
+        'eSports Manager',
+        element_justification='center',
+        layout=get_layouts(),
+        icon=icon_path,
+        resizable=True,
+    )
 
 
 def main_screen():
@@ -35,7 +39,7 @@ def main_screen():
     button_pad = (300, 15)
     button_size = (20, 1)
 
-    layout = [
+    return [
         [sg.Image(logo_path, pad=(100, 0))],
         [esm_button('New Game',
                     key='new_game',
@@ -59,8 +63,6 @@ def main_screen():
                     )]
     ]
 
-    return layout
-
 
 def create_manager_layout():
     """
@@ -71,7 +73,7 @@ def create_manager_layout():
     nationalities = get_players_nationalities()
     team_names = get_list_of_team_names()
 
-    layout = [
+    return [
         [esm_title_text('New Game')],
         [esm_form_text('Manager Name: '),
          esm_input_text()],
@@ -81,8 +83,6 @@ def create_manager_layout():
         [esm_button('Next', font='Yukarimobile 18'),
          esm_button('Cancel', font='Yukarimobile 18')]
     ]
-
-    return layout
 
 
 def load_game_layout():
@@ -96,15 +96,13 @@ def load_game_layout():
         'Saved Game 3'
     ]
 
-    layout = [
+    return [
         [esm_title_text('Load Game')],
         [esm_form_text('Saved Games: ')],
         [esm_listbox(saved_games)],
         [esm_button('Load Game', key='load_game_btn'),
          esm_button('Cancel', key='cancel_load')]
     ]
-
-    return layout
 
 
 def get_layouts():
@@ -130,11 +128,9 @@ def get_layouts():
                               element_justification="center"
                               )
 
-    layout = [
+    return [
         [sg.Pane([col_main_screen,
                   col_create_manager,
                   col_load_game],
                  relief=sg.RELIEF_FLAT, show_handle=False)]
     ]
-
-    return layout

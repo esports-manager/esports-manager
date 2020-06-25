@@ -20,8 +20,7 @@ def get_team(team_id, list_teams) -> dict:
 
     for team in list_teams:
         if team["id"] == team_id:
-            obtained_team = team
-            return obtained_team
+            return team
 
     else:
         raise ValueError("Team was not found!")
@@ -54,9 +53,7 @@ def create_team_object(team_dict: dict, all_players: list) -> Team:
     list_of_players = team_dict["roster_id"]
     roster = get_roster(list_of_players, all_players)
 
-    team = Team(team_id, name, roster)
-
-    return team
+    return Team(team_id, name, roster)
 
 
 def create_player_object(player_dict: dict) -> MobaPlayer:
@@ -72,9 +69,9 @@ def create_player_object(player_dict: dict) -> MobaPlayer:
     nick_name = player_dict["nick_name"]
     skill = player_dict["skill"]
 
-    player = MobaPlayer(player_id, nationality, first_name, last_name, nick_name, skill)
-
-    return player
+    return MobaPlayer(
+        player_id, nationality, first_name, last_name, nick_name, skill
+    )
 
 
 def create_champion_object(champion_dict: dict) -> Champion:
@@ -87,9 +84,7 @@ def create_champion_object(champion_dict: dict) -> Champion:
     name = champion_dict["name"]
     skill = champion_dict["skill"]
 
-    champion = Champion(champion_id, name, skill)
-
-    return champion
+    return Champion(champion_id, name, skill)
 
 
 def get_roster(list_of_players: list, all_players: list) -> list:
@@ -100,7 +95,7 @@ def get_roster(list_of_players: list, all_players: list) -> list:
     :param all_players: entire player list database
     :return: list of players
     """
-    roster = list()
+    roster = []
 
     # Is there a more pythonic way to do this?
     for player_id in list_of_players:
@@ -131,8 +126,8 @@ def initialize_match(team1_id: int,
     :return:
     """
     # Gets both lists to use it on the appropriate functions
-    team_list = get_dict_list("./resources/db/teams.json")
-    player_list = get_dict_list("./resources/db/players.json")
+    team_list = get_dict_list("../src/resources/db/teams.json")
+    player_list = get_dict_list("../src/resources/db/players.json")
 
     # Creates both teams dictionaries to create their objects
     team1_dict, team2_dict = get_teams_dictionaries(team1_id, team2_id, team_list)
@@ -153,7 +148,7 @@ def picks_and_bans(match: Match) -> None:
     :param match:
     :return:
     """
-    champion_list = get_dict_list("./resources/db/champions.json")
+    champion_list = get_dict_list("../src/resources/db/champions.json")
 
     # TODO: implement proper picks an bans
 
@@ -186,32 +181,38 @@ def get_match_obj_test() -> Match:
 
 
 def initialize_event_list() -> list:
-    events = ["START_MATCH"]
-    return events
+    return ["START_MATCH"]
 
 
 def add_events(match: Match, events: list):
     if match.game_time == 1.0:
         events.remove("START_MATCH")
         events.append("INVADE")
-    elif match.game_time == 2.0:
-        events.remove("INVADE")
-        events.append("GANK")
-        events.append("TEAM_FIGHT")
     elif match.game_time == 15.0:
         events.append("TOWER_ASSAULT")
         events.append("MAJOR_JUNGLE")
         events.remove("GANK")
+    elif match.game_time == 2.0:
+        events.remove("INVADE")
+        events.append("GANK")
+        events.append("TEAM_FIGHT")
     elif match.game_time == 20.0:
         events.append("SUPER_JUNGLE")
 
-    if not match.team1.are_all_towers_up() or not match.team2.are_all_towers_up():
+    if not (
+        match.team1.are_all_towers_up() and match.team2.are_all_towers_up()
+    ):
         events.append("INHIBITOR_ASSAULT")
 
-    if not match.team1.are_all_inhibitors_up() or not match.team2.are_all_inhibitors_up():
+    if not (
+        match.team1.are_all_inhibitors_up()
+        and match.team2.are_all_inhibitors_up()
+    ):
         events.append("BASE_TOWERS_ASSAULT")
 
-    if not match.team1.is_tower_up("base") or not match.team2.is_tower_up("base"):
+    if not (
+        match.team1.is_tower_up("base") and match.team2.is_tower_up("base")
+    ):
         events.append("BASE_ASSAULT")
 
 
@@ -227,27 +228,24 @@ def get_event(match: Match, events: list) -> Event:
 def define_atk_team(match: Match) -> Tuple[Team, Team]:
     prob = random.gauss(0, 1)
 
-    if match.team1.points > match.team2.points:
-        if -1 < prob < 1:
-            atk_team = match.team1
-            def_team = match.team2
-        else:
-            atk_team = match.team2
-            def_team = match.team1
-    elif match.team2.points > match.team1.points:
-        if -1 < prob < 1:
-            atk_team = match.team2
-            def_team = match.team1
-        else:
-            atk_team = match.team1
-            def_team = match.team2
+    if (
+        match.team1.points > match.team2.points
+        and -1 < prob < 1
+        or match.team1.points <= match.team2.points
+        and match.team2.points > match.team1.points
+        and not -1 < prob < 1
+    ):
+        atk_team = match.team1
+        def_team = match.team2
+    elif (
+        match.team1.points > match.team2.points
+        or match.team2.points > match.team1.points
+    ):
+        atk_team = match.team2
+        def_team = match.team1
     else:
         atk_team = random.choice(match.teams)
-        if atk_team == match.team1:
-            def_team = match.team2
-        else:
-            def_team = match.team1
-
+        def_team = match.team2 if atk_team == match.team1 else match.team1
     return atk_team, def_team
 
 

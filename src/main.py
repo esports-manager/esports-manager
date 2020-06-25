@@ -7,7 +7,7 @@ def app():
     window = create_window()
     while True:
         event, values = window.read()
-        if event == sg.WINDOW_CLOSED or event == 'exit_main':
+        if event in [sg.WINDOW_CLOSED, 'exit_main']:
             break
         elif event == 'new_game':
             window['main_screen'].update(visible=False)

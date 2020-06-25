@@ -1,3 +1,4 @@
+import os
 import random
 
 
@@ -5,7 +6,7 @@ import random
 # TODO: create a file with names from more nations
 
 def get_usa_first_names():
-    first_names = [
+    return [
         "Alexander",
         "Aaron",
         "Adam",
@@ -56,11 +57,9 @@ def get_usa_first_names():
         "Benjamin"
     ]
 
-    return first_names
-
 
 def get_usa_last_names():
-    last_names = [
+    return [
         "Johnson",
         "Williams",
         "Jones",
@@ -107,11 +106,9 @@ def get_usa_last_names():
         "Rogers"
     ]
 
-    return last_names
-
 
 def get_br_first_names():
-    first_names = [
+    return [
         "Alex",
         "André",
         "Antônio",
@@ -163,11 +160,9 @@ def get_br_first_names():
         "Roberto"
     ]
 
-    return first_names
-
 
 def get_br_last_names():
-    last_names = [
+    return [
         "Abreu",
         "Silva",
         "Carvalho",
@@ -221,11 +216,9 @@ def get_br_last_names():
         "Neves"
     ]
 
-    return last_names
-
 
 def get_kr_first_names():
-    first_names = [
+    return [
         "Do-yun",
         "Dong-ha",
         "Ha-joon",
@@ -263,11 +256,9 @@ def get_kr_first_names():
         "Yun-seo"
     ]
 
-    return first_names
-
 
 def get_kr_last_names():
-    last_names = [
+    return [
         "An",
         "Lee",
         "Park",
@@ -280,11 +271,12 @@ def get_kr_last_names():
         "Song"
     ]
 
-    return last_names
 
+def gen_nick_or_team_name(filename: str):
+    curr_dir = os.path.dirname(os.path.abspath(__file__))
+    file = os.path.join(curr_dir, filename)
 
-def gen_nick_or_team_name(filename):
-    with open(filename, "r") as fp:
+    with open(file, "r") as fp:
         names = fp.read().splitlines()
 
     return random.choice(names)

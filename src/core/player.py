@@ -22,7 +22,13 @@ class Player:
 
 
 class MobaPlayer(Player):
-    def __init__(self, player_id, nationality, first_name, last_name, nick_name, skill):
+    def __init__(self,
+                 player_id: int,
+                 nationality: str,
+                 first_name: str,
+                 last_name: str,
+                 nick_name: str,
+                 skill: int):
         super().__init__(player_id, nationality, first_name, last_name, nick_name, skill)
 
         # Live Match-related variables
@@ -37,5 +43,5 @@ class MobaPlayer(Player):
         return self._points
 
     @points.setter
-    def points(self, add_pts):
+    def points(self, add_pts: int):
         self._points += add_pts

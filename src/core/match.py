@@ -1,5 +1,8 @@
 import random
 
+from src.core.team import Team
+
+
 class Match:
     """
     The Match class is used to represent a match, whether they include
@@ -9,8 +12,8 @@ class Match:
     def __init__(self,
                  match_id: int,
                  championship_id: int,
-                 team1: "Team",
-                 team2: "Team",
+                 team1: Team,
+                 team2: Team,
                  show_commentary: bool,
                  match_speed: int):
         """

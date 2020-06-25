@@ -27,10 +27,7 @@ class Team:
         self.list_players = list_players
 
     def is_tower_up(self, lane) -> bool:
-        if self.towers[lane] == 0:
-            return False
-        else:
-            return True
+        return self.towers[lane] != 0
 
     def are_all_towers_up(self) -> bool:
         for lane, num in self.towers.items():

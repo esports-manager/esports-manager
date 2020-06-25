@@ -1,5 +1,5 @@
 class Champion:
-    def __init__(self, champion_id, name, skill):
+    def __init__(self, champion_id: int, name: str, skill: int):
         self.champion_id = champion_id
         self.name = name
 

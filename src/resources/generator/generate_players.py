@@ -5,10 +5,12 @@ import random
 from src.resources.generator.get_names import get_br_first_names, get_kr_first_names, get_usa_first_names, \
     get_br_last_names, get_kr_last_names, get_usa_last_names, gen_nick_or_team_name
 
+from ..utils import get_current_folder
 
-THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
-JSON_FILE = os.path.join(THIS_FOLDER, '../db/players.json')
+THIS_FOLDER = get_current_folder()
+
+JSON_FILE = os.path.join(THIS_FOLDER, '../src/resources/db/players.json')
 
 NUM_PLAYERS = 200
 
@@ -18,13 +20,11 @@ def get_players_nationalities() -> list:
     Defines nationalities
     :return nationality: string
     """
-    nationalities = [
+    return [
         "br",
         "kr",
         "usa"
     ]
-
-    return nationalities
 
 
 def generate_player(nationality: str) -> dict:
@@ -50,15 +50,13 @@ def generate_player(nationality: str) -> dict:
     skill = get_players_skills(nationality)
     skill = int(skill)
 
-    player = {
+    return {
         "first_name": first_name,
         "last_name": last_name,
         "nick_name": nick_name,
         "nationality": nationality,
         "skill": skill
     }
-
-    return player
 
 
 def get_players_skills(nationality: str) -> int:
@@ -82,6 +80,7 @@ def get_players_skills(nationality: str) -> int:
         
     skill = random.gauss(mu, sigma)
 
+    # Players' skill will follow the 30 < skill < 90 interval
     if skill > 93:
         skill = 90
     elif skill < 30:

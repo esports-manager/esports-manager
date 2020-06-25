@@ -1,6 +1,10 @@
 import os
 import json
-from src import THIS_FOLDER
+
+
+def get_current_folder():
+    return os.path.dirname(os.path.abspath(os.path.basename(__file__)))
+
 
 def get_from_file(file_name):
     """
@@ -21,16 +25,14 @@ def get_dict_list(filepath):
     :param filepath:
     :return:
     """
-    file = os.path.join(THIS_FOLDER, filepath)
-    dict_list = get_from_file(file)
-
-    return dict_list
+    file = os.path.join(get_current_folder(), filepath)
+    return get_from_file(file)
 
 
 def get_list_of_team_names():
-    dict_list = get_dict_list('./resources/db/teams.json')
+    dict_list = get_dict_list('../resources/db/teams.json')
 
-    team_list = list()
+    team_list = []
 
     for team in dict_list:
         team_list.append(team["name"])

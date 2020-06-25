@@ -162,18 +162,16 @@ champion_names = [
 ]
 
 
-def generate_champion_dict(champion_name, counter) -> dict:
+def generate_champion_dict(champion_name: str, counter: int) -> dict:
     if champion_name == "TEEMO":
         skill = random.randint(0, 50)
     else:
         skill = random.randint(50, 99)
-    
-    champion = {"name": champion_name,
-                "id": counter,
-                "skill": skill
-                }
-    
-    return champion
+
+    return {"name": champion_name,
+            "id": counter,
+            "skill": skill
+            }
 
 
 def create_champions_list() -> list:
@@ -188,7 +186,7 @@ def create_champions_list() -> list:
     return list_champions
 
 
-def write_to_json(ch_list) -> None:
+def write_to_json(ch_list: list) -> None:
     with open(JSON_FILE, 'w') as fp:
         json.dump(ch_list, fp, sort_keys=True, indent=4)
 

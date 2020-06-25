@@ -11,7 +11,5 @@ class MainTest(unittest.TestCase):
         self.assertIsNotNone(self.match)
 
 
-
-
 if __name__ == '__main__':
     unittest.main()

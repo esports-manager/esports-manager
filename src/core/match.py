@@ -46,3 +46,9 @@ class Match:
             print("{} decides to invade!".format(self.team2))
         else:
             print("Teams are starting passively this game!")
+
+    def __repr__(self):
+        return '{0} {1}'.format(self.__class__.__name__, self.match_id)
+
+    def __str__(self):
+        return '{0} ID: {1}'.format(self.__class__.__name__, self.match_id)

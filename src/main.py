@@ -18,6 +18,9 @@ def app():
         elif event == 'cancel_load':
             window['load_game'].update(visible=False)
             window['main_screen'].update(visible=True)
+        elif event == 'cancel_new_game':
+            window['create_manager'].update(visible=False)
+            window['main_screen'].update(visible=True)
         print(event, values)
 
     window.close()

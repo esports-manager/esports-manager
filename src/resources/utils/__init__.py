@@ -2,11 +2,11 @@ import os
 import json
 
 
-def get_current_folder():
+def get_current_folder() -> str:
     return os.path.dirname(os.path.abspath(os.path.basename(__file__)))
 
 
-def get_from_file(file_name):
+def get_from_file(file_name: str) -> list:
     """
     General function used to read a JSON file, extracting its data to a dictionary/list
     :param file_name:
@@ -18,7 +18,7 @@ def get_from_file(file_name):
     return dictionary
 
 
-def get_dict_list(filepath):
+def get_dict_list(filepath) -> list:
     """
     Reads a specified file (champions, player or team json) and
     returns the list from that file
@@ -29,8 +29,8 @@ def get_dict_list(filepath):
     return get_from_file(file)
 
 
-def get_list_of_team_names():
-    dict_list = get_dict_list('../resources/db/teams.json')
+def get_list_of_team_names() -> list:
+    dict_list = get_dict_list('../src/resources/db/teams.json')
 
     team_list = []
 

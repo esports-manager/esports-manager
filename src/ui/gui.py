@@ -6,7 +6,7 @@ from src.ui.gui_components import esm_button, esm_form_text, create_look_and_fee
 from src.resources.generator.generate_players import get_players_nationalities
 from src.resources.utils import get_list_of_team_names
 
-folder = os.path.dirname(os.path.abspath(__file__))
+folder = os.path.dirname(os.path.basename(__file__))
 
 
 def create_window():
@@ -34,7 +34,7 @@ def main_screen():
     use the Database Editor, or exit the game.
     :return: layout of the main screen
     """
-    logo_path = os.path.join(folder, '../resources/images/logo/esportsmanager.png')
+    logo_path = os.path.join(folder, '../src/resources/images/logo/esportsmanager.png')
 
     button_pad = (300, 15)
     button_size = (20, 1)
@@ -80,8 +80,8 @@ def create_manager_layout():
         [esm_form_text('Date of Birth: '), esm_input_text()],
         [esm_form_text('Nationality: '), esm_input_combo(nationalities)],
         [esm_form_text('Team: '), esm_listbox(team_names)],
-        [esm_button('Next', font='Yukarimobile 18'),
-         esm_button('Cancel', font='Yukarimobile 18')]
+        [esm_button('Next', key='next_new_game', font='Yukarimobile 18'),
+         esm_button('Cancel', key='cancel_new_game', font='Yukarimobile 18')]
     ]
 
 

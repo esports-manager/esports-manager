@@ -1,9 +1,11 @@
 import unittest
+import json
+from tempfile import NamedTemporaryFile
 
-from src.core.team import Team
 from src.core.match_live import get_match_obj_test, get_team, get_dict_list
 from src.resources.generator.generate_teams import *
 from src.resources.generator.get_names import gen_nick_or_team_name
+from src.resources.generator.generate_players import generate_file
 
 
 class TeamTest(unittest.TestCase):
@@ -41,6 +43,22 @@ class TeamTest(unittest.TestCase):
         self.assertIsNotNone(name)
         self.assertIsNot(name, " ")
 
+    def test_generate_team_file(self):
+        players = [
+            {"id": 1},
+            {"id": 2},
+            {"id": 3},
+            {"id": 4},
+            {"id": 5}
+        ]
+        contents = generate_teams(players)
+        with NamedTemporaryFile(delete=False) as temp_file:
+            generate_file(contents, temp_file.name)
+            with open(temp_file.name, 'r') as f:
+                obtained_content = json.load(f)
+        self.assertIsNotNone(obtained_content)
+        self.assertEqual(contents, obtained_content)
+
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

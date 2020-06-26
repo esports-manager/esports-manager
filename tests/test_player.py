@@ -1,9 +1,12 @@
 import unittest
+import json
+from tempfile import NamedTemporaryFile
 import random
 
 from src.core.player import Player
 from src.core.match_live import get_dict_list, create_player_object
 from src.resources.generator.get_names import gen_nick_or_team_name
+from src.resources.generator.generate_players import generate_player_list, generate_file
 
 
 def get_player_dict_test() -> dict:
@@ -52,6 +55,20 @@ class MobaPlayerTest(unittest.TestCase):
         self.assertIsNotNone(nickname)
         self.assertIsNot(nickname, " ")
 
+    def test_generate_player_list(self):
+        players = generate_player_list()
+        self.assertIsNotNone(players)
+        self.assertGreater(len(players), 0)
 
+    def test_generate_player_file(self):
+        players = generate_player_list()
+        with NamedTemporaryFile(delete=False) as temp_file:
+            generate_file(players, temp_file.name)
+            with open(temp_file.name, 'r') as fp:
+                contents = json.load(fp)
+        self.assertIsNotNone(contents)
+        self.assertEqual(players, contents)
+        
+        
 if __name__ == '__main__':
     unittest.main()

@@ -34,7 +34,7 @@ def generate_each_team(players: list) -> dict:
 
 
 def generate_teams(players: list) -> list:
-    num_teams = floor(int(NUM_PLAYERS / 5))
+    num_teams = floor(int(len(players) / 5))
 
     teams = []
     for i in range(num_teams):

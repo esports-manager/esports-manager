@@ -3,8 +3,9 @@ import os
 import random
 from math import floor
 
-from src.resources.generator.generate_players import NUM_PLAYERS, JSON_FILE, THIS_FOLDER, generate_file
-from src.resources.generator.get_names import gen_nick_or_team_name
+from .generate_players import NUM_PLAYERS, JSON_FILE, generate_file
+from .get_names import gen_nick_or_team_name
+from ..utils import find_file
 
 
 def get_players() -> list:
@@ -27,7 +28,7 @@ def choose_five_players(players: list) -> list:
 
 
 def generate_each_team(players: list) -> dict:
-    team_name = gen_nick_or_team_name("team_names.txt")
+    team_name = gen_nick_or_team_name('team_names.txt')
     roster_id = choose_five_players(players)
 
     return {"name": team_name, "roster_id": roster_id}
@@ -46,7 +47,7 @@ def generate_teams(players: list) -> list:
 
 
 def run_generation() -> None:
-    team_file = os.path.join(THIS_FOLDER, '../src/resources/db/teams.json')
+    team_file = find_file('teams.json')
     players = get_players()
     teams = generate_teams(players)
     generate_file(teams, team_file)

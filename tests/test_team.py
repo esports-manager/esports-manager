@@ -20,12 +20,12 @@ class TeamTest(unittest.TestCase):
         self.assertGreaterEqual(self.team.champion_overall, 0)
 
     def test_get_invalid_team(self):
-        teams = get_dict_list("../src/resources/db/teams.json")
+        teams = get_dict_list('teams.json')
         with self.assertRaises(ValueError):
             get_team(-1, teams)
 
     def test_get_valid_team(self):
-        teams = get_dict_list("../src/resources/db/teams.json")
+        teams = get_dict_list('teams.json')
         team = get_team(0, teams)
         self.assertIsNotNone(team)
         self.assertEqual(team, teams[0])
@@ -36,10 +36,10 @@ class TeamTest(unittest.TestCase):
 
     def test_invalid_generate_team_name(self):
         with self.assertRaises(FileNotFoundError):
-            gen_nick_or_team_name("teamname.txt")
+            gen_nick_or_team_name('teamname.txt')
 
     def test_generate_team_name(self):
-        name = gen_nick_or_team_name("team_names.txt")
+        name = gen_nick_or_team_name('team_names.txt')
         self.assertIsNotNone(name)
         self.assertIsNot(name, " ")
 

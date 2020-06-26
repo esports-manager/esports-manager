@@ -1,12 +1,9 @@
-import os
 import PySimpleGUI as sg
 
 from src.ui.gui_components import esm_button, esm_form_text, create_look_and_feel, \
                                   esm_input_text, esm_input_combo, esm_title_text, esm_listbox
 from src.resources.generator.generate_players import get_players_nationalities
-from src.resources.utils import get_list_of_team_names
-
-folder = os.path.dirname(os.path.basename(__file__))
+from src.resources.utils import get_list_of_team_names, find_file
 
 
 def create_window():
@@ -15,7 +12,7 @@ def create_window():
     It uses the get_layouts() function to get a list of layouts used in this software.
     :return: the window PySimpleGUI object
     """
-    icon_path = os.path.join(folder, '../resources/images/logo/esportsmanagertrophy.png')
+    icon_path = find_file('esportsmanagertrophy.png')
 
     create_look_and_feel()
     sg.theme('EsmTheme')
@@ -34,7 +31,7 @@ def main_screen():
     use the Database Editor, or exit the game.
     :return: layout of the main screen
     """
-    logo_path = os.path.join(folder, '../src/resources/images/logo/esportsmanager.png')
+    logo_path = find_file('esportsmanager.png')
 
     button_pad = (300, 15)
     button_size = (20, 1)

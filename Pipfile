@@ -5,13 +5,14 @@ verify_ssl = true
 
 [dev-packages]
 autopep8 = "*"
+pylint = "*"
 
 [packages]
 numpy = "*"
 pylint = "*"
 astroid = "*"
 autopep8 = "*"
-pysimplegui = "*"
+pysimplegui = "==4.20.0"
 pysimpleguiqt = "*"
 pysimpleguiwx = "*"
 wxpython = "*"

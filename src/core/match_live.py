@@ -126,8 +126,8 @@ def initialize_match(team1_id: int,
     :return:
     """
     # Gets both lists to use it on the appropriate functions
-    team_list = get_dict_list("../src/resources/db/teams.json")
-    player_list = get_dict_list("../src/resources/db/players.json")
+    team_list = get_dict_list('teams.json')
+    player_list = get_dict_list('players.json')
 
     # Creates both teams dictionaries to create their objects
     team1_dict, team2_dict = get_teams_dictionaries(team1_id, team2_id, team_list)
@@ -148,7 +148,7 @@ def picks_and_bans(match: Match) -> None:
     :param match:
     :return:
     """
-    champion_list = get_dict_list("../src/resources/db/champions.json")
+    champion_list = get_dict_list('champions.json')
 
     # TODO: implement proper picks an bans
 

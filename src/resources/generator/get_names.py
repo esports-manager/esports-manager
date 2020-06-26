@@ -1,6 +1,8 @@
 import os
 import random
 
+from ..utils import find_file
+
 
 # TODO: change these functions to a single one
 # TODO: create a file with names from more nations
@@ -273,8 +275,7 @@ def get_kr_last_names():
 
 
 def gen_nick_or_team_name(filename: str):
-    curr_dir = os.path.dirname(os.path.abspath(__file__))
-    file = os.path.join(curr_dir, filename)
+    file = find_file(filename)
 
     with open(file, "r") as fp:
         names = fp.read().splitlines()

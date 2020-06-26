@@ -36,7 +36,7 @@ class MobaPlayerTest(unittest.TestCase):
         self.assertIsNotNone(self.player)
 
     def test_random_player_creation(self) -> None:
-        player_list = get_dict_list('../src/resources/db/players.json')
+        player_list = get_dict_list('players.json')
         player_dict = random.choice(player_list)
         player = create_player_object(player_dict)
         self.assertIsInstance(player, Player)
@@ -48,10 +48,10 @@ class MobaPlayerTest(unittest.TestCase):
 
     def test_generate_invalid_nickname(self):
         with self.assertRaises(FileNotFoundError):
-            gen_nick_or_team_name("nick_names.txt")
+            gen_nick_or_team_name('nick_names.txt')
 
     def test_generate_valid_nickname(self):
-        nickname = gen_nick_or_team_name("nicknames.txt")
+        nickname = gen_nick_or_team_name('nicknames.txt')
         self.assertIsNotNone(nickname)
         self.assertIsNot(nickname, " ")
 

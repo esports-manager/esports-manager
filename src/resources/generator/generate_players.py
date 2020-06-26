@@ -5,12 +5,10 @@ import random
 from src.resources.generator.get_names import get_br_first_names, get_kr_first_names, get_usa_first_names, \
     get_br_last_names, get_kr_last_names, get_usa_last_names, gen_nick_or_team_name
 
-from ..utils import get_current_folder
+from ..utils import find_file
 
 
-THIS_FOLDER = get_current_folder()
-
-JSON_FILE = os.path.join(THIS_FOLDER, '../src/resources/db/players.json')
+JSON_FILE = find_file('players.json')
 
 NUM_PLAYERS = 200
 

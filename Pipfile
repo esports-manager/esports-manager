@@ -4,19 +4,12 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-autopep8 = "*"
-pylint = "*"
 
 [packages]
-numpy = "*"
+pysimplegui = "*"
 pylint = "*"
-astroid = "*"
 autopep8 = "*"
-pysimplegui = "==4.20.0"
-pysimpleguiqt = "*"
-pysimpleguiwx = "*"
-wxpython = "*"
-pysimpleguiweb = "*"
+setuptools = "*"
 
 [requires]
 python_version = "3.8"

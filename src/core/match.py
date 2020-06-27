@@ -1,5 +1,3 @@
-import random
-
 from src.core.team import Team
 
 
@@ -37,15 +35,6 @@ class Match:
         self.show_commentary = show_commentary
         self.match_speed = match_speed
         self.is_match_over = False
-
-    def event_invade(self):
-        prob = random.gauss(0, 1)
-        if prob > 1:
-            print("{} decides to invade!".format(self.team1))
-        elif prob < -1:
-            print("{} decides to invade!".format(self.team2))
-        else:
-            print("Teams are starting passively this game!")
 
     def __repr__(self):
         return '{0} {1}'.format(self.__class__.__name__, self.match_id)

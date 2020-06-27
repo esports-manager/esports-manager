@@ -5,12 +5,7 @@ import random
 from src.resources.generator.get_names import get_br_first_names, get_kr_first_names, get_usa_first_names, \
     get_br_last_names, get_kr_last_names, get_usa_last_names, gen_nick_or_team_name
 
-from ..utils import find_file
-
-
-JSON_FILE = find_file('players.json')
-
-NUM_PLAYERS = 200
+from ..utils import write_to_json
 
 
 def get_players_nationalities() -> list:
@@ -95,7 +90,7 @@ def generate_player_list() -> list:
     players_list = []
     nationalities = get_players_nationalities()
     
-    for i in range(NUM_PLAYERS):
+    for i in range(get_num_players()):
         nationality = random.choice(nationalities)
         player = generate_player(nationality)
         player["id"] = i
@@ -104,14 +99,8 @@ def generate_player_list() -> list:
     return players_list
 
 
-def generate_file(list_objects: list, file: str) -> None:
-    """
-    Writes list to a json file
-    :param file:
-    :param list_objects: player list
-    """
-    with open(file, "w") as fp:
-        json.dump(list_objects, fp, sort_keys=True, indent=4)
+def get_num_players():
+    return 200
 
 
 def generate() -> None:
@@ -119,4 +108,4 @@ def generate() -> None:
     Runs the entire thing
     """
     players = generate_player_list()
-    generate_file(players, JSON_FILE)
+    write_to_json(players, 'players.json')

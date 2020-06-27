@@ -1,11 +1,11 @@
 import unittest
-import json
 from tempfile import NamedTemporaryFile
 
-from src.core.match_live import get_match_obj_test, get_team, get_dict_list
+from src.core.match_live import get_match_obj_test
+from src.core.pre_match import get_team
+from src.resources.utils import get_dict_list, write_to_json, load_list_from_json
 from src.resources.generator.generate_teams import *
 from src.resources.generator.get_names import gen_nick_or_team_name
-from src.resources.generator.generate_players import generate_file
 
 
 class TeamTest(unittest.TestCase):
@@ -31,7 +31,7 @@ class TeamTest(unittest.TestCase):
         self.assertEqual(team, teams[0])
 
     def test_get_players(self):
-        players = get_players()
+        players = load_list_from_json('players.json')
         self.assertIsNotNone(players)
 
     def test_invalid_generate_team_name(self):
@@ -41,7 +41,7 @@ class TeamTest(unittest.TestCase):
     def test_generate_team_name(self):
         name = gen_nick_or_team_name('team_names.txt')
         self.assertIsNotNone(name)
-        self.assertIsNot(name, " ")
+        self.assertIsNot(" ", name)
 
     def test_generate_team_file(self):
         players = [
@@ -53,11 +53,31 @@ class TeamTest(unittest.TestCase):
         ]
         contents = generate_teams(players)
         with NamedTemporaryFile(delete=False) as temp_file:
-            generate_file(contents, temp_file.name)
+            write_to_json(contents, temp_file.name)
             with open(temp_file.name, 'r') as f:
                 obtained_content = json.load(f)
         self.assertIsNotNone(obtained_content)
         self.assertEqual(contents, obtained_content)
+
+    def test_is_tower_up(self):
+        self.assertEqual(True, self.team.is_tower_up('mid'))
+
+    def test_is_tower_not_up(self):
+        self.team.towers["mid"] = 0
+        self.assertEqual(False, self.team.is_tower_up('mid'))
+
+    def test_are_all_towers_up(self):
+        self.assertEqual(True, self.team.are_all_towers_up())
+
+    def test_are_all_towers_not_up(self):
+        for key, _ in self.team.towers.items():
+            self.team.towers[key] = 0
+
+        self.assertEqual(False, self.team.are_all_towers_up())
+
+    def test_one_tower_is_not_up(self):
+        self.team.towers['mid'] = 0
+        self.assertEqual(False, self.team.are_all_towers_up())
 
 
 if __name__ == '__main__':

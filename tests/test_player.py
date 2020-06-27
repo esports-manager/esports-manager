@@ -4,9 +4,11 @@ from tempfile import NamedTemporaryFile
 import random
 
 from src.core.player import Player
-from src.core.match_live import get_dict_list, create_player_object
+from src.core.match_live import get_dict_list
+from src.core.pre_match import create_player_object
 from src.resources.generator.get_names import gen_nick_or_team_name
-from src.resources.generator.generate_players import generate_player_list, generate_file
+from src.resources.generator.generate_players import generate_player_list
+from src.resources.utils import write_to_json
 
 
 def get_player_dict_test() -> dict:
@@ -63,9 +65,10 @@ class MobaPlayerTest(unittest.TestCase):
     def test_generate_player_file(self):
         players = generate_player_list()
         with NamedTemporaryFile(delete=False) as temp_file:
-            generate_file(players, temp_file.name)
+            write_to_json(players, temp_file.name)
             with open(temp_file.name, 'r') as fp:
                 contents = json.load(fp)
+
         self.assertIsNotNone(contents)
         self.assertEqual(players, contents)
         

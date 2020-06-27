@@ -26,28 +26,20 @@ class Team:
         # list of all players in the roster
         self.list_players = list_players
 
-    def is_tower_up(self, lane) -> bool:
+        self._player_overall = 0
+        self._avg_champion_skill = 0
+
+    def is_tower_up(self, lane: str) -> bool:
         return self.towers[lane] != 0
 
     def are_all_towers_up(self) -> bool:
-        for lane, num in self.towers.items():
-            if num == 0:
-                return False
+        return 0 not in self.towers.values()
 
-        return True
-
-    def is_inhibitor_up(self, lane) -> bool:
-        if self.inhibitors[lane] == 0:
-            return False
-        else:
-            return True
+    def is_inhibitor_up(self, lane: str) -> bool:
+        return self.inhibitors[lane] != 0
 
     def are_all_inhibitors_up(self) -> bool:
-        for lane, num in self.inhibitors.items():
-            if num == 0:
-                return False
-
-        return True
+        return 0 not in self.inhibitors.values()
 
     @property
     def points(self) -> int:
@@ -64,7 +56,6 @@ class Team:
         :return:
         """
         # TODO: there should be a check whether the player is playing the match or not, to avoid messing up this list
-        self._player_overall = 0
         skill_list = []
         for player in self.list_players:
             skill_list.append(player.skill)
@@ -80,7 +71,6 @@ class Team:
 
     @property
     def champion_overall(self) -> int:
-        self._avg_champion_skill = 0
         for player in self.list_players:
             self._avg_champion_skill += player.champion.skill
 

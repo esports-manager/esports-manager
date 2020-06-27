@@ -1,11 +1,9 @@
+import os
 import json
 import random
-import os
 
+from ..utils import write_to_json
 
-THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
-
-JSON_FILE = os.path.join(THIS_FOLDER, '../db/champions.json')
 
 # THIS FILE HAS THE SOLE PURPOSE OF GENERATING A JSON FILE
 # WITH CHAMPION NAMES AND RANDOM SKILL LEVELS
@@ -186,11 +184,6 @@ def create_champions_list() -> list:
     return list_champions
 
 
-def write_to_json(ch_list: list) -> None:
-    with open(JSON_FILE, 'w') as fp:
-        json.dump(ch_list, fp, sort_keys=True, indent=4)
-
-
 if __name__ == '__main__':
     list_of_champions = create_champions_list()
-    write_to_json(list_of_champions)
+    write_to_json(list_of_champions, 'champions.json')

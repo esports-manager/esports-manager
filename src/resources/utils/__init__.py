@@ -4,6 +4,29 @@ import json
 from src.definitions import ROOT_DIR
 
 
+def write_to_json(contents: list, filename: str) -> None:
+    file = filename
+    try:
+        file = find_file(filename)
+    except FileNotFoundError:
+        file = os.path.join(ROOT_DIR, 'resources', 'db', filename)
+    finally:
+        with open(file, 'w') as fp:
+            json.dump(contents, fp, sort_keys=True, indent=4)
+
+
+def load_list_from_json(filename: str) -> list:
+    try:
+        file = find_file(filename)
+    except FileNotFoundError as e:
+        print("Error occurred: {}".format(e.errno))
+    else:
+        with open(file, 'r') as fr:
+            contents = json.load(fr)
+
+        return contents
+
+
 def find_file(filename) -> str:
     """
     This function is used to find files used by the project. It receives the

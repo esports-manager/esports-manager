@@ -1,18 +1,9 @@
 import json
-import os
 import random
 from math import floor
 
-from .generate_players import NUM_PLAYERS, JSON_FILE, generate_file
 from .get_names import gen_nick_or_team_name
-from ..utils import find_file
-
-
-def get_players() -> list:
-    with open(JSON_FILE, "r") as fp:
-        players = json.load(fp)
-
-    return players
+from ..utils import write_to_json, load_list_from_json
 
 
 # TODO: let teams have a bigger roster than 5 players
@@ -47,7 +38,6 @@ def generate_teams(players: list) -> list:
 
 
 def run_generation() -> None:
-    team_file = find_file('teams.json')
-    players = get_players()
+    players = load_list_from_json('players.json')
     teams = generate_teams(players)
-    generate_file(teams, team_file)
+    write_to_json(teams, 'teams.json')

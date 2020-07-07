@@ -23,11 +23,13 @@ class Team:
             "bot": 1
         }
 
+        self.win_prob = 0
+
         # list of all players in the roster
         self.list_players = list_players
 
         self._player_overall = 0
-        self._avg_champion_skill = 0
+        self._champion_overall = 0
 
     def is_tower_up(self, lane: str) -> bool:
         return self.towers[lane] != 0
@@ -55,15 +57,14 @@ class Team:
         This method is calculating team's overall
         :return:
         """
-        # TODO: there should be a check whether the player is playing the match or not, to avoid messing up this list
+        self._player_overall = 0
+
         skill_list = []
         for player in self.list_players:
             skill_list.append(player.skill)
 
-        highest_rated = max(skill_list)
-
         for skill in skill_list:
-            self._player_overall = (skill * (skill/highest_rated)) + self._player_overall
+            self._player_overall += skill
 
         self._player_overall = int(self._player_overall / len(self.list_players))
 
@@ -71,9 +72,11 @@ class Team:
 
     @property
     def champion_overall(self) -> int:
+        self._champion_overall = 0
+
         for player in self.list_players:
-            self._avg_champion_skill += player.champion.skill
+            self._champion_overall += player.champion.skill
 
-        self._avg_champion_skill = int(self._avg_champion_skill / len(self.list_players))
+        self._champion_overall = int(self._champion_overall / len(self.list_players))
 
-        return self._avg_champion_skill
+        return self._champion_overall

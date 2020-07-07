@@ -1,9 +1,30 @@
 import PySimpleGUI as sg
 
-from src.ui.gui import create_window
+from src.ui.gui import create_window, match_test
+from src.core.match_live import get_match_obj_test
+from src.resources.generator.generate_champions import generate_champion_file
+from src.resources.generator.generate_teams import generate_team_file
+from src.resources.generator.generate_players import generate_player_file
 
 
-def app():
+def generation():
+    generate_champion_file()
+    generate_player_file()
+    generate_team_file()
+
+
+def testing_match():
+    match = get_match_obj_test()
+    window = match_test(match)
+    while True:
+        event, values = window.read()
+        if event in [sg.WINDOW_CLOSED, 'exit_main']:
+            break
+
+    window.close()
+
+
+def app() -> None:
     window = create_window()
     while True:
         event, values = window.read()

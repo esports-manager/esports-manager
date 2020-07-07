@@ -184,6 +184,6 @@ def create_champions_list() -> list:
     return list_champions
 
 
-if __name__ == '__main__':
+def generate_champion_file() -> None:
     list_of_champions = create_champions_list()
     write_to_json(list_of_champions, 'champions.json')

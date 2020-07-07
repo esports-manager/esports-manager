@@ -4,9 +4,10 @@ from src.ui.gui_components import esm_button, esm_form_text, create_look_and_fee
                                   esm_input_text, esm_input_combo, esm_title_text, esm_listbox
 from src.resources.generator.generate_players import get_players_nationalities
 from src.resources.utils import get_list_of_team_names, find_file
+from src.core.match import Match
 
 
-def create_window():
+def create_window() -> sg.Window:
     """
     Creates the main Window using PySimpleGUI, and assigns the eSM icon to it.
     It uses the get_layouts() function to get a list of layouts used in this software.
@@ -25,7 +26,7 @@ def create_window():
     )
 
 
-def main_screen():
+def main_screen() -> list:
     """
     Defines the main screen. This screen shows the initial options to play a new game, load game,
     use the Database Editor, or exit the game.
@@ -61,7 +62,7 @@ def main_screen():
     ]
 
 
-def create_manager_layout():
+def create_manager_layout() -> list:
     """
     Defines the manager creation layout. In this page, the user chooses a name for the manager, the team they
     want to play with, and
@@ -82,7 +83,7 @@ def create_manager_layout():
     ]
 
 
-def load_game_layout():
+def load_game_layout() -> list:
     """
     Creates the layout for the load game page
     :return:
@@ -102,7 +103,7 @@ def load_game_layout():
     ]
 
 
-def get_layouts():
+def get_layouts() -> list:
     """
     Gets all the layouts and makes them all invisible, except for the main screen one.
     This function gets called in the beginning of the game's execution.
@@ -131,3 +132,23 @@ def get_layouts():
                   col_load_game],
                  relief=sg.RELIEF_FLAT, show_handle=False)]
     ]
+
+
+# debugging
+def match_test(match: Match) -> sg.Window:
+    icon_path = find_file('esportsmanagertrophy.png')
+    match_name = 'Match ' + str(match.match_id)
+
+    layout = [
+        [esm_title_text(match_name)]
+    ]
+
+    create_look_and_feel()
+    sg.theme('EsmTheme')
+    return sg.Window(
+        'eSports Manager',
+        element_justification='center',
+        layout=layout,
+        icon=icon_path,
+        resizable=True,
+    )

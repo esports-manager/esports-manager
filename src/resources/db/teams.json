@@ -1,442 +1,442 @@
 [
     {
         "id": 0,
-        "name": "Bees",
+        "name": "Whammers",
         "roster_id": [
-            158,
-            53,
-            63,
-            186,
-            148
+            150,
+            15,
+            124,
+            137,
+            192
         ]
     },
     {
         "id": 1,
-        "name": "Perfecto\u00e2\u20ac\u2122s",
+        "name": "Gatling Guns",
         "roster_id": [
-            46,
-            31,
-            182,
-            32,
-            161
+            0,
+            184,
+            19,
+            35,
+            78
         ]
     },
     {
         "id": 2,
-        "name": "Chiefs",
+        "name": "Mediocrity At Its Best",
         "roster_id": [
-            107,
-            11,
-            6,
-            165,
-            157
+            156,
+            25,
+            68,
+            55,
+            91
         ]
     },
     {
         "id": 3,
-        "name": "8th Wonders of World",
+        "name": "Yankees",
         "roster_id": [
-            56,
-            1,
-            45,
+            40,
             2,
-            171
+            17,
+            175,
+            12
         ]
     },
     {
         "id": 4,
-        "name": "Lightning",
+        "name": "Sharks",
         "roster_id": [
-            96,
-            189,
-            130,
-            141,
-            185
+            126,
+            45,
+            82,
+            177,
+            60
         ]
     },
     {
         "id": 5,
-        "name": "Bees",
+        "name": "Aeros",
         "roster_id": [
-            150,
-            60,
-            104,
-            198,
-            190
+            182,
+            47,
+            171,
+            94,
+            116
         ]
     },
     {
         "id": 6,
-        "name": "Hustlers",
+        "name": "Witches",
         "roster_id": [
-            51,
-            120,
-            73,
-            170,
-            176
+            165,
+            193,
+            18,
+            198,
+            147
         ]
     },
     {
         "id": 7,
-        "name": "Big Bats",
+        "name": "Punishers",
         "roster_id": [
-            79,
-            58,
-            168,
-            88,
-            180
-        ]
-    },
-    {
-        "id": 8,
-        "name": "White Walkers",
-        "roster_id": [
-            22,
-            30,
+            21,
+            190,
             64,
-            74,
-            139
-        ]
-    },
-    {
-        "id": 9,
-        "name": "Mountaineers",
-        "roster_id": [
-            3,
-            90,
-            69,
-            115,
-            27
-        ]
-    },
-    {
-        "id": 10,
-        "name": "Diplomats",
-        "roster_id": [
-            99,
-            59,
-            40,
-            146,
-            145
-        ]
-    },
-    {
-        "id": 11,
-        "name": "Sharks in Suits",
-        "roster_id": [
-            187,
-            184,
-            174,
-            97,
-            82
-        ]
-    },
-    {
-        "id": 12,
-        "name": "Zeniths",
-        "roster_id": [
-            126,
-            48,
-            66,
-            50,
-            183
-        ]
-    },
-    {
-        "id": 13,
-        "name": "Indians",
-        "roster_id": [
-            39,
-            57,
-            129,
-            133,
-            100
-        ]
-    },
-    {
-        "id": 14,
-        "name": "Wanderers",
-        "roster_id": [
-            4,
-            34,
-            33,
-            13,
-            177
-        ]
-    },
-    {
-        "id": 15,
-        "name": "Lake Hawks",
-        "roster_id": [
-            25,
-            123,
-            86,
-            169,
-            159
-        ]
-    },
-    {
-        "id": 16,
-        "name": "Big Horns",
-        "roster_id": [
-            199,
-            119,
-            16,
-            68,
-            38
-        ]
-    },
-    {
-        "id": 17,
-        "name": "Marauders",
-        "roster_id": [
-            136,
-            84,
-            124,
-            167,
-            125
-        ]
-    },
-    {
-        "id": 18,
-        "name": "Rattlesnakes",
-        "roster_id": [
-            154,
-            20,
-            111,
-            105,
-            62
-        ]
-    },
-    {
-        "id": 19,
-        "name": "Wolf Pack",
-        "roster_id": [
-            75,
-            26,
-            65,
-            77,
-            194
-        ]
-    },
-    {
-        "id": 20,
-        "name": "Prodigies",
-        "roster_id": [
-            131,
-            102,
-            76,
-            35,
-            44
-        ]
-    },
-    {
-        "id": 21,
-        "name": "Squad",
-        "roster_id": [
-            15,
-            147,
-            91,
-            103,
-            191
-        ]
-    },
-    {
-        "id": 22,
-        "name": "Mermaids",
-        "roster_id": [
-            28,
-            42,
-            12,
-            192,
-            137
-        ]
-    },
-    {
-        "id": 23,
-        "name": "Watchers",
-        "roster_id": [
-            72,
-            17,
-            143,
-            78,
-            54
-        ]
-    },
-    {
-        "id": 24,
-        "name": "Enforcers",
-        "roster_id": [
-            138,
-            162,
-            188,
-            151,
-            55
-        ]
-    },
-    {
-        "id": 25,
-        "name": "Dynamix",
-        "roster_id": [
-            49,
-            14,
-            113,
-            195,
-            153
-        ]
-    },
-    {
-        "id": 26,
-        "name": "Workers Bees",
-        "roster_id": [
-            160,
-            118,
-            95,
-            8,
-            9
-        ]
-    },
-    {
-        "id": 27,
-        "name": "G-Force",
-        "roster_id": [
-            67,
-            98,
-            193,
-            149,
+            121,
             93
         ]
     },
     {
-        "id": 28,
-        "name": "Hammerheads",
+        "id": 8,
+        "name": "Calvary",
         "roster_id": [
-            83,
-            19,
-            116,
-            23,
-            109
+            56,
+            168,
+            174,
+            20,
+            166
         ]
     },
     {
-        "id": 29,
-        "name": "Chargers",
+        "id": 9,
+        "name": "Winos",
         "roster_id": [
-            134,
+            98,
+            187,
+            172,
+            75,
+            33
+        ]
+    },
+    {
+        "id": 10,
+        "name": "Tides",
+        "roster_id": [
             196,
-            121,
-            85,
-            172
-        ]
-    },
-    {
-        "id": 30,
-        "name": "Collision Course",
-        "roster_id": [
-            173,
-            127,
-            21,
-            36,
-            112
-        ]
-    },
-    {
-        "id": 31,
-        "name": "Unbeatable",
-        "roster_id": [
-            181,
-            10,
-            179,
-            37,
-            142
-        ]
-    },
-    {
-        "id": 32,
-        "name": "Ghosts",
-        "roster_id": [
-            156,
-            89,
-            18,
-            110,
-            7
-        ]
-    },
-    {
-        "id": 33,
-        "name": "Bean Counters",
-        "roster_id": [
-            163,
-            52,
+            86,
+            62,
             122,
-            197,
-            47
+            51
         ]
     },
     {
-        "id": 34,
-        "name": "Mets",
+        "id": 11,
+        "name": "Savage Joes",
         "roster_id": [
-            166,
-            140,
-            94,
-            108,
-            117
+            6,
+            183,
+            135,
+            149,
+            59
         ]
     },
     {
-        "id": 35,
-        "name": "Bruins",
+        "id": 12,
+        "name": "Trappers",
         "roster_id": [
-            0,
-            29,
-            24,
-            106,
-            87
+            145,
+            41,
+            67,
+            42,
+            49
         ]
     },
     {
-        "id": 36,
-        "name": "Impact",
+        "id": 13,
+        "name": "Lakers",
         "roster_id": [
-            81,
+            185,
+            97,
+            76,
+            13,
+            57
+        ]
+    },
+    {
+        "id": 14,
+        "name": "Wild Things",
+        "roster_id": [
             92,
-            164,
-            114,
-            80
+            80,
+            54,
+            7,
+            111
         ]
     },
     {
-        "id": 37,
-        "name": "Bachelors",
+        "id": 15,
+        "name": "Pirates",
         "roster_id": [
-            155,
-            128,
-            70,
-            144,
+            129,
+            176,
+            141,
+            151,
+            73
+        ]
+    },
+    {
+        "id": 16,
+        "name": "Red Rovers",
+        "roster_id": [
+            63,
+            125,
+            79,
+            162,
             178
         ]
     },
     {
-        "id": 38,
-        "name": "Leaders",
+        "id": 17,
+        "name": "Your Worst Nightmare",
         "roster_id": [
-            175,
-            101,
+            46,
+            195,
+            44,
+            120,
+            14
+        ]
+    },
+    {
+        "id": 18,
+        "name": "Generals",
+        "roster_id": [
+            160,
+            153,
+            148,
+            161,
+            109
+        ]
+    },
+    {
+        "id": 19,
+        "name": "Squadron",
+        "roster_id": [
+            1,
+            70,
+            134,
+            167,
+            143
+        ]
+    },
+    {
+        "id": 20,
+        "name": "Homies",
+        "roster_id": [
+            28,
+            136,
+            113,
+            164,
+            5
+        ]
+    },
+    {
+        "id": 21,
+        "name": "Laser Beams",
+        "roster_id": [
+            140,
+            181,
+            169,
+            90,
+            186
+        ]
+    },
+    {
+        "id": 22,
+        "name": "Bad to The Bone",
+        "roster_id": [
+            154,
             43,
-            41,
-            71
+            53,
+            199,
+            139
+        ]
+    },
+    {
+        "id": 23,
+        "name": "Steelers",
+        "roster_id": [
+            191,
+            87,
+            27,
+            11,
+            61
+        ]
+    },
+    {
+        "id": 24,
+        "name": "Obliterators",
+        "roster_id": [
+            127,
+            16,
+            24,
+            95,
+            123
+        ]
+    },
+    {
+        "id": 25,
+        "name": "Wrecking Crew",
+        "roster_id": [
+            110,
+            3,
+            103,
+            163,
+            152
+        ]
+    },
+    {
+        "id": 26,
+        "name": "Barbarians",
+        "roster_id": [
+            115,
+            89,
+            39,
+            131,
+            107
+        ]
+    },
+    {
+        "id": 27,
+        "name": "Blue Jays",
+        "roster_id": [
+            105,
+            9,
+            48,
+            30,
+            84
+        ]
+    },
+    {
+        "id": 28,
+        "name": "Admirals",
+        "roster_id": [
+            158,
+            128,
+            31,
+            69,
+            104
+        ]
+    },
+    {
+        "id": 29,
+        "name": "Owls",
+        "roster_id": [
+            133,
+            189,
+            173,
+            118,
+            194
+        ]
+    },
+    {
+        "id": 30,
+        "name": "Bulldogs",
+        "roster_id": [
+            72,
+            66,
+            22,
+            114,
+            132
+        ]
+    },
+    {
+        "id": 31,
+        "name": "Shadows",
+        "roster_id": [
+            29,
+            101,
+            102,
+            117,
+            155
+        ]
+    },
+    {
+        "id": 32,
+        "name": "Rhythm",
+        "roster_id": [
+            71,
+            170,
+            85,
+            26,
+            37
+        ]
+    },
+    {
+        "id": 33,
+        "name": "Bosses",
+        "roster_id": [
+            81,
+            83,
+            88,
+            10,
+            74
+        ]
+    },
+    {
+        "id": 34,
+        "name": "Tech Attack",
+        "roster_id": [
+            58,
+            146,
+            99,
+            138,
+            130
+        ]
+    },
+    {
+        "id": 35,
+        "name": "Adrenaline",
+        "roster_id": [
+            106,
+            142,
+            38,
+            157,
+            100
+        ]
+    },
+    {
+        "id": 36,
+        "name": "Scorpions",
+        "roster_id": [
+            65,
+            23,
+            52,
+            96,
+            197
+        ]
+    },
+    {
+        "id": 37,
+        "name": "Kingdom",
+        "roster_id": [
+            50,
+            112,
+            8,
+            4,
+            179
+        ]
+    },
+    {
+        "id": 38,
+        "name": "Sluggers",
+        "roster_id": [
+            36,
+            144,
+            108,
+            180,
+            34
         ]
     },
     {
         "id": 39,
-        "name": "Battle Buddies",
+        "name": "Builders",
         "roster_id": [
-            61,
-            135,
-            132,
-            152,
-            5
+            32,
+            159,
+            77,
+            119,
+            188
         ]
     }
 ]

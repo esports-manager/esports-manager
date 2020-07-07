@@ -3,7 +3,7 @@ from tempfile import NamedTemporaryFile
 
 from src.core.match_live import get_match_obj_test
 from src.core.pre_match import get_team
-from src.resources.utils import get_dict_list, write_to_json, load_list_from_json
+from src.resources.utils import load_list_from_json, write_to_json, load_list_from_json
 from src.resources.generator.generate_teams import *
 from src.resources.generator.get_names import gen_nick_or_team_name
 
@@ -20,12 +20,12 @@ class TeamTest(unittest.TestCase):
         self.assertGreaterEqual(self.team.champion_overall, 0)
 
     def test_get_invalid_team(self):
-        teams = get_dict_list('teams.json')
+        teams = load_list_from_json('teams.json')
         with self.assertRaises(ValueError):
             get_team(-1, teams)
 
     def test_get_valid_team(self):
-        teams = get_dict_list('teams.json')
+        teams = load_list_from_json('teams.json')
         team = get_team(0, teams)
         self.assertIsNotNone(team)
         self.assertEqual(team, teams[0])
@@ -78,6 +78,12 @@ class TeamTest(unittest.TestCase):
     def test_one_tower_is_not_up(self):
         self.team.towers['mid'] = 0
         self.assertEqual(False, self.team.are_all_towers_up())
+
+    def test_get_points(self):
+        for player in self.team.list_players:
+            player.points += 5
+
+        self.assertEqual(25, self.team.points)
 
 
 if __name__ == '__main__':

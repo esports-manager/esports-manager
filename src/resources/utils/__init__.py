@@ -9,42 +9,34 @@ def write_to_json(contents: list, filename: str) -> None:
     try:
         file = find_file(filename)
     except FileNotFoundError:
-        file = os.path.join(ROOT_DIR, 'resources', 'db', filename)
+        # Maybe file creation should be in a separate function?
+        file = os.path.join(ROOT_DIR, 'resources', 'db', filename)  # prevents hard-coding "/" or "\"
     finally:
         with open(file, 'w') as fp:
             json.dump(contents, fp, sort_keys=True, indent=4)
 
 
-def load_list_from_json(filename: str) -> list:
-    try:
-        file = find_file(filename)
-    except FileNotFoundError as e:
-        print("Error occurred: {}".format(e.errno))
-    else:
-        with open(file, 'r') as fr:
-            contents = json.load(fr)
-
-        return contents
-
-
-def find_file(filename) -> str:
+def find_file(filename: str, folder: str = ROOT_DIR) -> str:
     """
     This function is used to find files used by the project. It receives the
-    ROOT_DIR (src) and searches from there. It removes the need to hard-code
-    certain files.
+    folder and searches from there. It removes the need to hard-code
+    certain file paths.
 
     It was added because tests were failing outside of PyCharm, so running tests
-    from terminal or VS Code was producing tons of Errors. So I had to refactor
+    from terminal or VS Code was producing tons of errors. So I had to refactor
     everything, come up with ways that tests would work in all platforms, and that's
     what I ended up with.
 
     I hope this won't affect performance that much, and maybe in the future more
-    elegant solutions will come out.
+    elegant solutions will come out. I added the folder parameter to possibly
+    prevent some performance issues that might arise with the expansion of this project.
+    It's still unclear if it hits performance that much, but it's better safe than sorry.
 
+    :param folder: folder to start searching for the
     :param filename:
     :return:
     """
-    for root, _, files in os.walk(ROOT_DIR):
+    for root, _, files in os.walk(folder):
         if filename in files:
             return os.path.join(root, filename)
     else:
@@ -57,22 +49,27 @@ def get_from_file(file_name: str) -> list:
     :param file_name:
     :return:
     """
-    with open(file_name, "r") as fp:
+    with open(file_name, 'r') as fp:
         dictionary = json.load(fp)
 
     return dictionary
 
 
-def get_dict_list(filepath: str) -> list:
+def load_list_from_json(filepath: str) -> list:
     """
     Reads a specified file (champions, player or team json) and
     returns the list from that file
     :param filepath:
     :return:
     """
-    file = find_file(filepath)
-    return get_from_file(file)
+    try:
+        file = find_file(filepath)
+    except FileNotFoundError as e:
+        print("File was not found!")
+        print("Error occurred: {}".format(e.errno))
+    else:
+        return get_from_file(file)
 
 
 def get_list_of_team_names() -> list:
-    return [team["name"] for team in get_dict_list('teams.json')]
+    return [team["name"] for team in load_list_from_json('teams.json')]

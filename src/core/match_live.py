@@ -1,7 +1,7 @@
 import random
 
 from .match import Match
-from ..resources.utils import get_dict_list
+from ..resources.utils import load_list_from_json
 from .pre_match import get_teams_dictionaries, create_team_object, create_champion_object
 
 
@@ -23,8 +23,8 @@ def initialize_match(team1_id: int,
     :return:
     """
     # Gets both lists to use it on the appropriate functions
-    team_list = get_dict_list('teams.json')
-    player_list = get_dict_list('players.json')
+    team_list = load_list_from_json('teams.json')
+    player_list = load_list_from_json('players.json')
 
     # Creates both teams dictionaries to create their objects
     team1_dict, team2_dict = get_teams_dictionaries(team1_id, team2_id, team_list)
@@ -42,7 +42,7 @@ def picks_and_bans(match: Match) -> None:
     :param match:
     :return:
     """
-    champion_list = get_dict_list('champions.json')
+    champion_list = load_list_from_json('champions.json')
 
     # TODO: implement proper picks an bans
 
@@ -84,6 +84,13 @@ def start_match(team1_id: int,
     match = initialize_match(team1_id, team2_id, match_id, show_commentary, match_speed, ch_id)
     picks_and_bans(match)
 
-    # TODO: implement match loop
+    match.calculate_both_teams_win_prob()
+    # match_loop(match)
 
     return match
+
+
+def match_loop(match: Match) -> None:
+    while match.is_match_over is False:
+        pass
+

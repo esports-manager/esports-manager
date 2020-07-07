@@ -36,8 +36,26 @@ class Match:
         self.match_speed = match_speed
         self.is_match_over = False
 
-    def __repr__(self):
+    def calculate_both_teams_win_prob(self) -> None:
+        total_prob = 0
+        for team in self.teams:
+            total_prob += team.player_overall + team.champion_overall
+        # total_prob = sum(
+        #     team.player_overall + team.champion_overall for team in self.teams
+        # )
+
+        for team in self.teams:
+            team.win_prob = (team.player_overall + team.champion_overall) / total_prob
+
+    def __repr__(self) -> str:
         return '{0} {1}'.format(self.__class__.__name__, self.match_id)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return '{0} ID: {1}'.format(self.__class__.__name__, self.match_id)
+
+
+if __name__ == '__main__':
+    from src.core.match_live import get_match_obj_test
+
+    match = get_match_obj_test()
+    match.calculate_both_teams_win_prob()

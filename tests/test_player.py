@@ -4,7 +4,7 @@ from tempfile import NamedTemporaryFile
 import random
 
 from src.core.player import Player
-from src.core.match_live import get_dict_list
+from src.core.match_live import load_list_from_json
 from src.core.pre_match import create_player_object
 from src.resources.generator.get_names import gen_nick_or_team_name
 from src.resources.generator.generate_players import generate_player_list
@@ -38,7 +38,7 @@ class MobaPlayerTest(unittest.TestCase):
         self.assertIsNotNone(self.player)
 
     def test_random_player_creation(self) -> None:
-        player_list = get_dict_list('players.json')
+        player_list = load_list_from_json('players.json')
         player_dict = random.choice(player_list)
         player = create_player_object(player_dict)
         self.assertIsInstance(player, Player)

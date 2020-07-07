@@ -103,7 +103,7 @@ def get_num_players():
     return 200
 
 
-def generate() -> None:
+def generate_player_file() -> None:
     """
     Runs the entire thing
     """

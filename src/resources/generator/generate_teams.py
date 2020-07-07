@@ -37,7 +37,7 @@ def generate_teams(players: list) -> list:
     return teams
 
 
-def run_generation() -> None:
+def generate_team_file() -> None:
     players = load_list_from_json('players.json')
     teams = generate_teams(players)
     write_to_json(teams, 'teams.json')

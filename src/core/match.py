@@ -1,4 +1,5 @@
 from src.core.team import Team
+import random
 
 
 class Match:
@@ -37,21 +38,26 @@ class Match:
         self.is_match_over = False
 
     def calculate_both_teams_win_prob(self) -> None:
-        total_prob = 0
-        for team in self.teams:
-            total_prob += team.player_overall + team.champion_overall
-        # total_prob = sum(
-        #     team.player_overall + team.champion_overall for team in self.teams
-        # )
+        total_prob = sum(
+            team.player_overall + team.champion_overall + team.points for team in self.teams
+        )
 
         for team in self.teams:
-            team.win_prob = (team.player_overall + team.champion_overall) / total_prob
+            team.win_prob = (team.player_overall + team.champion_overall + team.points) / total_prob
 
     def __repr__(self) -> str:
         return '{0} {1}'.format(self.__class__.__name__, self.match_id)
 
     def __str__(self) -> str:
         return '{0} ID: {1}'.format(self.__class__.__name__, self.match_id)
+
+    def get_speed(self) -> int:
+        if self.match_speed == 1:
+            return 5
+        elif self.match_speed == 2:
+            return 10
+        elif self.match_speed == 3:
+            return 15
 
 
 if __name__ == '__main__':

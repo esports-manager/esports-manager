@@ -25,8 +25,12 @@ class Team:
 
         self.win_prob = 0
 
-        # list of all players in the roster
+        # list of players in match
         self.list_players = list_players
+
+        self._kills = 0
+        self._deaths = 0
+        self._assists = 0
 
         self._player_overall = 0
         self._champion_overall = 0
@@ -42,6 +46,30 @@ class Team:
 
     def are_all_inhibitors_up(self) -> bool:
         return 0 not in self.inhibitors.values()
+
+    @property
+    def kills(self):
+        self._kills = 0
+        for player in self.list_players:
+            player.kills += self._kills
+
+        return self._kills
+
+    @property
+    def deaths(self):
+        self._deaths = 0
+        for player in self.list_players:
+            player.deaths += self._deaths
+
+        return self._deaths
+
+    @property
+    def assists(self):
+        self._assists = 0
+        for player in self.list_players:
+            player.assists += self._assists
+
+        return self._assists
 
     @property
     def points(self) -> int:
@@ -80,3 +108,9 @@ class Team:
         self._champion_overall = int(self._champion_overall / len(self.list_players))
 
         return self._champion_overall
+
+    def __str__(self):
+        return '{0}'.format(self.name)
+
+    def __repr__(self):
+        return '{0} {1}'.format(self.__class__.__name__, self.name)

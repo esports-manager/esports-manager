@@ -1,5 +1,3 @@
-import json
-import os
 import random
 
 from src.resources.generator.get_names import get_br_first_names, get_kr_first_names, get_usa_first_names, \
@@ -100,7 +98,7 @@ def generate_player_list() -> list:
 
 
 def get_num_players():
-    return 200
+    return 1000
 
 
 def generate_player_file() -> None:

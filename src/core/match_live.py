@@ -3,6 +3,7 @@ import random
 from .match import Match
 from ..resources.utils import load_list_from_json
 from .pre_match import get_teams_dictionaries, create_team_object, create_champion_object
+from time import sleep
 
 
 def initialize_match(team1_id: int,
@@ -92,5 +93,5 @@ def start_match(team1_id: int,
 
 def match_loop(match: Match) -> None:
     while match.is_match_over is False:
-        pass
-
+        match.calculate_both_teams_win_prob()
+        sleep(match.get_speed())

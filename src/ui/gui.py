@@ -1,10 +1,20 @@
+import os
 import PySimpleGUI as sg
+import base64
 
 from src.ui.gui_components import esm_button, esm_form_text, create_look_and_feel, \
                                   esm_input_text, esm_input_combo, esm_title_text, esm_listbox
 from src.resources.generator.generate_players import get_players_nationalities
-from src.resources.utils import get_list_of_team_names, find_file
+from src.resources.utils import get_key_from_json, find_file, load_list_from_json
+from src.resources import RES_DIR
 from src.core.match import Match
+
+
+def encode_icon() -> str:
+    with open(find_file('esportsmanagertrophy.png', folder=RES_DIR), 'rb') as fp:
+        encoded_icon = base64.b64encode(fp.read())
+
+    return encoded_icon
 
 
 def create_window() -> sg.Window:
@@ -13,8 +23,8 @@ def create_window() -> sg.Window:
     It uses the get_layouts() function to get a list of layouts used in this software.
     :return: the window PySimpleGUI object
     """
-    icon_path = find_file('esportsmanagertrophy.png')
 
+    icon_path = encode_icon()
     create_look_and_feel()
     sg.theme('EsmTheme')
     return sg.Window(
@@ -69,7 +79,8 @@ def create_manager_layout() -> list:
     :return:
     """
     nationalities = get_players_nationalities()
-    team_names = get_list_of_team_names()
+
+    team_names = get_key_from_json()
 
     return [
         [esm_title_text('New Game')],
@@ -77,9 +88,12 @@ def create_manager_layout() -> list:
          esm_input_text()],
         [esm_form_text('Date of Birth: '), esm_input_text()],
         [esm_form_text('Nationality: '), esm_input_combo(nationalities)],
-        [esm_form_text('Team: '), esm_listbox(team_names)],
-        [esm_button('Next', key='next_new_game', font='Yukarimobile 18'),
-         esm_button('Cancel', key='cancel_new_game', font='Yukarimobile 18')]
+        [esm_form_text('Team: '),
+         esm_listbox(team_names, key='team_list', enable_events=True),
+         esm_form_text('Players: '),
+         esm_listbox(['No team selected'], key='player_list')],
+        [esm_button('Next', key='next_new_game'),
+         esm_button('Cancel', key='cancel_new_game')]
     ]
 
 
@@ -135,12 +149,11 @@ def get_layouts() -> list:
 
 
 # debugging
-def match_test(match: Match) -> sg.Window:
-    icon_path = find_file('esportsmanagertrophy.png')
-    match_name = 'Match ' + str(match.match_id)
+def debug_window(match: Match = None) -> sg.Window:
+    icon_path = encode_icon()
 
     layout = [
-        [esm_title_text(match_name)]
+        [esm_title_text('Debug Window')]
     ]
 
     create_look_and_feel()

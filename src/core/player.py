@@ -11,6 +11,8 @@ class Player:
                  skill: int):
         self.player_id = player_id
 
+        # TODO: players should include team's id as well
+
         self.first_name = first_name
         self.last_name = last_name
         self.nick_name = nick_name
@@ -30,7 +32,6 @@ class Player:
     @skill.setter
     def skill(self, skill):
         self._skill = skill
-        return self._skill
 
 
 class MobaPlayer(Player):
@@ -82,7 +83,7 @@ class MobaPlayer(Player):
 
     @points.setter
     def points(self, add_pts: int):
-        self._points += add_pts
+        self._points = add_pts
 
     def __repr__(self):
         return '{0} {1}'.format(self.__class__.__name__, self.nick_name)

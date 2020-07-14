@@ -71,5 +71,30 @@ def load_list_from_json(filepath: str) -> list:
         return get_from_file(file)
 
 
-def get_list_of_team_names() -> list:
-    return [team["name"] for team in load_list_from_json('teams.json')]
+def get_key_from_json(key: str = 'name', file: str = 'teams.json') -> list:
+    """
+    Gets a key from a json file. By default it is used by the GUI to get
+    names from the file teams.json, but we can repurpose that for other
+    files too, such as get player names, champion names, etc...
+    :param key:
+    :param file:
+    :return:
+    """
+    return [obj[key] for obj in load_list_from_json(file)]
+
+
+if __name__ == '__main__':
+    import time
+    from src.resources import RES_DIR
+
+    start_time1 = time.clock()
+    file1 = find_file('champions.json')
+    file2 = find_file('teams.json')
+    file3 = find_file('players.json')
+    print("1st runtime: {}".format((time.clock() - start_time1)))
+
+    start_time2 = time.clock()
+    file4 = find_file('champions.json', folder=RES_DIR)
+    file5 = find_file('teams.json', folder=RES_DIR)
+    file6 = find_file('players.json', folder=RES_DIR)
+    print("2nd runtime: {}".format(time.clock() - start_time2))

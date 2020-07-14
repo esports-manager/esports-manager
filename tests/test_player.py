@@ -45,7 +45,7 @@ class MobaPlayerTest(unittest.TestCase):
 
     def test_add_points(self) -> None:
         self.player.points = 5
-        self.player.points = 3
+        self.player.points += 3
         self.assertEqual(self.player.points, 8)
 
     def test_generate_invalid_nickname(self):

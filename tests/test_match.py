@@ -1,21 +1,17 @@
 import unittest
 
-from src.core.match_live import get_match_obj_test
+from src.core.match_live import get_live_obj_test
 from src.core.match import Match
 
 
 class MatchTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.match = get_match_obj_test()
+        self.live = get_live_obj_test()
+        self.match = self.live.match
 
     def test_get_match(self) -> None:
         self.assertIsNotNone(self.match)
         self.assertIsInstance(self.match, Match)
-
-    def test_get_team_win_prob(self) -> None:
-        self.match.calculate_both_teams_win_prob()
-        prob = self.match.team1.win_prob + self.match.team2.win_prob
-        self.assertEqual(1, prob)
 
     @unittest.expectedFailure
     def test_total_prob(self):

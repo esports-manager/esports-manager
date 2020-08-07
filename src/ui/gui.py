@@ -1,4 +1,3 @@
-import os
 import PySimpleGUI as sg
 import base64
 
@@ -15,6 +14,55 @@ def encode_icon() -> str:
         encoded_icon = base64.b64encode(fp.read())
 
     return encoded_icon
+
+
+def get_player_names(value: str, team_list: list, player_list: list) -> list:
+    player_ids = None
+    for team in team_list:
+        if value[0] == team['name']:
+            player_ids = team['roster_id']
+
+    if player_ids is not None:
+        player_names = []
+
+        for pl_id in player_ids:
+            for player in player_list:
+                if pl_id == player['id']:
+                    player_names.append(str(player['nick_name']) + '    ' +
+                                        str(player['nationality']) + '    ' +
+                                        str(player['skill']))
+    else:
+        raise NotImplementedError("Not found!")
+
+    return player_names
+
+
+def app() -> None:
+    window = create_window()
+    while True:
+        event, values = window.read()
+        if event in [sg.WINDOW_CLOSED, 'exit_main']:
+            break
+        elif event == 'new_game':
+            window['main_screen'].update(visible=False)
+            window['create_manager'].update(visible=True)
+        elif event == 'load_game_main':
+            window['main_screen'].update(visible=False)
+            window['load_game'].update(visible=True)
+        elif event == 'cancel_load':
+            window['load_game'].update(visible=False)
+            window['main_screen'].update(visible=True)
+        elif event == 'cancel_new_game':
+            window['create_manager'].update(visible=False)
+            window['main_screen'].update(visible=True)
+        elif event == 'team_list':
+            teams = load_list_from_json('teams.json')
+            players = load_list_from_json('players.json')
+            window.Element('player_list').Update(values=get_player_names(values['team_list'], teams, players))
+
+        print(event, values)
+
+    window.close()
 
 
 def create_window() -> sg.Window:
@@ -78,9 +126,19 @@ def create_manager_layout() -> list:
     want to play with, and
     :return:
     """
-    nationalities = get_players_nationalities()
+    names = load_list_from_json('names.json')
+    nationalities = get_players_nationalities(names)
 
     team_names = get_key_from_json()
+
+    team_list_frame = [
+        [esm_form_text('Team: ')],
+        [esm_listbox(team_names, key='team_list', enable_events=True)]
+    ]
+    player_list_frame = [
+        [esm_form_text('Players: ')],
+        [esm_listbox(['No team selected'], key='player_list')]
+    ]
 
     return [
         [esm_title_text('New Game')],
@@ -88,10 +146,8 @@ def create_manager_layout() -> list:
          esm_input_text()],
         [esm_form_text('Date of Birth: '), esm_input_text()],
         [esm_form_text('Nationality: '), esm_input_combo(nationalities)],
-        [esm_form_text('Team: '),
-         esm_listbox(team_names, key='team_list', enable_events=True),
-         esm_form_text('Players: '),
-         esm_listbox(['No team selected'], key='player_list')],
+        [sg.Column(layout=team_list_frame, element_justification='center'),
+         sg.Column(layout=player_list_frame, element_justification='center')],
         [esm_button('Next', key='next_new_game'),
          esm_button('Cancel', key='cancel_new_game')]
     ]

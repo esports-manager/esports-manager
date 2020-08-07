@@ -2,7 +2,7 @@ import json
 import random
 from math import floor
 
-from .get_names import gen_nick_or_team_name
+from .get_names import gen_team_name, get_nick_team_names
 from ..utils import write_to_json, load_list_from_json
 
 
@@ -18,8 +18,8 @@ def choose_five_players(players: list) -> list:
     return chosen_players_id
 
 
-def generate_each_team(players: list) -> dict:
-    team_name = gen_nick_or_team_name('team_names.txt')
+def generate_each_team(players: list, team_names: list) -> dict:
+    team_name = gen_team_name(team_names)
     roster_id = choose_five_players(players)
 
     return {"name": team_name, "roster_id": roster_id}
@@ -29,8 +29,11 @@ def generate_teams(players: list) -> list:
     num_teams = floor(int(len(players) / 5))
 
     teams = []
+
+    team_names = get_nick_team_names('team_names.txt')
+
     for i in range(num_teams):
-        team = generate_each_team(players)
+        team = generate_each_team(players, team_names)
         team["id"] = i
         teams.append(team)
 

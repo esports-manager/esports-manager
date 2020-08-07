@@ -5,7 +5,7 @@ class Event:
                  priority: int,
                  commentaries: list,
                  points: int,
-                 conditions: str):
+                 conditions: str = None):
         self.event_id = event_id
         self.name = name
         self._priority = priority
@@ -28,14 +28,3 @@ class Event:
     @points.setter
     def points(self, value):
         self._points = value
-
-
-def create_event_objects(events: list, ev_id: int) -> Event:
-    for event in events:
-        if event['id'] == ev_id:
-            return Event(event['id'],
-                         event['name'],
-                         event['priority'],
-                         event['commentaries'],
-                         event['points'],
-                         event['conditions'])

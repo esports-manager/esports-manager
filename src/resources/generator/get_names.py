@@ -4,280 +4,31 @@ import random
 from ..utils import find_file
 
 
-# TODO: change these functions to a single one
-# TODO: create a file with names from more nations
+def generate_player_name(names: list, nationality: str):
+    for name_dict in names:
+        if name_dict['region'] == nationality:
+            first_name = random.choice(name_dict['male'])
+            last_name = random.choice(name_dict['surnames'])
 
-def get_usa_first_names():
-    return [
-        "Alexander",
-        "Aaron",
-        "Adam",
-        "Zachary",
-        "Arthur",
-        "Austin",
-        "Joe",
-        "Noah",
-        "Sean",
-        "Kyle",
-        "John",
-        "Peter",
-        "David",
-        "Anthony",
-        "Carl",
-        "William",
-        "Ted",
-        "Carlson",
-        "Michael",
-        "James",
-        "Robert",
-        "Richard",
-        "Thomas",
-        "Charles",
-        "Christopher",
-        "Daniel",
-        "Matthew",
-        "Donald",
-        "Paul",
-        "George",
-        "Joshua",
-        "Edward",
-        "Brian",
-        "Timothy",
-        "Kevin",
-        "Jason",
-        "Gary",
-        "Jacob",
-        "Eric",
-        "Nicholas",
-        "Stephen",
-        "Steve",
-        "Steven",
-        "Jonathan",
-        "Brandon",
-        "Justin",
-        "Frank",
-        "Benjamin"
-    ]
+            return first_name, last_name
+    else:
+        raise ValueError('Nationality not found!')
 
 
-def get_usa_last_names():
-    return [
-        "Johnson",
-        "Williams",
-        "Jones",
-        "Smith",
-        "Brown",
-        "Davis",
-        "Wilson",
-        "Moore",
-        "Taylor",
-        "Anderson",
-        "Jackson",
-        "Harris",
-        "White",
-        "Martin",
-        "Garcia",
-        "Martinez",
-        "Clark",
-        "Rodriguez",
-        "Lewis",
-        "Walker",
-        "Lee",
-        "Lopez",
-        "Hill",
-        "Scott",
-        "Green",
-        "Adams",
-        "Baker",
-        "Rogers",
-        "Bell",
-        "Henderson",
-        "Washington",
-        "Butler",
-        "Bryant",
-        "Freeman",
-        "Mason",
-        "Wheeler",
-        "Chapman",
-        "Morrison",
-        "Lynch",
-        "Gilbert",
-        "Fowler",
-        "Wade",
-        "Stevenson",
-        "Rogers"
-    ]
+def gen_team_name(team_names: list) -> str:
+    team_name = random.choice(team_names)
+    team_names.remove(team_name)
+    return team_name
 
 
-def get_br_first_names():
-    return [
-        "Alex",
-        "André",
-        "Antônio",
-        "Anderson",
-        "Diego",
-        "Carlos",
-        "Adriano",
-        "Aldo",
-        "Augusto",
-        "César",
-        "Cléber",
-        "Pedro",
-        "Gabriel",
-        "Rafael",
-        "Francisco",
-        "Felipe",
-        "Fábio",
-        "Fabiano",
-        "Bernardo",
-        "Alan",
-        "Fernando",
-        "Lucas",
-        "Fabrício",
-        "Henrique",
-        "Júlio",
-        "Marcos",
-        "Daniel",
-        "Bruno",
-        "Eduardo",
-        "Luís Felipe",
-        "Luís Eduardo",
-        "Luís Adriano",
-        "Luiz",
-        "Paulo",
-        "Gustavo",
-        "Mateus",
-        "Mario",
-        "Mariano",
-        "Márcio",
-        "Tiago",
-        "Thiago",
-        "Eric",
-        "Nicolas",
-        "Nicolau",
-        "Marcelo",
-        "José",
-        "João",
-        "Rodrigo",
-        "Roberto"
-    ]
+def gen_nick_name(names: list) -> str:
+    return random.choice(names)
 
 
-def get_br_last_names():
-    return [
-        "Abreu",
-        "Silva",
-        "Carvalho",
-        "Alencar",
-        "Alves",
-        "Aparecido",
-        "Barbosa",
-        "Barroso",
-        "Batista",
-        "Campos",
-        "Castello",
-        "Chagas",
-        "Kardec",
-        "Couto",
-        "Coutinho",
-        "Espínola",
-        "Castro",
-        "Oliveira",
-        "de Oliveira",
-        "Azevedo",
-        "Guimarães",
-        "Gonçalves",
-        "Feitosa",
-        "Feliciano",
-        "Bolsonaro",
-        "Pires",
-        "Pinto",
-        "Rodrigues",
-        "Sales",
-        "Santana",
-        "Santos",
-        "dos Santos",
-        "Vieira",
-        "Xavier",
-        "do Valle",
-        "Tavares",
-        "Toffoli",
-        "Souza",
-        "de Souza",
-        "Soares",
-        "Faria",
-        "Silveira",
-        "da Silva",
-        "Novaes",
-        "Torres",
-        "Neto",
-        "Nazário",
-        "Menezes",
-        "Mendonça",
-        "Miranda",
-        "Neves"
-    ]
-
-
-def get_kr_first_names():
-    return [
-        "Do-yun",
-        "Dong-ha",
-        "Ha-joon",
-        "Hyuk-kyu",
-        "Won-seok",
-        "Jong",
-        "Ji-woo",
-        "Ji-soo",
-        "Jae",
-        "Ji-ho",
-        "Ji-hoon",
-        "Jin-seong",
-        "Joon-woo",
-        "Ju-won",
-        "Myeong",
-        "Myung",
-        "Min-ju",
-        "Min-seung",
-        "Seung",
-        "Sang-hyeok",
-        "Suk",
-        "Sung",
-        "Sung-ho",
-        "Seo-jun",
-        "Si-woo",
-        "Ye-jun",
-        "Yu-jun",
-        "Joo-won",
-        "Jun-seo",
-        "U-jin",
-        "Tae-min",
-        "Young",
-        "Young-ho",
-        "Young-soo",
-        "Yun-seo"
-    ]
-
-
-def get_kr_last_names():
-    return [
-        "An",
-        "Lee",
-        "Park",
-        "Kim",
-        "Moon",
-        "Heo",
-        "Cho",
-        "Kang",
-        "Jung",
-        "Song"
-    ]
-
-
-def gen_nick_or_team_name(filename: str):
+def get_nick_team_names(filename: str) -> list:
     file = find_file(filename)
 
-    with open(file, "r") as fp:
+    with open(file, "r", encoding='utf-8') as fp:
         names = fp.read().splitlines()
 
-    return random.choice(names)
+    return names

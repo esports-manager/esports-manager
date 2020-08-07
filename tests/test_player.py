@@ -6,7 +6,7 @@ import random
 from src.core.player import Player
 from src.core.match_live import load_list_from_json
 from src.core.pre_match import create_player_object
-from src.resources.generator.get_names import gen_nick_or_team_name
+from src.resources.generator.get_names import gen_nick_name, get_nick_team_names
 from src.resources.generator.generate_players import generate_player_list
 from src.resources.utils import write_to_json
 
@@ -16,7 +16,7 @@ def get_player_dict_test() -> dict:
         "first_name": "John",
         "last_name": "Doe",
         "nick_name": "Mock",
-        "nationality": "br",
+        "nationality": "Brazil",
         "id": 100,
         "skill": 80
     }
@@ -33,6 +33,7 @@ class MobaPlayerTest(unittest.TestCase):
     def setUp(self) -> None:
         player_dict = get_player_dict_test()
         self.player = create_player_object(player_dict)
+        self.nick_names = get_nick_team_names('nicknames.txt')
 
     def test_player_creation(self) -> None:
         self.assertIsNotNone(self.player)
@@ -48,12 +49,12 @@ class MobaPlayerTest(unittest.TestCase):
         self.player.points += 3
         self.assertEqual(self.player.points, 8)
 
-    def test_generate_invalid_nickname(self):
+    def test_get_invalid_nicknames(self):
         with self.assertRaises(FileNotFoundError):
-            gen_nick_or_team_name('nick_names.txt')
+            get_nick_team_names('nick_names.txt')
 
     def test_generate_valid_nickname(self):
-        nickname = gen_nick_or_team_name('nicknames.txt')
+        nickname = gen_nick_name(self.nick_names)
         self.assertIsNotNone(nickname)
         self.assertIsNot(nickname, " ")
 

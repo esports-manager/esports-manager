@@ -47,6 +47,10 @@ class Team:
     def are_all_inhibitors_up(self) -> bool:
         return 0 not in self.inhibitors.values()
 
+    def is_inhib_exposed(self) -> bool:
+        if self.towers['top'] == 0 or self.towers['mid'] == 0 or self.towers['bot'] == 0:
+            return True
+
     @property
     def kills(self):
         self._kills = 0

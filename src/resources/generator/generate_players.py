@@ -1,42 +1,33 @@
 import random
 
-from src.resources.generator.get_names import get_br_first_names, get_kr_first_names, get_usa_first_names, \
-    get_br_last_names, get_kr_last_names, get_usa_last_names, gen_nick_or_team_name
+from src.resources.generator.get_names import generate_player_name, gen_nick_name, get_nick_team_names
+from src.resources.utils import find_file, load_list_from_json
 
 from ..utils import write_to_json
 
 
-def get_players_nationalities() -> list:
+def get_players_nationalities(file: list) -> list:
     """
     Defines nationalities
-    :return nationality: string
+    :param file: list
+    :return nationality: list
     """
-    return [
-        "br",
-        "kr",
-        "usa"
-    ]
+
+    return ['Brazil', 'Korea', 'United States']
+
+    # This function will get all nationalities, but I'm not ready to implement all nationalities into the game
+    # return [element['region'] for element in file]
 
 
-def generate_player(nationality: str) -> dict:
+def generate_player(file: list, nationality: str, nicknames: list) -> dict:
     """
     Generates player dictionary
+    :param file: list
     :param nationality: string
     :return player: dictionary
     """
-    if nationality == "br":
-        first_names = get_br_first_names()
-        last_names = get_br_last_names()
-    elif nationality == "usa":
-        first_names = get_usa_first_names()
-        last_names = get_usa_last_names()
-    else:
-        first_names = get_kr_first_names()
-        last_names = get_kr_last_names()
-
-    first_name = random.choice(first_names)
-    last_name = random.choice(last_names)
-    nick_name = gen_nick_or_team_name("nicknames.txt")
+    first_name, last_name = generate_player_name(file, nationality)
+    nick_name = gen_nick_name(nicknames)
 
     skill = get_players_skills(nationality)
     skill = int(skill)
@@ -56,13 +47,13 @@ def get_players_skills(nationality: str) -> int:
     :param nationality: string
     :return skill: int
     """
-    if nationality == "br":
+    if nationality == "Brazil":
         mu = 50
         sigma = 20
-    elif nationality == "kr":
+    elif nationality == "Korea":
         mu = 80
         sigma = 10
-    elif nationality == "usa":
+    elif nationality == "United States":
         mu = 65
         sigma = 20
     else:
@@ -86,11 +77,15 @@ def generate_player_list() -> list:
     :return player_list:
     """
     players_list = []
-    nationalities = get_players_nationalities()
-    
+
+    file = load_list_from_json('names.json')
+    nicknames = get_nick_team_names('nicknames.txt')
+
+    nationalities = get_players_nationalities(file)
+
     for i in range(get_num_players()):
         nationality = random.choice(nationalities)
-        player = generate_player(nationality)
+        player = generate_player(file, nationality, nicknames)
         player["id"] = i
         players_list.append(player)
     

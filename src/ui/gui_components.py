@@ -1,6 +1,9 @@
 import PySimpleGUI as sg
 
 
+FONT = 'Noto Sans'
+
+
 def create_look_and_feel():
     sg.LOOK_AND_FEEL_TABLE['EsmTheme'] = {'BACKGROUND': '#FFFFFF',
                                           'TEXT': '#000000',
@@ -13,7 +16,7 @@ def create_look_and_feel():
                                           }
 
 
-def esm_button(text='', font='Helvetica 25', key=None, pad=None, size=(None, None)):
+def esm_button(text='', font=(FONT, '25'), key=None, pad=None, size=(None, None)):
     return sg.Button(text,
                      font=font,
                      key=key,
@@ -25,7 +28,7 @@ def esm_button(text='', font='Helvetica 25', key=None, pad=None, size=(None, Non
                      )
 
 
-def esm_title_text(text='', font='Helvetica 14', key=None, pad=(300, 1)):
+def esm_title_text(text='', font=(FONT, '14'), key=None, pad=(300, 1)):
     return sg.Text(text,
                    key=key,
                    font=font,
@@ -33,15 +36,16 @@ def esm_title_text(text='', font='Helvetica 14', key=None, pad=(300, 1)):
                    )
 
 
-def esm_form_text(text='', font='Helvetica 14', key=None, pad=None):
+def esm_form_text(text='', font=(FONT, '14'), key=None, pad=None, justification='center'):
     return sg.Text(text,
                    key=key,
                    font=font,
                    pad=pad,
+                   justification=justification
                    )
 
 
-def esm_input_text(text='', font='Helvetica 14', key=None, pad=None, size=(35, 1)):
+def esm_input_text(text='', font=(FONT, '14'), key=None, pad=None, size=(35, 1)):
     return sg.InputText(text,
                         font=font,
                         background_color='white',
@@ -51,7 +55,7 @@ def esm_input_text(text='', font='Helvetica 14', key=None, pad=None, size=(35, 1
                         )
 
 
-def esm_input_combo(values=None, font='Helvetica 14', key=None, pad=None, size=(25, 1)):
+def esm_input_combo(values=None, font=(FONT, '14'), key=None, pad=None, size=(25, 1)):
     return sg.InputCombo(values=values,
                          font=font,
                          background_color='white',
@@ -62,7 +66,7 @@ def esm_input_combo(values=None, font='Helvetica 14', key=None, pad=None, size=(
 
 
 def esm_listbox(values=None,
-                font='Helvetica 14',
+                font=(FONT, '14'),
                 default_values=[],
                 select_mode=sg.LISTBOX_SELECT_MODE_SINGLE,
                 key=None,

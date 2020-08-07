@@ -1,16 +1,17 @@
 import unittest
 from tempfile import NamedTemporaryFile
 
-from src.core.match_live import get_match_obj_test
+from src.core.match_live import get_live_obj_test
 from src.core.pre_match import get_team
-from src.resources.utils import load_list_from_json, write_to_json, load_list_from_json
 from src.resources.generator.generate_teams import *
-from src.resources.generator.get_names import gen_nick_or_team_name
+from src.resources.generator.get_names import gen_team_name, get_nick_team_names
 
 
 class TeamTest(unittest.TestCase):
     def setUp(self) -> None:
-        match = get_match_obj_test()
+        live = get_live_obj_test()
+        match = live.match
+        self.team_names = get_nick_team_names('team_names.txt')
         self.team = match.team1
 
     def test_player_skill(self):
@@ -34,12 +35,12 @@ class TeamTest(unittest.TestCase):
         players = load_list_from_json('players.json')
         self.assertIsNotNone(players)
 
-    def test_invalid_generate_team_name(self):
+    def test_invalid_get_team_name(self):
         with self.assertRaises(FileNotFoundError):
-            gen_nick_or_team_name('teamname.txt')
+            get_nick_team_names('teamname.txt')
 
     def test_generate_team_name(self):
-        name = gen_nick_or_team_name('team_names.txt')
+        name = gen_team_name(self.team_names)
         self.assertIsNotNone(name)
         self.assertIsNot(" ", name)
 

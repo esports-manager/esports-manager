@@ -2,237 +2,237 @@
     {
         "id": 0,
         "name": "AATROX",
-        "skill": 61
+        "skill": 79
     },
     {
         "id": 1,
         "name": "AHRI",
-        "skill": 61
+        "skill": 97
     },
     {
         "id": 2,
         "name": "AKALI",
-        "skill": 97
+        "skill": 63
     },
     {
         "id": 3,
         "name": "ALISTAR",
-        "skill": 86
+        "skill": 94
     },
     {
         "id": 4,
         "name": "AMUMU",
-        "skill": 84
+        "skill": 73
     },
     {
         "id": 5,
         "name": "ANIVIA",
-        "skill": 95
+        "skill": 73
     },
     {
         "id": 6,
         "name": "ANNIE",
-        "skill": 56
+        "skill": 73
     },
     {
         "id": 7,
         "name": "APHELIOS",
-        "skill": 77
+        "skill": 52
     },
     {
         "id": 8,
         "name": "ASHE",
-        "skill": 98
+        "skill": 70
     },
     {
         "id": 9,
         "name": "AURELION SOL",
-        "skill": 93
+        "skill": 74
     },
     {
         "id": 10,
         "name": "AZIR",
-        "skill": 80
+        "skill": 81
     },
     {
         "id": 11,
         "name": "BARD",
-        "skill": 98
+        "skill": 72
     },
     {
         "id": 12,
         "name": "BLITZCRANK",
-        "skill": 95
+        "skill": 62
     },
     {
         "id": 13,
         "name": "BRAND",
-        "skill": 71
+        "skill": 68
     },
     {
         "id": 14,
         "name": "BRAUM",
-        "skill": 77
+        "skill": 73
     },
     {
         "id": 15,
         "name": "CAITLYN",
-        "skill": 81
+        "skill": 72
     },
     {
         "id": 16,
         "name": "CAMILLE",
-        "skill": 83
+        "skill": 52
     },
     {
         "id": 17,
         "name": "CASSIOPEIA",
-        "skill": 66
+        "skill": 83
     },
     {
         "id": 18,
         "name": "CHO'GATH",
-        "skill": 51
+        "skill": 87
     },
     {
         "id": 19,
         "name": "CORKI",
-        "skill": 64
+        "skill": 81
     },
     {
         "id": 20,
         "name": "DARIUS",
-        "skill": 88
+        "skill": 56
     },
     {
         "id": 21,
         "name": "DIANA",
-        "skill": 83
+        "skill": 53
     },
     {
         "id": 22,
         "name": "DR. MUNDO",
-        "skill": 50
+        "skill": 94
     },
     {
         "id": 23,
         "name": "DRAVEN",
-        "skill": 66
+        "skill": 72
     },
     {
         "id": 24,
         "name": "EKKO",
-        "skill": 65
+        "skill": 76
     },
     {
         "id": 25,
         "name": "ELISE",
-        "skill": 88
+        "skill": 96
     },
     {
         "id": 26,
         "name": "EVELYNN",
-        "skill": 75
+        "skill": 54
     },
     {
         "id": 27,
         "name": "EZREAL",
-        "skill": 78
+        "skill": 95
     },
     {
         "id": 28,
         "name": "FIDDLESTICKS",
-        "skill": 82
+        "skill": 76
     },
     {
         "id": 29,
         "name": "FIORA",
-        "skill": 76
+        "skill": 69
     },
     {
         "id": 30,
         "name": "FIZZ",
-        "skill": 70
+        "skill": 74
     },
     {
         "id": 31,
         "name": "GALIO",
-        "skill": 52
+        "skill": 64
     },
     {
         "id": 32,
         "name": "GANGPLANK",
-        "skill": 81
+        "skill": 70
     },
     {
         "id": 33,
         "name": "GAREN",
-        "skill": 77
+        "skill": 65
     },
     {
         "id": 34,
         "name": "GNAR",
-        "skill": 64
+        "skill": 91
     },
     {
         "id": 35,
         "name": "GRAGAS",
-        "skill": 77
+        "skill": 72
     },
     {
         "id": 36,
         "name": "GRAVES",
-        "skill": 58
+        "skill": 84
     },
     {
         "id": 37,
         "name": "HECARIM",
-        "skill": 70
+        "skill": 90
     },
     {
         "id": 38,
         "name": "HEIMERDINGER",
-        "skill": 84
+        "skill": 79
     },
     {
         "id": 39,
         "name": "ILLAOI",
-        "skill": 55
+        "skill": 99
     },
     {
         "id": 40,
         "name": "IRELIA",
-        "skill": 60
+        "skill": 92
     },
     {
         "id": 41,
         "name": "IVERN",
-        "skill": 63
+        "skill": 87
     },
     {
         "id": 42,
         "name": "JANNA",
-        "skill": 91
+        "skill": 67
     },
     {
         "id": 43,
         "name": "JARVAN IV",
-        "skill": 56
+        "skill": 71
     },
     {
         "id": 44,
         "name": "JAX",
-        "skill": 87
+        "skill": 56
     },
     {
         "id": 45,
         "name": "JAYCE",
-        "skill": 98
+        "skill": 60
     },
     {
         "id": 46,
         "name": "JHIN",
-        "skill": 83
+        "skill": 81
     },
     {
         "id": 47,
@@ -242,501 +242,511 @@
     {
         "id": 48,
         "name": "KAI'SA",
-        "skill": 88
+        "skill": 76
     },
     {
         "id": 49,
         "name": "KALISTA",
-        "skill": 73
+        "skill": 75
     },
     {
         "id": 50,
         "name": "KARMA",
-        "skill": 65
+        "skill": 55
     },
     {
         "id": 51,
         "name": "KARTHUS",
-        "skill": 65
+        "skill": 80
     },
     {
         "id": 52,
         "name": "KASSADIN",
-        "skill": 55
+        "skill": 54
     },
     {
         "id": 53,
         "name": "KATARINA",
-        "skill": 56
+        "skill": 94
     },
     {
         "id": 54,
         "name": "KAYLE",
-        "skill": 81
+        "skill": 70
     },
     {
         "id": 55,
         "name": "KAYN",
-        "skill": 59
+        "skill": 87
     },
     {
         "id": 56,
         "name": "KENNEN",
-        "skill": 97
+        "skill": 68
     },
     {
         "id": 57,
         "name": "KHA'ZIX",
-        "skill": 62
+        "skill": 60
     },
     {
         "id": 58,
         "name": "KINDRED",
-        "skill": 65
+        "skill": 87
     },
     {
         "id": 59,
         "name": "KLED",
-        "skill": 68
+        "skill": 78
     },
     {
         "id": 60,
         "name": "KOG'MAW",
-        "skill": 65
+        "skill": 78
     },
     {
         "id": 61,
         "name": "LEBLANC",
-        "skill": 93
+        "skill": 98
     },
     {
         "id": 62,
         "name": "LEE SIN",
-        "skill": 77
+        "skill": 57
     },
     {
         "id": 63,
         "name": "LEONA",
-        "skill": 84
+        "skill": 70
     },
     {
         "id": 64,
         "name": "LISSANDRA",
-        "skill": 74
+        "skill": 69
     },
     {
         "id": 65,
-        "name": "LUCIAN",
-        "skill": 58
+        "name": "LILIA",
+        "skill": 99
     },
     {
         "id": 66,
-        "name": "LULU",
-        "skill": 59
+        "name": "LUCIAN",
+        "skill": 83
     },
     {
         "id": 67,
-        "name": "LUX",
+        "name": "LULU",
         "skill": 71
     },
     {
         "id": 68,
+        "name": "LUX",
+        "skill": 74
+    },
+    {
+        "id": 69,
         "name": "MALPHITE",
         "skill": 78
     },
     {
-        "id": 69,
-        "name": "MALZAHAR",
-        "skill": 59
-    },
-    {
         "id": 70,
-        "name": "MAOKAI",
-        "skill": 67
+        "name": "MALZAHAR",
+        "skill": 89
     },
     {
         "id": 71,
-        "name": "MASTER YI",
-        "skill": 91
+        "name": "MAOKAI",
+        "skill": 54
     },
     {
         "id": 72,
-        "name": "MISS FORTUNE",
-        "skill": 94
+        "name": "MASTER YI",
+        "skill": 96
     },
     {
         "id": 73,
-        "name": "MORDEKAISER",
-        "skill": 72
+        "name": "MISS FORTUNE",
+        "skill": 91
     },
     {
         "id": 74,
-        "name": "MORGANA",
-        "skill": 86
+        "name": "MORDEKAISER",
+        "skill": 94
     },
     {
         "id": 75,
-        "name": "NAMI",
-        "skill": 50
+        "name": "MORGANA",
+        "skill": 62
     },
     {
         "id": 76,
-        "name": "NASUS",
-        "skill": 65
+        "name": "NAMI",
+        "skill": 66
     },
     {
         "id": 77,
-        "name": "NAUTILUS",
-        "skill": 76
+        "name": "NASUS",
+        "skill": 81
     },
     {
         "id": 78,
-        "name": "NEEKO",
-        "skill": 71
-    },
-    {
-        "id": 79,
-        "name": "NIDALEE",
-        "skill": 59
-    },
-    {
-        "id": 80,
-        "name": "NOCTURNE",
-        "skill": 74
-    },
-    {
-        "id": 81,
-        "name": "NUNU & WILLUMP",
-        "skill": 60
-    },
-    {
-        "id": 82,
-        "name": "OLAF",
-        "skill": 86
-    },
-    {
-        "id": 83,
-        "name": "ORIANNA",
-        "skill": 81
-    },
-    {
-        "id": 84,
-        "name": "ORNN",
-        "skill": 76
-    },
-    {
-        "id": 85,
-        "name": "PANTHEON",
-        "skill": 63
-    },
-    {
-        "id": 86,
-        "name": "POPPY",
-        "skill": 87
-    },
-    {
-        "id": 87,
-        "name": "PYKE",
-        "skill": 74
-    },
-    {
-        "id": 88,
-        "name": "QIYANA",
-        "skill": 61
-    },
-    {
-        "id": 89,
-        "name": "QUINN",
-        "skill": 79
-    },
-    {
-        "id": 90,
-        "name": "RAKAN",
-        "skill": 78
-    },
-    {
-        "id": 91,
-        "name": "RAMMUS",
-        "skill": 55
-    },
-    {
-        "id": 92,
-        "name": "REK'SAI",
-        "skill": 85
-    },
-    {
-        "id": 93,
-        "name": "RENEKTON",
-        "skill": 92
-    },
-    {
-        "id": 94,
-        "name": "RENGAR",
-        "skill": 51
-    },
-    {
-        "id": 95,
-        "name": "RIVEN",
-        "skill": 99
-    },
-    {
-        "id": 96,
-        "name": "RUMBLE",
-        "skill": 82
-    },
-    {
-        "id": 97,
-        "name": "RYZE",
-        "skill": 94
-    },
-    {
-        "id": 98,
-        "name": "SEJUANI",
-        "skill": 65
-    },
-    {
-        "id": 99,
-        "name": "SENNA",
-        "skill": 83
-    },
-    {
-        "id": 100,
-        "name": "SETT",
-        "skill": 77
-    },
-    {
-        "id": 101,
-        "name": "SHACO",
-        "skill": 78
-    },
-    {
-        "id": 102,
-        "name": "SHEN",
-        "skill": 86
-    },
-    {
-        "id": 103,
-        "name": "SHYVANA",
-        "skill": 58
-    },
-    {
-        "id": 104,
-        "name": "SINGED",
-        "skill": 85
-    },
-    {
-        "id": 105,
-        "name": "SION",
-        "skill": 50
-    },
-    {
-        "id": 106,
-        "name": "SIVIR",
-        "skill": 51
-    },
-    {
-        "id": 107,
-        "name": "SKARNER",
-        "skill": 81
-    },
-    {
-        "id": 108,
-        "name": "SONA",
-        "skill": 81
-    },
-    {
-        "id": 109,
-        "name": "SORAKA",
-        "skill": 91
-    },
-    {
-        "id": 110,
-        "name": "SWAIN",
-        "skill": 56
-    },
-    {
-        "id": 111,
-        "name": "SYLAS",
-        "skill": 90
-    },
-    {
-        "id": 112,
-        "name": "SYNDRA",
-        "skill": 59
-    },
-    {
-        "id": 113,
-        "name": "TAHM KENCH",
-        "skill": 86
-    },
-    {
-        "id": 114,
-        "name": "TALIYAH",
-        "skill": 63
-    },
-    {
-        "id": 115,
-        "name": "TALON",
-        "skill": 80
-    },
-    {
-        "id": 116,
-        "name": "TARIC",
-        "skill": 91
-    },
-    {
-        "id": 117,
-        "name": "TEEMO",
-        "skill": 23
-    },
-    {
-        "id": 118,
-        "name": "THRESH",
-        "skill": 83
-    },
-    {
-        "id": 119,
-        "name": "TRISTANA",
-        "skill": 95
-    },
-    {
-        "id": 120,
-        "name": "TRUNDLE",
-        "skill": 93
-    },
-    {
-        "id": 121,
-        "name": "TRYNDAMERE",
-        "skill": 79
-    },
-    {
-        "id": 122,
-        "name": "TWISTED FATE",
-        "skill": 86
-    },
-    {
-        "id": 123,
-        "name": "TWITCH",
-        "skill": 94
-    },
-    {
-        "id": 124,
-        "name": "UDYR",
-        "skill": 84
-    },
-    {
-        "id": 125,
-        "name": "URGOT",
+        "name": "NAUTILUS",
         "skill": 53
     },
     {
-        "id": 126,
-        "name": "VARUS",
-        "skill": 88
+        "id": 79,
+        "name": "NEEKO",
+        "skill": 77
     },
     {
-        "id": 127,
-        "name": "VAYNE",
+        "id": 80,
+        "name": "NIDALEE",
+        "skill": 70
+    },
+    {
+        "id": 81,
+        "name": "NOCTURNE",
         "skill": 67
     },
     {
+        "id": 82,
+        "name": "NUNU & WILLUMP",
+        "skill": 52
+    },
+    {
+        "id": 83,
+        "name": "OLAF",
+        "skill": 56
+    },
+    {
+        "id": 84,
+        "name": "ORIANNA",
+        "skill": 95
+    },
+    {
+        "id": 85,
+        "name": "ORNN",
+        "skill": 67
+    },
+    {
+        "id": 86,
+        "name": "PANTHEON",
+        "skill": 78
+    },
+    {
+        "id": 87,
+        "name": "POPPY",
+        "skill": 79
+    },
+    {
+        "id": 88,
+        "name": "PYKE",
+        "skill": 87
+    },
+    {
+        "id": 89,
+        "name": "QIYANA",
+        "skill": 89
+    },
+    {
+        "id": 90,
+        "name": "QUINN",
+        "skill": 71
+    },
+    {
+        "id": 91,
+        "name": "RAKAN",
+        "skill": 63
+    },
+    {
+        "id": 92,
+        "name": "RAMMUS",
+        "skill": 87
+    },
+    {
+        "id": 93,
+        "name": "REK'SAI",
+        "skill": 73
+    },
+    {
+        "id": 94,
+        "name": "RENEKTON",
+        "skill": 73
+    },
+    {
+        "id": 95,
+        "name": "RENGAR",
+        "skill": 63
+    },
+    {
+        "id": 96,
+        "name": "RIVEN",
+        "skill": 55
+    },
+    {
+        "id": 97,
+        "name": "RUMBLE",
+        "skill": 68
+    },
+    {
+        "id": 98,
+        "name": "RYZE",
+        "skill": 67
+    },
+    {
+        "id": 99,
+        "name": "SEJUANI",
+        "skill": 57
+    },
+    {
+        "id": 100,
+        "name": "SENNA",
+        "skill": 62
+    },
+    {
+        "id": 101,
+        "name": "SETT",
+        "skill": 64
+    },
+    {
+        "id": 102,
+        "name": "SHACO",
+        "skill": 63
+    },
+    {
+        "id": 103,
+        "name": "SHEN",
+        "skill": 89
+    },
+    {
+        "id": 104,
+        "name": "SHYVANA",
+        "skill": 74
+    },
+    {
+        "id": 105,
+        "name": "SINGED",
+        "skill": 65
+    },
+    {
+        "id": 106,
+        "name": "SION",
+        "skill": 54
+    },
+    {
+        "id": 107,
+        "name": "SIVIR",
+        "skill": 70
+    },
+    {
+        "id": 108,
+        "name": "SKARNER",
+        "skill": 90
+    },
+    {
+        "id": 109,
+        "name": "SONA",
+        "skill": 52
+    },
+    {
+        "id": 110,
+        "name": "SORAKA",
+        "skill": 60
+    },
+    {
+        "id": 111,
+        "name": "SWAIN",
+        "skill": 64
+    },
+    {
+        "id": 112,
+        "name": "SYLAS",
+        "skill": 80
+    },
+    {
+        "id": 113,
+        "name": "SYNDRA",
+        "skill": 76
+    },
+    {
+        "id": 114,
+        "name": "TAHM KENCH",
+        "skill": 50
+    },
+    {
+        "id": 115,
+        "name": "TALIYAH",
+        "skill": 69
+    },
+    {
+        "id": 116,
+        "name": "TALON",
+        "skill": 96
+    },
+    {
+        "id": 117,
+        "name": "TARIC",
+        "skill": 97
+    },
+    {
+        "id": 118,
+        "name": "TEEMO",
+        "skill": 38
+    },
+    {
+        "id": 119,
+        "name": "THRESH",
+        "skill": 70
+    },
+    {
+        "id": 120,
+        "name": "TRISTANA",
+        "skill": 59
+    },
+    {
+        "id": 121,
+        "name": "TRUNDLE",
+        "skill": 83
+    },
+    {
+        "id": 122,
+        "name": "TRYNDAMERE",
+        "skill": 53
+    },
+    {
+        "id": 123,
+        "name": "TWISTED FATE",
+        "skill": 88
+    },
+    {
+        "id": 124,
+        "name": "TWITCH",
+        "skill": 71
+    },
+    {
+        "id": 125,
+        "name": "UDYR",
+        "skill": 83
+    },
+    {
+        "id": 126,
+        "name": "URGOT",
+        "skill": 69
+    },
+    {
+        "id": 127,
+        "name": "VARUS",
+        "skill": 56
+    },
+    {
         "id": 128,
-        "name": "VEIGAR",
-        "skill": 92
+        "name": "VAYNE",
+        "skill": 58
     },
     {
         "id": 129,
-        "name": "VEL'KOZ",
-        "skill": 85
+        "name": "VEIGAR",
+        "skill": 96
     },
     {
         "id": 130,
-        "name": "VI",
-        "skill": 93
+        "name": "VEL'KOZ",
+        "skill": 95
     },
     {
         "id": 131,
-        "name": "VIKTOR",
-        "skill": 93
+        "name": "VI",
+        "skill": 69
     },
     {
         "id": 132,
+        "name": "VIKTOR",
+        "skill": 66
+    },
+    {
+        "id": 133,
         "name": "VLADIMIR",
         "skill": 99
     },
     {
-        "id": 133,
-        "name": "VOLIBEAR",
-        "skill": 80
-    },
-    {
         "id": 134,
-        "name": "WARWICK",
-        "skill": 96
+        "name": "VOLIBEAR",
+        "skill": 60
     },
     {
         "id": 135,
-        "name": "WUKONG",
-        "skill": 66
+        "name": "WARWICK",
+        "skill": 99
     },
     {
         "id": 136,
-        "name": "XAYAH",
-        "skill": 50
+        "name": "WUKONG",
+        "skill": 88
     },
     {
         "id": 137,
-        "name": "XERATH",
-        "skill": 82
+        "name": "XAYAH",
+        "skill": 85
     },
     {
         "id": 138,
-        "name": "XIN ZHAO",
-        "skill": 65
+        "name": "XERATH",
+        "skill": 66
     },
     {
         "id": 139,
-        "name": "YASUO",
-        "skill": 61
+        "name": "XIN ZHAO",
+        "skill": 74
     },
     {
         "id": 140,
-        "name": "YORICK",
-        "skill": 82
+        "name": "YASUO",
+        "skill": 56
     },
     {
         "id": 141,
-        "name": "YUUMI",
-        "skill": 81
+        "name": "YORICK",
+        "skill": 73
     },
     {
         "id": 142,
-        "name": "ZAC",
-        "skill": 93
+        "name": "YONE",
+        "skill": 61
     },
     {
         "id": 143,
-        "name": "ZED",
-        "skill": 51
+        "name": "YUUMI",
+        "skill": 59
     },
     {
         "id": 144,
-        "name": "ZIGGS",
-        "skill": 89
+        "name": "ZAC",
+        "skill": 59
     },
     {
         "id": 145,
-        "name": "ZILEAN",
-        "skill": 55
+        "name": "ZED",
+        "skill": 88
     },
     {
         "id": 146,
+        "name": "ZIGGS",
+        "skill": 91
+    },
+    {
+        "id": 147,
+        "name": "ZILEAN",
+        "skill": 96
+    },
+    {
+        "id": 148,
         "name": "ZOE",
         "skill": 67
     },
     {
-        "id": 147,
+        "id": 149,
         "name": "ZYRA",
-        "skill": 97
+        "skill": 57
     }
 ]

@@ -49,7 +49,7 @@ def get_from_file(file_name: str) -> list:
     :param file_name:
     :return:
     """
-    with open(file_name, 'r') as fp:
+    with open(file_name, 'r', encoding='utf-8') as fp:
         dictionary = json.load(fp)
 
     return dictionary

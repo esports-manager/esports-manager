@@ -136,3 +136,6 @@ dmypy.json
 node_modules/
 .vscode/settings.json
 .vscode/settings.json
+/src/resources/db/teams.json
+/src/resources/db/players.json
+/src/resources/db/champions.json

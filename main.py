@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 
 from src.ui.gui import app, debug_window
+from src.resources.utils import find_file
 from src.resources.generator.generate_champions import generate_champion_file
 from src.resources.generator.generate_teams import generate_team_file
 from src.resources.generator.generate_players import generate_player_file
@@ -23,5 +24,11 @@ def testing_match():
 
 
 if __name__ == '__main__':
-    generation()
+    try:
+        find_file('champions.json')
+        find_file('players.json')
+        find_file('teams.json')
+    except FileNotFoundError:
+        generation()
+
     app()

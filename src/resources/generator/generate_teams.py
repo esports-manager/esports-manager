@@ -27,10 +27,13 @@ def generate_each_team(players: list, team_names: list) -> dict:
 
 def generate_teams(players: list) -> list:
     num_teams = floor(int(len(players) / 5))
+    team_names = get_nick_team_names('team_names.txt')
+
+    # Handling number of teams being higher than the number of available team names
+    if num_teams > len(team_names):
+        num_teams = len(team_names)
 
     teams = []
-
-    team_names = get_nick_team_names('team_names.txt')
 
     for i in range(num_teams):
         team = generate_each_team(players, team_names)

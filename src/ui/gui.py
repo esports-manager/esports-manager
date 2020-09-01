@@ -1,15 +1,18 @@
 import PySimpleGUI as sg
 import base64
+import tkinter as tk
+
 
 from src.ui.gui_components import esm_button, esm_form_text, create_look_and_feel, \
-                                  esm_input_text, esm_input_combo, esm_title_text, esm_listbox
+                                  esm_input_text, esm_input_combo, esm_title_text, esm_listbox, esm_table
 from src.resources.generator.generate_players import get_players_nationalities
 from src.resources.utils import get_key_from_json, find_file, load_list_from_json
 from src.resources import RES_DIR
 from src.core.match import Match
+from src.core.pre_match import create_team_object
 
 
-def encode_icon() -> str:
+def encode_icon() -> bytes:
     with open(find_file('esportsmanagertrophy.png', folder=RES_DIR), 'rb') as fp:
         encoded_icon = base64.b64encode(fp.read())
 
@@ -18,8 +21,9 @@ def encode_icon() -> str:
 
 def get_player_names(value: str, team_list: list, player_list: list) -> list:
     player_ids = None
+
     for team in team_list:
-        if value[0] == team['name']:
+        if value[0] == team['id']:
             player_ids = team['roster_id']
 
     if player_ids is not None:
@@ -28,9 +32,9 @@ def get_player_names(value: str, team_list: list, player_list: list) -> list:
         for pl_id in player_ids:
             for player in player_list:
                 if pl_id == player['id']:
-                    player_names.append(str(player['nick_name']) + '    ' +
-                                        str(player['nationality']) + '    ' +
-                                        str(player['skill']))
+                    player_names.append([player['nick_name'],
+                                         player['nationality'],
+                                         player['skill']])
     else:
         raise NotImplementedError("Not found!")
 
@@ -79,6 +83,7 @@ def create_window() -> sg.Window:
         'eSports Manager',
         element_justification='center',
         layout=get_layouts(),
+        # size=(900, 800),
         icon=icon_path,
         resizable=True,
     )
@@ -92,11 +97,11 @@ def main_screen() -> list:
     """
     logo_path = find_file('esportsmanager.png')
 
-    button_pad = (300, 15)
+    button_pad = (0, 15)
     button_size = (20, 1)
 
     return [
-        [sg.Image(logo_path, pad=(100, 0))],
+        [sg.Image(logo_path, pad=(50, 0))],
         [esm_button('New Game',
                     key='new_game',
                     pad=button_pad,
@@ -129,15 +134,29 @@ def create_manager_layout() -> list:
     names = load_list_from_json('names.json')
     nationalities = get_players_nationalities(names)
 
-    team_names = get_key_from_json()
+    players = load_list_from_json('players.json')
+    teams = load_list_from_json('teams.json')
+
+    team_list = []
+    for team in teams:
+        team_list.append(create_team_object(team, players))
+
+    data = []
+    for team in team_list:
+        data.append([team.team_id, team.name, team.player_overall])
+
+    team_headings = ['Team #', 'Team Name', 'Skill']
+    player_headings = ['Nickname', 'Nationality', 'Skill']
 
     team_list_frame = [
         [esm_form_text('Team: ')],
-        [esm_listbox(team_names, key='team_list', enable_events=True)]
+        [esm_table(data, key='team_list', headings=team_headings, enable_events=True)]
+        # [esm_listbox(team_names, key='team_list', enable_events=True)]
     ]
     player_list_frame = [
         [esm_form_text('Players: ')],
-        [esm_listbox(['No team selected'], key='player_list')]
+        [esm_table([['No team selected', ' ', ' ']], key='player_list', headings=player_headings)]
+        # [esm_listbox(['No team selected'], key='player_list')]
     ]
 
     return [
@@ -205,12 +224,10 @@ def get_layouts() -> list:
 
 
 # debugging
-def debug_window(match: Match = None) -> sg.Window:
+def debug_window() -> sg.Window:
     icon_path = encode_icon()
 
-    layout = [
-        [esm_title_text('Debug Window')]
-    ]
+    layout = get_debug_layout()
 
     create_look_and_feel()
     sg.theme('EsmTheme')
@@ -221,3 +238,11 @@ def debug_window(match: Match = None) -> sg.Window:
         icon=icon_path,
         resizable=True,
     )
+
+
+def get_debug_layout(match: Match = None):
+    return [
+        [esm_form_text('Debug Match')],
+        [esm_button('New Game')]
+    ]
+

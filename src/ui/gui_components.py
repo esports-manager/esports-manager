@@ -71,7 +71,7 @@ def esm_listbox(values=None,
                 select_mode=sg.LISTBOX_SELECT_MODE_SINGLE,
                 key=None,
                 pad=None,
-                size=(35, 20),
+                size=(30, 10),
                 enable_events=False
                 ):
     return sg.Listbox(values=values,
@@ -84,3 +84,22 @@ def esm_listbox(values=None,
                       pad=pad,
                       size=size
                       )
+
+
+def esm_table(values,
+              key=None,
+              headings=None,
+              auto_size_columns=True,
+              justification='left',
+              num_rows=20,
+              font=(FONT, '13'),
+              enable_events=True
+              ):
+    return sg.Table(values=values,
+                    key=key,
+                    headings=headings,
+                    justification=justification,
+                    auto_size_columns=auto_size_columns,
+                    num_rows=num_rows,
+                    enable_events=enable_events,
+                    font=font)

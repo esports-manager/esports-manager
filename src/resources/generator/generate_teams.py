@@ -2,8 +2,13 @@ import json
 import random
 from math import floor
 
+from .generate_players import get_num_players
 from .get_names import gen_team_name, get_nick_team_names
 from ..utils import write_to_json, load_list_from_json
+
+
+def get_num_teams():
+    return floor(int(get_num_players() / 5))
 
 
 # TODO: let teams have a bigger roster than 5 players
@@ -26,7 +31,7 @@ def generate_each_team(players: list, team_names: list) -> dict:
 
 
 def generate_teams(players: list) -> list:
-    num_teams = floor(int(len(players) / 5))
+    num_teams = get_num_teams()
     team_names = get_nick_team_names('team_names.txt')
 
     # Handling number of teams being higher than the number of available team names

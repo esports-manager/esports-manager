@@ -1,64 +1,63 @@
+#!/usr/bin/env python
 import PySimpleGUI as sg
-from src.ui.gui_components import create_look_and_feel
+import random
+import string
 
-create_look_and_feel()
+"""
+    Basic use of the Table Element
+"""
 
-sg.theme('EsmTheme')
-# sg.set_options(text_color='black', background_color='#A6B2BE', text_element_background_color='#A6B2BE')
-# ------ Menu Definition ------ #
-menu_def = [['&File', ['&Open', '&Save', 'E&xit', 'Properties']],
-            ['&Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],
-            ['&Help', '&About...'], ]
+sg.theme('Dark Red')
 
-# ------ Column Definition ------ #
-column1 = [[sg.Text('Column 1', justification='center', size=(10, 1))],
-           [sg.Spin(values=('Spin Box 1', '2', '3'),
-                    initial_value='Spin Box 1')],
-           [sg.Spin(values=['Spin Box 1', '2', '3'],
-                    initial_value='Spin Box 2')],
-           [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
+# ------ Some functions to help generate data for the table ------
+def word():
+    return ''.join(random.choice(string.ascii_lowercase) for i in range(10))
+def number(max_val=1000):
+    return random.randint(0, max_val)
 
-layout = [
-    [sg.Menu(menu_def, tearoff=True)],
-    [sg.Text('(Almost) All widgets in one Window!', size=(
-        30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
-    [sg.Text('Here is some text.... and a place to enter text')],
-    [sg.InputText('This is my text')],
-    [sg.Frame(layout=[
-        [sg.CBox('Checkbox', size=(10, 1)),
-         sg.CBox('My second checkbox!', default=True)],
-        [sg.Radio('My first Radio!     ', "RADIO1", default=True, size=(10, 1)),
-         sg.Radio('My second Radio!', "RADIO1")]], title='Options', relief=sg.RELIEF_SUNKEN,
-        tooltip='Use these to set flags')],
-    [sg.MLine(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),
-     sg.MLine(default_text='A second multi-line', size=(35, 3))],
-    [sg.Combo(('Combobox 1', 'Combobox 2'), default_value='Combobox 1', size=(20, 1)),
-     sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],
-    [sg.OptionMenu(('Menu Option 1', 'Menu Option 2', 'Menu Option 3'))],
-    [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),
-     sg.Frame('Labelled Group', [[
-         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25, tick_interval=25),
-         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
-         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
-         sg.Col(column1)]])
-     ],
-    [sg.ProgressBar(1000, orientation='h', size=(20, 20), key='progbar', border_width=0)],
-    [sg.Text('_' * 80)],
-    [sg.Text('Choose A Folder', size=(35, 1))],
-    [sg.Text('Your Folder', size=(15, 1), justification='right'),
-     sg.InputText('Default Folder'), sg.FolderBrowse()],
-    [sg.Submit(tooltip='Click to submit this form'), sg.Cancel()]
-]
+def make_table(num_rows, num_cols):
+    data = [[j for j in range(num_cols)] for i in range(num_rows)]
+    data[0] = [word() for __ in range(num_cols)]
+    for i in range(1, num_rows):
+        data[i] = [word(), *[number() for i in range(num_cols - 1)]]
+    return data
 
-window = sg.Window('Everything bagel', layout)
+# ------ Make the Table Data ------
+data = make_table(num_rows=15, num_cols=6)
+headings = [str(data[0][x])+'     ..' for x in range(len(data[0]))]
 
-for i in range(1000):
-    event, values = window.read(timeout=10)
-    if event == sg.WINDOW_CLOSED:
+# ------ Window Layout ------
+layout = [[sg.Table(values=data[1:][:], headings=headings, max_col_width=25,
+                    background_color='light blue',
+                    auto_size_columns=True,
+                    display_row_numbers=True,
+                    justification='right',
+                    num_rows=20,
+                    alternating_row_color='lightyellow',
+                    key='-TABLE-',
+                    row_height=35,
+                    tooltip='This is a table')],
+          [sg.Button('Read'), sg.Button('Double'), sg.Button('Change Colors')],
+          [sg.Text('Read = read which rows are selected')],
+          [sg.Text('Double = double the amount of data in the table')],
+          [sg.Text('Change Colors = Changes the colors of rows 8 and 9')]]
+
+# ------ Create Window ------
+window = sg.Window('The Table Element', layout,
+                   # font='Helvetica 25',
+                   )
+
+# ------ Event Loop ------
+while True:
+    event, values = window.read()
+    print(event, values)
+    if event == sg.WIN_CLOSED:
         break
-    window['progbar'].update_bar(i + 1)
+    if event == 'Double':
+        for i in range(len(data)):
+            data.append(data[i])
+        window['-TABLE-'].update(values=data)
+    elif event == 'Change Colors':
+        window['-TABLE-'].update(row_colors=((8, 'white', 'red'), (9, 'green')))
 
-sg.popup('Title',
-         'The results of the window.',
-         'The button clicked was "{}"'.format(event),
-         'The values are', values)
+window.close()

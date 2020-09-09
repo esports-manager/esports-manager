@@ -1,17 +1,21 @@
+import random
+
+
 class Event:
     def __init__(self,
                  event_id: int,
                  name: str,
                  priority: int,
-                 commentaries: list,
+                 # commentaries: list,
                  points: int,
-                 conditions: str = None):
+                 #  conditions: str = None
+                 ):
         self.event_id = event_id
         self.name = name
         self._priority = priority
-        self.commentaries = commentaries
+        # self.commentaries = commentaries
         self._points = points
-        self.conditions = conditions
+        # self.conditions = conditions
 
     @property
     def priority(self):
@@ -28,3 +32,53 @@ class Event:
     @points.setter
     def points(self, value):
         self._points = value
+
+
+class EventHandler:
+    def __init__(self):
+        self.events = []
+        self.possible = [(0, 'invade'),
+                         (1, 'gank'),
+                         (1, 'solo_kill'),
+                         (1, 'team_fight'),
+                         (2, 'tower_assault'),
+                         (3, 'jungle_major'),
+                         (4, 'inhibitor_assault'),
+                         (5, 'nexus_assault'),
+                         (5, 'backdoor')
+                         ]
+
+    def possible_events(self, number: int):
+        for event in self.possible:
+            if number in event:
+                self.events.append(event)
+
+    def get_events(self, game_time, inhib=False, nexus=False):
+        if game_time == 0.0:
+            self.possible_events(0)
+        elif 0.0 > game_time <= 15.0:
+            for event in self.events:
+                if 0 in event:
+                    self.events.remove(event)
+
+            if not self.events:
+                self.possible_events(1)
+        elif 15.0 <= game_time <= 20.0:
+            self.possible_events(2)
+        else:
+            self.possible_events(3)
+
+        if inhib:
+            self.possible_events(4)
+
+        if nexus:
+            self.possible_events(5)
+
+    def create_event(self, ev_id, name, priority, points):
+        return Event(ev_id, name, priority, points)
+
+    def choose_event(self):
+        return random.choice(self.events)
+
+    def calculate_event(self):
+        pass

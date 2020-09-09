@@ -1,10 +1,12 @@
 import PySimpleGUI as sg
+import asyncio
 
 from src.ui.gui import app, debug_window
 from src.resources.utils import find_file
 from src.resources.generator.generate_champions import generate_champion_file
 from src.resources.generator.generate_teams import generate_team_file
 from src.resources.generator.generate_players import generate_player_file
+from src.core.match_live import debug_match
 
 
 def generation():
@@ -13,7 +15,7 @@ def generation():
     generate_team_file()
 
 
-def testing_match():
+async def testing_match():
     window = debug_window()
     while True:
         event, values = window.read()

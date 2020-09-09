@@ -97,7 +97,7 @@ def get_num_players() -> int:
     Defines the number of players here. Could be replaced by a file.
     :return:
     """
-    return 500
+    return 200
 
 
 def generate_player_file() -> None:

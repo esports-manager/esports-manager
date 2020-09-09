@@ -65,7 +65,7 @@ class MobaPlayerTest(unittest.TestCase):
 
     def test_generate_player_file(self):
         players = generate_player_list()
-        with NamedTemporaryFile(delete=False) as temp_file:
+        with NamedTemporaryFile(mode='w') as temp_file:
             write_to_json(players, temp_file.name)
             with open(temp_file.name, 'r') as fp:
                 contents = json.load(fp)

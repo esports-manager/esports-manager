@@ -5,6 +5,7 @@ from src.core.match_live import get_live_obj_test
 from src.core.pre_match import get_team
 from src.resources.generator.generate_teams import *
 from src.resources.generator.get_names import gen_team_name, get_nick_team_names
+from src.resources.utils import load_list_from_json
 
 
 class TeamTest(unittest.TestCase):
@@ -45,14 +46,7 @@ class TeamTest(unittest.TestCase):
         self.assertIsNot(" ", name)
 
     def test_generate_team_file(self):
-        players = [
-            {"id": 1},
-            {"id": 2},
-            {"id": 3},
-            {"id": 4},
-            {"id": 5}
-        ]
-        contents = generate_teams(players)
+        contents = get_contents()
         with NamedTemporaryFile(delete=False) as temp_file:
             write_to_json(contents, temp_file.name)
             with open(temp_file.name, 'r') as f:
@@ -80,11 +74,23 @@ class TeamTest(unittest.TestCase):
         self.team.towers['mid'] = 0
         self.assertEqual(False, self.team.are_all_towers_up())
 
+    def test_is_inhib_up(self):
+        self.assertEqual(True, self.team.is_inhibitor_up('mid'))
+
+    def test_is_inhib_not_up(self):
+        self.team.inhibitors['mid'] = 0
+        self.assertEqual(False, self.team.is_inhibitor_up('mid'))
+
     def test_get_points(self):
         for player in self.team.list_players:
             player.points += 5
 
         self.assertEqual(25, self.team.points)
+
+
+def get_contents():
+    players_list = [{'id': i} for i in range(5)]
+    return generate_teams(players_list)
 
 
 if __name__ == '__main__':

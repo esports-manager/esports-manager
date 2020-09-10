@@ -48,8 +48,14 @@ class Team:
         return 0 not in self.inhibitors.values()
 
     def is_inhib_exposed(self) -> bool:
-        if self.towers['top'] == 0 or self.towers['mid'] == 0 or self.towers['bot'] == 0:
-            return True
+        return (
+            self.towers['top'] == 0
+            or self.towers['mid'] == 0
+            or self.towers['bot'] == 0
+        )
+
+    def is_nexus_exposed(self) -> bool:
+        return self.towers['base'] == 0
 
     @property
     def kills(self):

@@ -53,7 +53,7 @@ class EventHandler:
             if number in event:
                 self.events.append(event)
 
-    def get_events(self, game_time, inhib=False, nexus=False):
+    def get_events(self, game_time, inhib=0, nexus=0):
         if game_time == 0.0:
             self.possible_events(0)
         elif 0.0 > game_time <= 15.0:
@@ -68,10 +68,10 @@ class EventHandler:
         else:
             self.possible_events(3)
 
-        if inhib:
+        if inhib != 0:
             self.possible_events(4)
 
-        if nexus:
+        if nexus != 0:
             self.possible_events(5)
 
     def create_event(self, ev_id, name, priority, points):

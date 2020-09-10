@@ -11,6 +11,7 @@ pylint = "*"
 autopep8 = "*"
 setuptools = "*"
 coverage = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.8"

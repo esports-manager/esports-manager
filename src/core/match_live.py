@@ -45,9 +45,10 @@ class MatchLive:
     def increment_game_time(self, quantity):
         self.game_time += quantity
 
-    async def simulation(self):
+    def simulation(self):
         while not self.is_match_over:
-            pass
+
+            self.event_handler.get_events(self.game_time)
 
 
 def initialize_match(team1_id: int,

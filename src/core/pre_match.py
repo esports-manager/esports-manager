@@ -18,7 +18,7 @@ def get_data():
     for team in team_list:
         data.append([team.team_id, team.name, team.player_overall])
 
-    data.sort(key=lambda team: team[2])
+    data.sort(key=lambda team: team[2], reverse=True)
 
     return data
 

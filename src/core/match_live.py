@@ -1,5 +1,5 @@
 import random
-import asyncio
+import time
 
 from src.core.match import Match
 from src.resources.utils import load_list_from_json
@@ -45,10 +45,29 @@ class MatchLive:
     def increment_game_time(self, quantity):
         self.game_time += quantity
 
+    def which_team_nexus_exposed(self):
+        if self.match.team1.is_nexus_exposed():
+            return 1
+        elif self.match.team2.is_nexus_exposed():
+            return 2
+        else:
+            return 0
+
+    def is_any_inhib_open(self):
+        for team in self.match.teams:
+            if team.is_inhib_exposed():
+                return True
+        else:
+            return False
+
     def simulation(self):
         while not self.is_match_over:
-
-            self.event_handler.get_events(self.game_time)
+            self.event_handler.get_events(self.game_time, self.is_any_inhib_open(), self.which_team_nexus_exposed())
+            print(self.game_time, self.event_handler.choose_event())
+            self.increment_game_time(1)
+            if self.game_time == 50:
+                self.is_match_over = True
+            time.sleep(self.match_speed)
 
 
 def initialize_match(team1_id: int,
@@ -121,3 +140,9 @@ def debug_match():
 
     for team in live.match.teams:
         print(team.list_players)
+
+    live.simulation()
+
+
+if __name__ == '__main__':
+    debug_match()

@@ -54,6 +54,9 @@ class Team:
             or self.towers['bot'] == 0
         )
 
+    def get_exposed_inhibs(self):
+        return [lane for lane, num in self.inhibitors.items() if num == 0]
+
     def is_nexus_exposed(self) -> bool:
         return self.towers['base'] == 0
 

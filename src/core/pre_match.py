@@ -3,6 +3,24 @@ from typing import Tuple
 from .champion import Champion
 from .player import MobaPlayer
 from .team import Team
+from src.resources.utils import load_list_from_json
+
+
+def get_data():
+    players = load_list_from_json('players.json')
+    teams = load_list_from_json('teams.json')
+
+    team_list = []
+    for team in teams:
+        team_list.append(create_team_object(team, players))
+
+    data = []
+    for team in team_list:
+        data.append([team.team_id, team.name, team.player_overall])
+
+    data.sort(key=lambda team: team[2])
+
+    return data
 
 
 def get_team(team_id, list_teams) -> dict:

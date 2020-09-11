@@ -1,16 +1,14 @@
-import PySimpleGUI as sg
 import base64
-import asyncio
-import tkinter as tk
 
+import PySimpleGUI as sg
 
-from src.ui.gui_components import esm_button, esm_form_text, create_look_and_feel, \
-                                  esm_input_text, esm_input_combo, esm_title_text, esm_listbox, esm_table
-from src.resources.generator.generate_players import get_players_nationalities
-from src.resources.utils import get_key_from_json, find_file, load_list_from_json
-from src.resources import RES_DIR
 from src.core.match import Match
-from src.core.pre_match import create_team_object
+from src.core.pre_match import create_team_object, get_data
+from src.resources import RES_DIR
+from src.resources.generator.generate_players import get_players_nationalities
+from src.resources.utils import find_file, load_list_from_json
+from src.ui.gui_components import esm_button, esm_form_text, create_look_and_feel, \
+    esm_input_text, esm_input_combo, esm_title_text, esm_listbox, esm_table, esm_calendar_button
 
 
 def encode_icon() -> bytes:
@@ -99,7 +97,7 @@ def main_screen() -> list:
     logo_path = find_file('esportsmanager.png')
 
     button_pad = (0, 15)
-    button_size = (20, 1)
+    button_size = (20, 2)
 
     return [
         [sg.Image(logo_path, pad=(50, 0))],
@@ -132,39 +130,28 @@ def create_manager_layout() -> list:
     want to play with, and
     :return:
     """
-    names = load_list_from_json('names.json')
-    nationalities = get_players_nationalities(names)
-
-    players = load_list_from_json('players.json')
-    teams = load_list_from_json('teams.json')
-
-    team_list = []
-    for team in teams:
-        team_list.append(create_team_object(team, players))
-
-    data = []
-    for team in team_list:
-        data.append([team.team_id, team.name, team.player_overall])
+    nationalities = get_players_nationalities(load_list_from_json('names.json'))
 
     team_headings = ['Team #', 'Team Name', 'Skill']
     player_headings = ['Nickname', 'Nationality', 'Skill']
 
+    data = get_data()
+
     team_list_frame = [
         [esm_form_text('Team: ')],
         [esm_table(data, key='team_list', headings=team_headings, enable_events=True)]
-        # [esm_listbox(team_names, key='team_list', enable_events=True)]
     ]
     player_list_frame = [
         [esm_form_text('Players: ')],
         [esm_table([['No team selected', ' ', ' ']], key='player_list', headings=player_headings)]
-        # [esm_listbox(['No team selected'], key='player_list')]
     ]
 
     return [
         [esm_title_text('New Game')],
         [esm_form_text('Manager Name: '),
          esm_input_text()],
-        [esm_form_text('Date of Birth: '), esm_input_text()],
+        [esm_form_text('Date of Birth: ', ), esm_calendar_button(size=(20, 1))],
+        [esm_form_text('Starting Season: '), esm_input_combo([i for i in range(2010, 2021)], key='-starting_season-')],
         [esm_form_text('Nationality: '), esm_input_combo(nationalities)],
         [sg.Column(layout=team_list_frame, element_justification='center'),
          sg.Column(layout=player_list_frame, element_justification='center')],

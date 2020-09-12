@@ -3,7 +3,7 @@ import base64
 import PySimpleGUI as sg
 
 from src.core.match import Match
-from src.core.pre_match import create_team_object, get_data
+from src.core.pre_match import get_data
 from src.resources import RES_DIR
 from src.resources.generator.generate_players import get_players_nationalities
 from src.resources.utils import find_file, load_list_from_json
@@ -42,6 +42,7 @@ def get_player_names(value: str, team_list: list, player_list: list) -> list:
 
 def app() -> None:
     window = create_window()
+    v = [0]
     while True:
         event, values = window.read()
         if event in [sg.WINDOW_CLOSED, 'exit_main']:
@@ -61,9 +62,14 @@ def app() -> None:
         elif event == 'team_list':
             teams = load_list_from_json('teams.json')
             players = load_list_from_json('players.json')
-            window.Element('player_list').Update(values=get_player_names(values['team_list'], teams, players))
+            value = values['team_list']
+            v = window.Element('team_list').Values[value[0]]
+            window.Element('player_list').Update(values=get_player_names(v,
+                                                                         teams,
+                                                                         players))
 
         print(event, values)
+        print(v[0])
 
     window.close()
 
@@ -148,15 +154,21 @@ def create_manager_layout() -> list:
 
     return [
         [esm_title_text('New Game')],
-        [esm_form_text('Manager Name: '),
-         esm_input_text()],
-        [esm_form_text('Date of Birth: ', ), esm_calendar_button(size=(20, 1))],
-        [esm_form_text('Starting Season: '), esm_input_combo([i for i in range(2010, 2021)], key='-starting_season-')],
-        [esm_form_text('Nationality: '), esm_input_combo(nationalities)],
+        # TODO: we have to create a check on events to check if the input text fields are larger than 20 characters to
+        # avoid abuses
+        [esm_form_text('First Name: '),
+         esm_input_text(key='-First Name-')],
+        [esm_form_text('Last Name: '),
+         esm_input_text(key='-Last Name-')],
+        [esm_form_text('Nick Name: '),
+         esm_input_text(key='-Nick Name-')],
+        [esm_form_text('Nationality: '), esm_input_combo(nationalities, key='-Manager Nat-')],
+        [esm_form_text('Date of Birth: ', ), esm_calendar_button(size=(20, 1), key='-DOB-')],
+        [esm_form_text('Starting Season: '), esm_input_combo([i for i in range(2010, 2021)], key='-Starting Season-')],
         [sg.Column(layout=team_list_frame, element_justification='center'),
          sg.Column(layout=player_list_frame, element_justification='center')],
-        [esm_button('Next', key='next_new_game'),
-         esm_button('Cancel', key='cancel_new_game')]
+        [esm_button('Cancel', key='cancel_new_game', size=(10, 1)),
+         esm_button('Next', key='next_new_game', size=(10, 1))]
     ]
 
 
@@ -174,9 +186,9 @@ def load_game_layout() -> list:
     return [
         [esm_title_text('Load Game')],
         [esm_form_text('Saved Games: ')],
-        [esm_listbox(saved_games)],
-        [esm_button('Load Game', key='load_game_btn'),
-         esm_button('Cancel', key='cancel_load')]
+        [esm_listbox(saved_games, size=(50, 20), enable_events=True)],
+        [esm_button('Cancel', key='cancel_load', size=(10, 1)),
+         esm_button('Load Game', key='load_game_btn', size=(10, 1))]
     ]
 
 
@@ -233,4 +245,3 @@ def get_debug_layout(match: Match = None):
         [esm_form_text('Debug Match')],
         [esm_button('New Game')]
     ]
-

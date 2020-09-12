@@ -176,13 +176,9 @@ def generate_champion_dict(champion_name: str, counter: int) -> dict:
 
 def create_champions_list() -> list:
     list_champions = []
-    counter = 0
-    
-    for champion_name in champion_names:
+    for counter, champion_name in enumerate(champion_names):
         champion = generate_champion_dict(champion_name, counter)
         list_champions.append(champion)
-        counter += 1 
-
     return list_champions
 
 

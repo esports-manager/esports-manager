@@ -63,7 +63,7 @@ def get_players_skills(nationality: str) -> int:
     skill = random.gauss(mu, sigma)
 
     # Players' skill will follow the 30 < skill < 90 interval
-    if skill > 93:
+    if skill >= 90:
         skill = 90
     elif skill < 30:
         skill = 30

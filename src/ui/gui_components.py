@@ -27,7 +27,7 @@ def esm_button(text='', font=(default_font, '18'), key=None, pad=None, size=(Non
                      )
 
 
-def esm_title_text(text='', font=('Arial Bold', '16'), key=None, pad=(300, 1)):
+def esm_title_text(text='', font=('Liberation Sans Bold', '18'), key=None, pad=(300, 1)):
     return sg.Text(text,
                    key=key,
                    font=font,

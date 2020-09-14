@@ -22,16 +22,13 @@ class Event:
                  event_id: int,
                  name: str,
                  priority: int,
-                 # commentaries: list,
                  points: int,
-                 #  conditions: str = None
                  ):
         self.event_id = event_id
         self.name = name
         self._priority = priority
-        # self.commentaries = commentaries
+        self.commentaries = None
         self._points = points
-        # self.conditions = conditions
 
     @property
     def priority(self):
@@ -43,7 +40,7 @@ class Event:
 
     @priority.setter
     def priority(self, value):
-        self._priority += value
+        self._priority = value
 
     @points.setter
     def points(self, value):
@@ -54,32 +51,31 @@ class EventHandler:
     def __init__(self):
         self.events = []
         self.eventlog = []
-        self.possible = [(0, 'invade'),
-                         (1, 'gank'),
-                         (1, 'solo_kill'),
-                         (1, 'team_fight'),
-                         (2, 'tower_assault'),
-                         (3, 'jungle_major'),
-                         (4, 'inhibitor_assault'),
-                         (5, 'nexus_assault'),
-                         (5, 'backdoor')
+        self.possible = [(0, 'invade', 1, 10),
+                         (0, 'nothing', 1, 0),
+                         (1, 'lane_farm', 2, 10),
+                         (1, 'gank', 1, 10),
+                         (1, 'lane_fight', 1, 10),
+                         (1, 'team_fight', 1, 15),
+                         (2, 'tower_assault', 2, 20),
+                         (3, 'jungle_major', 2, 20),
+                         (4, 'inhibitor_assault', 3, 25),
+                         (5, 'nexus_assault', 4, 50),
+                         (5, 'backdoor', 4, 50)
                          ]
 
     def possible_events(self, number: int):
         for event in self.possible:
-            if number in event:
-                self.events.append(event)
+            if event[0] == number:
+                ev = self.create_event(event[1], event[2], event[3])
+                self.events.append(ev)
 
     def get_events(self, game_time, inhib=False, nexus=0):
         if game_time == 0.0:
             self.possible_events(0)
         elif 0.0 < game_time <= 15.0:
-            for event in self.events:
-                if 0 in event:
-                    self.events.remove(event)
-
-            if not self.events:
-                self.possible_events(1)
+            self.events.clear()
+            self.possible_events(1)
         elif 15.0 < game_time <= 20.0:
             self.possible_events(2)
         else:
@@ -91,12 +87,15 @@ class EventHandler:
         if nexus != 0:
             self.possible_events(5)
 
-    def create_event(self, ev_id, name, priority, points):
-        self.eventlog.append(Event(ev_id, name, priority, points))
+    def create_event(self, name, priority, points):
+        ev_id = len(self.eventlog) + 1
+        return Event(ev_id, name, priority, points)
 
     def choose_event(self):
-        weights = [i[0] for i in self.events]
-        return random.choices(self.events, weights=weights, k=1)
+        weights = [event.priority for event in self.events]
+        ev = random.choices(self.events, weights=weights, k=1)[0]
+        self.eventlog.append(ev)
+        return ev
 
     def calculate_event(self):
         pass

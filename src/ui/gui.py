@@ -180,7 +180,8 @@ def create_manager_layout() -> list:
          esm_input_text(key='-Nick Name-')],
         [esm_form_text('Nationality: '), esm_input_combo(nationalities, key='-Manager Nat-')],
         [esm_form_text('Date of Birth: ', ), esm_calendar_button(size=(20, 1), key='-DOB-')],
-        [esm_form_text('Starting Season: '), esm_input_combo([i for i in range(2010, 2021)], key='-Starting Season-')],
+        # TODO: implement starting season, putting this on hold for 0.1.0-alpha, maybe 0.2.0 should include it?
+        # [esm_form_text('Starting Season: '), esm_input_combo([i for i in range(2010, 2021)], key='-Starting Season-')]
         [sg.Column(layout=team_list_frame, element_justification='center'),
          sg.Column(layout=player_list_frame, element_justification='center')],
         [esm_button('Cancel', key='cancel_new_game', size=(10, 1)),

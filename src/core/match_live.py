@@ -63,9 +63,9 @@ class MatchLive:
 
     def which_team_nexus_exposed(self):
         if self.match.team1.is_nexus_exposed():
-            return 1
+            return self.match.team1
         elif self.match.team2.is_nexus_exposed():
-            return 2
+            return self.match.team2
         else:
             return 0
 
@@ -79,11 +79,13 @@ class MatchLive:
     def simulation(self):
         while not self.is_match_over:
             self.event_handler.get_events(self.game_time, self.is_any_inhib_open(), self.which_team_nexus_exposed())
-            print(self.game_time, self.event_handler.choose_event())
+            print(self.game_time, self.event_handler.choose_event().name)
             self.increment_game_time(1)
+            # TODO: match sim could be player without generating comments, so players can get instant results
+            # probably this implementation without a sleep should do the trick, because it is going to generate stats
             if self.game_time == 50:
                 self.is_match_over = True
-            time.sleep(self.match_speed)
+            # time.sleep(self.match_speed)
 
 
 def initialize_match(team1_id: int,
@@ -154,9 +156,14 @@ def debug_match():
 
     print(live.match.teams)
 
-    for team in live.match.teams:
-        print(team.list_players)
+    players = [None, None]
+    champions = [None, None]
+    for i, team in enumerate(live.match.teams):
+        players[i] = [player for player in team.list_players]
+        champions[i] = [player.champion for player in players[i]]
 
+    print(players)
+    print(champions)
     live.simulation()
 
 

@@ -22,6 +22,10 @@ from .team import Team
 from src.resources.utils import load_list_from_json
 
 
+def get_all_team_objects():
+    return [create_team_object(team, load_list_from_json('players.json')) for team in load_list_from_json('teams.json')]
+
+
 def get_data():
     players = load_list_from_json('players.json')
     teams = load_list_from_json('teams.json')
@@ -56,18 +60,14 @@ def get_team(team_id, list_teams) -> dict:
         raise ValueError("Team was not found!")
 
 
-def get_teams_dictionaries(team1_id, team2_id, list_of_teams) -> Tuple[dict, dict]:
+def get_teams_dictionaries(team_ids: list, list_of_teams: list) -> list:
     """
-    Used to return both teams dictionaries, based on their team IDs
-    :param team1_id:
-    :param team2_id:
+    Used to return a list of teams dictionaries, based on their team IDs
+    :param team_ids:
     :param list_of_teams:
     :return:
     """
-    team1 = get_team(team1_id, list_of_teams)
-    team2 = get_team(team2_id, list_of_teams)
-
-    return team1, team2
+    return [get_team(team_id, list_of_teams) for team_id in team_ids]
 
 
 def create_team_object(team_dict: dict, all_players: list) -> Team:
@@ -97,10 +97,11 @@ def create_player_object(player_dict: dict) -> MobaPlayer:
     last_name = player_dict["last_name"]
     nationality = player_dict["nationality"]
     nick_name = player_dict["nick_name"]
+    mult = player_dict["multipliers"]
     skill = player_dict["skill"]
 
     return MobaPlayer(
-        player_id, nationality, first_name, last_name, nick_name, skill
+        player_id, nationality, first_name, last_name, nick_name, mult, skill
     )
 
 

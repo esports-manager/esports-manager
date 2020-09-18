@@ -42,7 +42,7 @@ class Player:
         # can improve his overall skill to a certain level
 
     @property
-    def skill(self):
+    def skill(self) -> int:
         return self._skill
 
     @skill.setter
@@ -57,8 +57,11 @@ class MobaPlayer(Player):
                  first_name: str,
                  last_name: str,
                  nick_name: str,
+                 mult: list,
                  skill: int):
         self._champion = None
+        self.mult = mult
+        self._lane = None
         self._kills = 0
         self._deaths = 0
         self._assists = 0
@@ -66,28 +69,36 @@ class MobaPlayer(Player):
         super().__init__(player_id, nationality, first_name, last_name, nick_name, skill)
 
     @property
-    def champion(self):
+    def champion(self) -> Champion:
         return self._champion
 
     @property
-    def kills(self):
+    def lane(self) -> str:
+        return self._lane
+
+    @property
+    def kills(self) -> int:
         return self._kills
 
     @property
-    def deaths(self):
+    def deaths(self) -> int:
         return self._deaths
 
     @property
-    def assists(self):
+    def assists(self) -> int:
         return self._assists
 
     @property
-    def points(self):
+    def points(self) -> int:
         return self._points
 
     @champion.setter
     def champion(self, champion: Champion):
         self._champion = champion
+
+    @lane.setter
+    def lane(self, lane: str):
+        self._lane = lane
 
     @kills.setter
     def kills(self, kills: int):
@@ -100,6 +111,16 @@ class MobaPlayer(Player):
     @points.setter
     def points(self, add_pts: int):
         self._points = add_pts
+
+    def get_highest_multiplier(self) -> float:
+        return max(self.mult)
+
+    def get_lane(self) -> str:
+        lanes = ['top', 'jg', 'mid', 'adc', 'sup']
+        max_mult = self.get_highest_multiplier()
+        for lane, mult in zip(lanes, self.mult):
+            if mult == max_mult:
+                return lane
 
     def __repr__(self):
         return '{0} {1}'.format(self.__class__.__name__, self.nick_name)

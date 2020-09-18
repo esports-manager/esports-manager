@@ -16,10 +16,10 @@
 
 import unittest
 
-from src.core.pre_match import get_team
+from src.core.pre_match import get_team, get_teams_dictionaries
 
 
-class MyTestCase(unittest.TestCase):
+class PreMatch(unittest.TestCase):
     def test_get_team(self):
         expected_team = {
             "id": 1,

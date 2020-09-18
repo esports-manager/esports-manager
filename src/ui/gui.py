@@ -19,7 +19,7 @@ import base64
 import PySimpleGUI as sg
 
 from src.core.match import Match
-from src.core.pre_match import get_data
+from src.core.pre_match import get_data, get_all_team_objects
 from src.resources import RES_DIR
 from src.resources.generator.generate_players import get_players_nationalities
 from src.resources.utils import find_file, load_list_from_json
@@ -34,26 +34,16 @@ def encode_icon() -> bytes:
     return encoded_icon
 
 
-def get_player_names(value: str, team_list: list, player_list: list) -> list:
-    player_ids = None
+def get_player_names(value: str) -> list:
+    for team in get_all_team_objects():
+        if value[0] == team.team_id:
+            return [[player.get_lane(),
+                     player.nick_name,
+                     player.nationality,
+                     int(player.skill * player.get_highest_multiplier())] for player in team.list_players]
 
-    for team in team_list:
-        if value[0] == team['id']:
-            player_ids = team['roster_id']
-
-    if player_ids is not None:
-        player_names = []
-
-        for pl_id in player_ids:
-            for player in player_list:
-                if pl_id == player['id']:
-                    player_names.append([player['nick_name'],
-                                         player['nationality'],
-                                         player['skill']])
     else:
         raise NotImplementedError("Not found!")
-
-    return player_names
 
 
 def app() -> None:
@@ -76,13 +66,9 @@ def app() -> None:
             window['create_manager'].update(visible=False)
             window['main_screen'].update(visible=True)
         elif event == 'team_list':
-            teams = load_list_from_json('teams.json')
-            players = load_list_from_json('players.json')
             value = values['team_list']
             v = window.Element('team_list').Values[value[0]]
-            window.Element('player_list').Update(values=get_player_names(v,
-                                                                         teams,
-                                                                         players))
+            window.Element('player_list').Update(values=get_player_names(v))
 
         print(event, values)
         print(v[0])
@@ -118,7 +104,7 @@ def main_screen() -> list:
     """
     logo_path = find_file('esportsmanager.png')
 
-    button_pad = (0, 15)
+    button_pad = (0, 10)
     button_size = (20, 2)
 
     return [
@@ -133,11 +119,17 @@ def main_screen() -> list:
                     pad=button_pad,
                     size=button_size
                     )],
-        [esm_button('Editor',
-                    key='editor_main',
+        [esm_button('Settings',
+                    key='settings',
                     pad=button_pad,
                     size=button_size
                     )],
+        # TODO: implement editor
+        # [esm_button('Editor',
+        #             key='editor_main',
+        #             pad=button_pad,
+        #             size=button_size
+        #             )],
         [esm_button('Exit',
                     key='exit_main',
                     pad=button_pad,
@@ -155,9 +147,25 @@ def create_manager_layout() -> list:
     nationalities = get_players_nationalities(load_list_from_json('names.json'))
 
     team_headings = ['Team #', 'Team Name', 'Skill']
-    player_headings = ['Nickname', 'Nationality', 'Skill']
+    player_headings = ['Lane', 'Nickname', 'Nationality', 'Skill']
 
     data = get_data()
+
+    labels = [
+        [esm_form_text('First Name: ', pad=(0, 5))],
+        [esm_form_text('Last Name: ', pad=(0, 5))],
+        [esm_form_text('Nick Name: ', pad=(0, 5))],
+        [esm_form_text('Nationality: ', pad=(0, 5))],
+        [esm_form_text('Date of Birth: ', pad=(0, 5))]
+    ]
+
+    controls = [
+        [esm_input_text(key='-First Name-')],
+        [esm_input_text(key='-Last Name-')],
+        [esm_input_text(key='-Nick Name-')],
+        [esm_input_combo(nationalities, key='-Manager Nat-', size=(29, 1))],
+        [esm_calendar_button(button_text='Select date', size=(20, 1), key='-DOB-')],
+    ]
 
     team_list_frame = [
         [esm_form_text('Team: ')],
@@ -165,21 +173,14 @@ def create_manager_layout() -> list:
     ]
     player_list_frame = [
         [esm_form_text('Players: ')],
-        [esm_table([['No team selected', ' ', ' ']], key='player_list', headings=player_headings)]
+        [esm_table([[' ', 'Select team', ' ', ' ']], key='player_list', headings=player_headings)]
     ]
 
     return [
         [esm_title_text('New Game')],
         # TODO: we have to create a check on events to check if the input text fields are larger than 20 characters to
         # avoid abuses
-        [esm_form_text('First Name: '),
-         esm_input_text(key='-First Name-')],
-        [esm_form_text('Last Name: '),
-         esm_input_text(key='-Last Name-')],
-        [esm_form_text('Nick Name: '),
-         esm_input_text(key='-Nick Name-')],
-        [esm_form_text('Nationality: '), esm_input_combo(nationalities, key='-Manager Nat-')],
-        [esm_form_text('Date of Birth: ', ), esm_calendar_button(size=(20, 1), key='-DOB-')],
+        [sg.Column(layout=labels, element_justification='left'), sg.Column(layout=controls, element_justification='left')],
         # TODO: implement starting season, putting this on hold for 0.1.0-alpha, maybe 0.2.0 should include it?
         # [esm_form_text('Starting Season: '), esm_input_combo([i for i in range(2010, 2021)], key='-Starting Season-')]
         [sg.Column(layout=team_list_frame, element_justification='center'),

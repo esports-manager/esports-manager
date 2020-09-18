@@ -44,7 +44,11 @@ class MatchLive:
 
         # Testing, picking random champions for each player
         for i in range(2):
+            lanes = ['top', 'jg', 'mid', 'adc', 'sup']
             for player in self.match.teams[i].list_players:
+                lane = random.choice(lanes)
+                player.lane = lane
+                lanes.remove(lane)
                 champion_dict = random.choice(champion_list)
                 champion_list.remove(champion_dict)
                 champion = create_champion_object(champion_dict)
@@ -67,9 +71,9 @@ class MatchLive:
         elif self.match.team2.is_nexus_exposed():
             return self.match.team2
         else:
-            return 0
+            return None
 
-    def is_any_inhib_open(self):
+    def is_any_inhib_open(self) -> bool:
         for team in self.match.teams:
             if team.is_inhib_exposed():
                 return True
@@ -81,7 +85,7 @@ class MatchLive:
             self.event_handler.get_events(self.game_time, self.is_any_inhib_open(), self.which_team_nexus_exposed())
             print(self.game_time, self.event_handler.choose_event().name)
             self.increment_game_time(1)
-            # TODO: match sim could be player without generating comments, so players can get instant results
+            # TODO: match sim could be played without generating comments, so players can get instant results
             # probably this implementation without a sleep should do the trick, because it is going to generate stats
             if self.game_time == 50:
                 self.is_match_over = True
@@ -106,7 +110,7 @@ def initialize_match(team1_id: int,
     player_list = load_list_from_json('players.json')
 
     # Creates both teams dictionaries to create their objects
-    team1_dict, team2_dict = get_teams_dictionaries(team1_id, team2_id, team_list)
+    team1_dict, team2_dict = get_teams_dictionaries([team1_id, team2_id], team_list)
 
     # Instantiate team objects, creating players' objects as well
     team1 = create_team_object(team1_dict, player_list)
@@ -158,12 +162,13 @@ def debug_match():
 
     players = [None, None]
     champions = [None, None]
+    lanes = [None, None]
+
     for i, team in enumerate(live.match.teams):
         players[i] = [player for player in team.list_players]
+        lanes[i] = [player.lane for player in team.list_players]
         champions[i] = [player.champion for player in players[i]]
 
-    print(players)
-    print(champions)
     live.simulation()
 
 

@@ -40,21 +40,32 @@ def generate_player(file: list, nationality: str, nicknames: list) -> dict:
     Generates player dictionary
     :param file: list
     :param nationality: string
+    :param nicknames: string
     :return player: dictionary
     """
     first_name, last_name = generate_player_name(file, nationality)
     nick_name = gen_nick_name(nicknames)
 
-    skill = get_players_skills(nationality)
-    skill = int(skill)
+    multipliers = get_player_role_multiplier()
+    skill = int(get_players_skills(nationality))
 
     return {
         "first_name": first_name,
         "last_name": last_name,
         "nick_name": nick_name,
         "nationality": nationality,
+        "multipliers": multipliers,
         "skill": skill
     }
+
+
+def get_player_role_multiplier() -> list:
+    roles = []
+    for _ in range(5):
+        mult = random.randrange(3, 11) / 10
+        roles.append(mult)
+
+    return roles
 
 
 def get_players_skills(nationality: str) -> int:

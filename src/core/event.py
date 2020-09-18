@@ -49,6 +49,21 @@ class Event:
 
 class EventHandler:
     def __init__(self):
+        """
+        Initializes the event handler.
+        The possible list represents all possible events in a match, which is composed of a tuple. Each value means:
+
+        [0]: the event's conditions. This means that events with the same conditions are going to be included in the
+        list of available events when certain conditions are met. For example: when the game time is above 0 minutes,
+        the events: lane farm, gank, lane fight and team fight are unlocked. If an inhibitor is exposed, the
+        inhibitor assault event is unlocked.
+        [1]: name of the event.
+        [2]: priority of the event. This is used by the random.choices as a weight. The higher the priority, the higher
+        the chances to pick this event.
+        [3]: number of points. Each event will award points to the team that gets on top of that, and sometimes,
+        even awards points to individual players. These points will be added to the skill level of players and
+        champions, making it more relevant in probability calculations.
+        """
         self.events = []
         self.eventlog = []
         self.possible = [(0, 'invade', 1, 10),
@@ -60,17 +75,31 @@ class EventHandler:
                          (2, 'tower_assault', 2, 20),
                          (3, 'jungle_major', 2, 20),
                          (4, 'inhibitor_assault', 3, 25),
-                         (5, 'nexus_assault', 4, 50),
-                         (5, 'backdoor', 4, 50)
+                         (5, 'nexus_assault', 4, 10),
+                         (5, 'backdoor', 4, 10)
                          ]
 
     def possible_events(self, number: int):
+        """
+        This method adds the possible events, called by the get_events method, to the self.events list.
+
+        :param number:
+        :return:
+        """
         for event in self.possible:
             if event[0] == number:
                 ev = self.create_event(event[1], event[2], event[3])
                 self.events.append(ev)
 
     def get_events(self, game_time, inhib=False, nexus=0):
+        """
+        This method is used to get the available events according to the game time.
+
+        :param game_time:
+        :param inhib:
+        :param nexus:
+        :return:
+        """
         if game_time == 0.0:
             self.possible_events(0)
         elif 0.0 < game_time <= 15.0:
@@ -84,10 +113,18 @@ class EventHandler:
         if inhib is not False:
             self.possible_events(4)
 
-        if nexus != 0:
+        if nexus is not None:
             self.possible_events(5)
 
     def create_event(self, name, priority, points):
+        """
+        Creates the event, adding it to the Event Log.
+
+        :param name:
+        :param priority:
+        :param points:
+        :return:
+        """
         ev_id = len(self.eventlog) + 1
         return Event(ev_id, name, priority, points)
 

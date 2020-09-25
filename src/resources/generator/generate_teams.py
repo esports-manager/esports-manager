@@ -19,34 +19,52 @@ import random
 from math import floor
 
 from .get_names import gen_team_name, get_nick_team_names
+from .generate_players import generate_player, get_nick_team_names, get_players_nationalities
 from ..utils import write_to_json, load_list_from_json
 
 
-def get_num_teams(players: list) -> int:
-    return int(floor(len(players) / 5))
+def get_num_teams() -> int:
+    return 700
 
 
-# TODO: let teams have a bigger roster than 5 players
-def choose_five_players(players: list) -> list:
-    chosen_players_id = []
+def generate_roster(players: list, team_id: int) -> list:
+    roster = []
+    roster_length = random.randrange(5, 10)
+    names = load_list_from_json('names.json')
+    nicknames = get_nick_team_names('nicknames.txt')
+    nationalities = get_players_nationalities(names)
+    champions = load_list_from_json('champions.json')
 
-    while len(chosen_players_id) != 5:
-        player = random.choice(players)
-        players.remove(player)
-        chosen_players_id.append(player["id"])
+    for i in range(roster_length):
+        nationality = random.choice(nationalities)
+        player = generate_player(
+            names,
+            nationality,
+            nicknames,
+            len(players),
+            team_id,
+            i,
+            champions
+        )
+        roster.append(player['id'])
+        players.append(player)
 
-    return chosen_players_id
+    return roster
 
 
-def generate_each_team(players: list, team_names: list) -> dict:
+def generate_each_team(players: list, team_names: list, team_id: int) -> dict:
     team_name = gen_team_name(team_names)
-    roster_id = choose_five_players(players)
+    roster = generate_roster(players, team_id)
 
-    return {"name": team_name, "roster_id": roster_id}
+    return {
+        "id": team_id,
+        "name": team_name,
+        "roster_id": roster
+    }
 
 
 def generate_teams(players: list) -> list:
-    num_teams = get_num_teams(players)
+    num_teams = get_num_teams()
     team_names = get_nick_team_names('team_names.txt')
 
     # Handling number of teams being higher than the number of available team names
@@ -56,14 +74,12 @@ def generate_teams(players: list) -> list:
     teams = []
 
     for i in range(num_teams):
-        team = generate_each_team(players, team_names)
-        team["id"] = i
+        team = generate_each_team(players, team_names, i)
         teams.append(team)
 
     return teams
 
 
-def generate_team_file() -> None:
-    players = load_list_from_json('players.json')
+def generate_team_file(players) -> None:
     teams = generate_teams(players)
     write_to_json(teams, 'teams.json')

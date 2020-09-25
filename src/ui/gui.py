@@ -34,8 +34,8 @@ def encode_icon() -> bytes:
     return encoded_icon
 
 
-def get_player_names(value: str) -> list:
-    for team in get_all_team_objects():
+def get_player_names(value: str, teams) -> list:
+    for team in teams:
         if value[0] == team.team_id:
             return [[player.get_lane(),
                      player.nick_name,
@@ -49,6 +49,7 @@ def get_player_names(value: str) -> list:
 def app() -> None:
     window = create_window()
     v = [0]
+    teams = get_all_team_objects()
     while True:
         event, values = window.read()
         if event in [sg.WINDOW_CLOSED, 'exit_main']:
@@ -68,7 +69,7 @@ def app() -> None:
         elif event == 'team_list':
             value = values['team_list']
             v = window.Element('team_list').Values[value[0]]
-            window.Element('player_list').Update(values=get_player_names(v))
+            window.Element('player_list').Update(values=get_player_names(v, teams))
 
         print(event, values)
         print(v[0])
@@ -164,7 +165,7 @@ def create_manager_layout() -> list:
         [esm_input_text(key='-Last Name-')],
         [esm_input_text(key='-Nick Name-')],
         [esm_input_combo(nationalities, key='-Manager Nat-', size=(29, 1))],
-        [esm_calendar_button(button_text='Select date', size=(20, 1), key='-DOB-')],
+        [esm_calendar_button(button_text='Select date', size=(20, 1), key='-DOB-', enable_events=True)],
     ]
 
     team_list_frame = [

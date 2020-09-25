@@ -19,16 +19,18 @@ import asyncio
 
 from src.ui.gui import app, debug_window
 from src.resources.utils import find_file
-from src.resources.generator.generate_champions import generate_champion_file
+from src.resources.generator.generate_champions import generate_champion_file, create_champions_list
 from src.resources.generator.generate_teams import generate_team_file
 from src.resources.generator.generate_players import generate_player_file
 from src.core.match_live import debug_match
 
 
 def generation():
+    players = []
+    champions = create_champions_list()
     generate_champion_file()
-    generate_player_file()
-    generate_team_file()
+    generate_team_file(players)
+    generate_player_file(players)
 
 
 async def testing_match():

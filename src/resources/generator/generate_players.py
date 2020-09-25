@@ -35,21 +35,25 @@ def get_players_nationalities(file: list) -> list:
     # return [element['region'] for element in file]
 
 
-def generate_player(file: list, nationality: str, nicknames: list) -> dict:
+def generate_player(file: list,
+                    nationality: str,
+                    nicknames: list,
+                    player_id: int,
+                    team_id: int,
+                    lane: int,
+                    champions: list) -> dict:
     """
     Generates player dictionary
-    :param file: list
-    :param nationality: string
-    :param nicknames: string
-    :return player: dictionary
     """
     first_name, last_name = generate_player_name(file, nationality)
     nick_name = gen_nick_name(nicknames)
 
-    multipliers = get_player_role_multiplier()
+    multipliers = get_player_role_multiplier(lane)
     skill = int(get_players_skills(nationality))
 
     return {
+        "id": player_id,
+        "team_id": team_id,
         "first_name": first_name,
         "last_name": last_name,
         "nick_name": nick_name,
@@ -59,11 +63,14 @@ def generate_player(file: list, nationality: str, nicknames: list) -> dict:
     }
 
 
-def get_player_role_multiplier() -> list:
+def get_player_role_multiplier(lane: int) -> list:
     roles = []
-    for _ in range(5):
-        mult = random.randrange(3, 11) / 10
-        roles.append(mult)
+    for i in range(5):
+        if i == lane:
+            roles.append(1)
+        else:
+            mult = random.randrange(3, 10) / 10
+            roles.append(mult)
 
     return roles
 
@@ -98,27 +105,6 @@ def get_players_skills(nationality: str) -> int:
     return skill
 
 
-def generate_player_list() -> list:
-    """
-    Generates each player and adds to a list
-    :return player_list:
-    """
-    players_list = []
-
-    file = load_list_from_json('names.json')
-    nicknames = get_nick_team_names('nicknames.txt')
-
-    nationalities = get_players_nationalities(file)
-
-    for i in range(get_num_players()):
-        nationality = random.choice(nationalities)
-        player = generate_player(file, nationality, nicknames)
-        player["id"] = i
-        players_list.append(player)
-    
-    return players_list
-
-
 def get_num_players() -> int:
     """
     Defines the number of players here. Could be replaced by a file.
@@ -127,9 +113,8 @@ def get_num_players() -> int:
     return 200
 
 
-def generate_player_file() -> None:
+def generate_player_file(players) -> None:
     """
     Runs the entire thing
     """
-    players = generate_player_list()
     write_to_json(players, 'players.json')

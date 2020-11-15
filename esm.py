@@ -20,17 +20,24 @@ import asyncio
 from src.ui.gui import app, debug_window
 from src.resources.utils import find_file
 from src.resources.generator.generate_champions import generate_champion_file, create_champions_list
-from src.resources.generator.generate_teams import generate_team_file
-from src.resources.generator.generate_players import generate_player_file
+from src.resources.generator.generate_teams import TeamGenerator
+from src.resources.generator.generate_players import MobaPlayerGenerator
 from src.core.match_live import debug_match
 
 
 def generation():
-    players = []
-    champions = create_champions_list()
+    num_players = 3000
+    num_teams = int(num_players / 5)
+
     generate_champion_file()
-    generate_team_file(players)
-    generate_player_file(players)
+    champions = create_champions_list()
+    player_gen = MobaPlayerGenerator()
+    player_gen.generate_players(num_players)
+    team_gen = TeamGenerator(players=player_gen.players, amount=num_teams)
+    team_gen.generate_teams()
+
+    player_gen.generate_file()
+    team_gen.generate_file()
 
 
 async def testing_match():

@@ -97,20 +97,3 @@ def get_key_from_json(key: str = 'name', file: str = 'teams.json') -> list:
     :return:
     """
     return [obj[key] for obj in load_list_from_json(file)]
-
-
-if __name__ == '__main__':
-    import time
-    from src.resources import RES_DIR
-
-    start_time1 = time.clock()
-    file1 = find_file('champions.json')
-    file2 = find_file('teams.json')
-    file3 = find_file('players.json')
-    print("1st runtime: {}".format((time.clock() - start_time1)))
-
-    start_time2 = time.clock()
-    file4 = find_file('champions.json', folder=RES_DIR)
-    file5 = find_file('teams.json', folder=RES_DIR)
-    file6 = find_file('players.json', folder=RES_DIR)
-    print("2nd runtime: {}".format(time.clock() - start_time2))

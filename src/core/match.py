@@ -47,10 +47,3 @@ class Match:
 
     def __str__(self) -> str:
         return '{0} ID: {1}'.format(self.__class__.__name__, self.match_id)
-
-
-if __name__ == '__main__':
-    from src.core.match_live import get_live_obj_test
-
-    match = get_live_obj_test()
-    match.calculate_both_teams_win_prob()

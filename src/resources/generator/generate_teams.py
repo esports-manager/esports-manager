@@ -13,73 +13,87 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-import json
 import random
-from math import floor
+import uuid
 
-from .get_names import gen_team_name, get_nick_team_names
-from .generate_players import generate_player, get_nick_team_names, get_players_nationalities
-from ..utils import write_to_json, load_list_from_json
-
-
-def get_num_teams() -> int:
-    return 700
+from src.core.team import Team
+from src.resources.generator.get_names import get_nick_team_names
+from src.resources.utils import write_to_json
 
 
-def generate_roster(players: list, team_id: int) -> list:
-    roster = []
-    roster_length = random.randrange(5, 10)
-    names = load_list_from_json('names.json')
-    nicknames = get_nick_team_names('nicknames.txt')
-    nationalities = get_players_nationalities(names)
-    champions = load_list_from_json('champions.json')
-
-    for i in range(roster_length):
-        nationality = random.choice(nationalities)
-        player = generate_player(
-            names,
-            nationality,
-            nicknames,
-            len(players),
-            team_id,
-            i,
-            champions
-        )
-        roster.append(player['id'])
-        players.append(player)
-
-    return roster
+class TeamGeneratorError(Exception):
+    pass
 
 
-def generate_each_team(players: list, team_names: list, team_id: int) -> dict:
-    team_name = gen_team_name(team_names)
-    roster = generate_roster(players, team_id)
+class TeamGenerator:
+    def __init__(self, nationality: str = None, amount: int = 1, players: list = None):
+        self.name = None
+        self.nationality = nationality
+        self.logo = None
+        self.team_id = None
+        self.file_name = 'teams.json'
+        self.teams = []
+        self.teams_dict = []
+        self.team_dict = None
+        self.team_obj = None
+        self.player_list = players
+        self.roster = None
+        self.names = get_nick_team_names('team_names.txt')
+        self.amount = amount
 
-    return {
-        "id": team_id,
-        "name": team_name,
-        "roster_id": roster
-    }
+    def generate_id(self):
+        self.team_id = uuid.uuid4()
 
+    def generate_name(self):
+        self.name = random.choice(self.names)
+        self.names.remove(self.name)
 
-def generate_teams(players: list) -> list:
-    num_teams = get_num_teams()
-    team_names = get_nick_team_names('team_names.txt')
+    def generate_logo(self):
+        pass
 
-    # Handling number of teams being higher than the number of available team names
-    if num_teams > len(team_names):
-        num_teams = len(team_names)
+    def get_roster(self):
+        self.roster = []
+        if self.player_list is not None:
+            for i in range(5):
+                player = random.choice(self.player_list)
+                self.roster.append(player)
+                self.player_list.remove(player)
+        else:
+            raise TeamGeneratorError('List of players is not valid!')
 
-    teams = []
+    def get_roster_ids(self):
+        r_ids = []
+        if self.roster is not None and self.roster != []:
+            for player in self.roster:
+                r_ids.append(player.player_id.int)
+        else:
+            raise TeamGeneratorError('Player roster is invalid!')
 
-    for i in range(num_teams):
-        team = generate_each_team(players, team_names, i)
-        teams.append(team)
+        return r_ids
 
-    return teams
+    def get_dictionary(self):
+        self.team_dict = {'id': self.team_id.int,
+                          'name': self.name,
+                          'roster': self.get_roster_ids()}
 
+    def get_object(self):
+        self.team_obj = Team(self.team_id, self.name, self.roster)
 
-def generate_team_file(players) -> None:
-    teams = generate_teams(players)
-    write_to_json(teams, 'teams.json')
+    def get_nationality(self):
+        pass
+
+    def generate_team(self):
+        self.generate_id()
+        self.generate_name()
+        self.get_roster()
+        self.get_dictionary()
+        self.get_object()
+        self.teams.append(self.team_obj)
+        self.teams_dict.append(self.team_dict)
+
+    def generate_teams(self):
+        for i in range(self.amount):
+            self.generate_team()
+
+    def generate_file(self):
+        write_to_json(self.teams_dict, self.file_name)

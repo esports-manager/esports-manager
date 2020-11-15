@@ -13,32 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-import os
-import random
-
-from ..utils import find_file
-
-
-def generate_player_name(names: list, nationality: str):
-    for name_dict in names:
-        if name_dict['region'] == nationality:
-            first_name = random.choice(name_dict['male'])
-            last_name = random.choice(name_dict['surnames'])
-
-            return first_name, last_name
-    else:
-        raise ValueError('Nationality not found!')
-
-
-def gen_team_name(team_names: list) -> str:
-    team_name = random.choice(team_names)
-    team_names.remove(team_name)
-    return team_name
-
-
-def gen_nick_name(names: list) -> str:
-    return random.choice(names)
+from src.resources.utils import find_file
 
 
 def get_nick_team_names(filename: str) -> list:

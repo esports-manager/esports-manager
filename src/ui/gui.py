@@ -21,8 +21,7 @@ import PySimpleGUI as sg
 from src.core.match import Match
 from src.core.pre_match import get_data, get_all_team_objects
 from src.resources import RES_DIR
-from src.resources.generator.generate_players import get_players_nationalities
-from src.resources.utils import find_file, load_list_from_json
+from src.resources.utils import find_file
 from src.ui.gui_components import esm_button, esm_form_text, create_look_and_feel, \
     esm_input_text, esm_input_combo, esm_title_text, esm_listbox, esm_table, esm_calendar_button
 
@@ -145,7 +144,7 @@ def create_manager_layout() -> list:
     want to play with, and
     :return:
     """
-    nationalities = get_players_nationalities(load_list_from_json('names.json'))
+    nationalities = ['Brazil', 'United States', 'Korea']
 
     team_headings = ['Team #', 'Team Name', 'Skill']
     player_headings = ['Lane', 'Nickname', 'Nationality', 'Skill']

@@ -13,6 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from datetime import date
 
 from .champion import Champion
 
@@ -23,20 +24,26 @@ class Player:
                  nationality: str,
                  first_name: str,
                  last_name: str,
+                 birthday: date,
                  nick_name: str,
-                 skill: int):
+                 skill: int,
+                 champions: list):
         self.player_id = player_id
 
         # TODO: players should include team's id as well
 
         self.first_name = first_name
         self.last_name = last_name
+        self.birthday = birthday
+
         self.nick_name = nick_name
 
         self.nationality = nationality
 
         # TODO: replace skill by attribute dictionary
         self._skill = skill
+
+        self.champions = champions
 
         # TODO: players should have a "potential" value too. This value tells the game that the player
         # can improve his overall skill to a certain level
@@ -56,9 +63,11 @@ class MobaPlayer(Player):
                  nationality: str,
                  first_name: str,
                  last_name: str,
+                 birthday: date,
                  nick_name: str,
                  mult: list,
-                 skill: int):
+                 skill: int,
+                 champions: list):
         self._champion = None
         self.mult = mult
         self._lane = None
@@ -66,7 +75,7 @@ class MobaPlayer(Player):
         self._deaths = 0
         self._assists = 0
         self._points = 0
-        super().__init__(player_id, nationality, first_name, last_name, nick_name, skill)
+        super().__init__(player_id, nationality, first_name, last_name, birthday, nick_name, skill, champions)
 
     @property
     def champion(self) -> Champion:
@@ -121,6 +130,10 @@ class MobaPlayer(Player):
         for lane, mult in zip(lanes, self.mult):
             if mult == max_mult:
                 return lane
+
+    def get_age(self, today: date) -> int:
+        age = today - self.birthday
+        return int(age.days * 0.0027379070)
 
     def __repr__(self):
         return '{0} {1}'.format(self.__class__.__name__, self.nick_name)

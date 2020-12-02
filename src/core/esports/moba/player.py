@@ -15,7 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from datetime import date
 
-from .champion import Champion
+from src.core.esports.moba.champion import Champion
 
 
 class Player:

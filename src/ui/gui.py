@@ -18,8 +18,8 @@ import base64
 
 import PySimpleGUI as sg
 
-from src.core.match import Match
-from src.core.pre_match import get_data, get_all_team_objects
+from src.core.esports.moba.match import Match
+from src.core.esports.moba.pre_match import get_data, get_all_team_objects
 from src.resources import RES_DIR
 from src.resources.utils import find_file
 from src.ui.gui_components import esm_button, esm_form_text, create_look_and_feel, \

@@ -59,6 +59,15 @@ def find_file(filename: str, folder: str = ROOT_DIR) -> str:
         raise FileNotFoundError("File couldn't be found!")
 
 
+def get_list_from_file(filename: str) -> list:
+    file = find_file(filename)
+
+    with open(file, "r", encoding='utf-8') as fp:
+        lst = fp.read().splitlines()
+
+    return lst
+
+
 def get_from_file(file_name: str) -> list:
     """
     General function used to read a JSON file, extracting its data to a dictionary/list

@@ -15,12 +15,11 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import random
-import time
 
-from src.core.match import Match
+from src.core.esports.moba.match import Match
 from src.resources.utils import load_list_from_json
-from src.core.pre_match import get_teams_dictionaries, create_team_object, create_champion_object
-from src.core.event import EventHandler
+from src.core.esports.moba.pre_match import get_teams_dictionaries, create_team_object, create_champion_object
+from src.core.esports.moba.event import EventHandler
 
 
 class MatchLive:

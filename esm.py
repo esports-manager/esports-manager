@@ -15,14 +15,12 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import PySimpleGUI as sg
-import asyncio
 
 from src.ui.gui import app, debug_window
 from src.resources.utils import find_file
 from src.resources.generator.generate_champions import generate_champion_file, create_champions_list
 from src.resources.generator.generate_teams import TeamGenerator
 from src.resources.generator.generate_players import MobaPlayerGenerator
-from src.core.match_live import debug_match
 
 
 def generation():

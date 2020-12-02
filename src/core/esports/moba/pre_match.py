@@ -14,9 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from typing import Tuple
-
-from .champion import Champion
+from src.core.esports.moba.champion import Champion
 from .player import MobaPlayer
 from .team import Team
 from src.resources.utils import load_list_from_json

@@ -14,8 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from src.core.team import Team
-import random
+from src.core.esports.moba.team import Team
 
 
 class Match:

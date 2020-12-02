@@ -18,9 +18,8 @@ import random
 import uuid
 from datetime import date, timedelta
 
-from src.core.player import MobaPlayer
-from src.resources.generator.get_names import get_nick_team_names
-from src.resources.utils import load_list_from_json, write_to_json
+from src.core.esports.moba.player import MobaPlayer
+from src.resources.utils import load_list_from_json, write_to_json, get_list_from_file
 
 
 class MobaPlayerGeneratorError(Exception):
@@ -57,7 +56,7 @@ class MobaPlayerGenerator:
         self.player_dict = None
         self.file_name = 'players.json'
         self.names = load_list_from_json('names.json')
-        self.nick_names = get_nick_team_names('nicknames.txt')
+        self.nick_names = get_list_from_file('nicknames.txt')
 
     def generate_id(self):
         self.player_id = uuid.uuid4()
@@ -164,7 +163,7 @@ class MobaPlayerGenerator:
             multiplier = random.randrange(55, 100) / 100
             mult.append(multiplier)
 
-        if self.lane != 0:
+        if self.lane == 0:
             mult[mult.index(max(mult))] = 1
         else:
             mult[(self.lane - 1)] = 1
@@ -186,8 +185,15 @@ class MobaPlayerGenerator:
         self.players_dict.append(self.player_dict)
 
     def generate_players(self, amount: int = 5):
-        for i in range(amount):
-            self.generate_player()
+        if self.lane == 0:
+            for i in range(amount):
+                self.generate_player()
+        else:
+            self.lane = 1
+            for _ in range(5):
+                for __ in range(int(amount/5)):
+                    self.generate_player()
+                self.lane += 1
 
     def get_players_dict(self):
         self.players_dict = load_list_from_json('players.json')
@@ -212,11 +218,3 @@ class MobaPlayerGenerator:
 
     def generate_file(self):
         write_to_json(self.players_dict, self.file_name)
-
-
-if __name__ == '__main__':
-    data = date(2020, 1, 1)
-    pl = MobaPlayerGenerator(data, min_age=16, max_age=30)
-    pl.generate_players()
-    for player in pl.players_dict:
-        print(player['nick_name'])

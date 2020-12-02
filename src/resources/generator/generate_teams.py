@@ -13,12 +13,12 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import random
 import uuid
 
-from src.core.team import Team
-from src.resources.generator.get_names import get_nick_team_names
-from src.resources.utils import write_to_json
+from src.core.esports.moba.team import Team
+from src.resources.utils import write_to_json, get_list_from_file
 
 
 class TeamGeneratorError(Exception):
@@ -26,7 +26,7 @@ class TeamGeneratorError(Exception):
 
 
 class TeamGenerator:
-    def __init__(self, nationality: str = None, amount: int = 1, players: list = None):
+    def __init__(self, nationality: str = None, amount: int = 1, players: list = None, organized: bool = False):
         self.name = None
         self.nationality = nationality
         self.logo = None
@@ -38,8 +38,9 @@ class TeamGenerator:
         self.team_obj = None
         self.player_list = players
         self.roster = None
-        self.names = get_nick_team_names('team_names.txt')
+        self.names = get_list_from_file('team_names.txt')
         self.amount = amount
+        self.organized = organized
 
     def generate_id(self):
         self.team_id = uuid.uuid4()
@@ -54,8 +55,20 @@ class TeamGenerator:
     def get_roster(self):
         self.roster = []
         if self.player_list is not None:
+            lane = 0
             for i in range(5):
-                player = random.choice(self.player_list)
+                if self.organized is False:
+                    player = random.choice(self.player_list)
+                else:
+                    for player_ in self.player_list:
+                        x = player_.mult.index(max(player_.mult))
+                        if x == lane:
+                            player = player_
+                            lane += 1
+                            break
+                    else:
+                        raise TeamGeneratorError('No player found!')
+
                 self.roster.append(player)
                 self.player_list.remove(player)
         else:
@@ -97,3 +110,17 @@ class TeamGenerator:
 
     def generate_file(self):
         write_to_json(self.teams_dict, self.file_name)
+
+
+if __name__ == '__main__':
+    from src.resources.generator.generate_players import MobaPlayerGenerator
+
+    amount = 100
+    teams = int(amount / 5)
+    player = MobaPlayerGenerator(lane=1)
+    player.generate_players(amount=amount)
+    team = TeamGenerator(amount=teams, players=player.players, organized=True)
+    team.generate_teams()
+    for team_ in team.teams:
+        for player in team_.list_players:
+            print(player.get_lane())

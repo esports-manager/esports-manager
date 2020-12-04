@@ -21,7 +21,7 @@ from src.resources.utils import find_file
 from src.resources.generator.generate_champions import ChampionGenerator
 from src.resources.generator.generate_teams import TeamGenerator
 from src.resources.generator.generate_players import MobaPlayerGenerator
-from src.core.esports.moba.pre_match import match_debugger
+from src.core.esports.moba.debug import match_debugger
 
 
 def generation():
@@ -29,11 +29,11 @@ def generation():
     num_teams = int(num_players / 5)
 
     champions = ChampionGenerator()
-    player_gen = MobaPlayerGenerator()
+    player_gen = MobaPlayerGenerator(lane=1)
     champions.get_champion_names()
     champions.create_champions_list()
     player_gen.generate_players(num_players)
-    team_gen = TeamGenerator(players=player_gen.players, amount=num_teams)
+    team_gen = TeamGenerator(players=player_gen.players, organized=True, amount=num_teams)
     team_gen.generate_teams()
 
     champions.generate_file()
@@ -43,6 +43,7 @@ def generation():
 
 def debug_match():
     match_debugger()
+
 
 if __name__ == '__main__':
     try:

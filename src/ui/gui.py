@@ -18,7 +18,7 @@ import base64
 
 import PySimpleGUI as sg
 
-from src.core.esports.moba.match import Match
+from src.core.esports.moba.match_live import MatchLive
 from src.resources import RES_DIR
 from src.resources.utils import find_file
 from src.ui.gui_components import esm_button, esm_form_text, create_look_and_feel, \
@@ -257,11 +257,21 @@ def debug_window(match) -> sg.Window:
     )
 
 
-def get_debug_layout(match: Match = None):
-    names1 = [player.nick_name for player in match.match.team1.list_players]
-    names2 = [player.nick_name for player in match.match.team2.list_players]
+def get_debug_layout(match: MatchLive = None):
+    players1 = [player for player in match.match.team1.list_players]
+    players2 = [player for player in match.match.team2.list_players]
+
+    data1 = []
+    data2 = []
+    for player1, player2 in zip(players1, players2):
+        data1.append([player1.lane, player1.nick_name, player1.skill, player1.champion])
+        data2.append([player2.lane, player2.nick_name, player2.skill, player2.champion])
+
+    headings = ['Lane', 'Player Name', 'Skill', 'Champion']
 
     return [
         [esm_title_text('Debug Match')],
-        [esm_table(names1), esm_table(names2)]
+        [esm_table(data1, headings=headings), esm_table(data2, headings=headings)],
+        [sg.Output(size=(120, 20), echo_stdout_stderr=True)],
+        [esm_button('Start Match', key='-StartMatch-')]
     ]

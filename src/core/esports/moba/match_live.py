@@ -17,7 +17,6 @@
 import random
 
 from src.core.esports.moba.match import Match
-from src.resources.utils import load_list_from_json
 from src.core.esports.moba.event import EventHandler
 
 
@@ -38,6 +37,7 @@ class MatchLive:
         """
         for team in self.match.teams:
             for player in team.list_players:
+                player.debug_get_lane()
                 champion = random.choice(champions)
                 champions.remove(champion)
                 player.champion = champion
@@ -82,7 +82,6 @@ class MatchLive:
 
 def initialize_match(team1,
                      team2,
-                     match_id,
                      ch_id):
     """
     Instantiate each object that is going to be used by the match, returning

@@ -25,6 +25,7 @@ from src.resources.generator.generate_champions import ChampionGenerator
 from src.resources.utils import load_list_from_json
 from src.ui.gui import debug_window
 
+
 def match_debugger():
     ch = ChampionGenerator()
     pl = MobaPlayerGenerator()
@@ -46,7 +47,8 @@ def match_debugger():
     print(team1.list_players)
     print(team2.list_players)
 
-    match = initialize_match(team1, team2, uuid.uuid4(), uuid.uuid4())
+    match = initialize_match(team1, team2, uuid.uuid4())
+    match.picks_and_bans(ch.champions_obj)
 
     window = debug_window(match)
 
@@ -54,9 +56,9 @@ def match_debugger():
         event, values = window.read()
         if event in [sg.WINDOW_CLOSED, 'exit_main']:
             break
-
-        print(event, values)
+        elif event == '-StartMatch-':
+            match.is_match_over = False
+            match.game_time = 0.0
+            match.simulation()
 
     window.close()
-
-

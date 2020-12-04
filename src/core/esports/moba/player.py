@@ -125,8 +125,21 @@ class MobaPlayer(Player):
     def get_highest_multiplier(self) -> float:
         return max(self.mult)
 
-    def get_best_lane(self) -> Lanes:
+    def get_best_lane(self) -> int:
         return self.mult.index(self.get_highest_multiplier())
+
+    def debug_get_lane(self):
+        lane = self.get_best_lane()
+        if lane == 0:
+            self.lane = Lanes.TOP
+        if lane == 1:
+            self.lane = Lanes.JG
+        if lane == 2:
+            self.lane = Lanes.MID
+        if lane == 3:
+            self.lane = Lanes.ADC
+        if lane == 4:
+            self.lane = Lanes.SUP
     
     def get_curr_lane_multiplier(self):
         if self.lane is not None:

@@ -82,7 +82,10 @@ class ChampionGenerator:
     def get_champions(self):
         self.champions_list = load_list_from_json(self.file_name)
         self.champion_obj = []
-        for _ in self.champions_list:
+        for champion in self.champions_list:
+            self.name = champion['name']
+            self.champion_id = champion['id']
+            self.skill = champion['skill']
             self.generate_champion_obj()
             self.champions_obj.append(self.champion_obj)
 

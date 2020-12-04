@@ -36,7 +36,11 @@ class MatchLive:
         """
         Dummy picks and bans implementation. Will be changed in the future.
         """
-        pass
+        for team in self.match.teams:
+            for player in team.list_players:
+                champion = random.choice(champions)
+                champions.remove(champion)
+                player.champion = champion
 
     def calculate_both_teams_win_prob(self) -> None:
         total_prob = sum(
@@ -91,4 +95,4 @@ def initialize_match(team1,
     """
 
     match = Match(ch_id, team1, team2)
-    return MatchLive(match, True, )
+    return MatchLive(match, True, 1)

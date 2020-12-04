@@ -15,16 +15,15 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import random
+import PySimpleGUI as sg
+import uuid
 
-from src.core.esports.moba.champion import Champion
-from src.core.esports.moba.player import MobaPlayer
-from src.core.esports.moba.team import Team
-from src.core.esports.moba.match_live import MatchLive
+from src.core.esports.moba.match_live import MatchLive, initialize_match
 from src.resources.generator.generate_players import MobaPlayerGenerator
 from src.resources.generator.generate_teams import TeamGenerator
 from src.resources.generator.generate_champions import ChampionGenerator
 from src.resources.utils import load_list_from_json
-
+from src.ui.gui import debug_window
 
 def match_debugger():
     ch = ChampionGenerator()
@@ -47,89 +46,17 @@ def match_debugger():
     print(team1.list_players)
     print(team2.list_players)
 
+    match = initialize_match(team1, team2, uuid.uuid4(), uuid.uuid4())
+
+    window = debug_window(match)
+
+    while True:
+        event, values = window.read()
+        if event in [sg.WINDOW_CLOSED, 'exit_main']:
+            break
+
+        print(event, values)
+
+    window.close()
 
 
-
-def get_all_team_objects():
-    return [create_team_object(team, load_list_from_json('players.json')) for team in load_list_from_json('teams.json')]
-
-
-def get_data():
-    players = load_list_from_json('players.json')
-    teams = load_list_from_json('teams.json')
-
-    team_list = []
-    for team in teams:
-        team_list.append(create_team_object(team, players))
-
-    data = []
-    for team in team_list:
-        data.append([team.team_id, team.name, team.player_overall])
-
-    data.sort(key=lambda team: team[2], reverse=False)
-
-    return data
-
-
-def get_team(team_id, list_teams) -> dict:
-    """
-    Extracts the desired team from the list of teams, returning the team's
-    dictionary
-    :param team_id:
-    :param list_teams:
-    :return: team dictionary
-    """
-
-    for team in list_teams:
-        if team["id"] == team_id:
-            return team
-
-    else:
-        raise ValueError("Team was not found!")
-
-
-def get_teams_dictionaries(team_ids: list, list_of_teams: list) -> list:
-    """
-    Used to return a list of teams dictionaries, based on their team IDs
-    :param team_ids:
-    :param list_of_teams:
-    :return:
-    """
-    return [get_team(team_id, list_of_teams) for team_id in team_ids]
-
-
-def create_team_object(team_dict: dict, all_players: list) -> Team:
-    """
-    Creates the team object based on the Team class. It also gets the roster
-    and uses the get_roster() function to create the players list
-    :param team_dict:
-    :param all_players:
-    :return:
-    """
-    team_id = team_dict["id"]
-    name = team_dict["name"]
-    list_of_players = team_dict["roster_id"]
-    roster = get_roster(list_of_players, all_players)
-
-    return Team(team_id, name, roster)
-
-
-def get_roster(list_of_players: list, all_players: list) -> list:
-    """
-    Searches for each player ID on the player's list, creates the player
-    object based on the player dictionary, returning this object
-    :param list_of_players: list of players from the roster
-    :param all_players: entire player list database
-    :return: list of players
-    """
-    roster = []
-
-    # Is there a more pythonic way to do this?
-    for player_id in list_of_players:
-        for player_dict in all_players:
-            if player_dict["id"] == player_id:
-                player = create_player_object(player_dict)
-                roster.append(player)
-                break
-
-    return roster

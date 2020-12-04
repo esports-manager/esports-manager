@@ -19,7 +19,6 @@ import base64
 import PySimpleGUI as sg
 
 from src.core.esports.moba.match import Match
-from src.core.esports.moba.pre_match import get_data, get_all_team_objects
 from src.resources import RES_DIR
 from src.resources.utils import find_file
 from src.ui.gui_components import esm_button, esm_form_text, create_look_and_feel, \
@@ -242,10 +241,10 @@ def get_layouts() -> list:
 
 
 # debugging
-def debug_window() -> sg.Window:
+def debug_window(match) -> sg.Window:
     icon_path = encode_icon()
 
-    layout = get_debug_layout()
+    layout = get_debug_layout(match)
 
     create_look_and_feel()
     sg.theme('EsmTheme')
@@ -259,7 +258,10 @@ def debug_window() -> sg.Window:
 
 
 def get_debug_layout(match: Match = None):
+    names1 = [player.nick_name for player in match.match.team1.list_players]
+    names2 = [player.nick_name for player in match.match.team2.list_players]
+
     return [
-        [esm_form_text('Debug Match')],
-        [esm_button('New Game')]
+        [esm_title_text('Debug Match')],
+        [esm_table(names1), esm_table(names2)]
     ]

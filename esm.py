@@ -14,39 +14,35 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import PySimpleGUI as sg
+#import PySimpleGUI as sg
 
-from src.ui.gui import app, debug_window
+# from src.ui.gui import app, debug_window
 from src.resources.utils import find_file
-from src.resources.generator.generate_champions import generate_champion_file, create_champions_list
+from src.resources.generator.generate_champions import ChampionGenerator
 from src.resources.generator.generate_teams import TeamGenerator
 from src.resources.generator.generate_players import MobaPlayerGenerator
+from src.core.esports.moba.pre_match import match_debugger
 
 
 def generation():
     num_players = 3000
     num_teams = int(num_players / 5)
 
-    generate_champion_file()
-    champions = create_champions_list()
+    champions = ChampionGenerator()
     player_gen = MobaPlayerGenerator()
+    champions.get_champion_names()
+    champions.create_champions_list()
     player_gen.generate_players(num_players)
     team_gen = TeamGenerator(players=player_gen.players, amount=num_teams)
     team_gen.generate_teams()
 
+    champions.generate_file()
     player_gen.generate_file()
     team_gen.generate_file()
 
 
-async def testing_match():
-    window = debug_window()
-    while True:
-        event, values = window.read()
-        if event in [sg.WINDOW_CLOSED, 'exit_main']:
-            break
-
-    window.close()
-
+def debug_match():
+    match_debugger()
 
 if __name__ == '__main__':
     try:
@@ -56,4 +52,4 @@ if __name__ == '__main__':
     except FileNotFoundError:
         generation()
 
-    app()
+    debug_match()

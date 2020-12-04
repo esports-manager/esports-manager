@@ -59,7 +59,7 @@ class MobaPlayerGenerator:
         self.nick_names = get_list_from_file('nicknames.txt')
 
     def generate_id(self):
-        self.player_id = uuid.uuid4()
+        self.player_id = uuid.uuid4().int
 
     def get_nationality(self):
         """
@@ -132,7 +132,7 @@ class MobaPlayerGenerator:
         """
         Generates the dictionary based on the class' attributes
         """
-        self.player_dict = {'id': self.player_id.int,
+        self.player_dict = {'id': self.player_id,
                             'first_name': self.first_name,
                             'last_name': self.last_name,
                             'birthday': '{:%m/%d/%Y}'.format(self.dob),
@@ -159,7 +159,7 @@ class MobaPlayerGenerator:
 
     def generate_multipliers(self):
         mult = []
-        for i in range(5):
+        for _ in range(5):
             multiplier = random.randrange(55, 100) / 100
             mult.append(multiplier)
 
@@ -186,7 +186,7 @@ class MobaPlayerGenerator:
 
     def generate_players(self, amount: int = 5):
         if self.lane == 0:
-            for i in range(amount):
+            for _ in range(amount):
                 self.generate_player()
         else:
             self.lane = 1
@@ -202,19 +202,19 @@ class MobaPlayerGenerator:
         self.players = []
         if self.players_dict:
             for player in self.players_dict:
-                player['id'] = self.player_id
-                player['first_name'] = self.first_name
-                player['last_name'] = self.last_name
-                player['birthday'] = self.dob
-                player['nationality'] = self.nationality
-                player['nick_name'] = self.nick_name
-                player['skill'] = self.skill
-                player['multipliers'] = self.multipliers
-                player['champions'] = self.champions
+                self.player_id = player['id']
+                self.first_name = player['first_name']
+                self.last_name = player['last_name']
+                self.dob = player['birthday']
+                self.nationality = player['nationality']
+                self.nick_name = player['nick_name']
+                self.skill = player['skill']
+                self.multipliers = player['multipliers']
+                self.champions = player['champions']
                 self.get_object()
                 self.players.append(self.player_obj)
         else:
-            raise MobaPlayerGeneratorError("List is empty!")
+            raise MobaPlayerGeneratorError('List of players is empty!')
 
     def generate_file(self):
         write_to_json(self.players_dict, self.file_name)

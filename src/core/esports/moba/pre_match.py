@@ -14,10 +14,40 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import random
+
 from src.core.esports.moba.champion import Champion
-from .player import MobaPlayer
-from .team import Team
+from src.core.esports.moba.player import MobaPlayer
+from src.core.esports.moba.team import Team
+from src.core.esports.moba.match_live import MatchLive
+from src.resources.generator.generate_players import MobaPlayerGenerator
+from src.resources.generator.generate_teams import TeamGenerator
+from src.resources.generator.generate_champions import ChampionGenerator
 from src.resources.utils import load_list_from_json
+
+
+def match_debugger():
+    ch = ChampionGenerator()
+    pl = MobaPlayerGenerator()
+    t = TeamGenerator()
+
+    pl.get_players_dict()
+    pl.get_players_objects()
+    ch.get_champions()
+    
+    t.player_list = pl.players
+    t.get_teams_dict()
+    t.get_teams_objects()
+    
+    team1 = random.choice(t.teams)
+    t.teams.remove(team1)
+    team2 = random.choice(t.teams)
+    t.teams.remove(team2)
+
+    print(team1.list_players)
+    print(team2.list_players)
+
+
 
 
 def get_all_team_objects():
@@ -82,38 +112,6 @@ def create_team_object(team_dict: dict, all_players: list) -> Team:
     roster = get_roster(list_of_players, all_players)
 
     return Team(team_id, name, roster)
-
-
-def create_player_object(player_dict: dict) -> MobaPlayer:
-    """
-    Creates the player object
-    :param player_dict:
-    :return:
-    """
-    player_id = player_dict["id"]
-    first_name = player_dict["first_name"]
-    last_name = player_dict["last_name"]
-    nationality = player_dict["nationality"]
-    nick_name = player_dict["nick_name"]
-    mult = player_dict["multipliers"]
-    skill = player_dict["skill"]
-
-    return MobaPlayer(
-        player_id, nationality, first_name, last_name, nick_name, mult, skill
-    )
-
-
-def create_champion_object(champion_dict: dict) -> Champion:
-    """
-    Creates the champion object to insert it on the player choice
-    :param champion_dict: champion dictionary obtained from json file
-    :return: champion object
-    """
-    champion_id = champion_dict["id"]
-    name = champion_dict["name"]
-    skill = champion_dict["skill"]
-
-    return Champion(champion_id, name, skill)
 
 
 def get_roster(list_of_players: list, all_players: list) -> list:

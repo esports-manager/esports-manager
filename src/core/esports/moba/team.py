@@ -116,14 +116,9 @@ class Team:
         """
         self._player_overall = 0
 
-        skill_list = []
-        for player in self.list_players:
-            skill_list.append(player.skill)
-
-        for skill in skill_list:
-            self._player_overall += skill
-
-        self._player_overall = int(self._player_overall / len(self.list_players))
+        self._player_overall = sum(
+            (player.skill * player.mult)/2 for player in self.list_players
+        )
 
         return self._player_overall
 
@@ -131,8 +126,9 @@ class Team:
     def champion_overall(self) -> int:
         self._champion_overall = 0
 
-        for player in self.list_players:
-            self._champion_overall += player.champion.skill
+        self._champion_overall = sum(
+            player.get_champion_skill() for player in self.list_players
+        )
 
         self._champion_overall = int(self._champion_overall / len(self.list_players))
 

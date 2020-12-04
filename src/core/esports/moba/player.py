@@ -15,6 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from datetime import date
 
+from src.core.esports.moba.lane import Lanes, LaneError
 from src.core.esports.moba.champion import Champion
 
 
@@ -82,7 +83,7 @@ class MobaPlayer(Player):
         return self._champion
 
     @property
-    def lane(self) -> str:
+    def lane(self) -> Lanes:
         return self._lane
 
     @property
@@ -106,7 +107,7 @@ class MobaPlayer(Player):
         self._champion = champion
 
     @lane.setter
-    def lane(self, lane: str):
+    def lane(self, lane: Lanes):
         self._lane = lane
 
     @kills.setter
@@ -124,16 +125,21 @@ class MobaPlayer(Player):
     def get_highest_multiplier(self) -> float:
         return max(self.mult)
 
-    def get_lane(self) -> str:
-        lanes = ['top', 'jg', 'mid', 'adc', 'sup']
-        max_mult = self.get_highest_multiplier()
-        for lane, mult in zip(lanes, self.mult):
-            if mult == max_mult:
-                return lane
+    def get_best_lane(self) -> Lanes:
+        return self.mult.index(self.get_highest_multiplier())
+    
+    def get_curr_lane_multiplier(self):
+        if self.lane is not None:
+            return self.mult[self.lane]
+        else:
+            raise LaneError('Player may not be playing the game!')
 
     def get_age(self, today: date) -> int:
         age = today - self.birthday
         return int(age.days * 0.0027379070)
+    
+    def get_champion_skill(self):
+        pass
 
     def __repr__(self):
         return '{0} {1}'.format(self.__class__.__name__, self.nick_name)

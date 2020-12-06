@@ -15,19 +15,37 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import random
+from enum import Enum, auto
 
 
-class Event:
+class MobaEventType(Enum):
+    """
+    Defines the types of events that can occur during a match
+    """
+    INVADE = 0
+    NOTHING = auto()
+    LANE_FARM = auto()
+    GANK = auto()
+    LANE_FIGHT = auto()
+    TEAM_FIGHT = auto()
+    TOWER_ASSAULT = auto()
+    JG_MAJOR = auto()
+    INHIB_ASSAULT = auto()
+    NEXUS_ASSAULT = auto()
+    BACKDOOR = auto()
+
+
+class MobaEvent:
     def __init__(self,
                  event_id: int,
-                 name: str,
+                 ev_type: MobaEventType,
                  priority: int,
                  points: int,
                  ):
         self.event_id = event_id
-        self.name = name
+        self.ev_type = ev_type
         self._priority = priority
-        self.commentaries = None
+        self.commentaries = self.load_commentaries()
         self._points = points
 
     @property
@@ -46,8 +64,19 @@ class Event:
     def points(self, value):
         self._points = value
 
+    def calculate_event(self):
+        pass
 
-class EventHandler:
+    def load_commentaries(self):
+        """
+        Loads commentaries from a file
+        """
+        if self.ev_type is None:
+            pass
+        return None
+
+
+class MobaEventHandler:
     def __init__(self):
         """
         Initializes the event handler.
@@ -65,19 +94,19 @@ class EventHandler:
         champions, making it more relevant in probability calculations.
         """
         self.events = []
-        self.eventlog = []
-        self.possible = [(0, 'invade', 1, 10),
-                         (0, 'nothing', 1, 0),
-                         (1, 'lane_farm', 2, 10),
-                         (1, 'gank', 1, 10),
-                         (1, 'lane_fight', 1, 10),
-                         (1, 'team_fight', 1, 15),
-                         (2, 'tower_assault', 2, 20),
-                         (3, 'jungle_major', 2, 20),
-                         (4, 'inhibitor_assault', 3, 25),
-                         (5, 'nexus_assault', 4, 10),
-                         (5, 'backdoor', 4, 10)
-                         ]
+        # self.eventlog = []
+        # self.possible = [(0, 'invade', 1, 10),
+        #                  (0, 'nothing', 1, 0),
+        #                  (1, 'lane_farm', 2, 10),
+        #                  (1, 'gank', 1, 10),
+        #                  (1, 'lane_fight', 1, 10),
+        #                  (1, 'team_fight', 1, 15),
+        #                  (2, 'tower_assault', 2, 20),
+        #                  (3, 'jungle_major', 2, 20),
+        #                  (4, 'inhibitor_assault', 3, 25),
+        #                  (5, 'nexus_assault', 4, 10),
+        #                  (5, 'backdoor', 4, 10)
+        #                  ]
 
     def possible_events(self, number: int):
         """
@@ -86,10 +115,11 @@ class EventHandler:
         :param number:
         :return:
         """
-        for event in self.possible:
-            if event[0] == number:
-                ev = self.create_event(event[1], event[2], event[3])
-                self.events.append(ev)
+        # for event in self.possible:
+        #     if event[0] == number:
+        #         ev = self.create_event(event[1], event[2], event[3])
+        #         self.events.append(ev)
+        pass
 
     def get_events(self, game_time, inhib=False, nexus=0):
         """
@@ -100,39 +130,39 @@ class EventHandler:
         :param nexus:
         :return:
         """
-        if game_time == 0.0:
-            self.possible_events(0)
-        elif 0.0 < game_time <= 15.0:
-            self.events.clear()
-            self.possible_events(1)
-        elif 15.0 < game_time <= 20.0:
-            self.possible_events(2)
-        else:
-            self.possible_events(3)
+        # if game_time == 0.0:
+        #     self.possible_events(0)
+        # elif 0.0 < game_time <= 15.0:
+        #     self.events.clear()
+        #     self.possible_events(1)
+        # elif 15.0 < game_time <= 20.0:
+        #     self.possible_events(2)
+        # else:
+        #     self.possible_events(3)
+        #
+        # if inhib is not False:
+        #     self.possible_events(4)
+        #
+        # if nexus is not None:
+        #     self.possible_events(5)
+        pass
 
-        if inhib is not False:
-            self.possible_events(4)
-
-        if nexus is not None:
-            self.possible_events(5)
-
-    def create_event(self, name, priority, points):
+    def create_event(self, ev_type, priority, points):
         """
         Creates the event, adding it to the Event Log.
 
-        :param name:
+        :param ev_type:
         :param priority:
         :param points:
         :return:
         """
-        ev_id = len(self.eventlog) + 1
-        return Event(ev_id, name, priority, points)
+        # ev_id = len(self.eventlog) + 1
+        # return MobaEvent(ev_id, name, priority, points)
+        pass
 
     def choose_event(self):
-        weights = [event.priority for event in self.events]
-        ev = random.choices(self.events, weights=weights, k=1)[0]
-        self.eventlog.append(ev)
-        return ev
-
-    def calculate_event(self):
+        # weights = [event.priority for event in self.events]
+        # ev = random.choices(self.events, weights=weights, k=1)[0]
+        # self.eventlog.append(ev)
+        # return ev
         pass

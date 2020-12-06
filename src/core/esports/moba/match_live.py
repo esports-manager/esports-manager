@@ -17,7 +17,7 @@
 import random
 
 from src.core.esports.moba.match import Match
-from src.core.esports.moba.event import EventHandler
+from src.core.esports.moba.mobaevent import MobaEventHandler
 
 
 class MatchLive:
@@ -29,7 +29,7 @@ class MatchLive:
         self.show_commentary = show_commentary
         self.match_speed = match_speed
         self.is_match_over = False
-        self.event_handler = EventHandler()
+        self.event_handler = MobaEventHandler()
 
     def picks_and_bans(self, champions) -> None:
         """
@@ -37,7 +37,7 @@ class MatchLive:
         """
         for team in self.match.teams:
             for player in team.list_players:
-                player.debug_get_lane()
+                player.get_default_lane()
                 champion = random.choice(champions)
                 champions.remove(champion)
                 player.champion = champion
@@ -67,6 +67,9 @@ class MatchLive:
                 return True
         else:
             return False
+
+    def is_major_jungle_available(self) -> bool:
+        pass
 
     def simulation(self):
         while not self.is_match_over:

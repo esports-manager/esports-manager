@@ -107,8 +107,17 @@ class MobaPlayer(Player):
         self._champion = champion
 
     @lane.setter
-    def lane(self, lane: Lanes):
-        self._lane = lane
+    def lane(self, lane: int):
+        if lane == 0:
+            self._lane = Lanes.TOP
+        if lane == 1:
+            self._lane = Lanes.JG
+        if lane == 2:
+            self._lane = Lanes.MID
+        if lane == 3:
+            self._lane = Lanes.ADC
+        if lane == 4:
+            self._lane = Lanes.SUP
 
     @kills.setter
     def kills(self, kills: int):
@@ -128,22 +137,13 @@ class MobaPlayer(Player):
     def get_best_lane(self) -> int:
         return self.mult.index(self.get_highest_multiplier())
 
-    def debug_get_lane(self):
+    def get_default_lane(self):
         lane = self.get_best_lane()
-        if lane == 0:
-            self.lane = Lanes.TOP
-        if lane == 1:
-            self.lane = Lanes.JG
-        if lane == 2:
-            self.lane = Lanes.MID
-        if lane == 3:
-            self.lane = Lanes.ADC
-        if lane == 4:
-            self.lane = Lanes.SUP
+        self.lane = lane
     
     def get_curr_lane_multiplier(self):
         if self.lane is not None:
-            return self.mult[self.lane]
+            return self.mult[self.lane.value]
         else:
             raise LaneError('Player may not be playing the game!')
 

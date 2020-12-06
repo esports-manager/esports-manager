@@ -264,8 +264,8 @@ def get_debug_layout(match: MatchLive = None):
     data1 = []
     data2 = []
     for player1, player2 in zip(players1, players2):
-        data1.append([player1.lane, player1.nick_name, player1.skill, player1.champion])
-        data2.append([player2.lane, player2.nick_name, player2.skill, player2.champion])
+        data1.append([player1.lane.name, player1.nick_name, player1.skill, player1.champion])
+        data2.append([player2.lane.name, player2.nick_name, player2.skill, player2.champion])
 
     headings = ['Lane', 'Player Name', 'Skill', 'Champion']
 

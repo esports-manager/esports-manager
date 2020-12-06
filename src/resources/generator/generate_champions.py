@@ -77,7 +77,7 @@ class ChampionGenerator:
             self.generate_champion_dict()
             self.generate_champion_obj()
             self.champions_list.append(self.champion_dict)
-            self.champions_obj = (self.champion_obj)
+            self.champions_obj.append(self.champion_obj)
     
     def get_champions(self):
         self.champions_list = load_list_from_json(self.file_name)

@@ -15,7 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from datetime import date
 
-from src.core.esports.moba.lane import Lanes, LaneError
+from src.core.esports.moba.moba_enums_def import Lanes, LaneError
 from src.core.esports.moba.champion import Champion
 
 
@@ -108,16 +108,9 @@ class MobaPlayer(Player):
 
     @lane.setter
     def lane(self, lane: int):
-        if lane == 0:
-            self._lane = Lanes.TOP
-        if lane == 1:
-            self._lane = Lanes.JG
-        if lane == 2:
-            self._lane = Lanes.MID
-        if lane == 3:
-            self._lane = Lanes.ADC
-        if lane == 4:
-            self._lane = Lanes.SUP
+        for lane_name in Lanes:
+            if lane == lane_name.value:
+                self.lane = lane_name
 
     @kills.setter
     def kills(self, kills: int):
@@ -150,9 +143,17 @@ class MobaPlayer(Player):
     def get_age(self, today: date) -> int:
         age = today - self.birthday
         return int(age.days * 0.0027379070)
-    
+
+    def get_curr_player_skill(self):
+        return self.skill * self.get_curr_lane_multiplier()
+
     def get_champion_skill(self):
-        pass
+        mult = 0.5
+        for champion in self.champions:
+            if champion['id'] == self.champion.champion_id:
+                mult = champion['mult']
+                break
+        return self.champion.skill * mult
 
     def __repr__(self):
         return '{0} {1}'.format(self.__class__.__name__, self.nick_name)

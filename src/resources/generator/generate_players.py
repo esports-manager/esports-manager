@@ -30,7 +30,12 @@ class MobaPlayerGenerator:
     """
     Generates all MobaPlayer data
     """
-    def __init__(self, today: date = date.today(), min_age: int = 16, max_age: int = 25, lane: int = 0):
+    def __init__(self,
+                 today: date = date.today(),
+                 min_age: int = 16,
+                 max_age: int = 25,
+                 lane: int = 0,
+                 champions_list: list = []):
         self.player_id = None
         self.first_name = None
         self.last_name = None
@@ -51,6 +56,7 @@ class MobaPlayerGenerator:
         self.td = today
         self.multipliers = []
         self.champions = []
+        self.champions_list = []
         self.players = []
         self.players_dict = []
         self.player_dict = None
@@ -84,7 +90,14 @@ class MobaPlayerGenerator:
         self.dob = min_year + timedelta(days=rand_date)
 
     def generate_champions(self):
-        pass
+        self.champions = []
+        champion_dict = {}
+        if self.champions_list:
+            for champion in self.champions_list:
+                multip = random.randrange(50, 100) / 100
+                champion_dict['id'] = champion.champion_id
+                champion_dict['mult'] = multip
+                self.champions.append(champion_dict)
 
     def generate_skill(self):
         """

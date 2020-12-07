@@ -76,6 +76,9 @@ class Team:
     def is_nexus_exposed(self) -> bool:
         return self.towers['base'] == 0
 
+    def get_exposed_tower(self):
+        pass
+
     @property
     def kills(self):
         self._kills = 0
@@ -130,7 +133,7 @@ class Team:
             player.get_champion_skill() for player in self.list_players
         )
 
-        self._champion_overall = int(self._champion_overall / len(self.list_players))
+        self._champion_overall = int(self._champion_overall)
 
         return self._champion_overall
 

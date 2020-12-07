@@ -15,37 +15,24 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import random
+import uuid
 from enum import Enum, auto
 
-
-class MobaEventType(Enum):
-    """
-    Defines the types of events that can occur during a match
-    """
-    INVADE = 0
-    NOTHING = auto()
-    LANE_FARM = auto()
-    GANK = auto()
-    LANE_FIGHT = auto()
-    TEAM_FIGHT = auto()
-    TOWER_ASSAULT = auto()
-    JG_MAJOR = auto()
-    INHIB_ASSAULT = auto()
-    NEXUS_ASSAULT = auto()
-    BACKDOOR = auto()
+from src.core.esports.moba.moba_enums_def import MobaEventType, JungleMonsters
 
 
 class MobaEvent:
     def __init__(self,
-                 event_id: int,
-                 ev_type: MobaEventType,
-                 priority: int,
-                 points: int,
+                 event_id: int = uuid.uuid4().int,
+                 ev_type: MobaEventType = MobaEventType.NOTHING,
+                 priority: int = 0,
+                 points: int = 0,
+                 commentary: list = []
                  ):
         self.event_id = event_id
         self.ev_type = ev_type
         self._priority = priority
-        self.commentaries = self.load_commentaries()
+        self.commentary = self.load_commentary(commentary)
         self._points = points
 
     @property
@@ -64,90 +51,65 @@ class MobaEvent:
     def points(self, value):
         self._points = value
 
-    def calculate_event(self):
-        pass
+    def calculate_event(self,
+                        players_atk,
+                        players_def,
+                        which_nexus,
+                        which_inhib,
+                        which_jg,
+                        which_tower):
+        atk_n = len(players_atk)
+        def_n = len(players_def)
 
-    def load_commentaries(self):
-        """
-        Loads commentaries from a file
-        """
-        if self.ev_type is None:
+        if atk_n > 1:
+            atk_n = random.randrange(1, atk_n)
+
+        if def_n > 1:
+            def_n = random.randrange(1, def_n)
+
+        if self.ev_type == MobaEventType.NEXUS_ASSAULT:
             pass
-        return None
+        elif self.ev_type == MobaEventType.INHIB_ASSAULT:
+            pass
+        elif self.ev_type == MobaEventType.TOWER_ASSAULT:
+            pass
+        elif self.ev_type == MobaEventType.JG_MAJOR:
+            pass
+        else:
+            pass
+
+    def load_commentary(self, commentaries):
+        """
+        Chooses commentary based on a list of commentaries.
+
+        For now this is a dummy implementation that does nothing, but it will load commentaries depending
+        on the locale.
+        """
+        pass
 
 
 class MobaEventHandler:
     def __init__(self):
         """
         Initializes the event handler.
-        The possible list represents all possible events in a match, which is composed of a tuple. Each value means:
-
-        [0]: the event's conditions. This means that events with the same conditions are going to be included in the
-        list of available events when certain conditions are met. For example: when the game time is above 0 minutes,
-        the events: lane farm, gank, lane fight and team fight are unlocked. If an inhibitor is exposed, the
-        inhibitor assault event is unlocked.
-        [1]: name of the event.
-        [2]: priority of the event. This is used by the random.choices as a weight. The higher the priority, the higher
-        the chances to pick this event.
-        [3]: number of points. Each event will award points to the team that gets on top of that, and sometimes,
-        even awards points to individual players. These points will be added to the skill level of players and
-        champions, making it more relevant in probability calculations.
         """
         self.events = []
-        # self.eventlog = []
-        # self.possible = [(0, 'invade', 1, 10),
-        #                  (0, 'nothing', 1, 0),
-        #                  (1, 'lane_farm', 2, 10),
-        #                  (1, 'gank', 1, 10),
-        #                  (1, 'lane_fight', 1, 10),
-        #                  (1, 'team_fight', 1, 15),
-        #                  (2, 'tower_assault', 2, 20),
-        #                  (3, 'jungle_major', 2, 20),
-        #                  (4, 'inhibitor_assault', 3, 25),
-        #                  (5, 'nexus_assault', 4, 10),
-        #                  (5, 'backdoor', 4, 10)
-        #                  ]
+        self.commentaries = None
+        self.event = None
+        self.event_history = []
 
-    def possible_events(self, number: int):
-        """
-        This method adds the possible events, called by the get_events method, to the self.events list.
-
-        :param number:
-        :return:
-        """
-        # for event in self.possible:
-        #     if event[0] == number:
-        #         ev = self.create_event(event[1], event[2], event[3])
-        #         self.events.append(ev)
+    def get_game_state(self, game_time, which_nexus_exposed, inhib_down, major_jungle_av):
+        if game_time <= 15.0:
+            pass
         pass
 
-    def get_events(self, game_time, inhib=False, nexus=0):
+    def load_commentaries_file(self):
         """
-        This method is used to get the available events according to the game time.
-
-        :param game_time:
-        :param inhib:
-        :param nexus:
-        :return:
+        Load commentaries file
         """
-        # if game_time == 0.0:
-        #     self.possible_events(0)
-        # elif 0.0 < game_time <= 15.0:
-        #     self.events.clear()
-        #     self.possible_events(1)
-        # elif 15.0 < game_time <= 20.0:
-        #     self.possible_events(2)
-        # else:
-        #     self.possible_events(3)
-        #
-        # if inhib is not False:
-        #     self.possible_events(4)
-        #
-        # if nexus is not None:
-        #     self.possible_events(5)
         pass
 
-    def create_event(self, ev_type, priority, points):
+    def set_event(self, ev_type, priority, points):
         """
         Creates the event, adding it to the Event Log.
 
@@ -156,11 +118,9 @@ class MobaEventHandler:
         :param points:
         :return:
         """
-        # ev_id = len(self.eventlog) + 1
-        # return MobaEvent(ev_id, name, priority, points)
-        pass
+        self.event = MobaEvent(ev_type=ev_type, priority=priority, points=points)
 
-    def choose_event(self):
+    def generate_event(self):
         # weights = [event.priority for event in self.events]
         # ev = random.choices(self.events, weights=weights, k=1)[0]
         # self.eventlog.append(ev)

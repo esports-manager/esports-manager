@@ -73,8 +73,7 @@ class MatchLive:
 
     def simulation(self):
         while not self.is_match_over:
-            self.event_handler.get_events(self.game_time, self.is_any_inhib_open(), self.which_team_nexus_exposed())
-            print(self.game_time, self.event_handler.choose_event().name)
+
             self.increment_game_time(1)
             # TODO: match sim could be played without generating comments, so players can get instant results
             # probably this implementation without a sleep should do the trick, because it is going to generate stats

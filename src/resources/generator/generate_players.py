@@ -19,6 +19,7 @@ import uuid
 from datetime import date, timedelta
 
 from src.core.esports.moba.player import MobaPlayer
+from src.resources.generator.generate_champions import ChampionGenerator
 from src.resources.utils import load_list_from_json, write_to_json, get_list_from_file
 
 
@@ -90,14 +91,19 @@ class MobaPlayerGenerator:
         self.dob = min_year + timedelta(days=rand_date)
 
     def generate_champions(self):
+        """
+        Generates champion skill level for each player
+        """
         self.champions = []
         champion_dict = {}
-        if self.champions_list:
-            for champion in self.champions_list:
-                multip = random.randrange(50, 100) / 100
-                champion_dict['id'] = champion.champion_id
-                champion_dict['mult'] = multip
-                self.champions.append(champion_dict)
+        if not self.champions_list:
+            self.champions_list = ChampionGenerator().create_champions_list()
+
+        for champion in self.champions_list:
+            multip = random.randrange(50, 100) / 100
+            champion_dict['id'] = champion.champion_id
+            champion_dict['mult'] = multip
+            self.champions.append(champion_dict)
 
     def generate_skill(self):
         """
@@ -171,6 +177,16 @@ class MobaPlayerGenerator:
                                      )
 
     def generate_multipliers(self):
+        """
+        Generates players multipliers.
+        Multipliers are used to define the player's experience on a lane.
+        It goes from 0.55 to 1.
+
+        It goes like this:
+        player_skill * multiplier = player_actual_skill_in_game
+
+        Essentially this should discourage the users from making players play off-lane
+        """
         mult = []
         for _ in range(5):
             multiplier = random.randrange(55, 100) / 100
@@ -184,6 +200,9 @@ class MobaPlayerGenerator:
         self.multipliers = mult
 
     def generate_player(self):
+        """
+        Runs the player generation routine
+        """
         self.generate_id()
         self.get_nationality()
         self.generate_name()
@@ -198,6 +217,11 @@ class MobaPlayerGenerator:
         self.players_dict.append(self.player_dict)
 
     def generate_players(self, amount: int = 5):
+        """
+        Generates an "amount" of players.
+        If the self.lane attribute is set to 0, then it randomly generates players with variable lanes.
+        Otherwise, it generates an "amount/5" players that play on the same lane, doing that for every lane.
+        """
         if self.lane == 0:
             for _ in range(amount):
                 self.generate_player()
@@ -209,9 +233,15 @@ class MobaPlayerGenerator:
                 self.lane += 1
 
     def get_players_dict(self):
+        """
+        Loads the players from the players.json file, storing on the player dictionary list
+        """
         self.players_dict = load_list_from_json('players.json')
 
     def get_players_objects(self):
+        """
+        Creates players objects based on the player dictionary
+        """
         self.players = []
         if self.players_dict:
             for player in self.players_dict:
@@ -230,4 +260,7 @@ class MobaPlayerGenerator:
             raise MobaPlayerGeneratorError('List of players is empty!')
 
     def generate_file(self):
+        """
+        Generates the players.json file
+        """
         write_to_json(self.players_dict, self.file_name)

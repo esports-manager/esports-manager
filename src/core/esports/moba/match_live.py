@@ -18,10 +18,11 @@ import random
 
 from src.core.esports.moba.match import Match
 from src.core.esports.moba.mobaevent import MobaEventHandler
+from src.resources.generator.generate_champions import ChampionGenerator
 
 
 class MatchLive:
-    def __init__(self, match: Match, show_commentary, match_speed):
+    def __init__(self, match: Match, show_commentary, match_speed, simulate=True):
         self.match = match
         self.game_time = 0.0
         self.first_blood = False
@@ -29,12 +30,18 @@ class MatchLive:
         self.show_commentary = show_commentary
         self.match_speed = match_speed
         self.is_match_over = False
+        self.simulate = simulate
         self.event_handler = MobaEventHandler()
+        self.champions_list = ChampionGenerator()
 
     def picks_and_bans(self, champions) -> None:
         """
         Dummy picks and bans implementation. Will be changed in the future.
+
+        Probably picks and bans should be handled differently in the UI. But I need to come up
+        with a general implementation that can be used regardless of the UI.
         """
+        self.champions_list.get_champions()
         for team in self.match.teams:
             for player in team.list_players:
                 player.get_default_lane()

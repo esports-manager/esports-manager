@@ -43,33 +43,57 @@ class ChampionGenerator:
         self.champions_obj = []
     
     def generate_champion_id(self):
+        """
+        Generates champion UUID
+        """
         self.champion_id = uuid.uuid4().int
 
     def get_champion_names(self):
+        """
+        List used to generate champions, all these names will be used to generate champions
+
+        TODO: limit the number of champion names to generate
+        TODO: This should also be used to generate champions in different patches
+        """
         self.champion_names = get_list_from_file('champions.txt')
 
     def get_champion_lanes(self):
         pass
 
     def generate_champion_skill(self):
+        """
+        Generates Champion Skills. Perhaps it should also follow a Normal Distribution?
+
+        Also, easter egg for Teemo
+        """
         if self.name == "TEEMO":
             self.skill = random.randint(0, 50)
         else:
             self.skill = random.randint(50, 99)
     
     def generate_champion_dict(self):
+        """
+        Generates the champion dictionary
+        """
         self.champion_dict = {"name": self.name,
                               "id": self.champion_id,
                               "skill": self.skill
                               }
     
     def generate_champion_obj(self):
+        """
+        Generates the champion object based on the Champion class
+        """
         self.champion_obj = Champion(self.champion_id,
                                      self.name,
                                      self.skill
                                     )
 
     def create_champions_list(self):
+        """
+        Creates the list of champions according to the names.
+        Essentially this is the champion generation method.
+        """
         for name in self.champion_names:
             self.generate_champion_id()
             self.name = name
@@ -80,6 +104,10 @@ class ChampionGenerator:
             self.champions_obj.append(self.champion_obj)
     
     def get_champions(self):
+        """
+        Retrieves champions from the list of champions. Perhaps at the point when we implement
+        a database this can replace the load_list_from_json function.
+        """
         self.champions_list = load_list_from_json(self.file_name)
         self.champion_obj = []
         for champion in self.champions_list:
@@ -90,4 +118,7 @@ class ChampionGenerator:
             self.champions_obj.append(self.champion_obj)
 
     def generate_file(self) -> None:
+        """
+        Generates the champion file
+        """
         write_to_json(self.champions_list, self.file_name)

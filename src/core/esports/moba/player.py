@@ -148,7 +148,7 @@ class MobaPlayer(Player):
         return self.skill * self.get_curr_lane_multiplier()
 
     def get_champion_skill(self):
-        mult = 0.5
+        mult = 0.5  # default champion multiplier
         for champion in self.champions:
             if champion['id'] == self.champion.champion_id:
                 mult = champion['mult']

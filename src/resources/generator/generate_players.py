@@ -96,8 +96,8 @@ class MobaPlayerGenerator:
         """
         self.champions = []
         champion_dict = {}
-        if not self.champions_list:
-            self.champions_list = ChampionGenerator().create_champions_list()
+        if self.champions_list:
+            self.champions_list = ChampionGenerator().get_champions()
 
         for champion in self.champions_list:
             multip = random.randrange(50, 100) / 100

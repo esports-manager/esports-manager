@@ -25,7 +25,7 @@ from src.core.esports.moba.debug import match_debugger
 
 
 def generation():
-    num_players = 3000
+    num_players = 100
     num_teams = int(num_players / 5)
 
     champions = ChampionGenerator()
@@ -46,11 +46,12 @@ def debug_match():
 
 
 if __name__ == '__main__':
-    try:
-        find_file('champions.json')
-        find_file('players.json')
-        find_file('teams.json')
-    except FileNotFoundError:
-        generation()
+    #  try:
+    #     find_file('champions.json')
+    #     find_file('players.json')
+    #     find_file('teams.json')
+    #  except FileNotFoundError:
+    #     generation()
 
-    debug_match()
+    generation()
+    # debug_match()

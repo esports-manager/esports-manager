@@ -94,6 +94,7 @@ class ChampionGenerator:
         Creates the list of champions according to the names.
         Essentially this is the champion generation method.
         """
+        self.get_champion_names()
         for name in self.champion_names:
             self.generate_champion_id()
             self.name = name
@@ -122,3 +123,9 @@ class ChampionGenerator:
         Generates the champion file
         """
         write_to_json(self.champions_list, self.file_name)
+
+
+if __name__ == '__main__':
+    generate_champion = ChampionGenerator()
+    generate_champion.create_champions_list()
+    generate_champion.generate_file()

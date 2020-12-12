@@ -62,6 +62,7 @@ class MobaEvent:
                         which_tower):
         atk_n = len(players_atk)
         def_n = len(players_def)
+        random_factor = random.random()
 
         if atk_n > 1:
             atk_n = random.randrange(1, atk_n)

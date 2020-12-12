@@ -13,15 +13,54 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import random
+
+from src.core.esports.moba.match import Match
+
 
 class Championship:
-    def __init__(self, name: str, championship_id: int, country: str):
+    def __init__(self,
+                 name: str,
+                 championship_id: int,
+                 country: str,
+                 teams: list):
         self.name = name
-        self.id = championship_id
+        self.championship_id = championship_id
         self.country = country
+        self.teams = teams
+        self.matches = []
+
+    def schedule_matches(self):
+        """
+        Very naive implementation of match scheduling. This will make teams face off twice
+        in the championship. This should work for now.
+        """
+        for team in self.teams:
+            opp_teams = self.teams.copy()
+            opp_teams.remove(team)
+            random.shuffle(opp_teams)
+            for opp_team in opp_teams:
+                self.matches.append(Match(self.championship_id, team, opp_team))
+                opp_teams.remove(opp_team)
+
+            random.shuffle(self.matches)
 
     def __repr__(self):
         return '{0}'.format(self.__class__.__name__)
 
     def __str__(self):
         return '{0}'.format(self.__class__.__name__)
+
+
+if __name__ == '__main__':
+    from src.resources.generator.generate_teams import TeamGenerator
+
+    team_gen = TeamGenerator()
+    team_gen.get_teams_dict()
+    team_gen.get_teams_objects()
+
+    championship = Championship('League', 1, 'Brazil', team_gen.teams)
+    championship.schedule_matches()
+
+    for match in championship.matches:
+        print(match.team1.name + ' v ' + match.team2.name)

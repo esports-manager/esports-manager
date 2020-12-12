@@ -13,6 +13,6 @@ At its core, **eSports Manager** is an interactive application created to abstra
 - **Competitions**
 - **Finances**
 - **Talent Discovery**: It is a way for managers to find new players and incorporate them to their team.
+- **eSport Elements**: Elements that are unique to each eSport, like "Champions", "Heroes", "Races", etc.
 
-This application consists of a **User Interface** which provides tools for the User to interact with all the aspects of this abstraction.
-
+This application consists of a **User Interface** which provides tools for the User to interact with every aspect of the game.

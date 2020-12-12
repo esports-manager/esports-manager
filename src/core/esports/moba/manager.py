@@ -13,17 +13,19 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from datetime import date
+from src.core.esports.moba.team import Team
 
-class ESM:
-    """
-    This class will be the core eSports Manager module. It manages the games modules,
-    connecting them to a single place.
-    """
-    def __init__(self):
-        pass
 
-    def initialize_ui(self):
-        pass
-
-    def app(self):
-        pass
+class Manager:
+    def __init__(self,
+                 name: str,
+                 birthday: date,
+                 team: Team,
+                 is_player: bool,
+                 quality: int):
+        self.name = name
+        self.birthday = birthday
+        self.team = team
+        self.is_player = is_player
+        self.quality = quality

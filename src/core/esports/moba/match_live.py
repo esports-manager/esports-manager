@@ -51,17 +51,19 @@ class MatchLive:
 
     def calculate_both_teams_win_prob(self) -> None:
         total_prob = sum(
-            (team.player_overall + team.champion_overall)/2 + team.points for team in self.match.teams
+            team.total_skill for team in self.match.teams
         )
 
         for team in self.match.teams:
-            team.win_prob = (team.player_overall + team.champion_overall + team.points) / total_prob
+            team.win_prob = team.total_skill / total_prob
 
     def increment_game_time(self, quantity):
         self.game_time += quantity
 
     def which_team_nexus_exposed(self):
         if self.match.team1.is_nexus_exposed():
+            if self.match.team2.is_nexus_exposed():
+                return self.match.team1, self.match.team2
             return self.match.team1
         elif self.match.team2.is_nexus_exposed():
             return self.match.team2
@@ -74,9 +76,6 @@ class MatchLive:
                 return True
         else:
             return False
-
-    def is_major_jungle_available(self) -> bool:
-        pass
 
     def simulation(self):
         while not self.is_match_over:

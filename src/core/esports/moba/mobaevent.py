@@ -16,9 +16,9 @@
 
 import random
 import uuid
-from enum import Enum, auto
 
-from src.core.esports.moba.moba_enums_def import MobaEventType, JungleMonsters
+from src.core.esports.moba.moba_enums_def import MobaEventType
+from src.core.esports.moba.moba import Moba
 
 
 class MobaEvent:
@@ -27,12 +27,14 @@ class MobaEvent:
                  ev_type: MobaEventType = MobaEventType.NOTHING,
                  priority: int = 0,
                  points: int = 0,
+                 event_time: float = 0.0,
                  commentary: list = []
                  ):
         self.event_id = event_id
         self.ev_type = ev_type
         self._priority = priority
         self.commentary = self.load_commentary(commentary)
+        self.event_time = event_time
         self._points = points
 
     @property
@@ -85,7 +87,7 @@ class MobaEvent:
         For now this is a dummy implementation that does nothing, but it will load commentaries depending
         on the locale.
         """
-        pass
+        return 'Nothing to see here'
 
 
 class MobaEventHandler:
@@ -93,15 +95,33 @@ class MobaEventHandler:
         """
         Initializes the event handler.
         """
+        self.moba = Moba()
         self.events = []
         self.commentaries = None
         self.event = None
         self.event_history = []
 
-    def get_game_state(self, game_time, which_nexus_exposed, inhib_down, major_jungle_av):
-        if game_time <= 15.0:
+    def check_major_jungle(self):
+        if self.event.ev_type == MobaEventType.JG_MAJOR:
+            for jg in self.moba.major_jg:
+                if self.event.priority == jg['priority']:
+                    jg['spawn_time'] = self.event.event_time + jg['cooldown']
+        else:
+            for jg in self.moba.major_jg:
+                if self.event.event_time >= jg['spawn_time']:
+                    return True
+
+        return False
+
+    def get_game_state(self, game_time, which_nexus_exposed, inhib_down):
+        if game_time <= self.moba.tower_time:
             pass
-        pass
+        if self.check_major_jungle():
+            pass
+        if inhib_down:
+            pass
+        if which_nexus_exposed is not None:
+            pass
 
     def load_commentaries_file(self):
         """

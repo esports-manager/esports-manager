@@ -50,6 +50,7 @@ class Team:
 
         self._player_overall = 0
         self._champion_overall = 0
+        self._total_skill = 0
 
     def is_tower_up(self, lane: str) -> bool:
         return self.towers[lane] != 0
@@ -76,8 +77,8 @@ class Team:
     def is_nexus_exposed(self) -> bool:
         return self.towers['base'] == 0
 
-    def get_exposed_tower(self):
-        pass
+    def are_base_towers_exposed(self) -> bool:
+        return not self.are_all_inhibitors_up()
 
     @property
     def kills(self):
@@ -120,7 +121,7 @@ class Team:
         self._player_overall = 0
 
         self._player_overall = sum(
-            (player.skill * player.mult)/2 for player in self.list_players
+            player.skill * player.mult for player in self.list_players
         )
 
         return self._player_overall
@@ -136,6 +137,12 @@ class Team:
         self._champion_overall = int(self._champion_overall)
 
         return self._champion_overall
+
+    @property
+    def total_skill(self) -> int:
+        self._total_skill = self._player_overall + self._champion_overall + self._points
+
+        return self._total_skill
 
     def __str__(self):
         return '{0}'.format(self.name)

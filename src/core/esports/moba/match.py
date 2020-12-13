@@ -14,8 +14,9 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from src.core.team import Team
-import random
+import uuid
+
+from src.core.esports.moba.team import Team
 
 
 class Match:
@@ -25,7 +26,6 @@ class Match:
     """
 
     def __init__(self,
-                 match_id: int,
                  championship_id: int,
                  team1: Team,
                  team2: Team):
@@ -36,7 +36,7 @@ class Match:
         :param team1: first team (blue side/radiant)
         :param team2: second team (red side/dire)
         """
-        self.match_id = match_id
+        self.match_id = uuid.uuid4().int
         self.championship_id = championship_id
         self.team1 = team1
         self.team2 = team2
@@ -47,10 +47,3 @@ class Match:
 
     def __str__(self) -> str:
         return '{0} ID: {1}'.format(self.__class__.__name__, self.match_id)
-
-
-if __name__ == '__main__':
-    from src.core.match_live import get_live_obj_test
-
-    match = get_live_obj_test()
-    match.calculate_both_teams_win_prob()

@@ -14,21 +14,16 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import unittest
+class ESM:
+    """
+    This class will be the core eSports Manager module. It manages the games modules,
+    connecting them to a single place.
+    """
+    def __init__(self):
+        pass
 
-from src.core.pre_match import get_team, get_teams_dictionaries
+    def initialize_ui(self):
+        pass
 
-
-class PreMatch(unittest.TestCase):
-    def test_get_team(self):
-        expected_team = {
-            "id": 1,
-            "name": "TestTeam",
-        }
-        team_list = [expected_team, {"id": 2, "name": "TestTeam2"}]
-        team = get_team(1, team_list)
-        self.assertEqual(team, expected_team)
-
-
-if __name__ == '__main__':
-    unittest.main()
+    def app(self):
+        pass

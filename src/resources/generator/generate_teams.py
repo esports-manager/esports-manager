@@ -14,72 +14,189 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import json
 import random
-from math import floor
+import uuid
 
-from .get_names import gen_team_name, get_nick_team_names
-from .generate_players import generate_player, get_nick_team_names, get_players_nationalities
-from ..utils import write_to_json, load_list_from_json
-
-
-def get_num_teams() -> int:
-    return 700
+from src.core.esports.moba.team import Team
+from src.resources.generator.generate_players import MobaPlayerGenerator
+from src.resources.utils import write_to_json, get_list_from_file, load_list_from_json
 
 
-def generate_roster(players: list, team_id: int) -> list:
-    roster = []
-    roster_length = random.randrange(5, 10)
-    names = load_list_from_json('names.json')
-    nicknames = get_nick_team_names('nicknames.txt')
-    nationalities = get_players_nationalities(names)
-    champions = load_list_from_json('champions.json')
-
-    for i in range(roster_length):
-        nationality = random.choice(nationalities)
-        player = generate_player(
-            names,
-            nationality,
-            nicknames,
-            len(players),
-            team_id,
-            i,
-            champions
-        )
-        roster.append(player['id'])
-        players.append(player)
-
-    return roster
+class TeamGeneratorError(Exception):
+    pass
 
 
-def generate_each_team(players: list, team_names: list, team_id: int) -> dict:
-    team_name = gen_team_name(team_names)
-    roster = generate_roster(players, team_id)
+class TeamGenerator:
+    def __init__(self,
+                 nationality: str = None,
+                 amount: int = 1,
+                 players: list = None,
+                 organized: bool = True):
+        self.name = None
+        self.nationality = nationality
+        self.logo = None
+        self.team_id = None
+        self.file_name = 'teams.json'
+        self.teams = []
+        self.teams_dict = []
+        self.team_dict = None
+        self.team_obj = None
+        self.player_list = players
+        self.roster = None
+        self.names = get_list_from_file('team_names.txt')
+        self.amount = amount
+        self.organized = organized
 
-    return {
-        "id": team_id,
-        "name": team_name,
-        "roster_id": roster
-    }
+    def generate_id(self):
+        """
+        Generates teams UUID
+        """
+        self.team_id = uuid.uuid4().int
+
+    def generate_name(self):
+        """
+        Chooses a random team name
+        """
+        self.name = random.choice(self.names)
+        self.names.remove(self.name)
+
+    def generate_logo(self):
+        """
+        Placeholder for a future logo generator
+        """
+        pass
+
+    def generate_roster(self):
+        """
+        Generates a roster.
+        If the self.organized attribute is set to True, it is going to generate teams with players that are specialists
+        at their lanes.
+        Otherwise, it selects random players, regardless of their lane specialty.
+        """
+        self.roster = []
+        if self.player_list is None:
+            self.player_list = MobaPlayerGenerator(lane=0).generate_players(self.amount * 5)
+
+        lane = 0
+        for _ in range(5):
+            if self.organized is False:
+                player = random.choice(self.player_list)
+            else:
+                for player_ in self.player_list:
+                    if player_.get_best_lane() == lane:
+                        player = player_
+                        lane += 1
+                        break
+                else:
+                    raise TeamGeneratorError('No player found!')
+
+            self.roster.append(player)
+            self.player_list.remove(player)
+
+    def get_roster_ids(self):
+        """
+        Gets the IDs of each player to save on the dictionary
+        """
+        r_ids = []
+        if self.roster is not None and self.roster != []:
+            for player in self.roster:
+                r_ids.append(player.player_id)
+        else:
+            raise TeamGeneratorError('Player roster is invalid!')
+
+        return r_ids
+
+    def get_dictionary(self):
+        """
+        Generates the team dictionary
+        """
+        self.team_dict = {'id': self.team_id,
+                          'name': self.name,
+                          'roster': self.get_roster_ids()}
+
+    def get_object(self):
+        """
+        Generates the team object
+        """
+        self.team_obj = Team(self.team_id, self.name, self.roster)
+
+    def get_nationality(self):
+        """
+        Placeholder for team nationality
+        TODO: leagues and cups should also be considered
+        """
+        pass
+
+    def generate_team(self):
+        """
+        Runs the team generation routine
+        """
+        self.generate_id()
+        self.generate_name()
+        self.generate_roster()
+        self.get_dictionary()
+        self.get_object()
+        self.teams.append(self.team_obj)
+        self.teams_dict.append(self.team_dict)
+
+    def generate_teams(self):
+        """
+        Generates a "self.amount" of teams
+        """
+        for _ in range(self.amount):
+            self.generate_team()
+    
+    def get_teams_dict(self):
+        """
+        Retrieves teams list based on the teams.json file
+        """
+        self.teams_dict = load_list_from_json('teams.json')
+    
+    def get_roster(self, team):
+        """
+        Gets the roster based on the player's ID
+        """
+        self.roster = []
+        if self.player_list is not None:
+            for roster_id in team['roster']:
+                for player in self.player_list:
+                    if player.player_id == roster_id:
+                        self.roster.append(player)
+                        break
+        
+        return self.roster
+    
+    def get_teams_objects(self):
+        """
+        Retrieves champions objects based on teams list dict
+        """
+        self.teams = []
+        if self.teams_dict:
+            for team in self.teams_dict:
+                self.team_id = team['id']
+                self.name = team['name']
+                self.get_roster(team)
+                self.get_object()
+                self.teams.append(self.team_obj)
+        else:
+            raise TeamGeneratorError('List of teams is empty!')
+
+    def generate_file(self):
+        """
+        Generates the teams.json file
+        """
+        write_to_json(self.teams_dict, self.file_name)
 
 
-def generate_teams(players: list) -> list:
-    num_teams = get_num_teams()
-    team_names = get_nick_team_names('team_names.txt')
+if __name__ == '__main__':
+    from src.resources.generator.generate_players import MobaPlayerGenerator
 
-    # Handling number of teams being higher than the number of available team names
-    if num_teams > len(team_names):
-        num_teams = len(team_names)
-
-    teams = []
-
-    for i in range(num_teams):
-        team = generate_each_team(players, team_names, i)
-        teams.append(team)
-
-    return teams
-
-
-def generate_team_file(players) -> None:
-    teams = generate_teams(players)
-    write_to_json(teams, 'teams.json')
+    amount = 100
+    teams = int(amount / 5)
+    player = MobaPlayerGenerator(lane=0)
+    player.generate_players(amount=amount)
+    team = TeamGenerator(amount=teams, players=player.players, organized=True)
+    team.generate_teams()
+    for team_ in team.teams:
+        for player in team_.list_players:
+            print(player.get_lane())

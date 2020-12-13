@@ -13,15 +13,19 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from datetime import date
+from src.core.esports.moba.team import Team
 
-class Championship:
-    def __init__(self, name: str, championship_id: int, country: str):
+
+class Manager:
+    def __init__(self,
+                 name: str,
+                 birthday: date,
+                 team: Team,
+                 is_player: bool,
+                 quality: int):
         self.name = name
-        self.id = championship_id
-        self.country = country
-
-    def __repr__(self):
-        return '{0}'.format(self.__class__.__name__)
-
-    def __str__(self):
-        return '{0}'.format(self.__class__.__name__)
+        self.birthday = birthday
+        self.team = team
+        self.is_player = is_player
+        self.quality = quality

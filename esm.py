@@ -14,41 +14,45 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import PySimpleGUI as sg
-import asyncio
+#import PySimpleGUI as sg
 
-from src.ui.gui import app, debug_window
+# from src.ui.gui import app, debug_window
 from src.resources.utils import find_file
-from src.resources.generator.generate_champions import generate_champion_file, create_champions_list
-from src.resources.generator.generate_teams import generate_team_file
-from src.resources.generator.generate_players import generate_player_file
-from src.core.match_live import debug_match
+from src.resources.generator.generate_champions import ChampionGenerator
+from src.resources.generator.generate_teams import TeamGenerator
+from src.resources.generator.generate_players import MobaPlayerGenerator
+from src.core.esports.moba.debug import match_debugger
 
 
 def generation():
-    players = []
-    champions = create_champions_list()
-    generate_champion_file()
-    generate_team_file(players)
-    generate_player_file(players)
+    num_players = 100
+    num_teams = int(num_players / 5)
+
+    champions = ChampionGenerator()
+    player_gen = MobaPlayerGenerator(lane=0)
+    champions.get_champion_names()
+    champions.create_champions_list()
+    player_gen.generate_players(num_players)
+    team_gen = TeamGenerator(players=player_gen.players, organized=True, amount=num_teams)
+    team_gen.generate_teams()
+
+    champions.generate_file()
+    player_gen.generate_file()
+    team_gen.generate_file()
 
 
-async def testing_match():
-    window = debug_window()
-    while True:
-        event, values = window.read()
-        if event in [sg.WINDOW_CLOSED, 'exit_main']:
-            break
-
-    window.close()
+def debug_match():
+    match_debugger()
 
 
 if __name__ == '__main__':
-    try:
-        find_file('champions.json')
-        find_file('players.json')
-        find_file('teams.json')
-    except FileNotFoundError:
-        generation()
+    # try:
+    #     find_file('champions.json')
+    #     find_file('players.json')
+    #     find_file('teams.json')
+    # except FileNotFoundError():
+    #     generation()
 
-    app()
+    generation()
+
+    debug_match()

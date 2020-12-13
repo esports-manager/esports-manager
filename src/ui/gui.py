@@ -18,11 +18,9 @@ import base64
 
 import PySimpleGUI as sg
 
-from src.core.match import Match
-from src.core.pre_match import get_data, get_all_team_objects
+from src.core.esports.moba.match_live import MatchLive
 from src.resources import RES_DIR
-from src.resources.generator.generate_players import get_players_nationalities
-from src.resources.utils import find_file, load_list_from_json
+from src.resources.utils import find_file
 from src.ui.gui_components import esm_button, esm_form_text, create_look_and_feel, \
     esm_input_text, esm_input_combo, esm_title_text, esm_listbox, esm_table, esm_calendar_button
 
@@ -145,7 +143,7 @@ def create_manager_layout() -> list:
     want to play with, and
     :return:
     """
-    nationalities = get_players_nationalities(load_list_from_json('names.json'))
+    nationalities = ['Brazil', 'United States', 'Korea']
 
     team_headings = ['Team #', 'Team Name', 'Skill']
     player_headings = ['Lane', 'Nickname', 'Nationality', 'Skill']
@@ -243,13 +241,13 @@ def get_layouts() -> list:
 
 
 # debugging
-def debug_window() -> sg.Window:
+def debug_window(match) -> sg.Window:
     icon_path = encode_icon()
-
-    layout = get_debug_layout()
 
     create_look_and_feel()
     sg.theme('EsmTheme')
+
+    layout = get_debug_layout(match)
     return sg.Window(
         'eSports Manager',
         element_justification='center',
@@ -259,8 +257,21 @@ def debug_window() -> sg.Window:
     )
 
 
-def get_debug_layout(match: Match = None):
+def get_debug_layout(match: MatchLive = None):
+    players1 = [player for player in match.match.team1.list_players]
+    players2 = [player for player in match.match.team2.list_players]
+
+    data1 = []
+    data2 = []
+    for player1, player2 in zip(players1, players2):
+        data1.append([player1.lane.name, player1.nick_name, player1.skill, player1.champion])
+        data2.append([player2.lane.name, player2.nick_name, player2.skill, player2.champion])
+
+    headings = ['Lane', 'Player Name', 'Skill', 'Champion']
+
     return [
-        [esm_form_text('Debug Match')],
-        [esm_button('New Game')]
+        [esm_title_text('Debug Match')],
+        [esm_table(data1, headings=headings), esm_table(data2, headings=headings)],
+        [sg.Output(size=(120, 20), echo_stdout_stderr=True)],
+        [esm_button('Start Match', key='-StartMatch-')]
     ]

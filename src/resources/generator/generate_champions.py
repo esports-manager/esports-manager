@@ -14,190 +14,118 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import os
-import json
 import random
+import uuid
 
-from ..utils import write_to_json
-
-
-# THIS FILE HAS THE SOLE PURPOSE OF GENERATING A JSON FILE
-# WITH CHAMPION NAMES AND RANDOM SKILL LEVELS
-
-champion_names = [
-    "AATROX",
-    "AHRI",
-    "AKALI",
-    "ALISTAR",
-    "AMUMU",
-    "ANIVIA",
-    "ANNIE",
-    "APHELIOS",
-    "ASHE",
-    "AURELION SOL",
-    "AZIR",
-    "BARD",
-    "BLITZCRANK",
-    "BRAND",
-    "BRAUM",
-    "CAITLYN",
-    "CAMILLE",
-    "CASSIOPEIA",
-    "CHO'GATH",
-    "CORKI",
-    "DARIUS",
-    "DIANA",
-    "DR. MUNDO",
-    "DRAVEN",
-    "EKKO",
-    "ELISE",
-    "EVELYNN",
-    "EZREAL",
-    "FIDDLESTICKS",
-    "FIORA",
-    "FIZZ",
-    "GALIO",
-    "GANGPLANK",
-    "GAREN",
-    "GNAR",
-    "GRAGAS",
-    "GRAVES",
-    "HECARIM",
-    "HEIMERDINGER",
-    "ILLAOI",
-    "IRELIA",
-    "IVERN",
-    "JANNA",
-    "JARVAN IV",
-    "JAX",
-    "JAYCE",
-    "JHIN",
-    "JINX",
-    "KAI'SA",
-    "KALISTA",
-    "KARMA",
-    "KARTHUS",
-    "KASSADIN",
-    "KATARINA",
-    "KAYLE",
-    "KAYN",
-    "KENNEN",
-    "KHA'ZIX",
-    "KINDRED",
-    "KLED",
-    "KOG'MAW",
-    "LEBLANC",
-    "LEE SIN",
-    "LEONA",
-    "LISSANDRA",
-    "LILIA",
-    "LUCIAN",
-    "LULU",
-    "LUX",
-    "MALPHITE",
-    "MALZAHAR",
-    "MAOKAI",
-    "MASTER YI",
-    "MISS FORTUNE",
-    "MORDEKAISER",
-    "MORGANA",
-    "NAMI",
-    "NASUS",
-    "NAUTILUS",
-    "NEEKO",
-    "NIDALEE",
-    "NOCTURNE",
-    "NUNU & WILLUMP",
-    "OLAF",
-    "ORIANNA",
-    "ORNN",
-    "PANTHEON",
-    "POPPY",
-    "PYKE",
-    "QIYANA",
-    "QUINN",
-    "RAKAN",
-    "RAMMUS",
-    "REK'SAI",
-    "RENEKTON",
-    "RENGAR",
-    "RIVEN",
-    "RUMBLE",
-    "RYZE",
-    "SEJUANI",
-    "SENNA",
-    "SETT",
-    "SHACO",
-    "SHEN",
-    "SHYVANA",
-    "SINGED",
-    "SION",
-    "SIVIR",
-    "SKARNER",
-    "SONA",
-    "SORAKA",
-    "SWAIN",
-    "SYLAS",
-    "SYNDRA",
-    "TAHM KENCH",
-    "TALIYAH",
-    "TALON",
-    "TARIC",
-    "TEEMO",
-    "THRESH",
-    "TRISTANA",
-    "TRUNDLE",
-    "TRYNDAMERE",
-    "TWISTED FATE",
-    "TWITCH",
-    "UDYR",
-    "URGOT",
-    "VARUS",
-    "VAYNE",
-    "VEIGAR",
-    "VEL'KOZ",
-    "VI",
-    "VIKTOR",
-    "VLADIMIR",
-    "VOLIBEAR",
-    "WARWICK",
-    "WUKONG",
-    "XAYAH",
-    "XERATH",
-    "XIN ZHAO",
-    "YASUO",
-    "YORICK",
-    "YONE",
-    "YUUMI",
-    "ZAC",
-    "ZED",
-    "ZIGGS",
-    "ZILEAN",
-    "ZOE",
-    "ZYRA"
-]
+from src.resources.utils import write_to_json, get_list_from_file, load_list_from_json
+from src.core.esports.moba.champion import Champion
 
 
-def generate_champion_dict(champion_name: str, counter: int) -> dict:
-    if champion_name == "TEEMO":
-        skill = random.randint(0, 50)
-    else:
-        skill = random.randint(50, 99)
+class ChampionGenerator:
+    def __init__(self,
+                 name: str = None,
+                 skill: int = None,
+                 lane: str = None,
+                 champion_dict: dict = None,
+                 file_name: str = 'champions.json',
+                 champion_obj: Champion = None,
+                 champion_names: list = None
+                 ):
+        self.champion_id = 0
+        self.name = name
+        self.skill = skill
+        self.lane = lane
+        self.file_name = file_name
+        self.champion_dict = champion_dict
+        self.champion_obj = champion_obj
+        self.champion_names = champion_names
+        self.champions_list = []
+        self.champions_obj = []
+    
+    def generate_champion_id(self):
+        """
+        Generates champion UUID
+        """
+        self.champion_id = uuid.uuid4().int
 
-    return {"name": champion_name,
-            "id": counter,
-            "skill": skill
-            }
+    def get_champion_names(self):
+        """
+        List used to generate champions, all these names will be used to generate champions
+
+        TODO: limit the number of champion names to generate
+        TODO: This should also be used to generate champions in different patches
+        """
+        self.champion_names = get_list_from_file('champions.txt')
+
+    def get_champion_lanes(self):
+        pass
+
+    def generate_champion_skill(self):
+        """
+        Generates Champion Skills. Perhaps it should also follow a Normal Distribution?
+
+        Also, easter egg for Teemo
+        """
+        if self.name == "TEEMO":
+            self.skill = random.randint(0, 50)
+        else:
+            self.skill = random.randint(50, 99)
+    
+    def generate_champion_dict(self):
+        """
+        Generates the champion dictionary
+        """
+        self.champion_dict = {"name": self.name,
+                              "id": self.champion_id,
+                              "skill": self.skill
+                              }
+    
+    def generate_champion_obj(self):
+        """
+        Generates the champion object based on the Champion class
+        """
+        self.champion_obj = Champion(self.champion_id,
+                                     self.name,
+                                     self.skill
+                                    )
+
+    def create_champions_list(self):
+        """
+        Creates the list of champions according to the names.
+        Essentially this is the champion generation method.
+        """
+        self.get_champion_names()
+        for name in self.champion_names:
+            self.generate_champion_id()
+            self.name = name
+            self.generate_champion_skill()
+            self.generate_champion_dict()
+            self.generate_champion_obj()
+            self.champions_list.append(self.champion_dict)
+            self.champions_obj.append(self.champion_obj)
+    
+    def get_champions(self):
+        """
+        Retrieves champions from the list of champions. Perhaps at the point when we implement
+        a database this can replace the load_list_from_json function.
+        """
+        self.champions_list = load_list_from_json(self.file_name)
+        self.champion_obj = []
+        for champion in self.champions_list:
+            self.name = champion['name']
+            self.champion_id = champion['id']
+            self.skill = champion['skill']
+            self.generate_champion_obj()
+            self.champions_obj.append(self.champion_obj)
+
+    def generate_file(self) -> None:
+        """
+        Generates the champion file
+        """
+        write_to_json(self.champions_list, self.file_name)
 
 
-def create_champions_list() -> list:
-    list_champions = []
-    for counter, champion_name in enumerate(champion_names):
-        champion = generate_champion_dict(champion_name, counter)
-        list_champions.append(champion)
-    return list_champions
-
-
-def generate_champion_file() -> None:
-    list_of_champions = create_champions_list()
-    write_to_json(list_of_champions, 'champions.json')
+if __name__ == '__main__':
+    generate_champion = ChampionGenerator()
+    generate_champion.create_champions_list()
+    generate_champion.generate_file()

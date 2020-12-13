@@ -192,10 +192,10 @@ class MobaPlayerGenerator:
             multiplier = random.randrange(55, 100) / 100
             mult.append(multiplier)
 
-        if self.lane == 0:
+        if self.lane == -1:
             mult[mult.index(max(mult))] = 1
         else:
-            mult[(self.lane - 1)] = 1
+            mult[self.lane] = 1
 
         self.multipliers = mult
 
@@ -219,14 +219,14 @@ class MobaPlayerGenerator:
     def generate_players(self, amount: int = 5):
         """
         Generates an "amount" of players.
-        If the self.lane attribute is set to 0, then it randomly generates players with variable lanes.
+        If the self.lane attribute is set to -1, then it randomly generates players with variable lanes.
         Otherwise, it generates an "amount/5" players that play on the same lane, doing that for every lane.
         """
-        if self.lane == 0:
+        if self.lane == -1:
             for _ in range(amount):
                 self.generate_player()
         else:
-            self.lane = 1
+            self.lane = 0
             for _ in range(5):
                 for __ in range(int(amount/5)):
                     self.generate_player()

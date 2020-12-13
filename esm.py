@@ -29,7 +29,7 @@ def generation():
     num_teams = int(num_players / 5)
 
     champions = ChampionGenerator()
-    player_gen = MobaPlayerGenerator(lane=1)
+    player_gen = MobaPlayerGenerator(lane=0)
     champions.get_champion_names()
     champions.create_champions_list()
     player_gen.generate_players(num_players)
@@ -46,11 +46,13 @@ def debug_match():
 
 
 if __name__ == '__main__':
-    try:
-        find_file('champions.json')
-        find_file('players.json')
-        find_file('teams.json')
-    except FileNotFoundError():
-        generation()
+    # try:
+    #     find_file('champions.json')
+    #     find_file('players.json')
+    #     find_file('teams.json')
+    # except FileNotFoundError():
+    #     generation()
+
+    generation()
 
     debug_match()

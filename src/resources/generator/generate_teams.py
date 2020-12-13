@@ -75,7 +75,7 @@ class TeamGenerator:
         """
         self.roster = []
         if self.player_list is None:
-            self.player_list = MobaPlayerGenerator(lane=1).generate_players(self.amount * 5)
+            self.player_list = MobaPlayerGenerator(lane=0).generate_players(self.amount * 5)
 
         lane = 0
         for _ in range(5):
@@ -83,8 +83,7 @@ class TeamGenerator:
                 player = random.choice(self.player_list)
             else:
                 for player_ in self.player_list:
-                    x = player_.mult.index(max(player_.mult))
-                    if x == lane:
+                    if player_.get_best_lane() == lane:
                         player = player_
                         lane += 1
                         break
@@ -194,7 +193,7 @@ if __name__ == '__main__':
 
     amount = 100
     teams = int(amount / 5)
-    player = MobaPlayerGenerator(lane=1)
+    player = MobaPlayerGenerator(lane=0)
     player.generate_players(amount=amount)
     team = TeamGenerator(amount=teams, players=player.players, organized=True)
     team.generate_teams()

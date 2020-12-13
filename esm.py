@@ -46,12 +46,11 @@ def debug_match():
 
 
 if __name__ == '__main__':
-    #  try:
-    #     find_file('champions.json')
-    #     find_file('players.json')
-    #     find_file('teams.json')
-    #  except FileNotFoundError:
-    #     generation()
+    try:
+        find_file('champions.json')
+        find_file('players.json')
+        find_file('teams.json')
+    except FileNotFoundError():
+        generation()
 
-    generation()
-    # debug_match()
+    debug_match()

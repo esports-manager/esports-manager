@@ -244,10 +244,10 @@ def get_layouts() -> list:
 def debug_window(match) -> sg.Window:
     icon_path = encode_icon()
 
-    layout = get_debug_layout(match)
-
     create_look_and_feel()
     sg.theme('EsmTheme')
+
+    layout = get_debug_layout(match)
     return sg.Window(
         'eSports Manager',
         element_justification='center',

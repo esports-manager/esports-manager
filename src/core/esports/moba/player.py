@@ -110,7 +110,7 @@ class MobaPlayer(Player):
     def lane(self, lane: int):
         for lane_name in Lanes:
             if lane == lane_name.value:
-                self.lane = lane_name
+                self._lane = lane_name
 
     @kills.setter
     def kills(self, kills: int):

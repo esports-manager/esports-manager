@@ -41,7 +41,7 @@ class Lanes(Enum):
     """
     Defines lanes that can be played during a MOBA match
     """
-    TOP = auto()
+    TOP = 0
     JG = auto()
     MID = auto()
     ADC = auto()

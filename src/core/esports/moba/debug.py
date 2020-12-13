@@ -48,7 +48,7 @@ def match_debugger():
     print(team2.list_players)
 
     match = initialize_match(team1, team2, uuid.uuid4())
-    match.picks_and_bans(ch.champions_obj)
+    match.picks_and_bans()
 
     window = debug_window(match)
 

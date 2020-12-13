@@ -32,21 +32,21 @@ class MatchLive:
         self.is_match_over = False
         self.simulate = simulate
         self.event_handler = MobaEventHandler()
-        self.champions_list = ChampionGenerator()
+        self.champions = ChampionGenerator()
 
-    def picks_and_bans(self, champions) -> None:
+    def picks_and_bans(self) -> None:
         """
         Dummy picks and bans implementation. Will be changed in the future.
 
         Probably picks and bans should be handled differently in the UI. But I need to come up
         with a general implementation that can be used regardless of the UI.
         """
-        self.champions_list.get_champions()
+        self.champions.get_champions()
         for team in self.match.teams:
             for player in team.list_players:
                 player.get_default_lane()
-                champion = random.choice(champions)
-                champions.remove(champion)
+                champion = random.choice(self.champions.champions_obj)
+                self.champions.champions_obj.remove(champion)
                 player.champion = champion
 
     def calculate_both_teams_win_prob(self) -> None:

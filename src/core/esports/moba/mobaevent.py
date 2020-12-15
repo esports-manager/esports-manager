@@ -167,11 +167,10 @@ class MobaEventHandler:
             for jg in self.moba.major_jg:
                 if jg['name'] == jg_name:
                     jg['spawn_time'] += jg['cooldown']
-                    break
         else:
             for jg in self.moba.major_jg:
                 if jg['name'] == jg_name:
-                    if self.event.event_time >= jg['spawn_time']:
+                    if self.event.event_time > jg['spawn_time']:
                         return True
 
         return False
@@ -224,6 +223,7 @@ class MobaEventHandler:
         pass
 
     def generate_event(self, game_time):
+        self.events.clear()
         self.events = [MobaEvent(ev_type=ev_type, event_time=game_time) for ev_type in self.enabled_events]
         priorities = [event.priority for event in self.events]
         self.event = random.choices(self.events, priorities)[0]

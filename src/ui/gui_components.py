@@ -43,6 +43,13 @@ def esm_button(text='', font=(default_font, '18'), key=None, pad=None, size=(Non
                      )
 
 
+def esm_output(size=(80, 20), font=default_font, stdout=True):
+    return sg.Output(size=size,
+                     font=(font, '14'),
+                     echo_stdout_stderr=stdout
+                     )
+
+
 def esm_title_text(text='', font=('Liberation Sans Bold', '18'), key=None, pad=(300, 1)):
     return sg.Text(text,
                    key=key,

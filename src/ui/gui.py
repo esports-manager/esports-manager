@@ -22,7 +22,7 @@ from src.core.esports.moba.match_live import MatchLive
 from src.resources import RES_DIR
 from src.resources.utils import find_file
 from src.ui.gui_components import esm_button, esm_form_text, create_look_and_feel, \
-    esm_input_text, esm_input_combo, esm_title_text, esm_listbox, esm_table, esm_calendar_button
+    esm_input_text, esm_input_combo, esm_title_text, esm_listbox, esm_table, esm_calendar_button, esm_output
 
 
 def encode_icon() -> bytes:
@@ -257,21 +257,36 @@ def debug_window(match) -> sg.Window:
     )
 
 
-def get_debug_layout(match: MatchLive = None):
+def get_team_data(match: MatchLive = None):
     players1 = [player for player in match.match.team1.list_players]
     players2 = [player for player in match.match.team2.list_players]
 
     data1 = []
     data2 = []
     for player1, player2 in zip(players1, players2):
-        data1.append([player1.lane.name, player1.nick_name, player1.skill, player1.champion])
-        data2.append([player2.lane.name, player2.nick_name, player2.skill, player2.champion])
+        data1.append([player1.lane.name, player1.nick_name, player1.champion, player1.get_player_total_skill()])
+        data2.append([player2.lane.name, player2.nick_name, player2.champion, player2.get_player_total_skill()])
 
-    headings = ['Lane', 'Player Name', 'Skill', 'Champion']
+    return data1, data2
+
+
+def get_debug_layout(match: MatchLive = None):
+    data1, data2 = get_team_data(match)
+
+    headings = ['Lane', 'Player Name', 'Champion', 'Skill']
+
+    team1_column = [[esm_form_text('Team 1'), esm_form_text(text=str(match.match.team1.total_skill), key='team1skill')],
+                    [esm_table(data1, headings=headings, key='-Team1Table-')]]
+
+    team2_column = [
+        [esm_form_text('Team2'), esm_form_text(text=str(match.match.team2.total_skill), key='team2skill')],
+        [esm_table(data2, headings=headings, key='-Team2Table-')]
+    ]
 
     return [
         [esm_title_text('Debug Match')],
-        [esm_table(data1, headings=headings), esm_table(data2, headings=headings)],
-        [sg.Output(size=(120, 20), echo_stdout_stderr=True)],
-        [esm_button('Start Match', key='-StartMatch-')]
+        [sg.Column(layout=team1_column, element_justification='center'),
+         sg.Column(layout=team2_column, element_justification='center')],
+        [esm_output()],
+        [esm_button('Start Match', key='-StartMatch-'), esm_button('New Teams', key='-NewTeams-')]
     ]

@@ -23,10 +23,10 @@ from src.resources.generator.generate_players import MobaPlayerGenerator
 from src.resources.generator.generate_teams import TeamGenerator
 from src.resources.generator.generate_champions import ChampionGenerator
 from src.resources.utils import load_list_from_json
-from src.ui.gui import debug_window
+from src.ui.gui import debug_window, get_team_data
 
 
-def match_debugger():
+def get_match():
     ch = ChampionGenerator()
     pl = MobaPlayerGenerator()
     t = TeamGenerator()
@@ -34,11 +34,11 @@ def match_debugger():
     pl.get_players_dict()
     pl.get_players_objects()
     ch.get_champions()
-    
+
     t.player_list = pl.players
     t.get_teams_dict()
     t.get_teams_objects()
-    
+
     team1 = random.choice(t.teams)
     t.teams.remove(team1)
     team2 = random.choice(t.teams)
@@ -50,6 +50,10 @@ def match_debugger():
     match = initialize_match(team1, team2, uuid.uuid4())
     match.picks_and_bans()
 
+    return match
+
+def match_debugger():
+    match = get_match()
     window = debug_window(match)
 
     while True:
@@ -60,5 +64,12 @@ def match_debugger():
             match.is_match_over = False
             match.game_time = 0.0
             match.simulation()
+        elif event == '-NewTeams-':
+            match = get_match()
+            data1, data2 = get_team_data(match)
+            window.Element('-Team1Table-').Update(values=data1)
+            window.Element('-Team2Table-').Update(values=data2)
+            window.Element('team1skill').Update(value=match.match.team1.total_skill)
+            window.Element('team2skill').Update(value=match.match.team2.total_skill)
 
     window.close()

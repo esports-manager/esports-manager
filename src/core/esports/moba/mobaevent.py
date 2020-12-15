@@ -41,7 +41,7 @@ class MobaEvent:
     @property
     def priority(self):
         if self.ev_type == MobaEventType.NOTHING:
-            self._priority = 1
+            self._priority = 3
         elif self.ev_type == MobaEventType.JG_DRAGON:
             for jg in self.moba.major_jg:
                 if jg['name'] == 'Dragon':
@@ -135,7 +135,7 @@ class MobaEvent:
         elif self.ev_type == MobaEventType.LANE_FIGHT:
             pass
 
-        print(self.ev_type.name)
+        print(str(self.event_time) + ' ' + self.ev_type.name)
 
     def load_commentary(self, commentaries):
         """
@@ -177,6 +177,13 @@ class MobaEventHandler:
         return False
 
     def get_game_state(self, game_time, which_nexus_exposed, inhib_down, towers_number):
+        if game_time > 0:
+            if MobaEventType.LANE_FARM or MobaEventType.GANK or MobaEventType.TEAM_FIGHT or MobaEventType.GANK or MobaEventType.LANE_FIGHT not in self.enabled_events:
+                self.enabled_events.append(MobaEventType.LANE_FIGHT)
+                self.enabled_events.append(MobaEventType.TEAM_FIGHT)
+                self.enabled_events.append(MobaEventType.LANE_FARM)
+                self.enabled_events.append(MobaEventType.GANK)
+
         # Check if towers can already be assaulted
         if game_time >= self.moba.tower_time:
             self.enabled_events.append(MobaEventType.TOWER_ASSAULT)

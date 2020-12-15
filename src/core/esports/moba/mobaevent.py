@@ -23,8 +23,8 @@ from src.core.esports.moba.moba import Moba
 
 class MobaEvent:
     def __init__(self,
-                 event_id: int = uuid.uuid4().int,
                  ev_type: MobaEventType = MobaEventType.NOTHING,
+                 event_id: int = uuid.uuid4(),
                  priority: int = 0,
                  points: int = 0,
                  event_time: float = 0.0,
@@ -98,24 +98,23 @@ class MobaEvent:
     def points(self, value):
         self._points = value
 
-
-
-    def calculate_event(self,
-                        players_atk,
-                        players_def,
-                        which_nexus,
-                        which_inhib,
-                        which_jg,
-                        which_tower):
-        atk_n = len(players_atk)
-        def_n = len(players_def)
-        random_factor = random.random()
-
-        if atk_n > 1:
-            atk_n = random.randrange(1, atk_n)
-
-        if def_n > 1:
-            def_n = random.randrange(1, def_n)
+    def calculate_event(self
+                        # players_atk,
+                        # players_def,
+                        # which_nexus,
+                        # which_inhib,
+                        # which_jg,
+                        # which_tower
+                        ):
+        # atk_n = len(players_atk)
+        # def_n = len(players_def)
+        # random_factor = random.random()
+        #
+        # if atk_n > 1:
+        #     atk_n = random.randrange(1, atk_n)
+        #
+        # if def_n > 1:
+        #     def_n = random.randrange(1, def_n)
 
         if self.ev_type == MobaEventType.NEXUS_ASSAULT:
             pass
@@ -136,6 +135,8 @@ class MobaEvent:
         elif self.ev_type == MobaEventType.LANE_FIGHT:
             pass
 
+        print(self.ev_type.name)
+
     def load_commentary(self, commentaries):
         """
         Chooses commentary based on a list of commentaries.
@@ -154,7 +155,7 @@ class MobaEventHandler:
         self.moba = Moba()
         self.events = []
         self.commentaries = None
-        self.event = None
+        self.event = MobaEvent()
         self.enabled_events = [MobaEventType.NOTHING]
         self.event_history = []
 
@@ -178,33 +179,36 @@ class MobaEventHandler:
     def get_game_state(self, game_time, which_nexus_exposed, inhib_down, towers_number):
         # Check if towers can already be assaulted
         if game_time >= self.moba.tower_time:
-            self.events.append(MobaEventType.TOWER_ASSAULT)
+            self.enabled_events.append(MobaEventType.TOWER_ASSAULT)
 
         # Check if there is any tower up
         if towers_number == 0:
-            self.events.remove(MobaEventType.TOWER_ASSAULT)
+            self.enabled_events.remove(MobaEventType.TOWER_ASSAULT)
 
         # Check if Baron is up
         if self.check_major_jg('Baron'):
-            self.events.append(MobaEventType.JG_BARON)
+            self.enabled_events.append(MobaEventType.JG_BARON)
         else:
-            self.events.remove(MobaEventType.JG_BARON)
+            if MobaEventType.JG_BARON in self.enabled_events:
+                self.enabled_events.remove(MobaEventType.JG_BARON)
 
         # Check if Dragon is up
         if self.check_major_jg('Dragon'):
-            self.events.append(MobaEventType.JG_DRAGON)
+            self.enabled_events.append(MobaEventType.JG_DRAGON)
         else:
-            self.events.remove(MobaEventType.JG_DRAGON)
+            if MobaEventType.JG_BARON in self.enabled_events:
+                self.enabled_events.remove(MobaEventType.JG_DRAGON)
 
         # Check if an inhib is down
         if inhib_down:
-            self.events.append(MobaEventType.INHIB_ASSAULT)
+            self.enabled_events.append(MobaEventType.INHIB_ASSAULT)
         else:
-            self.events.remove(MobaEventType.INHIB_ASSAULT)
+            if MobaEventType.INHIB_ASSAULT in self.enabled_events:
+                self.enabled_events.remove(MobaEventType.INHIB_ASSAULT)
 
         # Check if a nexus is exposed
         if which_nexus_exposed is not None:
-            self.events.append(MobaEventType.NEXUS_ASSAULT)
+            self.enabled_events.append(MobaEventType.NEXUS_ASSAULT)
 
     def load_commentaries_file(self):
         """
@@ -212,8 +216,8 @@ class MobaEventHandler:
         """
         pass
 
-    def set_event(self, ev_type):
-        """
-        Creates the event, adding it to the Event Log.
-        """
-        self.event = MobaEvent(ev_type=ev_type)
+    def generate_event(self, game_time):
+        self.events = [MobaEvent(ev_type=ev_type, event_time=game_time) for ev_type in self.enabled_events]
+        priorities = [event.priority for event in self.events]
+        self.event = random.choices(self.events, priorities)[0]
+        self.event_history.append(self.event)

@@ -30,6 +30,7 @@ class MobaEvent:
                  event_time: float = 0.0,
                  commentary: list = []
                  ):
+        self.moba = Moba()
         self.event_id = event_id
         self.ev_type = ev_type
         self._priority = priority
@@ -39,10 +40,54 @@ class MobaEvent:
 
     @property
     def priority(self):
+        if self.ev_type == MobaEventType.NOTHING:
+            self._priority = 1
+        elif self.ev_type == MobaEventType.JG_DRAGON:
+            for jg in self.moba.major_jg:
+                if jg['name'] == 'Dragon':
+                    self._priority = jg['priority']
+        elif self.ev_type == MobaEventType.JG_BARON:
+            for jg in self.moba.major_jg:
+                if jg['name'] == 'Baron':
+                    self._priority = jg['priority']
+        elif self.ev_type == MobaEventType.TOWER_ASSAULT:
+            self._priority = 7
+        elif self.ev_type == MobaEventType.GANK:
+            self._priority = 3
+        elif self.ev_type == MobaEventType.LANE_FIGHT:
+            self._priority = 3
+        elif self.ev_type == MobaEventType.TEAM_FIGHT:
+            self._priority = 4
+        elif self.ev_type == MobaEventType.INHIB_ASSAULT:
+            self._priority = 9
+        elif self.ev_type == MobaEventType.LANE_FARM:
+            self._priority = 4
+        elif self.ev_type == MobaEventType.NEXUS_ASSAULT:
+            self._priority = 10
+
         return self._priority
 
     @property
     def points(self):
+        if self.ev_type == MobaEventType.NOTHING:
+            self._points = 0
+        elif self.ev_type == MobaEventType.JG_DRAGON:
+            self._points = 50
+        elif self.ev_type == MobaEventType.JG_BARON:
+            self._points = 100
+        elif self.ev_type == MobaEventType.TOWER_ASSAULT:
+            self._points = 10
+        elif self.ev_type == MobaEventType.GANK:
+            self._points = 5
+        elif self.ev_type == MobaEventType.LANE_FIGHT:
+            self._points = 8
+        elif self.ev_type == MobaEventType.TEAM_FIGHT:
+            self._points = 10
+        elif self.ev_type == MobaEventType.INHIB_ASSAULT:
+            self._points = 20
+        elif self.ev_type == MobaEventType.LANE_FARM:
+            self._points = 4
+
         return self._points
 
     @priority.setter
@@ -52,6 +97,8 @@ class MobaEvent:
     @points.setter
     def points(self, value):
         self._points = value
+
+
 
     def calculate_event(self,
                         players_atk,
@@ -76,9 +123,17 @@ class MobaEvent:
             pass
         elif self.ev_type == MobaEventType.TOWER_ASSAULT:
             pass
-        elif self.ev_type == MobaEventType.JG_MAJOR:
+        elif self.ev_type == MobaEventType.JG_BARON:
             pass
-        else:
+        elif self.ev_type == MobaEventType.JG_DRAGON:
+            pass
+        elif self.ev_type == MobaEventType.LANE_FARM:
+            pass
+        elif self.ev_type == MobaEventType.TEAM_FIGHT:
+            pass
+        elif self.ev_type == MobaEventType.GANK:
+            pass
+        elif self.ev_type == MobaEventType.LANE_FIGHT:
             pass
 
     def load_commentary(self, commentaries):
@@ -100,29 +155,56 @@ class MobaEventHandler:
         self.events = []
         self.commentaries = None
         self.event = None
+        self.enabled_events = [MobaEventType.NOTHING]
         self.event_history = []
 
-    def check_major_jungle(self):
-        if self.event.ev_type == MobaEventType.JG_MAJOR:
+    def check_major_jg(self, jg_name):
+        """
+        Checks if a jungle monster is up
+        """
+        if self.event.ev_type == MobaEventType.JG_BARON:
             for jg in self.moba.major_jg:
-                if self.event.priority == jg['priority']:
-                    jg['spawn_time'] = self.event.event_time + jg['cooldown']
+                if jg['name'] == jg_name:
+                    jg['spawn_time'] += jg['cooldown']
+                    break
         else:
             for jg in self.moba.major_jg:
-                if self.event.event_time >= jg['spawn_time']:
-                    return True
+                if jg['name'] == jg_name:
+                    if self.event.event_time >= jg['spawn_time']:
+                        return True
 
         return False
 
-    def get_game_state(self, game_time, which_nexus_exposed, inhib_down):
-        if game_time <= self.moba.tower_time:
-            pass
-        if self.check_major_jungle():
-            pass
+    def get_game_state(self, game_time, which_nexus_exposed, inhib_down, towers_number):
+        # Check if towers can already be assaulted
+        if game_time >= self.moba.tower_time:
+            self.events.append(MobaEventType.TOWER_ASSAULT)
+
+        # Check if there is any tower up
+        if towers_number == 0:
+            self.events.remove(MobaEventType.TOWER_ASSAULT)
+
+        # Check if Baron is up
+        if self.check_major_jg('Baron'):
+            self.events.append(MobaEventType.JG_BARON)
+        else:
+            self.events.remove(MobaEventType.JG_BARON)
+
+        # Check if Dragon is up
+        if self.check_major_jg('Dragon'):
+            self.events.append(MobaEventType.JG_DRAGON)
+        else:
+            self.events.remove(MobaEventType.JG_DRAGON)
+
+        # Check if an inhib is down
         if inhib_down:
-            pass
+            self.events.append(MobaEventType.INHIB_ASSAULT)
+        else:
+            self.events.remove(MobaEventType.INHIB_ASSAULT)
+
+        # Check if a nexus is exposed
         if which_nexus_exposed is not None:
-            pass
+            self.events.append(MobaEventType.NEXUS_ASSAULT)
 
     def load_commentaries_file(self):
         """
@@ -130,20 +212,8 @@ class MobaEventHandler:
         """
         pass
 
-    def set_event(self, ev_type, priority, points):
+    def set_event(self, ev_type):
         """
         Creates the event, adding it to the Event Log.
-
-        :param ev_type:
-        :param priority:
-        :param points:
-        :return:
         """
-        self.event = MobaEvent(ev_type=ev_type, priority=priority, points=points)
-
-    def generate_event(self):
-        # weights = [event.priority for event in self.events]
-        # ev = random.choices(self.events, weights=weights, k=1)[0]
-        # self.eventlog.append(ev)
-        # return ev
-        pass
+        self.event = MobaEvent(ev_type=ev_type)

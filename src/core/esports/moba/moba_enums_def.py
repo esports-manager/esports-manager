@@ -31,10 +31,10 @@ class MobaEventType(Enum):
     LANE_FIGHT = auto()
     TEAM_FIGHT = auto()
     TOWER_ASSAULT = auto()
-    JG_MAJOR = auto()
+    JG_DRAGON = auto()
+    JG_BARON = auto()
     INHIB_ASSAULT = auto()
     NEXUS_ASSAULT = auto()
-    BACKDOOR = auto()
 
 
 class Lanes(Enum):

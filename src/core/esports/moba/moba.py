@@ -21,12 +21,14 @@ class Moba:
         self.major_jg = [
             {
                 'name': 'Baron',
+                'id': 1,
                 'priority': 10,
                 'spawn_time': 20.0,
                 'cooldown': 6.0
             },
             {
                 'name': 'Dragon',
+                'id': 2,
                 'priority': 5,
                 'spawn_time': 5.0,
                 'cooldown': 5.0

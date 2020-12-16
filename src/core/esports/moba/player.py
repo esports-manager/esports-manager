@@ -156,7 +156,7 @@ class MobaPlayer(Player):
         return self.champion.skill * mult
 
     def get_player_total_skill(self):
-        return self.get_curr_player_skill() + self.get_champion_skill() + self.points
+        return int(self.get_curr_player_skill() + self.get_champion_skill() + self.points)
 
     def __repr__(self):
         return '{0} {1}'.format(self.__class__.__name__, self.nick_name)

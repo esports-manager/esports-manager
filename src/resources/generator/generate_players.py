@@ -57,7 +57,7 @@ class MobaPlayerGenerator:
         self.td = today
         self.multipliers = []
         self.champions = []
-        self.champions_list = []
+        self.champions_list = champions_list
         self.players = []
         self.players_dict = []
         self.player_dict = None
@@ -94,12 +94,12 @@ class MobaPlayerGenerator:
         """
         Generates champion skill level for each player
         """
-        self.champions = []
-        champion_dict = {}
-        if self.champions_list:
+        self.champions.clear()
+        if not self.champions_list:
             self.champions_list = ChampionGenerator().get_champions()
 
         for champion in self.champions_list:
+            champion_dict = {}
             multip = random.randrange(50, 100) / 100
             champion_dict['id'] = champion.champion_id
             champion_dict['mult'] = multip

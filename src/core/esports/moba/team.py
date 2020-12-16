@@ -142,7 +142,7 @@ class Team:
     def total_skill(self) -> int:
         self._total_skill = self.player_overall + self.champion_overall + self.points
 
-        return self._total_skill
+        return int(self._total_skill)
 
     def __str__(self):
         return '{0}'.format(self.name)

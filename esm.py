@@ -25,13 +25,13 @@ from src.core.esports.moba.debug import match_debugger
 
 
 def generation():
-    num_players = 100
+    num_players = 3500
     num_teams = int(num_players / 5)
 
     champions = ChampionGenerator()
-    player_gen = MobaPlayerGenerator(lane=0)
     champions.get_champion_names()
     champions.create_champions_list()
+    player_gen = MobaPlayerGenerator(lane=0, champions_list=champions.champions_obj)
     player_gen.generate_players(num_players)
     team_gen = TeamGenerator(players=player_gen.players, organized=True, amount=num_teams)
     team_gen.generate_teams()

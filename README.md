@@ -14,6 +14,40 @@ In this game, you will be able set up your team, get them to play in whatever po
 
 The game is still not ready to be played. Many features are yet to be implemented, and a lot of things are missing. There's no gameplay experience, only testing material here.
 
+## HOW TO RUN THE DEBUG VERSION
+
+To run the debug version first you need to have Python 3 installed. Probably this game should work with Python 3.8+, I don't know if it works with Python 3.6 or lower, but from what I remember, some functions that I use were only implemented in 3.8. Currently testing on 3.9 and it is working.
+
+To manage dependencies, we use Pipenv. To install pipenv:
+
+```
+pip install pipenv
+```
+
+Then, clone the repo and run:
+
+```
+pipenv install
+```
+
+And then you can do:
+
+```
+pipenv shell
+```
+
+To get into the python virtual environment shell. And then just run:
+
+```
+python esm.py
+```
+
+And that should run the basic Debug Match Window. There's very limited functionality here, Match Simulation is still under development, but you can see basically what events would happen in your match.
+
+If you want to generate a number X of players, edit the `esm.py` file and change the `num_players` variable to a number that's at max 3500.
+
+I haven't tested with a number of players that's not divisible by 5, and that should not work, so try to choose numbers that are divisible by 5. We can fix that later.
+
 ## FEATURES
 
 Check [FEATURES.md](FEATURES.md) to get more information on the planned features and features that are already implemented.

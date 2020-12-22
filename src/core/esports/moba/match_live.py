@@ -91,7 +91,11 @@ class MatchLive:
                                               self.is_any_inhib_open(),
                                               self.get_tower_number())
             self.event_handler.generate_event(self.game_time)
-            self.event_handler.event.calculate_event()
+            self.event_handler.event.calculate_event(self.match.team1,
+                                                     self.match.team2,
+                                                     self.which_team_nexus_exposed(),
+                                                     self.is_any_inhib_open(),
+                                                     self.get_tower_number())
             self.increment_game_time(1)
             # TODO: match sim could be played without generating comments, so players can get instant results
             # probably this implementation without a sleep should do the trick, because it is going to generate stats

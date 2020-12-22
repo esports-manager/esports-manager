@@ -258,29 +258,35 @@ def debug_window(match) -> sg.Window:
 
 
 def get_team_data(match: MatchLive = None):
-    players1 = [player for player in match.match.team1.list_players]
-    players2 = [player for player in match.match.team2.list_players]
+    players = [[player for player in team.list_players] for team in match.match.teams]
 
-    data1 = []
-    data2 = []
-    for player1, player2 in zip(players1, players2):
-        data1.append([player1.lane.name, player1.nick_name, player1.champion, player1.get_player_total_skill()])
-        data2.append([player2.lane.name, player2.nick_name, player2.champion, player2.get_player_total_skill()])
+    data = []
+    for team in players:
+        team_data = []
+        for player in team:
+            team_data.append([player.lane.name,
+                         player.nick_name,
+                         player.kills,
+                         player.deaths,
+                         player.assists,
+                         player.champion,
+                         player.get_player_total_skill()])
+        data.append(team_data)
 
-    return data1, data2
+    return data
 
 
 def get_debug_layout(match: MatchLive = None):
-    data1, data2 = get_team_data(match)
+    data = get_team_data(match)
 
-    headings = ['Lane', 'Player Name', 'Champion', 'Skill']
+    headings = ['Lane', 'Player Name', 'Kills', 'Deaths', 'Assists', 'Champion', 'Skill']
 
-    team1_column = [[esm_form_text('Team 1'), esm_form_text(text=str(match.match.team1.total_skill), key='team1skill')],
-                    [esm_table(data1, headings=headings, key='-Team1Table-')]]
+    team1_column = [[esm_form_text(match.match.team1.name), esm_form_text(text=str(match.match.team1.total_skill), key='team1skill')],
+                    [esm_table(data[0], headings=headings, key='-Team1Table-')]]
 
     team2_column = [
-        [esm_form_text('Team2'), esm_form_text(text=str(match.match.team2.total_skill), key='team2skill')],
-        [esm_table(data2, headings=headings, key='-Team2Table-')]
+        [esm_form_text(match.match.team2.name), esm_form_text(text=str(match.match.team2.total_skill), key='team2skill')],
+        [esm_table(data[1], headings=headings, key='-Team2Table-')]
     ]
 
     return [

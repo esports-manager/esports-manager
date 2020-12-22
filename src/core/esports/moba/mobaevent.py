@@ -37,17 +37,47 @@ class MobaEvent:
         self.priority = priority
         self.commentary = self.load_commentary(commentary)
         self.event_time = event_time
+        self.factor = random.gauss(0, 1)
         self.points = points
 
-    def calculate_event(self
-                        # team1,
-                        # team2,
-                        # which_nexus,
-                        # which_inhib,
-                        # which_jg,
-                        # which_tower
+    def calculate_kill(self, team1, team2):
+        pass
+
+    def calculate_baron(self, team1, team2):
+        pass
+
+    def calculate_dragon(self, team1, team2):
+        pass
+
+    def calculate_tower(self, team1, team2, tower_number):
+        pass
+
+    def calculate_inhib(self, team1, team2, which_inhib):
+        pass
+
+    def calculate_nexus(self, team1, team2, which_nexus):
+        pass
+
+    def calculate_event(self,
+                        team1,
+                        team2,
+                        which_nexus,
+                        which_inhib,
+                        tower_number
                         ):
-        print(self.event_name)
+        if self.event_name == 'KILL':
+            self.calculate_kill(team1, team2)
+        if self.event_name == 'BARON':
+            self.calculate_baron(team1, team2)
+        if self.event_name == 'DRAGON':
+            self.calculate_dragon(team1, team2)
+        if self.event_name == 'TOWER ASSAULT':
+            self.calculate_tower(team1, team2, tower_number)
+        if self.event_name == 'INHIB ASSAULT':
+            self.calculate_inhib(team1, team2, which_inhib)
+        if self.event_name == 'NEXUS ASSAULT':
+            self.calculate_nexus(team1, team2, which_nexus)
+        print(str(self.event_time) + ' ' + self.event_name)
 
     def load_commentary(self, commentaries):
         """

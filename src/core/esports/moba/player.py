@@ -116,6 +116,10 @@ class MobaPlayer(Player):
     def kills(self, kills: int):
         self._kills = kills
 
+    @deaths.setter
+    def deaths(self, deaths: int):
+        self._deaths = deaths
+
     @assists.setter
     def assists(self, assists: int):
         self._assists = assists

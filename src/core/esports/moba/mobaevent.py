@@ -40,8 +40,27 @@ class MobaEvent:
         self.factor = random.gauss(0, 1)
         self.points = points
 
+    def get_team_players(self, team1, team2):
+        return [team1.list_players, team2.list_players]
+
     def calculate_kill(self, team1, team2):
-        pass
+        teams = self.get_team_players(team1, team2)
+
+        weight = [20, 10, 5, 2, 1]
+
+        team_killer = random.choices(teams, [team1.total_skill, team2.total_skill])[0]
+        killer = random.choices(team_killer, [player.get_player_total_skill() for player in team_killer])[0]
+        amount_kills = random.choices([i+1 for i in range(5)], weight)[0]
+
+        if killer in teams[0]:
+            kills = random.choices(teams[1], k=amount_kills)
+        else:
+            kills = random.choices(teams[0], k=amount_kills)
+
+        killer.kills += len(kills)
+        killer.points += len(kills) * self.points
+        for killed in kills:
+            killed.deaths += 1
 
     def calculate_baron(self, team1, team2):
         pass

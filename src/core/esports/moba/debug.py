@@ -52,6 +52,7 @@ def get_match():
 
     return match
 
+
 def match_debugger():
     match = get_match()
     window = debug_window(match)
@@ -66,10 +67,16 @@ def match_debugger():
             match.simulation()
         elif event == '-NewTeams-':
             match = get_match()
-            data1, data2 = get_team_data(match)
-            window.Element('-Team1Table-').Update(values=data1)
-            window.Element('-Team2Table-').Update(values=data2)
+            data = get_team_data(match)
+            window.Element('-Team1Table-').Update(values=data[0])
+            window.Element('-Team2Table-').Update(values=data[1])
             window.Element('team1skill').Update(value=match.match.team1.total_skill)
             window.Element('team2skill').Update(value=match.match.team2.total_skill)
+
+        data = get_team_data(match)
+        window.Element('-Team1Table-').update(values=data[0])
+        window.Element('-Team2Table-').update(values=data[1])
+        window.Element('team1skill').update(value=match.match.team1.total_skill)
+        window.Element('team2skill').update(value=match.match.team2.total_skill)
 
     window.close()

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "NOTHING",
+    "priority": 2,
+    "points": 3
+  },
+  {
+    "name": "KILL",
+    "priority": 3,
+    "points": 5
+  },
+  {
+    "name": "TOWER ASSAULT",
+    "priority": 6,
+    "points": 15,
+    "start_assault": 15.0
+  },
+  {
+    "name": "INHIB ASSAULT",
+    "priority": 7,
+    "points": 20
+  },
+  {
+    "name": "BARON",
+    "priority": 7,
+    "points": 100,
+    "spawn_time": 20.0,
+    "cooldown": 6.0
+  },
+  {
+    "name": "DRAGON",
+    "priority": 4,
+    "points": 20,
+    "spawn_time": 5.0,
+    "cooldown": 5.0
+  },
+  {
+    "name": "NEXUS ASSAULT",
+    "priority": 9,
+    "points": 100
+  }
+]

@@ -17,125 +17,37 @@
 import random
 import uuid
 
-from src.core.esports.moba.moba_enums_def import MobaEventType
 from src.core.esports.moba.moba import Moba
+from src.resources.utils import load_list_from_json
 
 
 class MobaEvent:
     def __init__(self,
-                 ev_type: MobaEventType = MobaEventType.NOTHING,
                  event_id: int = uuid.uuid4(),
+                 event_name: str = None,
                  priority: int = 0,
                  points: int = 0,
                  event_time: float = 0.0,
-                 commentary: list = []
+                 commentary=None
                  ):
-        self.moba = Moba()
+        if commentary is None:
+            self.commentary = []
+        self.event_name = event_name
         self.event_id = event_id
-        self.ev_type = ev_type
-        self._priority = priority
+        self.priority = priority
         self.commentary = self.load_commentary(commentary)
         self.event_time = event_time
-        self._points = points
-
-    @property
-    def priority(self):
-        if self.ev_type == MobaEventType.NOTHING:
-            self._priority = 3
-        elif self.ev_type == MobaEventType.JG_DRAGON:
-            for jg in self.moba.major_jg:
-                if jg['name'] == 'Dragon':
-                    self._priority = jg['priority']
-        elif self.ev_type == MobaEventType.JG_BARON:
-            for jg in self.moba.major_jg:
-                if jg['name'] == 'Baron':
-                    self._priority = jg['priority']
-        elif self.ev_type == MobaEventType.TOWER_ASSAULT:
-            self._priority = 7
-        elif self.ev_type == MobaEventType.GANK:
-            self._priority = 3
-        elif self.ev_type == MobaEventType.LANE_FIGHT:
-            self._priority = 3
-        elif self.ev_type == MobaEventType.TEAM_FIGHT:
-            self._priority = 4
-        elif self.ev_type == MobaEventType.INHIB_ASSAULT:
-            self._priority = 9
-        elif self.ev_type == MobaEventType.LANE_FARM:
-            self._priority = 4
-        elif self.ev_type == MobaEventType.NEXUS_ASSAULT:
-            self._priority = 10
-
-        return self._priority
-
-    @property
-    def points(self):
-        if self.ev_type == MobaEventType.NOTHING:
-            self._points = 0
-        elif self.ev_type == MobaEventType.JG_DRAGON:
-            self._points = 50
-        elif self.ev_type == MobaEventType.JG_BARON:
-            self._points = 100
-        elif self.ev_type == MobaEventType.TOWER_ASSAULT:
-            self._points = 10
-        elif self.ev_type == MobaEventType.GANK:
-            self._points = 5
-        elif self.ev_type == MobaEventType.LANE_FIGHT:
-            self._points = 8
-        elif self.ev_type == MobaEventType.TEAM_FIGHT:
-            self._points = 10
-        elif self.ev_type == MobaEventType.INHIB_ASSAULT:
-            self._points = 20
-        elif self.ev_type == MobaEventType.LANE_FARM:
-            self._points = 4
-
-        return self._points
-
-    @priority.setter
-    def priority(self, value):
-        self._priority = value
-
-    @points.setter
-    def points(self, value):
-        self._points = value
+        self.points = points
 
     def calculate_event(self
-                        # players_atk,
-                        # players_def,
+                        # team1,
+                        # team2,
                         # which_nexus,
                         # which_inhib,
                         # which_jg,
                         # which_tower
                         ):
-        # atk_n = len(players_atk)
-        # def_n = len(players_def)
-        # random_factor = random.random()
-        #
-        # if atk_n > 1:
-        #     atk_n = random.randrange(1, atk_n)
-        #
-        # if def_n > 1:
-        #     def_n = random.randrange(1, def_n)
-
-        if self.ev_type == MobaEventType.NEXUS_ASSAULT:
-            pass
-        elif self.ev_type == MobaEventType.INHIB_ASSAULT:
-            pass
-        elif self.ev_type == MobaEventType.TOWER_ASSAULT:
-            pass
-        elif self.ev_type == MobaEventType.JG_BARON:
-            pass
-        elif self.ev_type == MobaEventType.JG_DRAGON:
-            pass
-        elif self.ev_type == MobaEventType.LANE_FARM:
-            pass
-        elif self.ev_type == MobaEventType.TEAM_FIGHT:
-            pass
-        elif self.ev_type == MobaEventType.GANK:
-            pass
-        elif self.ev_type == MobaEventType.LANE_FIGHT:
-            pass
-
-        print(str(self.event_time) + ' ' + self.ev_type.name)
+        print(self.event_name)
 
     def load_commentary(self, commentaries):
         """
@@ -153,68 +65,55 @@ class MobaEventHandler:
         Initializes the event handler.
         """
         self.moba = Moba()
-        self.events = []
+        self.events = load_list_from_json('mobaevents.json')
         self.commentaries = None
         self.event = MobaEvent()
-        self.enabled_events = [MobaEventType.NOTHING]
+        self.enabled_events = []
         self.event_history = []
 
-    def check_major_jg(self, jg_name):
-        """
-        Checks if a jungle monster is up
-        """
-        if self.event.ev_type == MobaEventType.JG_BARON:
-            for jg in self.moba.major_jg:
-                if jg['name'] == jg_name:
-                    jg['spawn_time'] += jg['cooldown']
-        else:
-            for jg in self.moba.major_jg:
-                if jg['name'] == jg_name:
-                    if self.event.event_time > jg['spawn_time']:
-                        return True
-
-        return False
-
     def get_game_state(self, game_time, which_nexus_exposed, inhib_down, towers_number):
-        if game_time > 0:
-            if MobaEventType.LANE_FARM or MobaEventType.GANK or MobaEventType.TEAM_FIGHT or MobaEventType.GANK or MobaEventType.LANE_FIGHT not in self.enabled_events:
-                self.enabled_events.append(MobaEventType.LANE_FIGHT)
-                self.enabled_events.append(MobaEventType.TEAM_FIGHT)
-                self.enabled_events.append(MobaEventType.LANE_FARM)
-                self.enabled_events.append(MobaEventType.GANK)
+        if game_time == 0.0:
+            self.get_enabled_events(['NOTHING', 'KILL'])
 
-        # Check if towers can already be assaulted
-        if game_time >= self.moba.tower_time:
-            self.enabled_events.append(MobaEventType.TOWER_ASSAULT)
-
-        # Check if there is any tower up
+        if game_time == 15.0:
+            self.get_enabled_events(['TOWER ASSAULT'])
         if towers_number == 0:
-            self.enabled_events.remove(MobaEventType.TOWER_ASSAULT)
+            self.remove_enabled_event('TOWER ASSAULT')
 
-        # Check if Baron is up
-        if self.check_major_jg('Baron'):
-            self.enabled_events.append(MobaEventType.JG_BARON)
-        else:
-            if MobaEventType.JG_BARON in self.enabled_events:
-                self.enabled_events.remove(MobaEventType.JG_BARON)
+        self.check_jungle(game_time, 'BARON')
+        self.check_jungle(game_time, 'DRAGON')
 
-        # Check if Dragon is up
-        if self.check_major_jg('Dragon'):
-            self.enabled_events.append(MobaEventType.JG_DRAGON)
-        else:
-            if MobaEventType.JG_BARON in self.enabled_events:
-                self.enabled_events.remove(MobaEventType.JG_DRAGON)
-
-        # Check if an inhib is down
         if inhib_down:
-            self.enabled_events.append(MobaEventType.INHIB_ASSAULT)
+            self.get_enabled_events(['INHIB ASSAULT'])
         else:
-            if MobaEventType.INHIB_ASSAULT in self.enabled_events:
-                self.enabled_events.remove(MobaEventType.INHIB_ASSAULT)
+            self.remove_enabled_event('INHIB ASSAULT')
 
-        # Check if a nexus is exposed
         if which_nexus_exposed is not None:
-            self.enabled_events.append(MobaEventType.NEXUS_ASSAULT)
+            self.get_enabled_events(['NEXUS ASSAULT'])
+        pass
+
+    def check_jungle(self, game_time, jungle):
+        for event in self.events:
+            if event['name'] == jungle:
+                if self.event.event_name == jungle:
+                    if event in self.enabled_events:
+                        self.enabled_events.remove(event)
+                    event['spawn_time'] += event['cooldown']
+                else:
+                    if game_time >= event['spawn_time']:
+                        if event not in self.enabled_events:
+                            self.get_enabled_events([event['name']])
+
+    def remove_enabled_event(self, name):
+        for event in self.enabled_events:
+            if event['name'] == name:
+                self.enabled_events.remove(event)
+
+    def get_enabled_events(self, names):
+        for event in self.events:
+            for name in names:
+                if event['name'] == name:
+                    self.enabled_events.append(event)
 
     def load_commentaries_file(self):
         """
@@ -222,9 +121,18 @@ class MobaEventHandler:
         """
         pass
 
+    def get_event_priorities(self):
+        priorities = []
+        for event in self.enabled_events:
+            priorities.append(event['priority'])
+
+        return priorities
+
     def generate_event(self, game_time):
-        self.events.clear()
-        self.events = [MobaEvent(ev_type=ev_type, event_time=game_time) for ev_type in self.enabled_events]
-        priorities = [event.priority for event in self.events]
-        self.event = random.choices(self.events, priorities)[0]
+        priorities = self.get_event_priorities()
+        ev_chosen = random.choices(self.enabled_events, priorities)[0]
+        self.event = MobaEvent(event_name=ev_chosen['name'],
+                               priority=ev_chosen['priority'],
+                               points=ev_chosen['points'],
+                               event_time=game_time)
         self.event_history.append(self.event)

@@ -46,7 +46,7 @@ def esm_button(text='', font=(default_font, '16'), key=None, pad=None, size=(Non
                      )
 
 
-def esm_output(size=(80, 20), font=(default_font, default_font_size), stdout=True):
+def esm_output(size=(80, 12), font=(default_font, default_font_size), stdout=True):
     return sg.Output(size=size,
                      font=font,
                      echo_stdout_stderr=stdout

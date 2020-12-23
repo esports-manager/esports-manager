@@ -14,7 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#import PySimpleGUI as sg
+# import PySimpleGUI as sg
 
 # from src.ui.gui import app, debug_window
 from src.resources.utils import find_file
@@ -53,6 +53,6 @@ if __name__ == '__main__':
     # except FileNotFoundError():
     #     generation()
 
-    # generation()
+    generation()
 
     debug_match()

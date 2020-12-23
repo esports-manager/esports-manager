@@ -43,10 +43,13 @@ class MobaEvent:
     def get_team_players(self, team1, team2):
         return [team1.list_players, team2.list_players]
 
+    def get_available_towers(self, teams):
+        pass
+
     def calculate_kill(self, team1, team2):
         teams = self.get_team_players(team1, team2)
 
-        weight = [20, 10, 5, 2, 1]
+        weight = [50, 20, 15, 2, 1]
 
         team_killer = random.choices(teams, [team1.total_skill, team2.total_skill])[0]
         killer = random.choices(team_killer, [player.get_player_total_skill() for player in team_killer])[0]
@@ -69,7 +72,8 @@ class MobaEvent:
         pass
 
     def calculate_tower(self, team1, team2, tower_number):
-        pass
+        if tower_number != 0:
+            pass
 
     def calculate_inhib(self, team1, team2, which_inhib):
         pass

@@ -130,16 +130,15 @@ class Team:
     def champion_overall(self) -> int:
         self._champion_overall = 0
 
-        self._champion_overall = sum(
+        self._champion_overall = int(sum(
             player.get_champion_skill() for player in self.list_players
-        )
-
-        self._champion_overall = int(self._champion_overall)
+        ))
 
         return self._champion_overall
 
     @property
     def total_skill(self) -> int:
+        self._total_skill = 0
         self._total_skill = self.player_overall + self.champion_overall + self.points
 
         return int(self._total_skill)

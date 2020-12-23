@@ -64,6 +64,12 @@ def match_debugger():
         elif event == '-StartMatch-':
             match.is_match_over = False
             match.game_time = 0.0
+            for team in match.match.teams:
+                for player in team.list_players:
+                    player.kills = 0
+                    player.deaths = 0
+                    player.assists = 0
+                team.total_skill
             match.simulation()
         elif event == '-NewTeams-':
             match = get_match()

@@ -69,7 +69,7 @@ def match_debugger():
                     player.kills = 0
                     player.deaths = 0
                     player.assists = 0
-                team.total_skill
+                    player.points = 0
             match.simulation()
         elif event == '-NewTeams-':
             match = get_match()

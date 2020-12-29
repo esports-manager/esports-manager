@@ -5,7 +5,7 @@ from src.resources.generator.generate_champions import ChampionGenerator
 
 @pytest.fixture
 def champion_generator():
-    return ChampionGenerator()
+    pass
 
 
 def test_get_champion_lanes(champion_generator):

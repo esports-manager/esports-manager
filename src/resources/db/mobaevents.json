@@ -11,13 +11,13 @@
   },
   {
     "name": "TOWER ASSAULT",
-    "priority": 6,
+    "priority": 5,
     "points": 15,
     "start_assault": 15.0
   },
   {
     "name": "INHIB ASSAULT",
-    "priority": 7,
+    "priority": 6,
     "points": 20
   },
   {
@@ -36,7 +36,7 @@
   },
   {
     "name": "NEXUS ASSAULT",
-    "priority": 9,
+    "priority": 8,
     "points": 100
   }
 ]

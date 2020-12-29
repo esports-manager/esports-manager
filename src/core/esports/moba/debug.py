@@ -18,11 +18,10 @@ import random
 import PySimpleGUI as sg
 import uuid
 
-from src.core.esports.moba.match_live import MatchLive, initialize_match
+from src.core.esports.moba.match_live import initialize_match
 from src.resources.generator.generate_players import MobaPlayerGenerator
 from src.resources.generator.generate_teams import TeamGenerator
 from src.resources.generator.generate_champions import ChampionGenerator
-from src.resources.utils import load_list_from_json
 from src.ui.gui import debug_window, get_team_data
 
 
@@ -43,9 +42,6 @@ def get_match():
     t.teams.remove(team1)
     team2 = random.choice(t.teams)
     t.teams.remove(team2)
-
-    print(team1.list_players)
-    print(team2.list_players)
 
     match = initialize_match(team1, team2, uuid.uuid4())
     match.picks_and_bans()
@@ -70,6 +66,14 @@ def match_debugger():
                     player.deaths = 0
                     player.assists = 0
                     player.points = 0
+                team.towers.update(
+                    {
+                        "top": 3,
+                        "mid": 3,
+                        "bot": 3,
+                        "base": 2
+                    }
+                )
             match.simulation()
         elif event == '-NewTeams-':
             match = get_match()
@@ -78,11 +82,21 @@ def match_debugger():
             window.Element('-Team2Table-').Update(values=data[1])
             window.Element('team1skill').Update(value=match.match.team1.total_skill)
             window.Element('team2skill').Update(value=match.match.team2.total_skill)
+            window.Element('team1winprob').Update(value=match.match.team1.win_prob)
+            window.Element('team2winprob').Update(value=match.match.team2.win_prob)
+            window.Element('team1towers').Update(value=match.match.team1.towers)
+            window.Element('team2towers').Update(value=match.match.team2.towers)
+            window.refresh()
 
         data = get_team_data(match)
         window.Element('-Team1Table-').update(values=data[0])
         window.Element('-Team2Table-').update(values=data[1])
         window.Element('team1skill').update(value=match.match.team1.total_skill)
         window.Element('team2skill').update(value=match.match.team2.total_skill)
+        window.Element('team1winprob').Update(value=match.match.team1.win_prob)
+        window.Element('team2winprob').Update(value=match.match.team2.win_prob)
+        window.Element('team1towers').Update(value=match.match.team1.towers)
+        window.Element('team2towers').Update(value=match.match.team2.towers)
+        window.refresh()
 
     window.close()

@@ -262,15 +262,13 @@ def get_team_data(match: MatchLive = None):
 
     data = []
     for team in players:
-        team_data = []
-        for player in team:
-            team_data.append([player.lane.name,
+        team_data = [[player.lane.name,
                          player.nick_name,
                          player.kills,
                          player.deaths,
                          player.assists,
                          player.champion,
-                         player.get_player_total_skill()])
+                         player.get_player_total_skill()] for player in team]
         data.append(team_data)
 
     return data
@@ -281,12 +279,18 @@ def get_debug_layout(match: MatchLive = None):
 
     headings = ['Lane', 'Player Name', 'Kills', 'Deaths', 'Assists', 'Champion', 'Skill']
 
-    team1_column = [[esm_form_text(match.match.team1.name), esm_form_text(text=str(match.match.team1.total_skill), key='team1skill')],
-                    [esm_table(data[0], headings=headings, key='-Team1Table-')]]
+    team1_column = [
+        [esm_form_text(match.match.team1.name), esm_form_text(text=str(match.match.team1.total_skill), key='team1skill')],
+        [esm_form_text(str(int(match.match.team1.win_prob)), key='team1winprob')],
+        [esm_table(data[0], headings=headings, key='-Team1Table-')],
+        [esm_form_text(match.match.team1.towers, key='team1towers')]
+    ]
 
     team2_column = [
         [esm_form_text(match.match.team2.name), esm_form_text(text=str(match.match.team2.total_skill), key='team2skill')],
-        [esm_table(data[1], headings=headings, key='-Team2Table-')]
+        [esm_form_text(str(int(match.match.team2.win_prob)), key='team2winprob')],
+        [esm_table(data[1], headings=headings, key='-Team2Table-')],
+        [esm_form_text(match.match.team2.towers, key='team2towers')]
     ]
 
     return [

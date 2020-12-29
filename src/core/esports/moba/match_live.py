@@ -55,17 +55,13 @@ class MatchLive:
         )
 
         for team in self.match.teams:
-            team.win_prob = team.total_skill / total_prob
+            team.win_prob = (team.total_skill / total_prob) * 100
 
     def increment_game_time(self, quantity):
         self.game_time += quantity
 
     def get_tower_number(self):
-        towers = 0
-        for team in self.match.teams:
-            towers += sum(lane for lane in team.towers.values())
-
-        return towers
+        return sum(sum(team.towers.values()) for team in self.match.teams)
 
     def which_team_nexus_exposed(self):
         if self.match.team1.is_nexus_exposed():
@@ -86,6 +82,7 @@ class MatchLive:
 
     def simulation(self):
         while not self.is_match_over:
+            self.calculate_both_teams_win_prob()
             self.event_handler.get_game_state(self.game_time,
                                               self.which_team_nexus_exposed(),
                                               self.is_any_inhib_open(),
@@ -94,8 +91,7 @@ class MatchLive:
             self.event_handler.event.calculate_event(self.match.team1,
                                                      self.match.team2,
                                                      self.which_team_nexus_exposed(),
-                                                     self.is_any_inhib_open(),
-                                                     self.get_tower_number())
+                                                     self.is_any_inhib_open())
             self.increment_game_time(1)
             # TODO: match sim could be played without generating comments, so players can get instant results
             # probably this implementation without a sleep should do the trick, because it is going to generate stats

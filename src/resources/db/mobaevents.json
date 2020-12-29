@@ -11,13 +11,13 @@
   },
   {
     "name": "TOWER ASSAULT",
-    "priority": 5,
+    "priority": 7,
     "points": 15,
     "start_assault": 15.0
   },
   {
     "name": "INHIB ASSAULT",
-    "priority": 6,
+    "priority": 8,
     "points": 20
   },
   {

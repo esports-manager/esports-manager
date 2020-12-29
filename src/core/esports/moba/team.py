@@ -64,7 +64,7 @@ class Team:
     def are_all_inhibitors_up(self) -> bool:
         return 0 not in self.inhibitors.values()
 
-    def is_inhib_exposed(self) -> bool:
+    def are_inhibs_exposed(self) -> bool:
         return (
             self.towers['top'] == 0
             or self.towers['mid'] == 0
@@ -72,7 +72,11 @@ class Team:
         )
 
     def get_exposed_inhibs(self):
-        return [lane for lane, num in self.inhibitors.items() if num == 0]
+        return [
+            lane
+            for lane, num in self.towers.items()
+            if num == 0 and lane != 'base' and self.inhibitors[lane] != 0
+        ]
 
     def is_nexus_exposed(self) -> bool:
         return self.towers['base'] == 0

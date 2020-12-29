@@ -32,6 +32,7 @@ class MobaEvent:
                  ):
         if commentary is None:
             self.commentary = []
+
         self.event_name = event_name
         self.event_id = event_id
         self.priority = priority
@@ -41,16 +42,20 @@ class MobaEvent:
         self.points = points
 
     @staticmethod
+    def _get_probable_team(team1, team2):
+        attack_team = random.choices([team1, team2], [team1.win_prob, team2.win_prob])[0]
+
+        def_team = team2 if team1 == attack_team else team1
+
+        return attack_team, def_team
+
+    @staticmethod
     def _get_team_players(team1, team2):
         return [team1.list_players, team2.list_players]
 
-    @staticmethod
-    def _get_tower_attributes(team1, team2):
-        teams = [team1, team2]
-        attack_team = random.choices(teams, [team.win_prob for team in teams])[0]
-        teams.remove(attack_team)
+    def _get_tower_attributes(self, team1, team2):
+        attack_team, def_team = self._get_probable_team(team1, team2)
 
-        def_team = teams[0]
         lanes = [lanes for lanes, value in def_team.towers.items() if value != 0]
 
         if def_team.are_all_inhibitors_up():
@@ -66,7 +71,7 @@ class MobaEvent:
                 else:
                     probs.append(5)
 
-        chosen_lane = random.choices(lanes, probs)[0]
+        chosen_lane = random.choices(lanes, weights=probs)[0]
 
         return attack_team, def_team, chosen_lane
 
@@ -98,11 +103,20 @@ class MobaEvent:
         for killed in kills:
             killed.deaths += 1
 
-    def calculate_baron(self, team1, team2):
-        pass
+    def calculate_jungle(self, team1, team2, jungle):
+        attack_team, def_team = self._get_probable_team(team1, team2)
 
-    def calculate_dragon(self, team1, team2):
-        pass
+        prevailing_team = random.choices([attack_team, def_team],
+                                         [attack_team.win_prob * abs(self.factor),
+                                          def_team.win_prob * abs(self.factor)])[0]
+
+        for player in prevailing_team.list_players:
+            player.points += self.points / 5
+
+        if prevailing_team == attack_team:
+            print(prevailing_team.name, 'has slain the', jungle, '!')
+        else:
+            print(prevailing_team.name, 'stole the', jungle, '!')
 
     def calculate_tower(self, team1, team2):
         attack_team, def_team, lane = self._get_tower_attributes(team1, team2)
@@ -133,8 +147,28 @@ class MobaEvent:
 
             print(def_team.name, "'s", lane, " tower was successfully defended")
 
-    def calculate_inhib(self, team1, team2, inhib):
-        pass
+    def calculate_inhib(self, team1, team2):
+        if team1.get_exposed_inhibs():
+            attack_team = team2
+            def_team = team1
+        elif team2.get_exposed_inhibs():
+            attack_team = team1
+            def_team = team2
+        else:
+            attack_team, def_team = self._get_probable_team(team1, team2)
+
+        exposed = random.choice(def_team.get_exposed_inhibs())
+
+        prevailing = random.choices([attack_team, def_team], [attack_team.win_prob, def_team.win_prob])[0]
+
+        if prevailing == attack_team:
+            for player in prevailing.list_players:
+                player.points += self.points / 5
+
+            def_team.inhibitors[exposed] -= 1
+        else:
+            for player in prevailing.list_players:
+                player.points += self.points / 10
 
     def calculate_nexus(self, team1, team2, which_nexus):
         pass
@@ -143,18 +177,17 @@ class MobaEvent:
                         team1,
                         team2,
                         which_nexus,
-                        which_inhib
                         ):
         if self.event_name == 'KILL':
             self.calculate_kill(team1, team2)
         if self.event_name == 'BARON':
-            self.calculate_baron(team1, team2)
+            self.calculate_jungle(team1, team2, 'Baron')
         if self.event_name == 'DRAGON':
-            self.calculate_dragon(team1, team2)
+            self.calculate_jungle(team1, team2, 'Dragon')
         if self.event_name == 'TOWER ASSAULT':
             self.calculate_tower(team1, team2)
         if self.event_name == 'INHIB ASSAULT':
-            self.calculate_inhib(team1, team2, which_inhib)
+            self.calculate_inhib(team1, team2)
         if self.event_name == 'NEXUS ASSAULT':
             self.calculate_nexus(team1, team2, which_nexus)
         print(str(self.event_time) + ' ' + self.event_name)
@@ -181,25 +214,26 @@ class MobaEventHandler:
         self.enabled_events = []
         self.event_history = []
 
-    def get_game_state(self, game_time, which_nexus_exposed, inhib_down, towers_number):
+    def get_game_state(self, game_time, which_nexus_exposed, is_any_inhib_open, towers_number):
         if game_time == 0.0:
             self.get_enabled_events(['NOTHING', 'KILL'])
 
         if game_time == 15.0:
             self.get_enabled_events(['TOWER ASSAULT'])
         if towers_number == 0:
-            self.remove_enabled_event(['TOWER ASSAULT'])
+            self.remove_enabled_event('TOWER ASSAULT')
 
         self.check_jungle(game_time, 'BARON')
         self.check_jungle(game_time, 'DRAGON')
 
-        if inhib_down:
+        # TODO: We need to add a Inhibitor Spawn time
+        if is_any_inhib_open:
             self.get_enabled_events(['INHIB ASSAULT'])
         else:
-            self.remove_enabled_event(['INHIB ASSAULT'])
+            self.remove_enabled_event('INHIB ASSAULT')
 
         if which_nexus_exposed is not None:
-            self.get_enabled_events(['NEXUS ASSAULT'])
+            self.get_enabled_events('NEXUS ASSAULT')
 
     def check_jungle(self, game_time, jungle):
         for event in self.events:
@@ -223,7 +257,7 @@ class MobaEventHandler:
     def get_enabled_events(self, names):
         for event in self.events:
             for name in names:
-                if event['name'] == name:
+                if event['name'] == name and event not in self.enabled_events:
                     self.enabled_events.append(event)
 
     def load_commentaries_file(self):

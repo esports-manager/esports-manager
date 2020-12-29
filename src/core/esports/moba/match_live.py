@@ -25,7 +25,6 @@ class MatchLive:
     def __init__(self, match: Match, show_commentary, match_speed, simulate=True):
         self.match = match
         self.game_time = 0.0
-        self.first_blood = False
         self.victorious_team = None
         self.show_commentary = show_commentary
         self.match_speed = match_speed
@@ -75,10 +74,10 @@ class MatchLive:
 
     def is_any_inhib_open(self) -> bool:
         for team in self.match.teams:
-            if team.is_inhib_exposed():
+            open_inhibs = team.get_exposed_inhibs()
+            if open_inhibs:
                 return True
-        else:
-            return False
+        return False
 
     def simulation(self):
         while not self.is_match_over:
@@ -90,8 +89,7 @@ class MatchLive:
             self.event_handler.generate_event(self.game_time)
             self.event_handler.event.calculate_event(self.match.team1,
                                                      self.match.team2,
-                                                     self.which_team_nexus_exposed(),
-                                                     self.is_any_inhib_open())
+                                                     self.which_team_nexus_exposed())
             self.increment_game_time(1)
             # TODO: match sim could be played without generating comments, so players can get instant results
             # probably this implementation without a sleep should do the trick, because it is going to generate stats

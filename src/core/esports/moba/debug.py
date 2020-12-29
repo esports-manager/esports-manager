@@ -22,6 +22,7 @@ from src.core.esports.moba.match_live import initialize_match
 from src.resources.generator.generate_players import MobaPlayerGenerator
 from src.resources.generator.generate_teams import TeamGenerator
 from src.resources.generator.generate_champions import ChampionGenerator
+from src.core.esports.moba.mobaevent import MobaEventHandler
 from src.ui.gui import debug_window, get_team_data
 
 
@@ -48,6 +49,18 @@ def get_match():
 
     return match
 
+def update_info(match, window, data):
+    window.Element('-Team1Table-').update(values=data[0])
+    window.Element('-Team2Table-').update(values=data[1])
+    window.Element('team1skill').update(value=match.match.team1.total_skill)
+    window.Element('team2skill').update(value=match.match.team2.total_skill)
+    window.Element('team1winprob').Update(value=match.match.team1.win_prob)
+    window.Element('team2winprob').Update(value=match.match.team2.win_prob)
+    window.Element('team1towers').Update(value=match.match.team1.towers)
+    window.Element('team2towers').Update(value=match.match.team2.towers)
+    window.Element('team1inhibs').Update(value=match.match.team1.inhibitors)
+    window.Element('team2inhibs').Update(value=match.match.team2.inhibitors)
+    window.refresh()
 
 def match_debugger():
     match = get_match()
@@ -60,6 +73,7 @@ def match_debugger():
         elif event == '-StartMatch-':
             match.is_match_over = False
             match.game_time = 0.0
+            match.event_handler = MobaEventHandler()
             for team in match.match.teams:
                 for player in team.list_players:
                     player.kills = 0
@@ -74,29 +88,19 @@ def match_debugger():
                         "base": 2
                     }
                 )
+                team.inhibitors.update(
+                    {
+                        "top": 1,
+                        "mid": 1,
+                        "bot": 1
+                    }
+                )
             match.simulation()
         elif event == '-NewTeams-':
             match = get_match()
             data = get_team_data(match)
-            window.Element('-Team1Table-').Update(values=data[0])
-            window.Element('-Team2Table-').Update(values=data[1])
-            window.Element('team1skill').Update(value=match.match.team1.total_skill)
-            window.Element('team2skill').Update(value=match.match.team2.total_skill)
-            window.Element('team1winprob').Update(value=match.match.team1.win_prob)
-            window.Element('team2winprob').Update(value=match.match.team2.win_prob)
-            window.Element('team1towers').Update(value=match.match.team1.towers)
-            window.Element('team2towers').Update(value=match.match.team2.towers)
-            window.refresh()
+            update_info(match, window, data)
 
         data = get_team_data(match)
-        window.Element('-Team1Table-').update(values=data[0])
-        window.Element('-Team2Table-').update(values=data[1])
-        window.Element('team1skill').update(value=match.match.team1.total_skill)
-        window.Element('team2skill').update(value=match.match.team2.total_skill)
-        window.Element('team1winprob').Update(value=match.match.team1.win_prob)
-        window.Element('team2winprob').Update(value=match.match.team2.win_prob)
-        window.Element('team1towers').Update(value=match.match.team1.towers)
-        window.Element('team2towers').Update(value=match.match.team2.towers)
-        window.refresh()
-
+        update_info(match, window, data)
     window.close()

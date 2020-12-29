@@ -125,13 +125,13 @@ class MobaEvent:
                     other_player.points += self.points / 5
 
             def_team.towers[lane] -= 1
-            print('Tower in ', lane, ' was destroyed')
+            print(def_team.name, "'s ", lane, " tower was destroyed")
         else:
             # Otherwise the defending team gets points for successfully defending the tower
             for player in def_team.list_players:
                 player.points += self.points / 5
 
-            print('Tower in ', lane, ' was successfully defended')
+            print(def_team.name, "'s", lane, " tower was successfully defended")
 
     def calculate_inhib(self, team1, team2, inhib):
         pass

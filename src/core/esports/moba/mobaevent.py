@@ -17,7 +17,6 @@
 import random
 import uuid
 
-from src.core.esports.moba.moba import Moba
 from src.resources.utils import load_list_from_json
 
 
@@ -119,9 +118,22 @@ class MobaEvent:
 
         # Increases player kill counter and the dead player's death counter, awarding points to the the killer as well
         killer.kills += len(kills)
+        # TODO: if a player is on a killing spree, he should win more points
+        # TODO: the same would happen for a player that kills another that is on a killing spree
         killer.points += len(kills) * self.points
         for killed in kills:
             killed.deaths += 1
+
+        killed_players = [deaths.nick_name for deaths in kills]
+        if amount_kills == 2:
+            print(killer, 'got a Double Kill!')
+        elif amount_kills == 3:
+            print(killer, 'got a Triple Kill!')
+        elif amount_kills == 4:
+            print(killer, 'got a QUADRA KILL!')
+        elif amount_kills == 5:
+            print(killer, 'got a PENTAKILL! HE IS UNSTOPPABLE!')
+        print(killer, 'has slain:', killed_players)
 
     def calculate_jungle(self, team1, team2, jungle):
         """
@@ -247,7 +259,6 @@ class MobaEventHandler:
         """
         Initializes the event handler.
         """
-        self.moba = Moba()
         self.events = load_list_from_json('mobaevents.json')
         self.commentaries = None
         self.event = MobaEvent()

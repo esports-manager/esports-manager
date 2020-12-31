@@ -103,7 +103,7 @@ class MatchLive:
             self.check_match_over()
 
             if not self.is_match_over:
-                self.increment_game_time(0.25)
+                self.increment_game_time(0.5)
 
         self.winning_team()
         print(self.victorious_team, 'Won the match!')

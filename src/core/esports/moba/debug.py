@@ -61,6 +61,8 @@ def update_info(match, window, data):
     window.Element('team2towers').Update(value=match.match.team2.towers)
     window.Element('team1inhibs').Update(value=match.match.team1.inhibitors)
     window.Element('team2inhibs').Update(value=match.match.team2.inhibitors)
+    window.Element('team1name').Update(value=match.match.team1.name)
+    window.Element('team2name').Update(value=match.match.team2.name)
     window.refresh()
 
 

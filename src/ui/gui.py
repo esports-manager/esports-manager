@@ -281,7 +281,7 @@ def get_debug_layout(match: MatchLive = None):
     headings = ['Lane', 'Player Name', 'Kills', 'Deaths', 'Assists', 'Champion', 'Skill']
 
     team1_column = [
-        [esm_form_text(match.match.team1.name),
+        [esm_form_text(match.match.team1.name, key='team1name'),
          esm_form_text(text=str(match.match.team1.total_skill), key='team1skill')],
         [esm_form_text(str(int(match.match.team1.win_prob)), key='team1winprob')],
         [esm_table(data[0], headings=headings, key='-Team1Table-')],
@@ -290,7 +290,7 @@ def get_debug_layout(match: MatchLive = None):
     ]
 
     team2_column = [
-        [esm_form_text(match.match.team2.name),
+        [esm_form_text(match.match.team2.name, key='team2name'),
          esm_form_text(text=str(match.match.team2.total_skill), key='team2skill')],
         [esm_form_text(str(int(match.match.team2.win_prob)), key='team2winprob')],
         [esm_table(data[1], headings=headings, key='-Team2Table-')],

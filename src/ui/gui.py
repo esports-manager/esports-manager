@@ -282,8 +282,8 @@ def get_debug_layout(match: MatchLive = None):
 
     team1_column = [
         [esm_form_text(match.match.team1.name, key='team1name'),
-         esm_form_text(text=str(match.match.team1.total_skill), key='team1skill')],
-        [esm_form_text(str(int(match.match.team1.win_prob)), key='team1winprob')],
+         esm_form_text(text=match.match.team1.total_skill, key='team1skill')],
+        [esm_form_text(match.match.team1.win_prob, key='team1winprob')],
         [esm_table(data[0], headings=headings, key='-Team1Table-')],
         [esm_form_text(match.match.team1.towers, key='team1towers')],
         [esm_form_text(match.match.team1.inhibitors, key='team1inhibs')]
@@ -291,8 +291,8 @@ def get_debug_layout(match: MatchLive = None):
 
     team2_column = [
         [esm_form_text(match.match.team2.name, key='team2name'),
-         esm_form_text(text=str(match.match.team2.total_skill), key='team2skill')],
-        [esm_form_text(str(int(match.match.team2.win_prob)), key='team2winprob')],
+         esm_form_text(text=match.match.team2.total_skill, key='team2skill')],
+        [esm_form_text(match.match.team2.win_prob, key='team2winprob')],
         [esm_table(data[1], headings=headings, key='-Team2Table-')],
         [esm_form_text(match.match.team2.towers, key='team2towers')],
         [esm_form_text(match.match.team2.inhibitors, key='team2inhibs')]

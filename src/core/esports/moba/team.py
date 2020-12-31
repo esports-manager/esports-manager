@@ -41,7 +41,7 @@ class Team:
 
         self.nexus = 1
 
-        self.win_prob = 0
+        self.win_prob = 0.00
 
         # list of players in match
         self.list_players = list_players

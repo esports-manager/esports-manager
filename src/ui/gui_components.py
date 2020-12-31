@@ -64,6 +64,7 @@ def esm_title_text(text='', font=(bold_font, increased_font_size), key=None, pad
 def esm_form_text(text='', font=(default_font, default_font_size), key=None, pad=None, justification='center'):
     return sg.Text(text,
                    key=key,
+                   auto_size_text=True,
                    font=font,
                    pad=pad,
                    justification=justification

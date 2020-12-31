@@ -37,8 +37,13 @@ class MobaEvent:
         self.priority = priority
         self.commentary = self.load_commentary(commentary)
         self.event_time = event_time
-        self.factor = random.gauss(0, 1)
+        self._factor = 0
         self.points = points
+
+    @property
+    def factor(self):
+        self._factor = random.gauss(0, 1)
+        return self._factor
 
     @staticmethod
     def _get_probable_team(team1, team2):
@@ -91,6 +96,56 @@ class MobaEvent:
 
         return attack_team, def_team, chosen_lane
 
+    def choose_duel_players(self, killer, team, amount):
+        duel_players = []
+        random.shuffle(team)
+        for player in team:
+            if killer.get_player_total_skill() >= player.get_player_total_skill():
+                # 68% chance of happening
+                if -1.0 <= self.factor <= 1.0:
+                    duel_players.append(player)
+                    amount -= 1
+            else:
+                # This will have about 30% chance of happening
+                if self.factor >= 1.0 or self.factor <= -1.0:
+                    duel_players.append(player)
+                    amount -= 1
+
+                if amount == 0:
+                    break
+
+        if amount > 0:
+            if duel_players:
+                amount = len(duel_players)
+            else:
+                duel_players.append(random.choice(team))
+
+        return amount, duel_players
+
+    def player_duel(self, player1, player2):
+        killed = 0
+        total_prob = player1.get_player_total_skill() + player2.get_player_total_skill()
+
+        player1_prob = player1.get_player_total_skill() / total_prob
+        player2_prob = 1 - player1_prob
+
+        diff_probs = abs(player1_prob - player2_prob)
+
+        if player1_prob > player2_prob and (
+            -1.0 <= self.factor <= 1.0 or diff_probs >= 0.3
+        ):
+            killed = 1
+        else:
+            if diff_probs <= 0.15 and -1.0 <= self.factor <= 1.0:
+                killed = 1
+
+        if killed == 1:
+            player1.kills += 1
+            player1.points += self.points
+            player2.deaths += 1
+
+        return killed
+
     def calculate_kill(self, team1, team2):
         """
         This will calculate the kill event
@@ -106,25 +161,26 @@ class MobaEvent:
         # TODO: If a player is on a very good form, a pentakill should occur more often
         weight = [0.5, 0.2, 0.1, 0.15, 0.05]
 
-        # Randomly chooses the amount of kills
+        # Randomly chooses the amount of kills that the player is going to attempt
         amount_kills = random.choices([i+1 for i in range(5)], weight)[0]
+
+        if killer in teams[0]:
+            amount_kills, duel_players = self.choose_duel_players(killer, teams[1], amount_kills)
+        else:
+            amount_kills, duel_players = self.choose_duel_players(killer, teams[0], amount_kills)
 
         # TODO: Currently, Assists are not awarded to members of the killer's team. This should be implemented
         # TODO: Before 0.1.0-alpha
-        if killer in teams[0]:
-            kills = random.choices(teams[1], k=amount_kills)
-        else:
-            kills = random.choices(teams[0], k=amount_kills)
-
-        # Increases player kill counter and the dead player's death counter, awarding points to the the killer as well
-        killer.kills += len(kills)
         # TODO: if a player is on a killing spree, he should win more points
         # TODO: the same would happen for a player that kills another that is on a killing spree
-        killer.points += len(kills) * self.points
-        for killed in kills:
-            killed.deaths += 1
+        # The player enters in duel mode against other players, to decide who wins the fight
+        for player in duel_players:
+            killed = self.player_duel(killer, player)
+            if killed == 0:
+                duel_players.remove(player)
 
-        killed_players = [deaths.nick_name for deaths in kills]
+        amount_kills = len(duel_players)
+        killed_players = [deaths.nick_name for deaths in duel_players]
         if amount_kills == 2:
             print(killer, 'got a Double Kill!')
         elif amount_kills == 3:
@@ -133,7 +189,9 @@ class MobaEvent:
             print(killer, 'got a QUADRA KILL!')
         elif amount_kills == 5:
             print(killer, 'got a PENTAKILL! HE IS UNSTOPPABLE!')
-        print(killer, 'has slain:', killed_players)
+
+        if amount_kills != 0:
+            print(killer, 'has slain:', killed_players)
 
     def calculate_jungle(self, team1, team2, jungle):
         """

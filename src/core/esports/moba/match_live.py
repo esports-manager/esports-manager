@@ -54,7 +54,7 @@ class MatchLive:
         )
 
         for team in self.match.teams:
-            team.win_prob = (team.total_skill / total_prob) * 100
+            team.win_prob = team.total_skill / total_prob
 
     def increment_game_time(self, quantity):
         self.game_time += quantity
@@ -71,6 +71,16 @@ class MatchLive:
             return self.match.team2
         else:
             return None
+
+    def check_match_over(self):
+        for team in self.match.teams:
+            if team.nexus == 0:
+                self.is_match_over = True
+
+    def winning_team(self):
+        for team in self.match.teams:
+            if team.nexus == 1:
+                self.victorious_team = team
 
     def is_any_inhib_open(self) -> bool:
         for team in self.match.teams:
@@ -90,12 +100,13 @@ class MatchLive:
             self.event_handler.event.calculate_event(self.match.team1,
                                                      self.match.team2,
                                                      self.which_team_nexus_exposed())
-            self.increment_game_time(1)
-            # TODO: match sim could be played without generating comments, so players can get instant results
-            # probably this implementation without a sleep should do the trick, because it is going to generate stats
-            if self.game_time == 50:
-                self.is_match_over = True
-            # time.sleep(self.match_speed)
+            self.check_match_over()
+
+            if not self.is_match_over:
+                self.increment_game_time(0.25)
+
+        self.winning_team()
+        print(self.victorious_team, 'Won the match!')
 
 
 def initialize_match(team1,

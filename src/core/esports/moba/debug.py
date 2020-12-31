@@ -49,6 +49,7 @@ def get_match():
 
     return match
 
+
 def update_info(match, window, data):
     window.Element('-Team1Table-').update(values=data[0])
     window.Element('-Team2Table-').update(values=data[1])
@@ -61,6 +62,7 @@ def update_info(match, window, data):
     window.Element('team1inhibs').Update(value=match.match.team1.inhibitors)
     window.Element('team2inhibs').Update(value=match.match.team2.inhibitors)
     window.refresh()
+
 
 def match_debugger():
     match = get_match()
@@ -95,6 +97,7 @@ def match_debugger():
                         "bot": 1
                     }
                 )
+                team.nexus = 1
             match.simulation()
         elif event == '-NewTeams-':
             match = get_match()

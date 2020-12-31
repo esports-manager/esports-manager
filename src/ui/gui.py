@@ -269,7 +269,7 @@ def get_team_data(match: MatchLive = None):
                       player.deaths,
                       player.assists,
                       player.champion,
-                      player.get_player_total_skill()] for player in team]
+                      int(player.get_player_total_skill())] for player in team]
         data.append(team_data)
 
     return data

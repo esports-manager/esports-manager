@@ -39,6 +39,8 @@ class Team:
             "bot": 1
         }
 
+        self.nexus = 1
+
         self.win_prob = 0
 
         # list of players in match
@@ -57,6 +59,14 @@ class Team:
 
     def are_all_towers_up(self) -> bool:
         return 0 not in self.towers.values()
+
+    def are_all_towers_down(self) -> bool:
+        return (
+            self.towers['top'] == 0
+            and self.towers['mid'] == 0
+            and self.towers['bot'] == 0
+            and self.towers['base'] == 0
+        )
 
     def is_inhibitor_up(self, lane: str) -> bool:
         return self.inhibitors[lane] != 0
@@ -79,7 +89,7 @@ class Team:
         ]
 
     def is_nexus_exposed(self) -> bool:
-        return self.towers['base'] == 0
+        return self.towers['base'] == 0 and not self.are_all_inhibitors_up()
 
     def are_base_towers_exposed(self) -> bool:
         return not self.are_all_inhibitors_up()
@@ -143,7 +153,7 @@ class Team:
     @property
     def total_skill(self) -> int:
         self._total_skill = 0
-        self._total_skill = ((self.player_overall + self.champion_overall)/2 + self.points) / 5
+        self._total_skill = ((self.player_overall + self.champion_overall) / 5 + self.points)
 
         return int(self._total_skill)
 

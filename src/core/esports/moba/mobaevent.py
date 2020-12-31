@@ -43,6 +43,9 @@ class MobaEvent:
 
     @staticmethod
     def _get_probable_team(team1, team2):
+        """
+        Gets the team with a higher probability to attack the other team
+        """
         attack_team = random.choices([team1, team2], [team1.win_prob, team2.win_prob])[0]
 
         def_team = team2 if team1 == attack_team else team1
@@ -51,10 +54,24 @@ class MobaEvent:
 
     @staticmethod
     def _get_team_players(team1, team2):
+        """
+        Gets all the players from each of the teams
+        """
         return [team1.list_players, team2.list_players]
 
     def _get_tower_attributes(self, team1, team2):
-        attack_team, def_team = self._get_probable_team(team1, team2)
+        """
+        Checks which towers are up, and if they can be attacked. If it is a Base tower,
+        there is a higher chance to focus on it
+        """
+        if team1.are_all_towers_down():
+            attack_team = team1
+            def_team = team2
+        elif team2.are_all_towers_down():
+            attack_team = team2
+            def_team = team1
+        else:
+            attack_team, def_team = self._get_probable_team(team1, team2)
 
         lanes = [lanes for lanes, value in def_team.towers.items() if value != 0]
 
@@ -65,33 +82,36 @@ class MobaEvent:
         for lane, value in def_team.towers.items():
             if lane in lanes:
                 if value == 1:
-                    probs.append(7)
+                    probs.append(0.4)
                 elif value == 2:
-                    probs.append(6)
+                    probs.append(0.3)
                 else:
-                    probs.append(5)
+                    probs.append(0.2)
 
         chosen_lane = random.choices(lanes, weights=probs)[0]
 
         return attack_team, def_team, chosen_lane
 
     def calculate_kill(self, team1, team2):
+        """
+        This will calculate the kill event
+        """
         teams = self._get_team_players(team1, team2)
-
-        # Providing a little randomness for the amount of kills
-        w = [50, 20, 15, 2, 1]
-        weight = [i * abs(self.factor) for i in w]
 
         # Chooses the team from which the killer will come from, most likely the team with the highest win probability
         team_killer = random.choices(teams, [team1.win_prob, team2.win_prob])[0]
         killer = random.choices(team_killer, [player.get_player_total_skill() for player in team_killer])[0]
 
+        # A player is less likely to get a pentakill in a match
+        # TODO: we should in the future try to weight this up with the current player total skill lvl
+        # TODO: If a player is on a very good form, a pentakill should occur more often
+        weight = [0.5, 0.2, 0.1, 0.15, 0.05]
+
         # Randomly chooses the amount of kills
         amount_kills = random.choices([i+1 for i in range(5)], weight)[0]
 
         # TODO: Currently, Assists are not awarded to members of the killer's team. This should be implemented
-        # TODO: Before alpha-0.1.0
-
+        # TODO: Before 0.1.0-alpha
         if killer in teams[0]:
             kills = random.choices(teams[1], k=amount_kills)
         else:
@@ -104,11 +124,14 @@ class MobaEvent:
             killed.deaths += 1
 
     def calculate_jungle(self, team1, team2, jungle):
+        """
+        Calculates the outcome of a major jungle attempt (baron or dragon)
+        """
         attack_team, def_team = self._get_probable_team(team1, team2)
 
         prevailing_team = random.choices([attack_team, def_team],
-                                         [attack_team.win_prob * abs(self.factor),
-                                          def_team.win_prob * abs(self.factor)])[0]
+                                         [attack_team.win_prob,
+                                          def_team.win_prob])[0]
 
         for player in prevailing_team.list_players:
             player.points += self.points / 5
@@ -119,6 +142,9 @@ class MobaEvent:
             print(prevailing_team.name, 'stole the', jungle, '!')
 
     def calculate_tower(self, team1, team2):
+        """
+        This method calculates the tower assault outcome
+        """
         attack_team, def_team, lane = self._get_tower_attributes(team1, team2)
 
         # Chooses which team prevails over the tower assault
@@ -141,9 +167,7 @@ class MobaEvent:
             def_team.towers[lane] -= 1
             print(def_team.name, "'s ", lane, " tower was destroyed")
         else:
-            # Otherwise the defending team gets points for successfully defending the tower
-            for player in def_team.list_players:
-                player.points += self.points / 5
+            # Defending team will not get points for defending the tower anymore
 
             print(def_team.name, "'s", lane, " tower was successfully defended")
 
@@ -166,18 +190,34 @@ class MobaEvent:
                 player.points += self.points / 5
 
             def_team.inhibitors[exposed] -= 1
+            print(def_team.name, "'s", exposed, 'inhibitor was destroyed!')
         else:
-            for player in prevailing.list_players:
-                player.points += self.points / 10
+            print(def_team, "defended their", exposed, "inhibitor!")
 
     def calculate_nexus(self, team1, team2, which_nexus):
-        pass
+        if which_nexus == team1:
+            atk_team = team2
+            def_team = team1
+        elif which_nexus == team2:
+            atk_team = team1
+            def_team = team2
+        else:
+            # gets which team is more likely to attack due to the skill lvl
+            atk_team, def_team = self._get_probable_team(team1, team2)
+
+        prevailing = random.choices([atk_team, def_team], [atk_team.total_skill, def_team.total_skill])[0]
+
+        if prevailing == atk_team:
+            def_team.nexus = 0
 
     def calculate_event(self,
                         team1,
                         team2,
-                        which_nexus,
+                        which_nexus
                         ):
+        """
+        Takes the event to the appropriate function that calculates its outcome.
+        """
         if self.event_name == 'KILL':
             self.calculate_kill(team1, team2)
         if self.event_name == 'BARON':
@@ -233,7 +273,7 @@ class MobaEventHandler:
             self.remove_enabled_event('INHIB ASSAULT')
 
         if which_nexus_exposed is not None:
-            self.get_enabled_events('NEXUS ASSAULT')
+            self.get_enabled_events(['NEXUS ASSAULT'])
 
     def check_jungle(self, game_time, jungle):
         for event in self.events:

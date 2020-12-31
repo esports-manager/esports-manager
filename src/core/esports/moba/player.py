@@ -27,8 +27,7 @@ class Player:
                  last_name: str,
                  birthday: date,
                  nick_name: str,
-                 skill: int,
-                 champions: list):
+                 skill: int):
         self.player_id = player_id
 
         # TODO: players should include team's id as well
@@ -43,8 +42,6 @@ class Player:
 
         # TODO: replace skill by attribute dictionary
         self._skill = skill
-
-        self.champions = champions
 
         # TODO: players should have a "potential" value too. This value tells the game that the player
         # can improve his overall skill to a certain level
@@ -76,7 +73,8 @@ class MobaPlayer(Player):
         self._deaths = 0
         self._assists = 0
         self._points = 0
-        super().__init__(player_id, nationality, first_name, last_name, birthday, nick_name, skill, champions)
+        self.champions = champions
+        super().__init__(player_id, nationality, first_name, last_name, birthday, nick_name, skill)
 
     @property
     def champion(self) -> Champion:
@@ -115,6 +113,10 @@ class MobaPlayer(Player):
     @kills.setter
     def kills(self, kills: int):
         self._kills = kills
+
+    @deaths.setter
+    def deaths(self, deaths: int):
+        self._deaths = deaths
 
     @assists.setter
     def assists(self, assists: int):
@@ -156,7 +158,7 @@ class MobaPlayer(Player):
         return self.champion.skill * mult
 
     def get_player_total_skill(self):
-        return int(self.get_curr_player_skill() + self.get_champion_skill() + self.points)
+        return self.get_curr_player_skill() + self.get_champion_skill() + self.points
 
     def __repr__(self):
         return '{0} {1}'.format(self.__class__.__name__, self.nick_name)

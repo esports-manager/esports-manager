@@ -179,7 +179,8 @@ def create_manager_layout() -> list:
         [esm_title_text('New Game')],
         # TODO: we have to create a check on events to check if the input text fields are larger than 20 characters to
         # avoid abuses
-        [sg.Column(layout=labels, element_justification='left'), sg.Column(layout=controls, element_justification='left')],
+        [sg.Column(layout=labels, element_justification='left'),
+         sg.Column(layout=controls, element_justification='left')],
         # TODO: implement starting season, putting this on hold for 0.1.0-alpha, maybe 0.2.0 should include it?
         # [esm_form_text('Starting Season: '), esm_input_combo([i for i in range(2010, 2021)], key='-Starting Season-')]
         [sg.Column(layout=team_list_frame, element_justification='center'),
@@ -258,29 +259,43 @@ def debug_window(match) -> sg.Window:
 
 
 def get_team_data(match: MatchLive = None):
-    players1 = [player for player in match.match.team1.list_players]
-    players2 = [player for player in match.match.team2.list_players]
+    players = [[player for player in team.list_players] for team in match.match.teams]
 
-    data1 = []
-    data2 = []
-    for player1, player2 in zip(players1, players2):
-        data1.append([player1.lane.name, player1.nick_name, player1.champion, player1.get_player_total_skill()])
-        data2.append([player2.lane.name, player2.nick_name, player2.champion, player2.get_player_total_skill()])
+    data = []
+    for team in players:
+        team_data = [[player.lane.name,
+                      player.nick_name,
+                      player.kills,
+                      player.deaths,
+                      player.assists,
+                      player.champion,
+                      int(player.get_player_total_skill())] for player in team]
+        data.append(team_data)
 
-    return data1, data2
+    return data
 
 
 def get_debug_layout(match: MatchLive = None):
-    data1, data2 = get_team_data(match)
+    data = get_team_data(match)
 
-    headings = ['Lane', 'Player Name', 'Champion', 'Skill']
+    headings = ['Lane', 'Player Name', 'Kills', 'Deaths', 'Assists', 'Champion', 'Skill']
 
-    team1_column = [[esm_form_text('Team 1'), esm_form_text(text=str(match.match.team1.total_skill), key='team1skill')],
-                    [esm_table(data1, headings=headings, key='-Team1Table-')]]
+    team1_column = [
+        [esm_form_text(match.match.team1.name),
+         esm_form_text(text=str(match.match.team1.total_skill), key='team1skill')],
+        [esm_form_text(str(int(match.match.team1.win_prob)), key='team1winprob')],
+        [esm_table(data[0], headings=headings, key='-Team1Table-')],
+        [esm_form_text(match.match.team1.towers, key='team1towers')],
+        [esm_form_text(match.match.team1.inhibitors, key='team1inhibs')]
+    ]
 
     team2_column = [
-        [esm_form_text('Team2'), esm_form_text(text=str(match.match.team2.total_skill), key='team2skill')],
-        [esm_table(data2, headings=headings, key='-Team2Table-')]
+        [esm_form_text(match.match.team2.name),
+         esm_form_text(text=str(match.match.team2.total_skill), key='team2skill')],
+        [esm_form_text(str(int(match.match.team2.win_prob)), key='team2winprob')],
+        [esm_table(data[1], headings=headings, key='-Team2Table-')],
+        [esm_form_text(match.match.team2.towers, key='team2towers')],
+        [esm_form_text(match.match.team2.inhibitors, key='team2inhibs')]
     ]
 
     return [

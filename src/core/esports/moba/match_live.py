@@ -25,7 +25,6 @@ class MatchLive:
     def __init__(self, match: Match, show_commentary, match_speed, simulate=True):
         self.match = match
         self.game_time = 0.0
-        self.first_blood = False
         self.victorious_team = None
         self.show_commentary = show_commentary
         self.match_speed = match_speed
@@ -61,11 +60,7 @@ class MatchLive:
         self.game_time += quantity
 
     def get_tower_number(self):
-        towers = 0
-        for team in self.match.teams:
-            towers += sum(lane for lane in team.towers.values())
-
-        return towers
+        return sum(sum(team.towers.values()) for team in self.match.teams)
 
     def which_team_nexus_exposed(self):
         if self.match.team1.is_nexus_exposed():
@@ -77,27 +72,41 @@ class MatchLive:
         else:
             return None
 
+    def check_match_over(self):
+        for team in self.match.teams:
+            if team.nexus == 0:
+                self.is_match_over = True
+
+    def winning_team(self):
+        for team in self.match.teams:
+            if team.nexus == 1:
+                self.victorious_team = team
+
     def is_any_inhib_open(self) -> bool:
         for team in self.match.teams:
-            if team.is_inhib_exposed():
+            open_inhibs = team.get_exposed_inhibs()
+            if open_inhibs:
                 return True
-        else:
-            return False
+        return False
 
     def simulation(self):
         while not self.is_match_over:
+            self.calculate_both_teams_win_prob()
             self.event_handler.get_game_state(self.game_time,
                                               self.which_team_nexus_exposed(),
                                               self.is_any_inhib_open(),
                                               self.get_tower_number())
             self.event_handler.generate_event(self.game_time)
-            self.event_handler.event.calculate_event()
-            self.increment_game_time(1)
-            # TODO: match sim could be played without generating comments, so players can get instant results
-            # probably this implementation without a sleep should do the trick, because it is going to generate stats
-            if self.game_time == 50:
-                self.is_match_over = True
-            # time.sleep(self.match_speed)
+            self.event_handler.event.calculate_event(self.match.team1,
+                                                     self.match.team2,
+                                                     self.which_team_nexus_exposed())
+            self.check_match_over()
+
+            if not self.is_match_over:
+                self.increment_game_time(0.25)
+
+        self.winning_team()
+        print(self.victorious_team, 'Won the match!')
 
 
 def initialize_match(team1,

@@ -16,7 +16,10 @@
 
 import PySimpleGUI as sg
 
-default_font = 'Liberation Sans'
+default_font = 'Arial'
+bold_font = default_font + ' Bold'
+default_font_size = '12'
+increased_font_size = '18'
 
 
 def create_look_and_feel():
@@ -31,7 +34,7 @@ def create_look_and_feel():
                                           }
 
 
-def esm_button(text='', font=(default_font, '18'), key=None, pad=None, size=(None, None)):
+def esm_button(text='', font=(default_font, '16'), key=None, pad=None, size=(None, None)):
     return sg.Button(text,
                      font=font,
                      key=key,
@@ -43,14 +46,14 @@ def esm_button(text='', font=(default_font, '18'), key=None, pad=None, size=(Non
                      )
 
 
-def esm_output(size=(80, 20), font=default_font, stdout=True):
+def esm_output(size=(80, 12), font=(default_font, default_font_size), stdout=True):
     return sg.Output(size=size,
-                     font=(font, '14'),
+                     font=font,
                      echo_stdout_stderr=stdout
                      )
 
 
-def esm_title_text(text='', font=('Liberation Sans Bold', '18'), key=None, pad=(300, 1)):
+def esm_title_text(text='', font=(bold_font, increased_font_size), key=None, pad=(300, 1)):
     return sg.Text(text,
                    key=key,
                    font=font,
@@ -58,7 +61,7 @@ def esm_title_text(text='', font=('Liberation Sans Bold', '18'), key=None, pad=(
                    )
 
 
-def esm_form_text(text='', font=(default_font, '14'), key=None, pad=None, justification='center'):
+def esm_form_text(text='', font=(default_font, default_font_size), key=None, pad=None, justification='center'):
     return sg.Text(text,
                    key=key,
                    font=font,
@@ -67,7 +70,7 @@ def esm_form_text(text='', font=(default_font, '14'), key=None, pad=None, justif
                    )
 
 
-def esm_input_text(text='', font=(default_font, '14'), border_width=1, key=None, pad=None, size=(30, 1), enable_events=True):
+def esm_input_text(text='', font=(default_font, default_font_size), border_width=1, key=None, pad=None, size=(30, 1), enable_events=True):
     return sg.InputText(text,
                         font=font,
                         background_color='white',
@@ -79,7 +82,7 @@ def esm_input_text(text='', font=(default_font, '14'), border_width=1, key=None,
                         )
 
 
-def esm_input_combo(values=None, font=(default_font, '14'), key=None, pad=None, size=(15, 1), enable_events=True):
+def esm_input_combo(values=None, font=(default_font, default_font_size), key=None, pad=None, size=(15, 1), enable_events=True):
     return sg.InputCombo(values=values,
                          font=font,
                          background_color='white',
@@ -91,7 +94,7 @@ def esm_input_combo(values=None, font=(default_font, '14'), key=None, pad=None, 
 
 
 def esm_listbox(values=None,
-                font=(default_font, '14'),
+                font=(default_font, default_font_size),
                 default_values=[],
                 select_mode=sg.LISTBOX_SELECT_MODE_SINGLE,
                 key=None,
@@ -118,7 +121,7 @@ def esm_table(values,
               justification='left',
               num_rows=15,
               display_row_numbers=False,
-              font=(default_font, '14'),
+              font=(default_font, default_font_size),
               enable_events=True
               ):
     return sg.Table(values=values,
@@ -138,7 +141,7 @@ def esm_calendar_button(button_text='Calendar',
                         close_when_date_chosen=True,
                         default_date_m_d_y=(1, 1, 1995),
                         size=(None, None),
-                        font=(default_font, '14'),
+                        font=(default_font, default_font_size),
                         auto_size_button=None,
                         border_width=0,
                         title='Choose date of birth',

@@ -39,6 +39,8 @@ class Team:
             "bot": 1
         }
 
+        self.nexus = 1
+
         self.win_prob = 0
 
         # list of players in match
@@ -58,13 +60,21 @@ class Team:
     def are_all_towers_up(self) -> bool:
         return 0 not in self.towers.values()
 
+    def are_all_towers_down(self) -> bool:
+        return (
+            self.towers['top'] == 0
+            and self.towers['mid'] == 0
+            and self.towers['bot'] == 0
+            and self.towers['base'] == 0
+        )
+
     def is_inhibitor_up(self, lane: str) -> bool:
         return self.inhibitors[lane] != 0
 
     def are_all_inhibitors_up(self) -> bool:
         return 0 not in self.inhibitors.values()
 
-    def is_inhib_exposed(self) -> bool:
+    def are_inhibs_exposed(self) -> bool:
         return (
             self.towers['top'] == 0
             or self.towers['mid'] == 0
@@ -72,10 +82,14 @@ class Team:
         )
 
     def get_exposed_inhibs(self):
-        return [lane for lane, num in self.inhibitors.items() if num == 0]
+        return [
+            lane
+            for lane, num in self.towers.items()
+            if num == 0 and lane != 'base' and self.inhibitors[lane] != 0
+        ]
 
     def is_nexus_exposed(self) -> bool:
-        return self.towers['base'] == 0
+        return self.towers['base'] == 0 and not self.are_all_inhibitors_up()
 
     def are_base_towers_exposed(self) -> bool:
         return not self.are_all_inhibitors_up()
@@ -130,17 +144,16 @@ class Team:
     def champion_overall(self) -> int:
         self._champion_overall = 0
 
-        self._champion_overall = sum(
+        self._champion_overall = int(sum(
             player.get_champion_skill() for player in self.list_players
-        )
-
-        self._champion_overall = int(self._champion_overall)
+        ))
 
         return self._champion_overall
 
     @property
     def total_skill(self) -> int:
-        self._total_skill = self.player_overall + self.champion_overall + self.points
+        self._total_skill = 0
+        self._total_skill = ((self.player_overall + self.champion_overall) / 5 + self.points)
 
         return int(self._total_skill)
 

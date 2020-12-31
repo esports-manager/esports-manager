@@ -26,10 +26,7 @@ class MobaEventType(Enum):
     Defines the types of events that can occur during a match
     """
     NOTHING = 0
-    LANE_FARM = auto()
-    GANK = auto()
-    LANE_FIGHT = auto()
-    TEAM_FIGHT = auto()
+    KILL = auto()
     TOWER_ASSAULT = auto()
     JG_DRAGON = auto()
     JG_BARON = auto()

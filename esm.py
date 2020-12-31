@@ -14,7 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#import PySimpleGUI as sg
+# import PySimpleGUI as sg
 
 # from src.ui.gui import app, debug_window
 from src.resources.utils import find_file
@@ -25,7 +25,7 @@ from src.core.esports.moba.debug import match_debugger
 
 
 def generation():
-    num_players = 3500
+    num_players = 400
     num_teams = int(num_players / 5)
 
     champions = ChampionGenerator()

@@ -16,6 +16,8 @@ The game is still not ready to be played. Many features are yet to be implemente
 
 ## HOW TO RUN THE DEBUG VERSION
 
+![Debug Match](src/resources/images/debug_match_screen.PNG)
+
 To run the debug version first you need to have Python 3 installed. Probably this game should work with Python 3.8+, I don't know if it works with Python 3.6 or lower, but from what I remember, some functions that I use were only implemented in 3.8. Currently testing on 3.9 and it is working.
 
 To manage dependencies, we use Pipenv. To install pipenv:

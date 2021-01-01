@@ -15,6 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import random
+import time
 
 from src.core.esports.moba.match import Match
 from src.core.esports.moba.mobaevent import MobaEventHandler
@@ -90,6 +91,9 @@ class MatchLive:
         return False
 
     def simulation(self):
+        if self.show_commentary:
+            self.event_handler.load_commentaries_file()
+
         while not self.is_match_over:
             self.calculate_both_teams_win_prob()
             self.event_handler.get_game_state(self.game_time,
@@ -105,6 +109,9 @@ class MatchLive:
             if not self.is_match_over:
                 self.increment_game_time(0.5)
 
+            if self.simulate:
+                time.sleep(self.match_speed)
+
         self.winning_team()
         print(self.victorious_team, 'Won the match!')
 
@@ -115,9 +122,8 @@ def initialize_match(team1,
     """
     Instantiate each object that is going to be used by the match, returning
     the match object.
-    :param team1_id:
-    :param team2_id:
-    :param match_id:
+    :param team1:
+    :param team2:
     :param ch_id:+
     :return:
     """

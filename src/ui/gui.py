@@ -261,6 +261,10 @@ def debug_window(match) -> sg.Window:
 def get_team_data(match: MatchLive = None):
     players = [[player for player in team.list_players] for team in match.match.teams]
 
+    # The event handler shuffles players, let's keep their order straight up
+    for team in players:
+        team.sort(key=lambda x: x.lane.value)
+
     data = []
     for team in players:
         team_data = [[player.lane.name,

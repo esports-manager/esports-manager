@@ -13,7 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+import threading
 import random
 import PySimpleGUI as sg
 import uuid
@@ -24,6 +24,13 @@ from src.resources.generator.generate_teams import TeamGenerator
 from src.resources.generator.generate_champions import ChampionGenerator
 from src.core.esports.moba.mobaevent import MobaEventHandler
 from src.ui.gui import debug_window, get_team_data
+
+
+def match_simulation_thread(match, window):
+    match.simulation()
+    window.write_event_value('MATCH SIMULATED', 'DONE')
+    window.Element('-StartMatch-').Update(disabled=False)
+    window.Element('-NewTeams-').Update(disabled=False)
 
 
 def get_match():
@@ -71,9 +78,11 @@ def match_debugger():
     window = debug_window(match)
 
     while True:
-        event, values = window.read()
+        event, values = window.read(timeout=100)
+
         if event in [sg.WINDOW_CLOSED, 'exit_main']:
             break
+
         elif event == '-StartMatch-':
             match.is_match_over = False
             match.game_time = 0.0
@@ -100,7 +109,14 @@ def match_debugger():
                     }
                 )
                 team.nexus = 1
-            match.simulation()
+            try:
+                thread = threading.Thread(target=match_simulation_thread, args=(match, window), daemon=True)
+                thread.start()
+                window.Element('-StartMatch-').Update(disabled=True)
+                window.Element('-NewTeams-').Update(disabled=True)
+            except Exception as e:
+                print('Error starting thread.')
+
         elif event == '-NewTeams-':
             match = get_match()
             data = get_team_data(match)

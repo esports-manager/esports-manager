@@ -155,10 +155,10 @@ class MobaPlayer(Player):
             if champion['id'] == self.champion.champion_id:
                 mult = champion['mult']
                 break
-        return self.champion.skill * mult
+        return (0.5 * self.champion.skill) + (0.5 * self.champion.skill * mult)
 
     def get_player_total_skill(self):
-        return self.get_curr_player_skill() + self.get_champion_skill() + self.points
+        return (self.get_curr_player_skill() + self.get_champion_skill())/2 + self.points
 
     def __repr__(self):
         return '{0} {1}'.format(self.__class__.__name__, self.nick_name)

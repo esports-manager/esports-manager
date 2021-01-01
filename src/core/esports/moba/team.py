@@ -153,7 +153,7 @@ class Team:
     @property
     def total_skill(self) -> int:
         self._total_skill = 0
-        self._total_skill = ((self.player_overall + self.champion_overall) / 5 + self.points)
+        self._total_skill = ((self.player_overall + self.champion_overall) / 10 + self.points)
 
         return int(self._total_skill)
 

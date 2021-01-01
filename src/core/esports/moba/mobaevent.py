@@ -136,7 +136,7 @@ class MobaEvent:
         ):
             killed = 1
         else:
-            if diff_probs <= 0.15 and -1.0 <= self.factor <= 1.0:
+            if diff_probs <= 0.15 and -0.5 <= self.factor <= 0.5:
                 killed = 1
 
         if killed == 1:
@@ -159,7 +159,7 @@ class MobaEvent:
         # A player is less likely to get a pentakill in a match
         # TODO: we should in the future try to weight this up with the current player total skill lvl
         # TODO: If a player is on a very good form, a pentakill should occur more often
-        weight = [0.5, 0.2, 0.1, 0.15, 0.05]
+        weight = [0.5, 0.2, 0.185, 0.1, 0.015]
 
         # Randomly chooses the amount of kills that the player is going to attempt
         amount_kills = random.choices([i+1 for i in range(5)], weight)[0]
@@ -232,7 +232,7 @@ class MobaEvent:
             # Other players are awarded points as well, but reduced number of points
             for other_player in prevailing.list_players:
                 if other_player != player:
-                    other_player.points += self.points / 5
+                    other_player.points += self.points / 4
 
             def_team.towers[lane] -= 1
             print(def_team.name, "'s ", lane, " tower was destroyed")

@@ -111,8 +111,8 @@ class MobaEvent:
                     duel_players.append(player)
                     amount -= 1
 
-                if amount == 0:
-                    break
+            if amount == 0:
+                break
 
         if amount > 0:
             if duel_players:
@@ -159,7 +159,7 @@ class MobaEvent:
         # A player is less likely to get a pentakill in a match
         # TODO: we should in the future try to weight this up with the current player total skill lvl
         # TODO: If a player is on a very good form, a pentakill should occur more often
-        weight = [0.5, 0.2, 0.185, 0.1, 0.015]
+        weight = [0.5, 0.2, 0.15, 0.1, 0.05]
 
         # Randomly chooses the amount of kills that the player is going to attempt
         amount_kills = random.choices([i+1 for i in range(5)], weight)[0]

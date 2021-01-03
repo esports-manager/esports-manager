@@ -36,7 +36,9 @@ class MobaPlayerGenerator:
                  min_age: int = 16,
                  max_age: int = 25,
                  lane: int = 0,
-                 champions_list: list = []):
+                 champions_list=None):
+        if champions_list is None:
+            champions_list = []
         self.player_id = None
         self.first_name = None
         self.last_name = None

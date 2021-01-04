@@ -45,7 +45,17 @@ class MatchLive:
         for team in self.match.teams:
             for player in team.list_players:
                 player.get_default_lane()
-                champion = random.choice(self.champions.champions_obj)
+                chs = [ch for ch in player.champions]
+                chs.sort(key=lambda x: x['mult'], reverse=True)
+
+                champions = []
+                for ch in chs:
+                    for champ in self.champions.champions_obj:
+                        if ch['id'] == champ.champion_id:
+                            champions.append(champ)
+                            break
+
+                champion = champions[0]
                 self.champions.champions_obj.remove(champion)
                 player.champion = champion
 

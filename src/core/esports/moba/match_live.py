@@ -23,6 +23,15 @@ from src.resources.generator.generate_champions import ChampionGenerator
 
 
 class MatchLive:
+    """
+    The MatchLive class is the one that contains information about the live match events.
+    It receives a Match object with all the information from teams and players, and defines all the other
+    match simulation details.
+
+    The simulation, however, is delegated to the MobaEventHandler object, that can only look to events and the
+    current game state. The MatchLive only provides needed information for the simulation to take place, and
+    in the end gets the winning team from the EventHandler.
+    """
     def __init__(self, match: Match, show_commentary, match_speed, simulate=True):
         self.match = match
         self.game_time = 0.0
@@ -45,6 +54,10 @@ class MatchLive:
 
 
     def calculate_both_teams_win_prob(self) -> None:
+        """
+        Calculates both teams Win probabilities. This is used for internal match simulation calculations. The winning
+        team will always have a significant advantage over the losing team.
+        """
         total_prob = sum(
             team.total_skill for team in self.match.teams
         )
@@ -53,12 +66,22 @@ class MatchLive:
             team.win_prob = team.total_skill / total_prob
 
     def increment_game_time(self, quantity):
+        """
+        Defines how slowly time passes on the match. I found 0.5 to be the most realistic time simulation.
+        """
         self.game_time += quantity
 
     def get_tower_number(self):
+        """
+        Gets the amount of towers in the game. If neither team has any towers, the game stops trying to generate the
+        Tower Assault events.
+        """
         return sum(sum(team.towers.values()) for team in self.match.teams)
 
     def which_team_nexus_exposed(self):
+        """
+        Gets the exposed nexus from one or both of the teams.
+        """
         if self.match.team1.is_nexus_exposed():
             if self.match.team2.is_nexus_exposed():
                 return self.match.team1, self.match.team2
@@ -69,16 +92,25 @@ class MatchLive:
             return None
 
     def check_match_over(self):
+        """
+        Checks if one of the nexus is down and terminates the simulation
+        """
         for team in self.match.teams:
             if team.nexus == 0:
                 self.is_match_over = True
 
     def winning_team(self):
+        """
+        Assigns the winner to the team that still has the nexus up
+        """
         for team in self.match.teams:
             if team.nexus == 1:
                 self.victorious_team = team
 
     def is_any_inhib_open(self) -> bool:
+        """
+        Checks for open inhibitors, to decide whether a base tower or nexus can be attacked
+        """
         for team in self.match.teams:
             open_inhibs = team.get_exposed_inhibs()
             if open_inhibs:
@@ -86,6 +118,9 @@ class MatchLive:
         return False
 
     def simulation(self):
+        """
+        The simulation itself.
+        """
         if self.show_commentary:
             self.event_handler.load_commentaries_file()
 

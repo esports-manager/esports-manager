@@ -248,7 +248,11 @@ def debug_window(match) -> sg.Window:
     create_look_and_feel()
     sg.theme('EsmTheme')
 
-    layout = get_debug_layout(match)
+    layout1 = sg.Column(get_debug_layout(match), visible=False, element_justification='center')
+    layout2 = sg.Column(picks_and_bans_layout(match), visible=True, element_justification='center')
+
+    layout = [[sg.Pane([layout1, layout2], relief=sg.RELIEF_FLAT, show_handle=False)]]
+
     return sg.Window(
         'eSports Manager',
         element_justification='center',
@@ -308,4 +312,43 @@ def get_debug_layout(match: MatchLive = None):
          sg.Column(layout=team2_column, element_justification='center')],
         [esm_output()],
         [esm_button('Start Match', key='-StartMatch-'), esm_button('New Teams', key='-NewTeams-')]
+    ]
+
+
+def picks_and_bans_layout(match: MatchLive = None):
+    players = [[player for player in team.list_players] for team in match.match.teams]
+
+    data = []
+    for team in players:
+        team_data = [[player.lane.name,
+                      player.nick_name,
+                      int(player.get_player_total_skill()),
+                      player.champion,
+                      ] for player in team]
+        data.append(team_data)
+
+    champions_names = [champion.name for champion in match.champions.champions_obj]
+
+    headings = ['Lane', 'Player', 'Skill', 'Champion']
+
+    team1_column = [
+        [esm_form_text(match.match.team1.name, key='team1namepicks')],
+        [esm_table(data[0], headings=headings, key='-Team1PicksBans')]
+    ]
+
+    team2_column = [
+        [esm_form_text(match.match.team2.name, key='team2namepicks')],
+        [esm_table(data[1], headings=headings, key='-Team2PicksBans')]
+    ]
+
+    champion_column = [
+        [esm_listbox(champions_names, key='champions_pick_ban')]
+    ]
+
+    return [
+        [esm_title_text('Debug Picks Bans')],
+        [sg.Column(layout=team1_column, element_justification='center'),
+         sg.Column(layout=champion_column, element_justification='center'),
+         sg.Column(layout=team2_column, element_justification='center')],
+        [esm_button('Pick', key='Pick')]
     ]

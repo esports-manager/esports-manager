@@ -14,45 +14,22 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# import PySimpleGUI as sg
-
-# from src.ui.gui import app, debug_window
-from src.resources.utils import find_file
-from src.resources.generator.generate_champions import ChampionGenerator
-from src.resources.generator.generate_teams import TeamGenerator
-from src.resources.generator.generate_players import MobaPlayerGenerator
-from src.core.esports.moba.debug import match_debugger
+from src.core.core import Core
+from src.ui.gui import GUI
 
 
-def generation():
-    num_players = 400
-    num_teams = int(num_players / 5)
+class ESM:
+    def __init__(self):
+        self.core = Core()
+        self.gui = GUI(self)
 
-    champions = ChampionGenerator()
-    champions.get_champion_names()
-    champions.create_champions_list()
-    player_gen = MobaPlayerGenerator(lane=0, champions_list=champions.champions_obj)
-    player_gen.generate_players(num_players)
-    team_gen = TeamGenerator(players=player_gen.players, organized=True, amount=num_teams)
-    team_gen.generate_teams()
+    def initialize_modules(self):
+        pass
 
-    champions.generate_file()
-    player_gen.generate_file()
-    team_gen.generate_file()
-
-
-def debug_match():
-    match_debugger()
+    def app(self):
+        pass
 
 
 if __name__ == '__main__':
-    # try:
-    #     find_file('champions.json')
-    #     find_file('players.json')
-    #     find_file('teams.json')
-    # except FileNotFoundError():
-    #     generation()
-
-    generation()
-
-    debug_match()
+    esm = ESM()
+    esm.app()

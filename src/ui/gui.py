@@ -21,15 +21,70 @@ import PySimpleGUI as sg
 from src.core.esports.moba.match_live import MatchLive
 from src.resources import RES_DIR
 from src.resources.utils import find_file
-from src.ui.gui_components import esm_button, esm_form_text, create_look_and_feel, \
-    esm_input_text, esm_input_combo, esm_title_text, esm_listbox, esm_table, esm_calendar_button, esm_output
+from src.ui.gui_components import *
 
 
-def encode_icon() -> bytes:
-    with open(find_file('esportsmanagertrophy.png', folder=RES_DIR), 'rb') as fp:
-        encoded_icon = base64.b64encode(fp.read())
+class GUI:
+    def __init__(self, controller):
+        self.controller = controller
+        self.icon = 'esportsmanagertrophy.png'
+        self.layouts = self._get_layouts()
+        self.window = self._create_window()
 
-    return encoded_icon
+    def _encode_icon(self) -> bytes:
+        with open(find_file(self.icon, folder=RES_DIR), 'rb') as fp:
+            encoded_icon = base64.b64encode(fp.read())
+
+        return encoded_icon
+
+    def _create_window(self) -> sg.Window:
+        """
+        Creates the main Window using PySimpleGUI, and assigns the eSM icon to it.
+        It uses the get_layouts() function to get a list of layouts used in this software.
+        :return: the window PySimpleGUI object
+        """
+
+        encoded_icon = self._encode_icon()
+        create_look_and_feel()
+        sg.theme('EsmTheme')
+        return sg.Window(
+            'eSports Manager',
+            element_justification='center',
+            layout=self.layouts,
+            # size=(900, 800),
+            icon=encoded_icon,
+            resizable=True,
+        )
+
+    def _get_layouts(self) -> list:
+        """
+        Gets all the layouts and makes them all invisible, except for the main screen one.
+        This function gets called in the beginning of the game's execution.
+        :return:
+        """
+        col_main_screen = sg.Column(main_screen(),
+                                    key='main_screen',
+                                    element_justification="center"
+                                    )
+
+        col_create_manager = sg.Column(create_manager_layout(),
+                                       key='create_manager',
+                                       visible=False,
+                                       element_justification="center"
+                                       )
+
+        col_load_game = sg.Column(load_game_layout(),
+                                  key='load_game',
+                                  visible=False,
+                                  element_justification="center"
+                                  )
+
+        return [
+            [sg.Pane([col_main_screen,
+                      col_create_manager,
+                      col_load_game],
+                     relief=sg.RELIEF_FLAT, show_handle=False)]
+        ]
 
 
 def get_player_names(value: str, teams) -> list:
@@ -73,26 +128,6 @@ def app() -> None:
         print(v[0])
 
     window.close()
-
-
-def create_window() -> sg.Window:
-    """
-    Creates the main Window using PySimpleGUI, and assigns the eSM icon to it.
-    It uses the get_layouts() function to get a list of layouts used in this software.
-    :return: the window PySimpleGUI object
-    """
-
-    icon_path = encode_icon()
-    create_look_and_feel()
-    sg.theme('EsmTheme')
-    return sg.Window(
-        'eSports Manager',
-        element_justification='center',
-        layout=get_layouts(),
-        # size=(900, 800),
-        icon=icon_path,
-        resizable=True,
-    )
 
 
 def main_screen() -> list:
@@ -208,38 +243,6 @@ def load_game_layout() -> list:
         [esm_button('Cancel', key='cancel_load', size=(10, 1)),
          esm_button('Load Game', key='load_game_btn', size=(10, 1))]
     ]
-
-
-def get_layouts() -> list:
-    """
-    Gets all the layouts and makes them all invisible, except for the main screen one.
-    This function gets called in the beginning of the game's execution.
-    :return:
-    """
-    col_main_screen = sg.Column(main_screen(),
-                                key='main_screen',
-                                element_justification="center"
-                                )
-
-    col_create_manager = sg.Column(create_manager_layout(),
-                                   key='create_manager',
-                                   visible=False,
-                                   element_justification="center"
-                                   )
-
-    col_load_game = sg.Column(load_game_layout(),
-                              key='load_game',
-                              visible=False,
-                              element_justification="center"
-                              )
-
-    return [
-        [sg.Pane([col_main_screen,
-                  col_create_manager,
-                  col_load_game],
-                 relief=sg.RELIEF_FLAT, show_handle=False)]
-    ]
-
 
 # debugging
 def debug_window(match) -> sg.Window:

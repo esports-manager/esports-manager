@@ -13,17 +13,65 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import math
+import PySimpleGUI as sg
 
-class ESM:
-    """
-    This class will be the core eSports Manager module. It manages the games modules,
-    connecting them to a single place.
-    """
+from src.resources.generator.generate_players import MobaPlayerGenerator
+from src.resources.generator.generate_teams import TeamGenerator
+from src.resources.generator.generate_champions import ChampionGenerator
+from src.core.esports.moba.championship import Championship
+from src.ui.gui import GUI
+from src.core.esports.moba.match import Match
+from src.core.esports.moba.match_live import MatchLive
+
+
+class Core:
     def __init__(self):
-        pass
+        self.amount_players = 400
+        self.amount_teams = math.floor(self.amount_players / 5)
+        self.champions = ChampionGenerator()
+        self.champions.get_champion_names()
+        self.players = MobaPlayerGenerator()
+        self.teams = TeamGenerator()
 
-    def initialize_ui(self):
-        pass
+        self.match = None
+        self.matches = []
 
-    def app(self):
+        self.match_simulation = None
+
+        self.championship = None
+
+    def generate_all(self):
+        self.champions.get_champion_names()
+        self.players.champions_list = self.champions.create_champions_list()
+
+        self.players.lane = 0
+        self.players.generate_players(amount=self.amount_players)
+
+        self.teams.amount = self.amount_teams
+        self.teams.generate_teams()
+
+        self.teams.generate_file()
+        self.champions.generate_file()
+        self.players.generate_file()
+
+    def get_players(self):
+        self.players.get_players_objects()
+        return self.players.players
+
+    def get_teams(self):
+        self.teams.get_teams_objects()
+        return self.teams.teams
+
+    def get_champions(self):
+        self.champions.get_champions()
+        return self.champions.champions_obj
+
+    def initialize_match(self, championship_id, team1, team2):
+        self.match = Match(championship_id=championship_id, team1=team1, team2=team2)
+
+    def initialize_match_simulation(self, match, show_commentary, match_speed, sim):
+        self.match_simulation = MatchLive(match, show_commentary=show_commentary, match_speed=match_speed, simulate=sim)
+
+    def get_championship(self):
         pass

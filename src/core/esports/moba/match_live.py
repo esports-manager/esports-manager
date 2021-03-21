@@ -51,7 +51,12 @@ class MatchLive:
         with a general implementation that can be used regardless of the UI.
         """
         self.champions.get_champions()
-
+        for team in self.match.teams:
+            for player in team.list_players:
+                player.get_default_lane()
+                champion = random.choice(self.champions.champions_obj)
+                self.champions.champions_obj.remove(champion)
+                player.champion = champion
 
     def calculate_both_teams_win_prob(self) -> None:
         """
@@ -154,7 +159,7 @@ def initialize_match(team1,
     the match object.
     :param team1:
     :param team2:
-    :param ch_id:+
+    :param ch_id:
     :return:
     """
 

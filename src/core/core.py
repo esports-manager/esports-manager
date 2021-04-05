@@ -14,6 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import math
+import threading
 
 from src.resources.generator.generate_players import MobaPlayerGenerator
 from src.resources.generator.generate_teams import TeamGenerator

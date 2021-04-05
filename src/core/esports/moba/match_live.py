@@ -124,7 +124,7 @@ class MatchLive:
 
     def simulation(self):
         """
-        The simulation itself.
+        Match simulation method. Starts the while loop.
         """
         if self.show_commentary:
             self.event_handler.load_commentaries_file()

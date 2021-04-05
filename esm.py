@@ -15,21 +15,20 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from src.core.core import Core
-from src.ui.gui import GUI
+from src.ui.gui import View
 
 
 class ESM:
     def __init__(self):
         self.core = Core()
-        self.gui = GUI(self)
+        self.view = View(self)
 
     def initialize_modules(self):
         pass
 
     def app(self):
-        pass
+        self.view.start()
 
 
-if __name__ == '__main__':
-    esm = ESM()
-    esm.app()
+esm = ESM()
+esm.app()

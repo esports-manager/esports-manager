@@ -23,7 +23,6 @@ from src.resources.generator.generate_players import MobaPlayerGenerator
 from src.resources.generator.generate_teams import TeamGenerator
 from src.resources.generator.generate_champions import ChampionGenerator
 from src.core.esports.moba.mobaevent import MobaEventHandler
-from src.ui.gui import debug_window, get_team_data
 
 
 def match_simulation_thread(match, window):

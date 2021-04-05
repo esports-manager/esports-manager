@@ -14,13 +14,11 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import math
-import PySimpleGUI as sg
 
 from src.resources.generator.generate_players import MobaPlayerGenerator
 from src.resources.generator.generate_teams import TeamGenerator
 from src.resources.generator.generate_champions import ChampionGenerator
 from src.core.esports.moba.championship import Championship
-from src.ui.gui import GUI
 from src.core.esports.moba.match import Match
 from src.core.esports.moba.match_live import MatchLive
 

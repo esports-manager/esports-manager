@@ -14,6 +14,8 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import threading
+
 from src.core.core import Core
 from src.ui.gui import View
 
@@ -23,8 +25,16 @@ class ESM:
         self.core = Core()
         self.view = View(self)
 
-    def initialize_modules(self):
-        pass
+    def start_match_sim(self, window):
+        self.core.match_simulation.simulation()
+        window.write_event_value('MATCH SIMULATED', 'DONE')
+
+    def start_match_sim_thread(self, window):
+        try:
+            thread = threading.Thread(target=self.start_match_sim, args=(window))
+            thread.start()
+        except Exception as e:
+            print('Error starting thread.')
 
     def app(self):
         self.view.start()

@@ -18,10 +18,6 @@ class Team:
     def __init__(self, team_id, name, list_players):
         """
         Initiates the team object.
-
-        Arguments:
-            name {string} -- team name.
-            list_players {list<Player>} -- list of players
         """
         self._points = 0
         self.team_id = team_id
@@ -153,7 +149,7 @@ class Team:
     @property
     def total_skill(self) -> int:
         self._total_skill = 0
-        self._total_skill = ((self.player_overall + self.champion_overall) / 10 + self.points)
+        self._total_skill = (((self.player_overall + self.champion_overall) / 10) + self.points)
 
         return int(self._total_skill)
 

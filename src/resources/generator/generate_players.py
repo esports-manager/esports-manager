@@ -36,7 +36,8 @@ class MobaPlayerGenerator:
                  min_age: int = 16,
                  max_age: int = 25,
                  lane: int = 0,
-                 champions_list=None):
+                 champions_list: list = None,
+                 file_name: str = 'players.json'):
         if champions_list is None:
             champions_list = []
         self.player_id = None
@@ -63,8 +64,14 @@ class MobaPlayerGenerator:
         self.players = []
         self.players_dict = []
         self.player_dict = None
-        self.file_name = 'players.json'
+        self.file_name = file_name
+        self.names = None
+        self.nick_names = None
+
+    def get_names(self):
         self.names = load_list_from_json('names.json')
+
+    def get_nick_names(self):
         self.nick_names = get_list_from_file('nicknames.txt')
 
     def generate_id(self):
@@ -83,10 +90,10 @@ class MobaPlayerGenerator:
         """
         year = timedelta(seconds=31556952)  # definition of a Gregorian calendar date
 
-        max_age = 25 * year  # players should be a max of 25 years old
-        min_age = 16 * year  # players can't be less than 16 years old
-        min_year = self.td - max_age  # minimum date for birthday
-        max_year = self.td - min_age  # max date for birthday
+        max_age = self.max_age * year       # players should be a max of self.max_age years old
+        min_age = self.min_age * year       # players can't be less than self.min_age years old
+        min_year = self.td - max_age        # minimum date for birthday
+        max_year = self.td - min_age        # max date for birthday
 
         days_interval = max_year - min_year
         rand_date = random.randrange(days_interval.days)
@@ -102,9 +109,9 @@ class MobaPlayerGenerator:
 
         for champion in self.champions_list:
             champion_dict = {}
-            multip = random.randrange(50, 100) / 100
+            mult = random.randrange(50, 100) / 100
             champion_dict['id'] = champion.champion_id
-            champion_dict['mult'] = multip
+            champion_dict['mult'] = mult
             self.champions.append(champion_dict)
 
     def generate_skill(self):
@@ -205,6 +212,10 @@ class MobaPlayerGenerator:
         """
         Runs the player generation routine
         """
+        if self.names is None:
+            self.get_names()
+        if self.nick_names is None:
+            self.get_nick_names()
         self.generate_id()
         self.get_nationality()
         self.generate_name()

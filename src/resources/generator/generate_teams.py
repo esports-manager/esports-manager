@@ -31,21 +31,25 @@ class TeamGenerator:
                  nationality: str = None,
                  amount: int = 1,
                  players: list = None,
-                 organized: bool = True):
+                 organized: bool = True,
+                 file_name: str = 'teams.json'):
         self.name = None
         self.nationality = nationality
         self.logo = None
         self.team_id = None
-        self.file_name = 'teams.json'
+        self.file_name = file_name
         self.teams = []
         self.teams_dict = []
         self.team_dict = None
         self.team_obj = None
         self.player_list = players
         self.roster = None
-        self.names = get_list_from_file('team_names.txt')
+        self.names = None
         self.amount = amount
         self.organized = organized
+
+    def get_names(self):
+        self.names = get_list_from_file('team_names.txt')
 
     def generate_id(self):
         """
@@ -131,6 +135,8 @@ class TeamGenerator:
         """
         Runs the team generation routine
         """
+        if self.names is None:
+            self.get_names()
         self.generate_id()
         self.generate_name()
         self.generate_roster()

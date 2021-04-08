@@ -43,12 +43,14 @@ class Core:
 
     def generate_all(self):
         self.champions.get_champion_names()
-        self.players.champions_list = self.champions.create_champions_list()
+        self.champions.create_champions_list()
+        self.players.champions_list = self.champions.champions_obj
 
         self.players.lane = 0
         self.players.generate_players(amount=self.amount_players)
 
         self.teams.amount = self.amount_teams
+        self.teams.player_list = self.players.players
         self.teams.generate_teams()
 
         self.teams.generate_file()
@@ -78,8 +80,8 @@ class Core:
     def initialize_match(self, championship_id, team1, team2):
         self.match = Match(championship_id=championship_id, team1=team1, team2=team2)
 
-    def initialize_match_simulation(self, match, show_commentary, match_speed, sim):
-        self.match_simulation = MatchLive(match, show_commentary=show_commentary, match_speed=match_speed, simulate=sim)
+    def initialize_match_simulation(self, match, show_commentary=True, match_speed=1, simulate=True):
+        self.match_simulation = MatchLive(match, show_commentary=show_commentary, match_speed=match_speed, simulate=simulate)
 
     def get_championship(self):
         pass

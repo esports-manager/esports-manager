@@ -14,6 +14,9 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from src.resources.generator.generate_teams import TeamGenerator
+from src.resources.generator.generate_players import MobaPlayerGenerator
+from src.resources.generator.generate_champions import ChampionGenerator
 import threading
 import random
 import uuid
@@ -26,31 +29,67 @@ class ESM:
     def __init__(self):
         self.core = Core()
         self.view = View(self)
+        self.current_match = None
+        self.match_thread = None
 
-    def start_match_sim(self, window):
-        self.core.match_simulation.simulation()
-        window.write_event_value('MATCH SIMULATED', 'DONE')
-    
+    def start_match_sim(self):
+        self.current_match.simulation()
+        self.view.gui.window.write_event_value('MATCH SIMULATED', 'DONE')
+        self.view.gui.window.Element('debug_startmatch_btn').Update(disabled=False)
+        self.view.gui.window.Element('debug_newteams_btn').Update(disabled=False)
+        
+        # Resets the match
+        self.current_match = None
+
     def check_files(self):
         self.core.check_files()
 
-    def initialize_debug_match(self):
-        self.core.teams.player_list = self.core.players.players
-        self.core.teams.get_teams_dict()
-        self.core.teams.get_teams_objects()
+    def reset_generators(self):
+        """
+        Resets all generators. This prevents memory allocation of unnecessary elements.
+        """
+        self.core.teams = TeamGenerator()
+        self.core.players = MobaPlayerGenerator()
+        self.core.champions = ChampionGenerator()
 
-        team1 = random.choice(self.core.teams.teams)
-        self.core.teams.teams.remove(team1)
-        team2 = random.choice(self.core.teams.teams)
-        self.core.teams.teams.remove(team2)
+    def initialize_debug_match(self):
+        t = self.core.teams
+        pl = self.core.players
+        ch = self.core.champions
+
+        pl.get_players_dict()
+        pl.get_players_objects()
+        ch.get_champions()
+
+        t.player_list = pl.players
+        t.get_teams_dict()
+        t.get_teams_objects()
+
+        team1 = random.choice(t.teams)
+        t.teams.remove(team1)
+        team2 = random.choice(t.teams)
+        t.teams.remove(team2)
 
         self.core.initialize_match(uuid.uuid4(), team1, team2)
-        
+        self.core.initialize_match_simulation(self.core.match)
 
-    def start_match_sim_thread(self, window):
+        # Resetting
+        self.reset_generators()
+
+        self.core.match_simulation.picks_and_bans()
+        
+        self.current_match = self.core.match_simulation
+
+        return self.core.match_simulation
+
+    def start_match_sim_thread(self):
+        window = self.view.gui.window
+
         try:
-            thread = threading.Thread(target=self.start_match_sim, args=(window))
-            thread.start()
+            self.match_thread = threading.Thread(target=self.start_match_sim, daemon=True)
+            self.match_thread.start()
+            window.Element('debug_startmatch_btn').Update(disabled=True)
+            window.Element('debug_newteams_btn').Update(disabled=True)
         except Exception as e:
             print('Error starting thread.')
 

@@ -27,6 +27,7 @@ class View:
     def __init__(self, controller):
         self.gui = GUI(controller)
         self.controller = controller
+        self.is_match_running = False
     
     def make_screen_visible(self, inv_screen, vis_screen):
         self.gui.window[inv_screen].update(visible=False)
@@ -42,7 +43,7 @@ class View:
         data = []
         for team in players:
             team_data = [[
-                player.lane_name,
+                player.lane.name,
                 player.nick_name,
                 player.kills,
                 player.deaths,
@@ -58,7 +59,7 @@ class View:
         while True:
             event, values = self.gui.window.read(timeout=100)
 
-            if event in [sg.WINDOW_CLOSED, 'exit_main']:
+            if event in [sg.WINDOW_CLOSED, 'main_exit_btn']:
                 break
 
             elif event == 'main_newgame_btn':
@@ -67,10 +68,34 @@ class View:
             elif event == 'main_loadgame_btn':
                 self.make_screen_visible('main_screen', 'load_game_screen')
             
+            elif event == 'debug_cancel_btn':
+                if self.is_match_running:
+                    self.controller.current_match.is_match_over = True
+                self.make_screen_visible('debug_screen', 'main_screen')
+            
             elif event == 'main_debug_btn':
                 self.controller.check_files()
-                self.team_data()
+                if not self.controller.current_match:
+                    match_live = self.controller.initialize_debug_match()
+                else:
+                    match_live = self.controller.current_match
+                
+                data = self.team_data(match_live=match_live)
+                self.gui.update_debug_match_info(match_live, data)
                 self.make_screen_visible('main_screen', 'debug_screen')
+            
+            elif event == 'debug_startmatch_btn':
+                self.is_match_running = True
+                self.controller.current_match.is_match_over = False
+                self.controller.start_match_sim_thread()
+            
+            if self.is_match_running:
+                if not self.controller.current_match.is_match_over and self.controller.match_thread.is_alive():
+                    data = self.team_data(self.controller.current_match)
+                    self.gui.update_debug_match_info(self.controller.current_match, data)
+                else:
+                    self.is_match_running = False
+
 
 
 
@@ -121,6 +146,7 @@ class GUI:
 
         col_main_debug = sg.Column(self.debug_layout(),
                                     key='debug_screen',
+                                    visible=False,
                                     element_justification="center"
                                     )
 
@@ -138,6 +164,7 @@ class GUI:
 
         return [
             [sg.Pane([col_main_screen,
+                      col_main_debug,
                     #   col_create_manager,
                     #   col_load_game,
                     ],
@@ -184,7 +211,8 @@ class GUI:
             )],
         ]
 
-    def update_debug_match_info(self, match, window, data):
+    def update_debug_match_info(self, match, data):
+        window = self.window
         window.Element('debug_team1table').update(values=data[0])
         window.Element('debug_team2table').update(values=data[1])
         window.Element('debug_team1skill').update(value=match.match.team1.total_skill)
@@ -207,9 +235,18 @@ class GUI:
             [esm_form_text('Team1DebugMatch', key='debug_team1name'),
             esm_form_text('0000', key='debug_team1skill')],
             [esm_form_text('0.0000', key='debug_team1winprob')],
-            [esm_table([], headings=headings, key='debug_team1table')],
-            [esm_form_text('', key='debug_team1towers')],
-            [esm_form_text('', key='debug_team1inhibs')]
+            [esm_table(headings, headings=headings, key='debug_team1table')],
+            [esm_form_text({
+                        "top": 3,
+                        "mid": 3,
+                        "bot": 3,
+                        "base": 2
+                    }, key='debug_team1towers')],
+            [esm_form_text({
+                        "top": 1,
+                        "mid": 1,
+                        "bot": 1
+                    }, key='debug_team1inhibs')]
         ]
 
         
@@ -217,9 +254,18 @@ class GUI:
             [esm_form_text('Team2DebugMatch', key='debug_team2name'),
             esm_form_text('0000', key='debug_team2skill')],
             [esm_form_text('0.0000', key='debug_team2winprob')],
-            [esm_table([], headings=headings, key='debug_team2table')],
-            [esm_form_text('', key='debug_team2towers')],
-            [esm_form_text('', key='debug_team2inhibs')]
+            [esm_table(headings, headings=headings, key='debug_team2table')],
+            [esm_form_text({
+                        "top": 3,
+                        "mid": 3,
+                        "bot": 3,
+                        "base": 2
+                    }, key='debug_team2towers')],
+            [esm_form_text({
+                        "top": 1,
+                        "mid": 1,
+                        "bot": 1
+                    }, key='debug_team2inhibs')]
         ]
 
         return [
@@ -227,7 +273,9 @@ class GUI:
             [sg.Column(layout=team1_column, element_justification='center'),
             sg.Column(layout=team2_column, element_justification='center')],
             [esm_output()],
-            [esm_button('Start Match', key='debug_startmatch_btn'), esm_button('New Teams', key='debug_newteams_btn')]
+            [esm_button('Start Match', key='debug_startmatch_btn'),
+            esm_button('New Teams', key='debug_newteams_btn'),
+            esm_button('Cancel', key='debug_cancel_btn')]
         ]
         
 

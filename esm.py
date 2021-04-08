@@ -15,6 +15,8 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import threading
+import random
+import uuid
 
 from src.core.core import Core
 from src.ui.gui import View
@@ -28,6 +30,22 @@ class ESM:
     def start_match_sim(self, window):
         self.core.match_simulation.simulation()
         window.write_event_value('MATCH SIMULATED', 'DONE')
+    
+    def check_files(self):
+        self.core.check_files()
+
+    def initialize_debug_match(self):
+        self.core.teams.player_list = self.core.players.players
+        self.core.teams.get_teams_dict()
+        self.core.teams.get_teams_objects()
+
+        team1 = random.choice(self.core.teams.teams)
+        self.core.teams.teams.remove(team1)
+        team2 = random.choice(self.core.teams.teams)
+        self.core.teams.teams.remove(team2)
+
+        self.core.initialize_match(uuid.uuid4(), team1, team2)
+        
 
     def start_match_sim_thread(self, window):
         try:

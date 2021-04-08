@@ -19,14 +19,15 @@ import threading
 from src.resources.generator.generate_players import MobaPlayerGenerator
 from src.resources.generator.generate_teams import TeamGenerator
 from src.resources.generator.generate_champions import ChampionGenerator
+from src.resources.utils import find_file
 from src.core.esports.moba.championship import Championship
 from src.core.esports.moba.match import Match
 from src.core.esports.moba.match_live import MatchLive
 
 
 class Core:
-    def __init__(self):
-        self.amount_players = 400
+    def __init__(self, amount_players=400):
+        self.amount_players = amount_players
         self.amount_teams = math.floor(self.amount_players / 5)
         self.champions = ChampionGenerator()
         self.champions.get_champion_names()
@@ -53,6 +54,14 @@ class Core:
         self.teams.generate_file()
         self.champions.generate_file()
         self.players.generate_file()
+
+    def check_files(self):
+        try:
+            find_file(self.champions.file_name)
+            find_file(self.players.file_name)
+            find_file(self.teams.file_name)
+        except FileNotFoundError:
+            self.generate_all()
 
     def get_players(self):
         self.players.get_players_objects()

@@ -167,3 +167,18 @@ def esm_calendar_button(button_text='Calendar',
                              month_names=month_names,
                              no_titlebar=no_titlebar
                              )
+
+def esm_checkbox(text,
+                 default=True,
+                 font=(default_font, default_font_size),
+                 key=None,
+                 enable_events=True,
+                 visible=True,
+                 ):
+    return sg.Checkbox(text=text,
+                        default=default,
+                        font=font,
+                        key=key,
+                        enable_events=enable_events,
+                        visible=visible
+                        )

@@ -17,6 +17,7 @@
 from src.resources.generator.generate_teams import TeamGenerator
 from src.resources.generator.generate_players import MobaPlayerGenerator
 from src.resources.generator.generate_champions import ChampionGenerator
+from src.core.esports.moba.mobaevent import MobaEventHandler
 import threading
 import random
 import uuid
@@ -37,9 +38,7 @@ class ESM:
         self.view.gui.window.write_event_value('MATCH SIMULATED', 'DONE')
         self.view.gui.window.Element('debug_startmatch_btn').Update(disabled=False)
         self.view.gui.window.Element('debug_newteams_btn').Update(disabled=False)
-        
-        # Resets the match
-        self.current_match = None
+        self.view.gui.window.Element('debug_resetmatch_btn').Update(disabled=False)
 
     def check_files(self):
         self.core.check_files()
@@ -52,6 +51,13 @@ class ESM:
         self.core.players = MobaPlayerGenerator()
         self.core.champions = ChampionGenerator()
 
+    def reset_match(self, match):
+        self.core.reset_team_values(match)
+        match.is_match_over = False
+        match.game_time = 0.0
+        match.event_handler = MobaEventHandler()
+        match.victorious_team = None
+    
     def initialize_debug_match(self):
         t = self.core.teams
         pl = self.core.players
@@ -90,6 +96,7 @@ class ESM:
             self.match_thread.start()
             window.Element('debug_startmatch_btn').Update(disabled=True)
             window.Element('debug_newteams_btn').Update(disabled=True)
+            window.Element('debug_resetmatch_btn').Update(disabled=True)
         except Exception as e:
             print('Error starting thread.')
 

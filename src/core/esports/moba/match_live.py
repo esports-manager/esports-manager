@@ -43,6 +43,10 @@ class MatchLive:
         self.event_handler = MobaEventHandler()
         self.champions = ChampionGenerator()
 
+    def reset_teams(self):
+        for team in self.match.teams:
+            team.reset_values()
+    
     def picks_and_bans(self) -> None:
         """
         Dummy picks and bans implementation. Will be changed in the future.

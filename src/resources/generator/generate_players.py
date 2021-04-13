@@ -57,7 +57,7 @@ class MobaPlayerGenerator:
             raise MobaPlayerGeneratorError('Minimum age cannot be higher than maximum age!')
 
         self.lane = lane
-        self.td = today
+        self.td = today     # used to calculate the date of birth. Varies according to the current season calendar
         self.multipliers = []
         self.champions = []
         self.champions_list = champions_list
@@ -96,8 +96,8 @@ class MobaPlayerGenerator:
         max_year = self.td - min_age        # max date for birthday
 
         days_interval = max_year - min_year
-        rand_date = random.randrange(days_interval.days)
-        self.dob = min_year + timedelta(days=rand_date)
+        rand_date = random.randrange(days_interval.days)    # chooses a random date from the max days interval
+        self.dob = min_year + timedelta(days=rand_date)     # assigns date of birth
 
     def generate_champions(self):
         """

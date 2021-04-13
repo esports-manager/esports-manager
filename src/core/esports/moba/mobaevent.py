@@ -37,13 +37,8 @@ class MobaEvent:
         self.priority = priority
         self.commentary = self.load_commentary(commentary)
         self.event_time = event_time
-        self._factor = 0
+        self.factor = random.gauss(0, 1)
         self.points = points
-
-    @property
-    def factor(self):
-        self._factor = random.gauss(0, 1)
-        return self._factor
 
     @staticmethod
     def _get_probable_team(team1, team2):
@@ -79,14 +74,15 @@ class MobaEvent:
 
         lanes = [lanes for lanes, value in def_team.towers.items() if value != 0]
 
-        if def_team.are_all_inhibitors_up():
+        # You cannot attack a base tower unless it is exposed
+        if not def_team.are_base_towers_exposed():
             lanes.remove("base")
 
         probs = []
         for lane, value in def_team.towers.items():
             if lane in lanes:
                 if value == 1:
-                    probs.append(0.4)
+                    probs.append(0.5)
                 elif value == 2:
                     probs.append(0.3)
                 else:
@@ -97,8 +93,12 @@ class MobaEvent:
         return attack_team, def_team, chosen_lane
 
     def choose_duel_players(self, killer, team, amount):
+        """
+        Chooses players to duel. The killer is decided in self.calculate_kill()
+        """
         duel_players = []
         random.shuffle(team)
+
         for player in team:
             if killer.get_player_total_skill() >= player.get_player_total_skill():
                 # 68% chance of happening
@@ -154,6 +154,8 @@ class MobaEvent:
 
         # Chooses the team from which the killer will come from, most likely the team with the highest win probability
         team_killer = random.choices(teams, [team1.win_prob, team2.win_prob])[0]
+
+        # Chooses the killer player, most probably the highest skill player
         killer = random.choices(team_killer, [player.get_player_total_skill() for player in team_killer])[0]
 
         # A player is less likely to get a pentakill in a match
@@ -327,7 +329,7 @@ class MobaEventHandler:
         if game_time == 0.0:
             self.get_enabled_events(['NOTHING', 'KILL'])
 
-        if game_time == 15.0:
+        if game_time >= 10.0:
             self.get_enabled_events(['TOWER ASSAULT'])
         if towers_number == 0:
             self.remove_enabled_event('TOWER ASSAULT')
@@ -379,6 +381,9 @@ class MobaEventHandler:
         return [event['priority'] for event in self.enabled_events]
 
     def generate_event(self, game_time):
+        """
+        Generates events for the match based on their priorities and available events.
+        """
         priorities = self.get_event_priorities()
         ev_chosen = random.choices(self.enabled_events, priorities)[0]
         self.event = MobaEvent(event_name=ev_chosen['name'],

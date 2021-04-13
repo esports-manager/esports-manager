@@ -85,3 +85,7 @@ class Core:
 
     def get_championship(self):
         pass
+    
+    @staticmethod
+    def reset_team_values(match):
+        match.reset_teams()

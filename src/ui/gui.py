@@ -42,20 +42,24 @@ class View:
         
         data = []
         for team in players:
-            team_data = [[
-                player.lane.name,
-                player.nick_name,
-                player.kills,
-                player.deaths,
-                player.assists,
-                player.champion,
-                int(player.get_player_total_skill())
-            ] for player in team]
+            team_data = [
+                [
+                    player.lane.name,
+                    player.nick_name,
+                    player.kills,
+                    player.deaths,
+                    player.assists,
+                    player.champion,
+                    int(player.get_player_total_skill())
+                ] for player in team
+            ]
             data.append(team_data)
 
         return data
     
     def start(self):
+        match_live = None
+        
         while True:
             event, values = self.gui.window.read(timeout=100)
 
@@ -86,16 +90,36 @@ class View:
             
             elif event == 'debug_startmatch_btn':
                 self.is_match_running = True
+                self.controller.reset_match(match_live)
                 self.controller.current_match.is_match_over = False
                 self.controller.start_match_sim_thread()
             
+            elif event == 'debug_newteams_btn':
+                self.controller.check_files()
+                match_live = self.controller.initialize_debug_match()
+                data = self.team_data(match_live=match_live)
+                self.gui.update_debug_match_info(match_live, data)
+            
+            elif event == 'debug_resetmatch_btn':
+                self.controller.reset_match(match_live)
+                data = self.team_data(match_live=match_live)
+                self.gui.update_debug_match_info(match_live, data)
+            
+            
+            if match_live is not None:
+                if values['debug_simulate_checkbox']:
+                    match_live.simulate = True
+                else:
+                    match_live.simulate = False
+                
+
             if self.is_match_running:
                 if not self.controller.current_match.is_match_over and self.controller.match_thread.is_alive():
                     data = self.team_data(self.controller.current_match)
                     self.gui.update_debug_match_info(self.controller.current_match, data)
                 else:
                     self.is_match_running = False
-
+            
 
 
 
@@ -273,8 +297,10 @@ class GUI:
             [sg.Column(layout=team1_column, element_justification='center'),
             sg.Column(layout=team2_column, element_justification='center')],
             [esm_output()],
+            [esm_checkbox('Simulate step-by-step', key='debug_simulate_checkbox')],
             [esm_button('Start Match', key='debug_startmatch_btn'),
             esm_button('New Teams', key='debug_newteams_btn'),
+            esm_button('Reset Match', key='debug_resetmatch_btn'),
             esm_button('Cancel', key='debug_cancel_btn')]
         ]
         

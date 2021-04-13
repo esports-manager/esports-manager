@@ -57,7 +57,14 @@ class Player:
     @skill.setter
     def skill(self, skill):
         self._skill = skill
-
+    
+    def get_age(self, today: date=date.today()) -> int:
+        """
+        Defines the player's age. Today generally refers to the datetime.today function, but when we implement
+        a calendar, it will all be based on the current calendar date in-game.
+        """
+        age = today - self.birthday
+        return int(age.days * 0.0027379070)
 
 class MobaPlayer(Player):
     """
@@ -134,6 +141,12 @@ class MobaPlayer(Player):
     @points.setter
     def points(self, add_pts: int):
         self._points = add_pts
+    
+    def reset_attributes(self):
+        self.points = 0
+        self.kills = 0
+        self.deaths = 0
+        self.assists = 0
 
     def get_highest_multiplier(self) -> float:
         """
@@ -165,14 +178,6 @@ class MobaPlayer(Player):
             return self.mult[self.lane.value]
         else:
             raise LaneError('Player may not be playing the game!')
-
-    def get_age(self, today: date) -> int:
-        """
-        Defines the player's age. Today generally refers to the datetime.today function, but when we implement
-        a calendar, it will all be based on the current calendar date ingame.
-        """
-        age = today - self.birthday
-        return int(age.days * 0.0027379070)
 
     def get_curr_player_skill(self):
         """

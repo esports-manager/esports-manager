@@ -89,6 +89,30 @@ class Team:
 
     def are_base_towers_exposed(self) -> bool:
         return not self.are_all_inhibitors_up()
+    
+    def reset_values(self):
+        for player in self.list_players:
+            player.reset_attributes()
+        
+        self.towers.update(
+            {
+                'top': 3,
+                'mid': 3,
+                'bot': 3,
+                'base': 2,
+            }
+        )
+
+        self.inhibitors.update(
+            {
+                'top': 1,
+                'mid': 1,
+                'bot': 1,
+            }
+        )
+        
+        self.win_prob = 0
+        self.nexus = 1
 
     @property
     def kills(self):

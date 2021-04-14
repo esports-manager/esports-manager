@@ -33,6 +33,17 @@ class View:
         self.gui.window[inv_screen].update(visible=False)
         self.gui.window[vis_screen].update(visible=True)
 
+    def disable_debug_buttons(self):
+        self.gui.window.Element('debug_startmatch_btn').Update(disabled=True)
+        self.gui.window.Element('debug_newteams_btn').Update(disabled=True)
+        self.gui.window.Element('debug_resetmatch_btn').Update(disabled=True)
+    
+    def update_match_sim_elements(self):
+        self.gui.window.write_event_value('MATCH SIMULATED', 'DONE')
+        self.gui.window.Element('debug_startmatch_btn').Update(disabled=False)
+        self.gui.window.Element('debug_newteams_btn').Update(disabled=False)
+        self.gui.window.Element('debug_resetmatch_btn').Update(disabled=False)
+    
     def team_data(self, match_live):
         players = [[player for player in team.list_players] for team in match_live.match.teams]
 
@@ -61,7 +72,7 @@ class View:
         match_live = None
         
         while True:
-            event, values = self.gui.window.read(timeout=100)
+            event, values = self.gui.window.read(timeout=1000)
 
             if event in [sg.WINDOW_CLOSED, 'main_exit_btn']:
                 break
@@ -87,6 +98,24 @@ class View:
                 data = self.team_data(match_live=match_live)
                 self.gui.update_debug_match_info(match_live, data)
                 self.make_screen_visible('main_screen', 'debug_screen')
+            
+            elif event == 'main_newgame_btn':
+                self.make_screen_visible('main_screen', 'new_game_screen')
+            
+            elif event == 'main_loadgame_btn':
+                self.make_screen_visible('main_screen', 'load_game_screen')
+
+            elif event == 'main_settings_btn':
+                self.make_screen_visible('main_screen', 'settings_screen')
+
+            elif event == 'load_game_cancel_btn':
+                self.make_screen_visible('load_game_screen', 'main_screen')
+            
+            elif event == 'ng_cancel_btn':
+                self.make_screen_visible('new_game_screen', 'main_screen')
+            
+            elif event == 'settings_cancel_btn':
+                self.make_screen_visible('settings_screen', 'main_screen')
             
             elif event == 'debug_startmatch_btn':
                 self.is_match_running = True
@@ -121,10 +150,9 @@ class View:
                     self.is_match_running = False
             
 
-
-
 class GUI:
     def __init__(self, controller):
+        create_look_and_feel()
         self.icon = 'esportsmanagertrophy.png'
         self.window = self._create_window()
         self.layouts = None
@@ -136,23 +164,22 @@ class GUI:
 
         return encoded_icon
 
-    def _create_window(self) -> sg.Window:
+    def _create_window(self, theme='EsmTheme') -> sg.Window:
         """
         Creates the main Window using PySimpleGUI, and assigns the eSM icon to it.
         It uses the _get_layouts() function to get a list of layouts used in this software.
         :return: the window PySimpleGUI object
         """
 
-        create_look_and_feel()
         encoded_icon = self._encode_icon()
-        sg.theme('EsmTheme')
-
+        
+        sg.theme(theme)
         self.layouts = self._get_layouts()
         return sg.Window(
             'eSports Manager',
             element_justification='center',
             layout=self.layouts,
-            # size=(900, 800),
+            size=(1300, 780),
             icon=encoded_icon,
             resizable=True,
         )
@@ -173,29 +200,37 @@ class GUI:
                                     visible=False,
                                     element_justification="center"
                                     )
-
-        # col_create_manager = sg.Column(self.create_manager_layout(),
-        #                                key='create_manager',
-        #                                visible=False,
-        #                                element_justification="center"
-        #                                )
-
-        # col_load_game = sg.Column(self.load_game_layout(),
-        #                           key='load_game',
-        #                           visible=False,
-        #                           element_justification="center"
-        #                           )
+        
+        col_newgame_screen = sg.Column(self.new_game_layout(),
+                                        key='new_game_screen',
+                                        visible=False,
+                                        element_justification="center"
+                                        )
+        
+        col_loadgame_screen = sg.Column(self.load_game_layout(),
+                                        key='load_game_screen',
+                                        visible=False,
+                                        element_justification="center"
+                                        )
+        
+        col_settings_screen = sg.Column(self.settings_layout(),
+                                        key='settings_screen',
+                                        visible=False,
+                                        element_justification="center"
+                                        )
+        
 
         return [
             [sg.Pane([col_main_screen,
                       col_main_debug,
-                    #   col_create_manager,
-                    #   col_load_game,
+                      col_newgame_screen,
+                      col_loadgame_screen,
+                      col_settings_screen,
                     ],
                      relief=sg.RELIEF_FLAT, show_handle=False
                     )]
         ]
-    
+
     def main_screen(self) -> list:
         """
         Defines the main screen. This screen shows the initial options to play a new game, load game,
@@ -251,6 +286,81 @@ class GUI:
         window.Element('debug_team2name').Update(value=match.match.team2.name)
         window.refresh()
 
+    def new_game_layout(self) -> list:
+        """
+        Defines the new game screen.
+        """
+
+        label_pad = (0, 5)
+        size_element = (29,1)
+
+        labels = [
+            [esm_form_text('Game Name:', pad=label_pad)],
+        ]
+
+        inputs = [
+            [esm_input_text(key='ng_gamename_input', size=size_element)]
+        ]
+
+        return [
+            [esm_title_text('New Game')],
+            [sg.Column(labels, element_justification='left'), sg.Column(inputs, element_justification='left')],
+            [esm_button('Create Game', key='ng_creategame_btn'), esm_button('Cancel', key='ng_cancel_btn')]
+        ]
+
+    def load_game_layout(self):
+        saved_games = [
+            'Saved Game 1',
+            'Saved Game 2',
+            'Saved Game 3',
+        ]
+
+        size_btn = (10,1)
+
+        return [
+            [esm_title_text('Load Game')],
+            [esm_form_text('Saved Games:')],
+            [esm_listbox(saved_games, size=(50, 20), key='load_game_listbox', enable_events=True)],
+            [esm_button('Load Game', key='load_game_btn', size=size_btn),
+            esm_button('Cancel', key='load_game_cancel_btn', size=size_btn)]
+        ]
+    
+    def settings_layout(self):
+        size_elements = (45, 2)
+        
+        languages = ['English', 'Portuguese']
+
+        ch_file = find_file('champions.json')
+        pl_file = find_file('players.json')
+        t_file = find_file('teams.json')
+
+        labels = [
+            [esm_form_text('Language:')],
+            [esm_form_text('Font scale:')],
+            [esm_form_text('Champions file:')],
+            [esm_form_text('Players file:')],
+            [esm_form_text('Teams file:')],
+        ]
+
+        controls = [
+            # TODO: Replace with supported i18n
+            [esm_input_combo(languages, default_value=languages[0], size=size_elements, key='settings_languages_inpcombo')],
+            [esm_input_text('1', size=size_elements, key='settings_fontsize_input')],
+            [esm_input_text(ch_file, size=size_elements, key='settings_ch_file'),
+            sg.FileBrowse(target='settings_ch_file')],
+            [esm_input_text(pl_file, size=size_elements, key='settings_pl_file'),
+            sg.FileBrowse(target='settings_pl_file')],
+            [esm_input_text(t_file, size=size_elements, key='settings_t_file'),
+            sg.FileBrowse(target='settings_t_file')],
+        ]
+        
+        return [
+            [esm_title_text('Settings')],
+            [sg.Column(labels, element_justification='left'),
+            sg.Column(controls, element_justification='left')],
+            [esm_button('Apply', key='settings_apply_btn'),
+            esm_button('Cancel', key='settings_cancel_btn')]
+        ]
 
     def debug_layout(self):
         headings = ['Lane', 'Player Name', 'Kills', 'Deaths', 'Assists', 'Champion', 'Skill']

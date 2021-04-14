@@ -83,8 +83,9 @@ def esm_input_text(text='', font=(default_font, default_font_size), border_width
                         )
 
 
-def esm_input_combo(values=None, font=(default_font, default_font_size), key=None, pad=None, size=(15, 1), enable_events=True):
+def esm_input_combo(values=None, default_value=None, font=(default_font, default_font_size), key=None, pad=None, size=(15, 1), enable_events=True):
     return sg.InputCombo(values=values,
+                         default_value=default_value,
                          font=font,
                          background_color='white',
                          key=key,

@@ -1,4 +1,4 @@
-**NOTE:** *THIS PROJECT IS STILL UNDER DEVELOPMENT, AND IS NOT READY FOR GAMEPLAY YET. AS SOON AS GAMEPLAY FEATURES ARE IMPLEMENTED, THIS NOTE WILL BE REMOVED AND NEW INFO WILL BE ADDED TO THIS REPOSITORY.*
+**NOTE:** *THIS PROJECT IS STILL UNDER DEVELOPMENT, AND IS NOT READY FOR GAMEPLAY YET.*
 
 ![eSports Manager Logo](src/resources/images/logo/esportsmanager.png)
 
@@ -16,9 +16,15 @@ The game is still not ready to be played. Many features are yet to be implemente
 
 ## HOW TO RUN THE DEBUG VERSION
 
-![Debug Match](src/resources/images/debug_match_screen.PNG)
+<img src="src/resources/images/main_screen.PNG" width="40%">
 
-To run the debug version first you need to have Python 3 installed. Probably this game should work with Python 3.8+, I don't know if it works with Python 3.6 or lower, but from what I remember, some functions that I use were only implemented in 3.8. Currently testing on 3.9 and it is working.
+<img src="src/resources/images/debug_match_screen.PNG" width="40%">
+
+<img src="src/resources/images/settings_screen.PNG" width="40%">
+
+<img src="src/resources/images/load_game_screen.PNG" width="40%">
+
+To run the debug version first you need to have Python 3 installed. Use Python 3.7 or higher, there's no guarantee it will work with Python 3.6 or older.
 
 To manage dependencies, we use Pipenv. To install pipenv:
 
@@ -44,11 +50,7 @@ To get into the python virtual environment shell. And then just run:
 python esm.py
 ```
 
-And that should run the basic Debug Match Window. There's very limited functionality here, Match Simulation is still under development, but you can see basically what events would happen in your match.
-
-If you want to generate a number X of players, edit the `esm.py` file and change the `num_players` variable to a number that's at max 3500.
-
-I haven't tested with a number of players that's not divisible by 5, and that should not work, so try to choose numbers that are divisible by 5. We can fix that later.
+You can test the Debug Match window, and check other dummy features like New Game, Load Game, and Settings.
 
 ## FEATURES
 

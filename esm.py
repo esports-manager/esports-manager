@@ -35,10 +35,7 @@ class ESM:
 
     def start_match_sim(self):
         self.current_match.simulation()
-        self.view.gui.window.write_event_value('MATCH SIMULATED', 'DONE')
-        self.view.gui.window.Element('debug_startmatch_btn').Update(disabled=False)
-        self.view.gui.window.Element('debug_newteams_btn').Update(disabled=False)
-        self.view.gui.window.Element('debug_resetmatch_btn').Update(disabled=False)
+        self.view.update_match_sim_elements()
 
     def check_files(self):
         self.core.check_files()
@@ -89,14 +86,10 @@ class ESM:
         return self.core.match_simulation
 
     def start_match_sim_thread(self):
-        window = self.view.gui.window
-
         try:
             self.match_thread = threading.Thread(target=self.start_match_sim, daemon=True)
             self.match_thread.start()
-            window.Element('debug_startmatch_btn').Update(disabled=True)
-            window.Element('debug_newteams_btn').Update(disabled=True)
-            window.Element('debug_resetmatch_btn').Update(disabled=True)
+            self.view.disable_debug_buttons()
         except Exception as e:
             print('Error starting thread.')
 

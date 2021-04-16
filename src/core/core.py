@@ -14,7 +14,6 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import math
-import threading
 
 from src.resources.generator.generate_players import MobaPlayerGenerator
 from src.resources.generator.generate_teams import TeamGenerator
@@ -30,7 +29,6 @@ class Core:
         self.amount_players = amount_players
         self.amount_teams = math.floor(self.amount_players / 5)
         self.champions = ChampionGenerator()
-        self.champions.get_champion_names()
         self.players = MobaPlayerGenerator()
         self.teams = TeamGenerator()
 
@@ -42,7 +40,6 @@ class Core:
         self.championship = None
 
     def generate_all(self):
-        self.champions.get_champion_names()
         self.champions.create_champions_list()
         self.players.champions_list = self.champions.champions_obj
 
@@ -58,12 +55,9 @@ class Core:
         self.players.generate_file()
 
     def check_files(self):
-        try:
-            find_file(self.champions.file_name)
-            find_file(self.players.file_name)
-            find_file(self.teams.file_name)
-        except FileNotFoundError:
-            self.generate_all()
+        find_file(self.champions.file_name)
+        find_file(self.players.file_name)
+        find_file(self.teams.file_name)
 
     def get_players(self):
         self.players.get_players_objects()

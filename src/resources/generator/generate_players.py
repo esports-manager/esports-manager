@@ -189,7 +189,7 @@ class MobaPlayerGenerator:
         """
         Generates players multipliers.
         Multipliers are used to define the player's experience on a lane.
-        It goes from 0.55 to 1.
+        It ranges from 0.55 to 1.
 
         It goes like this:
         player_skill * multiplier = player_actual_skill_in_game
@@ -256,21 +256,21 @@ class MobaPlayerGenerator:
         Creates players objects based on the player dictionary
         """
         self.players = []
-        if self.players_dict:
-            for player in self.players_dict:
-                self.player_id = player['id']
-                self.first_name = player['first_name']
-                self.last_name = player['last_name']
-                self.dob = player['birthday']
-                self.nationality = player['nationality']
-                self.nick_name = player['nick_name']
-                self.skill = player['skill']
-                self.multipliers = player['multipliers']
-                self.champions = player['champions']
-                self.get_object()
-                self.players.append(self.player_obj)
-        else:
-            raise MobaPlayerGeneratorError('List of players is empty!')
+        if not self.players_dict:
+            self.get_players_dict()
+        for player in self.players_dict:
+            self.player_id = player['id']
+            self.first_name = player['first_name']
+            self.last_name = player['last_name']
+            self.dob = player['birthday']
+            self.nationality = player['nationality']
+            self.nick_name = player['nick_name']
+            self.skill = player['skill']
+            self.multipliers = player['multipliers']
+            self.champions = player['champions']
+            self.get_object()
+            self.players.append(self.player_obj)
+            
 
     def generate_file(self):
         """

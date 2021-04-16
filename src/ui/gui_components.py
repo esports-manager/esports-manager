@@ -29,7 +29,7 @@ def create_look_and_feel():
                                           'TEXT_INPUT': '#000000',
                                           'SCROLL': '#4FC3F7',
                                           'BUTTON': ('white', '#4FC3F7'),
-                                          'PROGRESS': ('#FFFFFF', '#4FC3F7'),
+                                          'PROGRESS': ('#4FC3F7', '#FFFFFF'),
                                           'BORDER': 0, 'SLIDER_DEPTH': 1, 'PROGRESS_DEPTH': 0,
                                           }
 
@@ -53,8 +53,9 @@ def esm_output(size=(80, 12), font=(default_font, default_font_size), stdout=Tru
                      )
 
 
-def esm_title_text(text='', font=(bold_font, increased_font_size), key=None, pad=(300, 1)):
+def esm_title_text(text='', auto_size=True, font=(bold_font, increased_font_size), key=None, pad=(300, 1)):
     return sg.Text(text,
+                   auto_size_text=auto_size,
                    key=key,
                    font=font,
                    pad=pad,

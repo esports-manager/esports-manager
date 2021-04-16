@@ -16,6 +16,7 @@
 
 import base64
 import PySimpleGUI as sg
+import traceback
 
 from src.core.esports.moba.match_live import MatchLive
 from src.resources import RES_DIR
@@ -28,6 +29,12 @@ class View:
         self.gui = GUI(controller)
         self.controller = controller
         self.is_match_running = False
+    
+    def print_error(self, e):
+        self.gui.error_message(e)
+    
+    def print_generate_data_window(self):
+        self.gui.generate_data_window()
     
     def make_screen_visible(self, inv_screen, vis_screen):
         self.gui.window[inv_screen].update(visible=False)
@@ -98,7 +105,7 @@ class View:
                 data = self.team_data(match_live=match_live)
                 self.gui.update_debug_match_info(match_live, data)
                 self.make_screen_visible('main_screen', 'debug_screen')
-            
+                
             elif event == 'main_newgame_btn':
                 self.make_screen_visible('main_screen', 'new_game_screen')
             
@@ -231,6 +238,9 @@ class GUI:
                     )]
         ]
 
+    def generate_data_window(self):
+        sg.popup_auto_close('Generating data!')
+    
     def main_screen(self) -> list:
         """
         Defines the main screen. This screen shows the initial options to play a new game, load game,
@@ -271,13 +281,15 @@ class GUI:
         ]
 
     def update_debug_match_info(self, match, data):
+        win_prob = match.match.team1.win_prob * 100
         window = self.window
         window.Element('debug_team1table').update(values=data[0])
         window.Element('debug_team2table').update(values=data[1])
         window.Element('debug_team1skill').update(value=match.match.team1.total_skill)
         window.Element('debug_team2skill').update(value=match.match.team2.total_skill)
-        window.Element('debug_team1winprob').Update(value=match.match.team1.win_prob)
-        window.Element('debug_team2winprob').Update(value=match.match.team2.win_prob)
+        window.Element('debug_team1winprob').update(value=match.match.team1.win_prob)
+        window.Element('debug_team2winprob').update(value=match.match.team2.win_prob)
+        window.Element('debug_winprob').update_bar(win_prob)
         window.Element('debug_team1towers').Update(value=match.match.team1.towers)
         window.Element('debug_team2towers').Update(value=match.match.team2.towers)
         window.Element('debug_team1inhibs').Update(value=match.match.team1.inhibitors)
@@ -330,9 +342,14 @@ class GUI:
         
         languages = ['English', 'Portuguese']
 
-        ch_file = find_file('champions.json')
-        pl_file = find_file('players.json')
-        t_file = find_file('teams.json')
+        try:
+            ch_file = find_file('champions.json')
+            pl_file = find_file('players.json')
+            t_file = find_file('teams.json')
+        except FileNotFoundError:
+            ch_file = 'champions.json'
+            pl_file = 'players.json'
+            t_file = 'teams.json'
 
         labels = [
             [esm_form_text('Language:')],
@@ -406,6 +423,7 @@ class GUI:
             [esm_title_text('Debug Match')],
             [sg.Column(layout=team1_column, element_justification='center'),
             sg.Column(layout=team2_column, element_justification='center')],
+            [sg.ProgressBar(100, size=(80, 20),border_width=1, key='debug_winprob')],
             [esm_output()],
             [esm_checkbox('Simulate step-by-step', key='debug_simulate_checkbox')],
             [esm_button('Start Match', key='debug_startmatch_btn'),
@@ -414,5 +432,9 @@ class GUI:
             esm_button('Cancel', key='debug_cancel_btn')]
         ]
         
+    def error_message(self, e):
+        tb = traceback.format_exc()
+        sg.Print('The following error happened:', e, tb)
+        sg.popup_error(f'The following error occurred:', e, tb)
 
 

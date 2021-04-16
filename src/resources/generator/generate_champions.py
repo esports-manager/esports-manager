@@ -57,7 +57,7 @@ class ChampionGenerator:
         """
         self.champion_names = get_list_from_file('champions.txt')
 
-    def get_champion_lanes(self):
+    def generate_champion_lanes(self):
         pass
 
     def generate_champion_skill(self):
@@ -94,7 +94,8 @@ class ChampionGenerator:
         Creates the list of champions according to the names.
         Essentially this is the champion generation method.
         """
-        self.get_champion_names()
+        if not self.champion_names:
+            self.get_champion_names()
         for name in self.champion_names:
             self.generate_champion_id()
             self.name = name

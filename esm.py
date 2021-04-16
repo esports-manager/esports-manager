@@ -14,21 +14,22 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from src.resources.generator.generate_teams import TeamGenerator
-from src.resources.generator.generate_players import MobaPlayerGenerator
-from src.resources.generator.generate_champions import ChampionGenerator
-from src.core.esports.moba.mobaevent import MobaEventHandler
 import threading
 import random
 import uuid
 
+from src.resources.generator.generate_teams import TeamGenerator
+from src.resources.generator.generate_players import MobaPlayerGenerator
+from src.resources.generator.generate_champions import ChampionGenerator
+from src.core.esports.moba.mobaevent import MobaEventHandler
 from src.core.core import Core
 from src.ui.gui import View
 
 
 class ESM:
-    def __init__(self):
-        self.core = Core()
+    def __init__(self, amount_players=400):
+        self.amount_players = amount_players
+        self.core = Core(amount_players=amount_players)
         self.view = View(self)
         self.current_match = None
         self.match_thread = None
@@ -37,8 +38,23 @@ class ESM:
         self.current_match.simulation()
         self.view.update_match_sim_elements()
 
+    def generate_all_data(self):
+        """
+        Starts a thread to generate data and show a window progress bar.
+        """
+        try:
+            generate_data_thread = threading.Thread(target=self.core.generate_all, daemon=True)
+            generate_data_thread.start()
+            self.view.print_generate_data_window()
+            generate_data_thread.join()
+        except Exception as e:
+            self.view.print_error(e)
+
     def check_files(self):
-        self.core.check_files()
+        try:
+            self.core.check_files()
+        except FileNotFoundError as e:
+            self.generate_all_data()
 
     def reset_generators(self):
         """
@@ -58,11 +74,8 @@ class ESM:
     def initialize_debug_match(self):
         t = self.core.teams
         pl = self.core.players
-        ch = self.core.champions
 
-        pl.get_players_dict()
         pl.get_players_objects()
-        ch.get_champions()
 
         t.player_list = pl.players
         t.get_teams_dict()

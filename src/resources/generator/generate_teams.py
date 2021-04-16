@@ -79,7 +79,10 @@ class TeamGenerator:
         """
         self.roster = []
         if self.player_list is None:
-            self.player_list = MobaPlayerGenerator(lane=0).generate_players(self.amount * 5)
+            try:
+                self.player_list = MobaPlayerGenerator.get_players_objects()
+            except:
+                self.player_list = MobaPlayerGenerator(lane=0).generate_players(self.amount * 5)
 
         lane = 0
         for _ in range(5):
@@ -177,15 +180,14 @@ class TeamGenerator:
         Retrieves champions objects based on teams list dict
         """
         self.teams = []
-        if self.teams_dict:
-            for team in self.teams_dict:
-                self.team_id = team['id']
-                self.name = team['name']
-                self.get_roster(team)
-                self.get_object()
-                self.teams.append(self.team_obj)
-        else:
-            raise TeamGeneratorError('List of teams is empty!')
+        if not self.teams_dict:
+            self.get_teams_dict()
+        for team in self.teams_dict:
+            self.team_id = team['id']
+            self.name = team['name']
+            self.get_roster(team)
+            self.get_object()
+            self.teams.append(self.team_obj)
 
     def generate_file(self):
         """

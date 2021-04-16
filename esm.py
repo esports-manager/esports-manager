@@ -28,11 +28,20 @@ from src.ui.gui import View
 
 class ESM:
     def __init__(self, amount_players=400):
-        self.amount_players = amount_players
-        self.core = Core(amount_players=amount_players)
+        self.core = Core()
+        self._amount_players = amount_players
         self.view = View(self)
         self.current_match = None
         self.match_thread = None
+
+    @property
+    def amount_players(self):
+        return self._amount_players
+
+    @amount_players.setter
+    def amount_players(self, amount):
+        self.core.amount_players = amount
+        self._amount_players = amount
 
     def start_match_sim(self):
         self.current_match.simulation()

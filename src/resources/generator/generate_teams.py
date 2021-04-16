@@ -140,6 +140,11 @@ class TeamGenerator:
         """
         if self.names is None:
             self.get_names()
+        
+        # Prevents IndexError
+        if len(self.names) < self.amount:
+            self.amount = len(self.names)
+
         self.generate_id()
         self.generate_name()
         self.generate_roster()

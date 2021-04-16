@@ -124,6 +124,16 @@ class View:
             elif event == 'settings_cancel_btn':
                 self.make_screen_visible('settings_screen', 'main_screen')
             
+            elif event == 'settings_generate_btn':
+                try:
+                    value = int(values['settings_amount_input'])
+                except ValueError:
+                    self.controller.amount_players = 400
+                    self.gui.window['settings_amount_input'].update(value=400)
+                else:
+                    self.controller.amount_players = value
+                self.controller.generate_all_data()
+
             elif event == 'debug_startmatch_btn':
                 self.is_match_running = True
                 self.controller.reset_match(match_live)
@@ -350,13 +360,14 @@ class GUI:
             ch_file = 'champions.json'
             pl_file = 'players.json'
             t_file = 'teams.json'
-
+        
         labels = [
             [esm_form_text('Language:')],
             [esm_form_text('Font scale:')],
             [esm_form_text('Champions file:')],
             [esm_form_text('Players file:')],
             [esm_form_text('Teams file:')],
+            [esm_form_text('Generate new files:')]
         ]
 
         controls = [
@@ -369,11 +380,13 @@ class GUI:
             sg.FileBrowse(target='settings_pl_file')],
             [esm_input_text(t_file, size=size_elements, key='settings_t_file'),
             sg.FileBrowse(target='settings_t_file')],
+            [esm_input_text('400', key='settings_amount_input', size=size_elements), 
+            esm_button('Generate', font=(default_font, default_font_size), key='settings_generate_btn')]
         ]
         
         return [
             [esm_title_text('Settings')],
-            [sg.Column(labels, element_justification='left'),
+            [sg.Column(labels, element_justification='right'),
             sg.Column(controls, element_justification='left')],
             [esm_button('Apply', key='settings_apply_btn'),
             esm_button('Cancel', key='settings_cancel_btn')]

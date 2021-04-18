@@ -125,7 +125,7 @@ class View:
             elif event == 'debug_match_btn':
                 self.controller.check_files()
                 if not self.controller.current_match:
-                    match_live = self.controller.initialize_debug_match()
+                    match_live = self.controller.initialize_random_debug_match()
                 else:
                     match_live = self.controller.current_match
                 
@@ -151,7 +151,7 @@ class View:
             
             elif event == 'debug_newteams_btn':
                 self.controller.check_files()
-                match_live = self.controller.initialize_debug_match()
+                match_live = self.controller.initialize_random_debug_match()
                 data = self.team_data(match_live=match_live)
                 self.gui.update_debug_match_info(match_live, data)
             
@@ -346,7 +346,7 @@ class GUI:
         """
 
         label_pad = (0, 5)
-        size_element = (29,1)
+        size_element = (29, 1)
 
         labels = [
             [esm_form_text('Game Name:', pad=label_pad)],

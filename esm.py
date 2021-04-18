@@ -15,14 +15,12 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import threading
-import random
-import uuid
 
+from src.core.esports.moba.mobaevent import MobaEventHandler
+from src.core.core import Core
 from src.resources.generator.generate_teams import TeamGenerator
 from src.resources.generator.generate_players import MobaPlayerGenerator
 from src.resources.generator.generate_champions import ChampionGenerator
-from src.core.esports.moba.mobaevent import MobaEventHandler
-from src.core.core import Core
 from src.ui.gui import View
 
 
@@ -80,23 +78,8 @@ class ESM:
         match.event_handler = MobaEventHandler()
         match.victorious_team = None
     
-    def initialize_debug_match(self):
-        t = self.core.teams
-        pl = self.core.players
-
-        pl.get_players_objects()
-
-        t.player_list = pl.players
-        t.get_teams_dict()
-        t.get_teams_objects()
-
-        team1 = random.choice(t.teams)
-        t.teams.remove(team1)
-        team2 = random.choice(t.teams)
-        t.teams.remove(team2)
-
-        self.core.initialize_match(uuid.uuid4(), team1, team2)
-        self.core.initialize_match_simulation(self.core.match)
+    def initialize_random_debug_match(self):
+        self.core.initialize_random_debug_match()
 
         # Resetting
         self.reset_generators()
@@ -113,7 +96,7 @@ class ESM:
             self.match_thread.start()
             self.view.disable_debug_buttons()
         except Exception as e:
-            print('Error starting thread.')
+            self.view.print_error(e)
 
     def app(self):
         self.view.start()

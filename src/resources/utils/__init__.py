@@ -106,3 +106,12 @@ def get_key_from_json(key: str = 'name', file: str = 'teams.json') -> list:
     :return:
     """
     return [obj[key] for obj in load_list_from_json(file)]
+
+
+def get_localedir(folder: str =ROOT_DIR) -> str:
+    localedir = 'locale'
+    for root, dir, _ in os.walk(folder):
+        if localedir in dir:
+            return os.path.join(root, localedir)
+    else:
+        raise NotADirectoryError('Directory not found')

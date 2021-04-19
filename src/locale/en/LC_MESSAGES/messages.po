@@ -1,0 +1,195 @@
+# ESPORTS MANAGER
+# Copyright (C) 2020 - 2021 PEDRENRIQUE G. GUIMARÃES
+# This file is distributed under the same license as the ESM package.
+# PEDRENRIQUE G. GUIMARÃES <PEDRENRIQUEGG@HOTMAIL.COM>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-19 08:15-0300\n"
+"PO-Revision-Date: 2021-04-19 11:14-0300\n"
+"Last-Translator: <EMAIL@ADDRESS>\n"
+"Language-Team: English\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\src\ui\gui.py:291
+msgid "Generating data!"
+msgstr "Generating data!"
+
+#: .\src\ui\gui.py:305
+msgid "Debug Game Mode"
+msgstr "Debug Game Mode"
+
+#: .\src\ui\gui.py:310 .\src\ui\gui.py:367
+msgid "New Game"
+msgstr "New Game"
+
+#: .\src\ui\gui.py:315 .\src\ui\gui.py:382 .\src\ui\gui.py:385
+msgid "Load Game"
+msgstr "Load Game"
+
+#: .\src\ui\gui.py:320 .\src\ui\gui.py:427
+msgid "Settings"
+msgstr "Settings"
+
+#: .\src\ui\gui.py:325 .\src\ui\gui.py:459
+msgid "Exit"
+msgstr "Exit"
+
+#: .\src\ui\gui.py:359
+msgid "Game Name:"
+msgstr "Game Name:"
+
+#: .\src\ui\gui.py:369
+msgid "Create Game"
+msgstr "Create Game"
+
+#: .\src\ui\gui.py:369 .\src\ui\gui.py:386 .\src\ui\gui.py:431
+#: .\src\ui\gui.py:454 .\src\ui\gui.py:486 .\src\ui\gui.py:547
+msgid "Cancel"
+msgstr "Cancel"
+
+#: .\src\ui\gui.py:383
+msgid "Saved Games:"
+msgstr "Saved Games:"
+
+#: .\src\ui\gui.py:392
+msgid "English"
+msgstr "English"
+
+#: .\src\ui\gui.py:392
+msgid "Portuguese"
+msgstr "Portuguese"
+
+#: .\src\ui\gui.py:404
+msgid "Language:"
+msgstr "Language:"
+
+#: .\src\ui\gui.py:405
+msgid "Font scale:"
+msgstr "Font scale:"
+
+#: .\src\ui\gui.py:406
+msgid "Champions file:"
+msgstr "Champions file:"
+
+#: .\src\ui\gui.py:407
+msgid "Players file:"
+msgstr "Players file:"
+
+#: .\src\ui\gui.py:408
+msgid "Teams file:"
+msgstr "Teams file:"
+
+#: .\src\ui\gui.py:409
+msgid "Generate new files:"
+msgstr "Generate new files:"
+
+#: .\src\ui\gui.py:423
+msgid "Generate"
+msgstr "Generate"
+
+#: .\src\ui\gui.py:430
+msgid "Apply"
+msgstr "Apply"
+
+#: .\src\ui\gui.py:443
+msgid "Choose your debug mode"
+msgstr "Choose your debug mode"
+
+#: .\src\ui\gui.py:444 .\src\ui\gui.py:538
+msgid "Debug Match"
+msgstr "Debug Match"
+
+#: .\src\ui\gui.py:449
+msgid "Debug Pick Team"
+msgstr "Debug Pick Team"
+
+#: .\src\ui\gui.py:468
+msgid "Team Name"
+msgstr "Team Name"
+
+#: .\src\ui\gui.py:468 .\src\ui\gui.py:469 .\src\ui\gui.py:498
+msgid "Skill"
+msgstr "Skill"
+
+#: .\src\ui\gui.py:469 .\src\ui\gui.py:498
+msgid "Lane"
+msgstr "Lane"
+
+#: .\src\ui\gui.py:469
+msgid "Nickname"
+msgstr "Nickname"
+
+#: .\src\ui\gui.py:469
+msgid "Nationality"
+msgstr "Nationality"
+
+#: .\src\ui\gui.py:472
+msgid "Team:"
+msgstr "Team:"
+
+#: .\src\ui\gui.py:477
+msgid "Players:"
+msgstr "Players:"
+
+#: .\src\ui\gui.py:478
+msgid "Select a team"
+msgstr "Select a team"
+
+#: .\src\ui\gui.py:482
+msgid "Pick your team"
+msgstr "Pick your team"
+
+#: .\src\ui\gui.py:485
+msgid "Confirm"
+msgstr "Confirm"
+
+#: .\src\ui\gui.py:494
+msgid "Picks and Bans"
+msgstr "Picks and Bans"
+
+#: .\src\ui\gui.py:498
+msgid "Player Name"
+msgstr "Player Name"
+
+#: .\src\ui\gui.py:498
+msgid "Kills"
+msgstr "Kills"
+
+#: .\src\ui\gui.py:498
+msgid "Deaths"
+msgstr "Deaths"
+
+#: .\src\ui\gui.py:498
+msgid "Assists"
+msgstr "Assists"
+
+#: .\src\ui\gui.py:498
+msgid "Champion"
+msgstr "Champion"
+
+#: .\src\ui\gui.py:543
+msgid "Simulate step-by-step"
+msgstr "Simulate step-by-step"
+
+#: .\src\ui\gui.py:544
+msgid "Start Match"
+msgstr "Start Match"
+
+#: .\src\ui\gui.py:545
+msgid "New Teams"
+msgstr "New Teams"
+
+#: .\src\ui\gui.py:546
+msgid "Reset Match"
+msgstr "Reset Match"
+
+#: .\src\ui\gui.py:552
+msgid "The following error happened:"
+msgstr "The following error happened:"

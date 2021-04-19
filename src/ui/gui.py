@@ -16,12 +16,19 @@
 
 import base64
 import PySimpleGUI as sg
+import gettext
 import traceback
 
 from src.core.esports.moba.match_live import MatchLive
 from src.resources import RES_DIR
-from src.resources.utils import find_file
+from src.resources.utils import find_file, get_localedir
 from src.ui.gui_components import *
+
+
+localedir = get_localedir()
+translate = gettext.translation('messages', localedir=localedir, languages=['pt_BR'])
+translate.install()
+_ = translate.gettext
 
 
 class View:
@@ -281,7 +288,7 @@ class GUI:
         ]
 
     def generate_data_window(self):
-        sg.popup_auto_close('Generating data!')
+        sg.popup_auto_close(_('Generating data!'))
     
     def main_screen(self) -> list:
         """
@@ -295,27 +302,27 @@ class GUI:
 
         return [
             [sg.Image(logo_path, pad=(50,0))],
-            [esm_button('Debug Game Mode',
+            [esm_button(_('Debug Game Mode'),
                         key ='main_debug_btn',
                         pad=button_pad,
                         size=button_size
             )],
-            [esm_button('New Game',
+            [esm_button(_('New Game'),
                         key ='main_newgame_btn',
                         pad=button_pad,
                         size=button_size
             )],
-            [esm_button('Load Game',
+            [esm_button(_('Load Game'),
                         key ='main_loadgame_btn',
                         pad=button_pad,
                         size=button_size
             )],
-            [esm_button('Settings',
+            [esm_button(_('Settings'),
                         key ='main_settings_btn',
                         pad=button_pad,
                         size=button_size
             )],
-            [esm_button('Exit',
+            [esm_button(_('Exit'),
                         key ='main_exit_btn',
                         pad=button_pad,
                         size=button_size
@@ -349,7 +356,7 @@ class GUI:
         size_element = (29, 1)
 
         labels = [
-            [esm_form_text('Game Name:', pad=label_pad)],
+            [esm_form_text(_('Game Name:'), pad=label_pad)],
         ]
 
         inputs = [
@@ -357,9 +364,9 @@ class GUI:
         ]
 
         return [
-            [esm_title_text('New Game')],
+            [esm_title_text(_('New Game'))],
             [sg.Column(labels, element_justification='left'), sg.Column(inputs, element_justification='left')],
-            [esm_button('Create Game', key='ng_creategame_btn'), esm_button('Cancel', key='ng_cancel_btn')]
+            [esm_button(_('Create Game'), key='ng_creategame_btn'), esm_button(_('Cancel'), key='ng_cancel_btn')]
         ]
 
     def load_game_layout(self):
@@ -372,17 +379,17 @@ class GUI:
         size_btn = (10,1)
 
         return [
-            [esm_title_text('Load Game')],
-            [esm_form_text('Saved Games:')],
+            [esm_title_text(_('Load Game'))],
+            [esm_form_text(_('Saved Games:'))],
             [esm_listbox(saved_games, size=(50, 20), key='load_game_listbox', enable_events=True)],
-            [esm_button('Load Game', key='load_game_btn', size=size_btn),
-            esm_button('Cancel', key='load_game_cancel_btn', size=size_btn)]
+            [esm_button(_('Load Game'), key='load_game_btn', size=size_btn),
+            esm_button(_('Cancel'), key='load_game_cancel_btn', size=size_btn)]
         ]
     
     def settings_layout(self):
         size_elements = (45, 2)
         
-        languages = ['English', 'Portuguese']
+        languages = [_('English'), _('Portuguese')]
 
         try:
             ch_file = find_file('champions.json')
@@ -394,12 +401,12 @@ class GUI:
             t_file = 'teams.json'
         
         labels = [
-            [esm_form_text('Language:')],
-            [esm_form_text('Font scale:')],
-            [esm_form_text('Champions file:')],
-            [esm_form_text('Players file:')],
-            [esm_form_text('Teams file:')],
-            [esm_form_text('Generate new files:')]
+            [esm_form_text(_('Language:'))],
+            [esm_form_text(_('Font scale:'))],
+            [esm_form_text(_('Champions file:'))],
+            [esm_form_text(_('Players file:'))],
+            [esm_form_text(_('Teams file:'))],
+            [esm_form_text(_('Generate new files:'))]
         ]
 
         controls = [
@@ -413,15 +420,15 @@ class GUI:
             [esm_input_text(t_file, size=size_elements, key='settings_t_file'),
             sg.FileBrowse(target='settings_t_file')],
             [esm_input_text('400', key='settings_amount_input', size=size_elements), 
-            esm_button('Generate', font=(default_font, default_font_size), key='settings_generate_btn')]
+            esm_button(_('Generate'), font=(default_font, default_font_size), key='settings_generate_btn')]
         ]
         
         return [
-            [esm_title_text('Settings')],
+            [esm_title_text(_('Settings'))],
             [sg.Column(labels, element_justification='right'),
             sg.Column(controls, element_justification='left')],
-            [esm_button('Apply', key='settings_apply_btn'),
-            esm_button('Cancel', key='settings_cancel_btn')]
+            [esm_button(_('Apply'), key='settings_apply_btn'),
+            esm_button(_('Cancel'), key='settings_cancel_btn')]
         ]
 
     def debug_game_mode_screen(self) -> list:
@@ -433,23 +440,23 @@ class GUI:
         button_size = (20, 2)
 
         return [
-            [esm_title_text('Choose your debug mode')],
-            [esm_button('Debug Match',
+            [esm_title_text(_('Choose your debug mode'))],
+            [esm_button(_('Debug Match'),
                         key ='debug_match_btn',
                         pad=button_pad,
                         size=button_size
             )],
-            [esm_button('Debug Pick Team',
+            [esm_button(_('Debug Pick Team'),
                         key ='debug_pickteam_btn',
                         pad=button_pad,
                         size=button_size
             )],
-            [esm_button('Cancel',
+            [esm_button(_('Cancel'),
                         key ='debug_cancelmain_btn',
                         pad=button_pad,
                         size=button_size
             )],
-            [esm_button('Exit',
+            [esm_button(_('Exit'),
                         key ='main_exit_btn',
                         pad=button_pad,
                         size=button_size
@@ -458,25 +465,25 @@ class GUI:
     
     def debug_pick_a_team(self):
 
-        team_headings = ['Team Name', 'Skill']
-        player_headings = ['Lane', 'Nickname', 'Nationality', 'Skill']
+        team_headings = [_('Team Name'), _('Skill')]
+        player_headings = [_('Lane'), _('Nickname'), _('Nationality'), _('Skill')]
 
         team_list_frame = [
-            [esm_form_text('Team:')],
+            [esm_form_text(_('Team:'))],
             [esm_table(values=[['', '']], key='debug_pick_team_table', headings=team_headings, enable_events=True)]
         ]
 
         player_list_frame = [
-            [esm_form_text('Players:')],
-            [esm_table(values=[['', 'Select a team', '', '']], key='debug_pick_player_table', headings=player_headings, enable_events=True)]
+            [esm_form_text(_('Players:'))],
+            [esm_table(values=[['', _('Select a team'), '', '']], key='debug_pick_player_table', headings=player_headings, enable_events=True)]
         ]
 
         return [
-            [esm_title_text('Pick your team')],
+            [esm_title_text(_('Pick your team'))],
             [sg.Column(team_list_frame, element_justification='center'),
             sg.Column(player_list_frame, element_justification='center')],
-            [esm_button('Confirm', key='debug_confirmteam_btn'),
-            esm_button('Cancel', key='debug_cancelteam_btn')]
+            [esm_button(_('Confirm'), key='debug_confirmteam_btn'),
+            esm_button(_('Cancel'), key='debug_cancelteam_btn')]
         ]
 
 
@@ -484,11 +491,11 @@ class GUI:
         
         
         return [
-            [esm_title_text('Picks and Bans')],
+            [esm_title_text(_('Picks and Bans'))],
         ]
     
     def debug_layout(self):
-        headings = ['Lane', 'Player Name', 'Kills', 'Deaths', 'Assists', 'Champion', 'Skill']
+        headings = [_('Lane'), _('Player Name'), _('Kills'), _('Deaths'), _('Assists'), _('Champion'), _('Skill')]
 
         team1_column = [
             [esm_form_text('Team1DebugMatch', key='debug_team1name'),
@@ -528,21 +535,21 @@ class GUI:
         ]
 
         return [
-            [esm_title_text('Debug Match')],
+            [esm_title_text(_('Debug Match'))],
             [sg.Column(layout=team1_column, element_justification='center'),
             sg.Column(layout=team2_column, element_justification='center')],
             [sg.ProgressBar(100, size=(80, 20),border_width=1, key='debug_winprob')],
             [esm_output()],
-            [esm_checkbox('Simulate step-by-step', key='debug_simulate_checkbox')],
-            [esm_button('Start Match', key='debug_startmatch_btn'),
-            esm_button('New Teams', key='debug_newteams_btn'),
-            esm_button('Reset Match', key='debug_resetmatch_btn'),
-            esm_button('Cancel', key='debug_cancel_btn')]
+            [esm_checkbox(_('Simulate step-by-step'), key='debug_simulate_checkbox')],
+            [esm_button(_('Start Match'), key='debug_startmatch_btn'),
+            esm_button(_('New Teams'), key='debug_newteams_btn'),
+            esm_button(_('Reset Match'), key='debug_resetmatch_btn'),
+            esm_button(_('Cancel'), key='debug_cancel_btn')]
         ]
         
     def error_message(self, e):
         tb = traceback.format_exc()
-        sg.Print('The following error happened:', e, tb)
+        sg.Print(_('The following error happened:'), e, tb)
         sg.popup_error(f'The following error occurred:', e, tb)
 
 

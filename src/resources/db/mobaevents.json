@@ -23,7 +23,7 @@
   {
     "name": "BARON",
     "priority": 50,
-    "points": 100,
+    "points": 200,
     "spawn_time": 20.0,
     "cooldown": 6.0
   },

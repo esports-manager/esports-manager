@@ -99,18 +99,25 @@ class MobaPlayerGenerator:
         rand_date = random.randrange(days_interval.days)    # chooses a random date from the max days interval
         self.dob = min_year + timedelta(days=rand_date)     # assigns date of birth
 
-    def generate_champions(self):
+    def generate_champions(self, amount=0):
         """
-        Generates champion skill level for each player
+        Generates champion skill level for each player.
+        Chooses a random amount of champions to generate.
         """
         self.champions.clear()
         if not self.champions_list:
             self.champions_list = ChampionGenerator().get_champions()
 
-        for champion in self.champions_list:
+        champs = self.champions_list.copy()
+        if amount == 0:
+            amount = random.randrange(3, 7)
+
+        for _ in range(amount):
             champion_dict = {}
-            mult = random.randrange(50, 100) / 100
-            champion_dict['id'] = champion.champion_id
+            ch = random.choice(champs)
+            champs.remove(ch)
+            mult = random.randrange(60, 100) / 100
+            champion_dict['id'] = ch.champion_id
             champion_dict['mult'] = mult
             self.champions.append(champion_dict)
 
@@ -168,7 +175,7 @@ class MobaPlayerGenerator:
                             'nationality': self.nationality,
                             'skill': self.skill,
                             'multipliers': self.multipliers,
-                            'champions': self.champions}
+                            'champions': self.champions.copy()}
 
     def get_object(self):
         """
@@ -270,7 +277,6 @@ class MobaPlayerGenerator:
             self.champions = player['champions']
             self.get_object()
             self.players.append(self.player_obj)
-            
 
     def generate_file(self):
         """

@@ -256,6 +256,8 @@ class MobaPlayerGenerator:
         """
         Loads the players from the players.json file, storing on the player dictionary list
         """
+        if self.players_dict:
+            self.players_dict.clear()
         self.players_dict = load_list_from_json('players.json')
 
     def get_players_objects(self):
@@ -263,6 +265,8 @@ class MobaPlayerGenerator:
         Creates players objects based on the player dictionary
         """
         self.players = []
+        if self.players:
+            self.players.clear()
         if not self.players_dict:
             self.get_players_dict()
         for player in self.players_dict:

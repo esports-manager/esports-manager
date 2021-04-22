@@ -164,6 +164,8 @@ class TeamGenerator:
         """
         Retrieves teams list based on the teams.json file
         """
+        if self.teams_dict:
+            self.teams_dict.clear()
         self.teams_dict = load_list_from_json('teams.json')
     
     def get_roster(self, team):
@@ -185,6 +187,8 @@ class TeamGenerator:
         Retrieves champions objects based on teams list dict
         """
         self.teams = []
+        if self.teams:
+            self.teams.clear()
         if not self.teams_dict:
             self.get_teams_dict()
         for team in self.teams_dict:

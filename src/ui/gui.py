@@ -18,6 +18,7 @@ import base64
 import PySimpleGUI as sg
 import gettext
 import traceback
+import time
 
 from src.core.esports.moba.match_live import MatchLive
 from src.resources import RES_DIR
@@ -40,8 +41,8 @@ class View:
     def print_error(self, e):
         self.gui.error_message(e)
     
-    def print_generate_data_window(self):
-        self.gui.generate_data_window()
+    def print_generate_data_window(self, players, teams, champions):
+        self.gui.generate_data_window(players, teams, champions)
     
     def make_screen_visible(self, inv_screen, vis_screen):
         self.gui.window[inv_screen].update(visible=False)
@@ -214,7 +215,7 @@ class GUI:
             'eSports Manager',
             element_justification='center',
             layout=self.layouts,
-            size=(1300, 780),
+            size=(1360, 800),
             icon=encoded_icon,
             resizable=True,
         )
@@ -287,8 +288,17 @@ class GUI:
                     )]
         ]
 
-    def generate_data_window(self):
-        sg.popup_auto_close(_('Generating data!'))
+    def generate_data_window(self, players, teams, champions):
+        for i, _ in enumerate(champions):
+            sg.one_line_progress_meter('Generating Champions', i+1, len(champions), 'generate_champ')
+        
+        for i, _ in enumerate(players):
+            sg.one_line_progress_meter('Generating players', i+1, len(players), 'generate_players')
+        
+        for i, _ in enumerate(teams):
+            sg.one_line_progress_meter('Generating teams', i+1, len(teams), 'generate_teams')
+
+        # sg.popup_auto_close(_('Generating data!'))
     
     def main_screen(self) -> list:
         """

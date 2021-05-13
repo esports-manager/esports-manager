@@ -24,160 +24,6 @@ from src.resources.utils import find_file
 from src.ui.gui_components import *
 
 
-class View:
-    def __init__(self, controller):
-        self.gui = GUI(controller)
-        self.controller = controller
-        self.is_match_running = False
-    
-    def print_error(self, e):
-        self.gui.error_message(e)
-    
-    def print_generate_data_window(self):
-        self.gui.generate_data_window()
-    
-    def make_screen_visible(self, inv_screen, vis_screen):
-        self.gui.window[inv_screen].update(visible=False)
-        self.gui.window[vis_screen].update(visible=True)
-
-    def disable_debug_buttons(self):
-        self.gui.window.Element('debug_startmatch_btn').Update(disabled=True)
-        self.gui.window.Element('debug_newteams_btn').Update(disabled=True)
-        self.gui.window.Element('debug_resetmatch_btn').Update(disabled=True)
-    
-    def update_match_sim_elements(self):
-        self.gui.window.write_event_value('MATCH SIMULATED', 'DONE')
-        self.gui.window.Element('debug_startmatch_btn').Update(disabled=False)
-        self.gui.window.Element('debug_newteams_btn').Update(disabled=False)
-        self.gui.window.Element('debug_resetmatch_btn').Update(disabled=False)
-    
-    def team_data(self, match_live):
-        players = [[player for player in team.list_players] for team in match_live.match.teams]
-
-        # Event handler shuffles players, this keeps them in order
-        for team in players:
-            team.sort(key=lambda x: x.lane.value)
-        
-        data = []
-        for team in players:
-            team_data = [
-                [
-                    player.lane.name,
-                    player.nick_name,
-                    player.kills,
-                    player.deaths,
-                    player.assists,
-                    player.champion,
-                    int(player.get_player_total_skill())
-                ] for player in team
-            ]
-            data.append(team_data)
-
-        return data
-    
-    def start(self):
-        match_live = None
-        
-        while True:
-            event, values = self.gui.window.read(timeout=1000)
-
-            if event in [sg.WINDOW_CLOSED, 'main_exit_btn']:
-                break
-
-            elif event == 'main_newgame_btn':
-                self.make_screen_visible('main_screen', 'new_game_screen')
-            
-            elif event == 'main_loadgame_btn':
-                self.make_screen_visible('main_screen', 'load_game_screen')
-            
-            elif event == 'debug_cancelmain_btn':
-                self.make_screen_visible('debug_game_mode_screen', 'main_screen')
-            
-            elif event == 'debug_cancel_btn':
-                if self.is_match_running:
-                    self.controller.current_match.is_match_over = True
-                self.make_screen_visible('debug_match_screen', 'main_screen')
-            
-            elif event == 'main_debug_btn':
-                self.make_screen_visible('main_screen', 'debug_game_mode_screen')
-                
-            elif event == 'main_newgame_btn':
-                self.make_screen_visible('main_screen', 'new_game_screen')
-            
-            elif event == 'main_loadgame_btn':
-                self.make_screen_visible('main_screen', 'load_game_screen')
-
-            elif event == 'main_settings_btn':
-                self.make_screen_visible('main_screen', 'settings_screen')
-
-            elif event == 'load_game_cancel_btn':
-                self.make_screen_visible('load_game_screen', 'main_screen')
-            
-            elif event == 'ng_cancel_btn':
-                self.make_screen_visible('new_game_screen', 'main_screen')
-            
-            elif event == 'settings_cancel_btn':
-                self.make_screen_visible('settings_screen', 'main_screen')
-            
-            elif event == 'debug_pickteam_btn':
-                self.make_screen_visible('debug_game_mode_screen', 'debug_pickteam_screen')
-            
-            elif event == 'debug_match_btn':
-                self.controller.check_files()
-                if not self.controller.current_match:
-                    match_live = self.controller.initialize_random_debug_match()
-                else:
-                    match_live = self.controller.current_match
-                
-                data = self.team_data(match_live=match_live)
-                self.gui.update_debug_match_info(match_live, data)
-                self.make_screen_visible('debug_game_mode_screen', 'debug_match_screen')
-            
-            elif event == 'settings_generate_btn':
-                try:
-                    value = int(values['settings_amount_input'])
-                except ValueError:
-                    self.controller.amount_players = 400
-                    self.gui.window['settings_amount_input'].update(value=400)
-                else:
-                    self.controller.amount_players = value
-                self.controller.generate_all_data()
-
-            elif event == 'debug_startmatch_btn':
-                self.is_match_running = True
-                self.controller.reset_match(match_live)
-                self.controller.current_match.is_match_over = False
-                self.controller.start_match_sim_thread()
-            
-            elif event == 'debug_newteams_btn':
-                self.controller.check_files()
-                match_live = self.controller.initialize_random_debug_match()
-                data = self.team_data(match_live=match_live)
-                self.gui.update_debug_match_info(match_live, data)
-            
-            
-
-            elif event == 'debug_resetmatch_btn':
-                self.controller.reset_match(match_live)
-                data = self.team_data(match_live=match_live)
-                self.gui.update_debug_match_info(match_live, data)
-            
-            
-            if match_live is not None:
-                if values['debug_simulate_checkbox']:
-                    match_live.simulate = True
-                else:
-                    match_live.simulate = False
-                
-
-            if self.is_match_running:
-                if not self.controller.current_match.is_match_over and self.controller.match_thread.is_alive():
-                    data = self.team_data(self.controller.current_match)
-                    self.gui.update_debug_match_info(self.controller.current_match, data)
-                else:
-                    self.is_match_running = False
-            
-
 class GUI:
     def __init__(self, controller):
         create_look_and_feel()
@@ -200,7 +46,7 @@ class GUI:
         """
 
         encoded_icon = self._encode_icon()
-        
+
         sg.theme(theme)
         self.layouts = self._get_layouts()
         return sg.Window(
@@ -224,47 +70,46 @@ class GUI:
                                     )
 
         col_debug_match_screen = sg.Column(self.debug_layout(),
-                                    key='debug_match_screen',
-                                    visible=False,
-                                    element_justification="center"
-                                    )
-        
+                                           key='debug_match_screen',
+                                           visible=False,
+                                           element_justification="center"
+                                           )
+
         col_newgame_screen = sg.Column(self.new_game_layout(),
-                                        key='new_game_screen',
-                                        visible=False,
-                                        element_justification="center"
-                                        )
-        
+                                       key='new_game_screen',
+                                       visible=False,
+                                       element_justification="center"
+                                       )
+
         col_loadgame_screen = sg.Column(self.load_game_layout(),
                                         key='load_game_screen',
                                         visible=False,
                                         element_justification="center"
                                         )
-        
+
         col_settings_screen = sg.Column(self.settings_layout(),
                                         key='settings_screen',
                                         visible=False,
                                         element_justification="center"
                                         )
-        
+
         col_debug_gamemode_screen = sg.Column(self.debug_game_mode_screen(),
-                                        key='debug_game_mode_screen',
-                                        visible=False,
-                                        element_justification="center"
-                                        )
-        
+                                              key='debug_game_mode_screen',
+                                              visible=False,
+                                              element_justification="center"
+                                              )
+
         col_debug_pickteam_screen = sg.Column(self.debug_pick_a_team(),
-                                        key='debug_pickteam_screen',
-                                        visible=False,
-                                        element_justification="center"
-                                        )
-        
+                                              key='debug_pickteam_screen',
+                                              visible=False,
+                                              element_justification="center"
+                                              )
+
         col_debug_picks_bans_screen = sg.Column(self.debug_picks_bans(),
-                                        key='debug_picks_bans_screen',
-                                        visible=False,
-                                        element_justification="center"
-                                        )
-        
+                                                key='debug_picks_bans_screen',
+                                                visible=False,
+                                                element_justification="center"
+                                                )
 
         return [
             [sg.Pane([col_main_screen,
@@ -275,15 +120,17 @@ class GUI:
                       col_debug_match_screen,
                       col_debug_pickteam_screen,
                       col_debug_picks_bans_screen,
-                    ],
+                      ],
                      relief=sg.RELIEF_FLAT, show_handle=False
-                    )]
+                     )]
         ]
 
-    def generate_data_window(self):
+    @staticmethod
+    def generate_data_window():
         sg.popup_auto_close('Generating data!')
-    
-    def main_screen(self) -> list:
+
+    @staticmethod
+    def main_screen() -> list:
         """
         Defines the main screen. This screen shows the initial options to play a new game, load game,
         use the Database Editor, or exit the game.
@@ -294,32 +141,32 @@ class GUI:
         button_size = (20, 2)
 
         return [
-            [sg.Image(logo_path, pad=(50,0))],
+            [sg.Image(logo_path, pad=(50, 0))],
             [esm_button('Debug Game Mode',
-                        key ='main_debug_btn',
+                        key='main_debug_btn',
                         pad=button_pad,
                         size=button_size
-            )],
+                        )],
             [esm_button('New Game',
-                        key ='main_newgame_btn',
+                        key='main_newgame_btn',
                         pad=button_pad,
                         size=button_size
-            )],
+                        )],
             [esm_button('Load Game',
-                        key ='main_loadgame_btn',
+                        key='main_loadgame_btn',
                         pad=button_pad,
                         size=button_size
-            )],
+                        )],
             [esm_button('Settings',
-                        key ='main_settings_btn',
+                        key='main_settings_btn',
                         pad=button_pad,
                         size=button_size
-            )],
+                        )],
             [esm_button('Exit',
-                        key ='main_exit_btn',
+                        key='main_exit_btn',
                         pad=button_pad,
                         size=button_size
-            )],
+                        )],
         ]
 
     def update_debug_match_info(self, match, data):
@@ -340,7 +187,8 @@ class GUI:
         window.Element('debug_team2name').Update(value=match.match.team2.name)
         window.refresh()
 
-    def new_game_layout(self) -> list:
+    @staticmethod
+    def new_game_layout() -> list:
         """
         Defines the new game screen.
         """
@@ -362,26 +210,28 @@ class GUI:
             [esm_button('Create Game', key='ng_creategame_btn'), esm_button('Cancel', key='ng_cancel_btn')]
         ]
 
-    def load_game_layout(self):
+    @staticmethod
+    def load_game_layout():
         saved_games = [
             'Saved Game 1',
             'Saved Game 2',
             'Saved Game 3',
         ]
 
-        size_btn = (10,1)
+        size_btn = (10, 1)
 
         return [
             [esm_title_text('Load Game')],
             [esm_form_text('Saved Games:')],
             [esm_listbox(saved_games, size=(50, 20), key='load_game_listbox', enable_events=True)],
             [esm_button('Load Game', key='load_game_btn', size=size_btn),
-            esm_button('Cancel', key='load_game_cancel_btn', size=size_btn)]
+             esm_button('Cancel', key='load_game_cancel_btn', size=size_btn)]
         ]
-    
-    def settings_layout(self):
+
+    @staticmethod
+    def settings_layout():
         size_elements = (45, 2)
-        
+
         languages = ['English', 'Portuguese']
 
         try:
@@ -392,7 +242,7 @@ class GUI:
             ch_file = 'champions.json'
             pl_file = 'players.json'
             t_file = 'teams.json'
-        
+
         labels = [
             [esm_form_text('Language:')],
             [esm_form_text('Font scale:')],
@@ -404,27 +254,29 @@ class GUI:
 
         controls = [
             # TODO: Replace with supported i18n
-            [esm_input_combo(languages, default_value=languages[0], size=size_elements, key='settings_languages_inpcombo')],
+            [esm_input_combo(languages, default_value=languages[0], size=size_elements,
+                             key='settings_languages_inpcombo')],
             [esm_input_text('1', size=size_elements, key='settings_fontsize_input')],
             [esm_input_text(ch_file, size=size_elements, key='settings_ch_file'),
-            sg.FileBrowse(target='settings_ch_file')],
+             sg.FileBrowse(target='settings_ch_file')],
             [esm_input_text(pl_file, size=size_elements, key='settings_pl_file'),
-            sg.FileBrowse(target='settings_pl_file')],
+             sg.FileBrowse(target='settings_pl_file')],
             [esm_input_text(t_file, size=size_elements, key='settings_t_file'),
-            sg.FileBrowse(target='settings_t_file')],
-            [esm_input_text('400', key='settings_amount_input', size=size_elements), 
-            esm_button('Generate', font=(default_font, default_font_size), key='settings_generate_btn')]
+             sg.FileBrowse(target='settings_t_file')],
+            [esm_input_text('400', key='settings_amount_input', size=size_elements),
+             esm_button('Generate', font=(default_font, default_font_size), key='settings_generate_btn')]
         ]
-        
+
         return [
             [esm_title_text('Settings')],
             [sg.Column(labels, element_justification='right'),
-            sg.Column(controls, element_justification='left')],
+             sg.Column(controls, element_justification='left')],
             [esm_button('Apply', key='settings_apply_btn'),
-            esm_button('Cancel', key='settings_cancel_btn')]
+             esm_button('Cancel', key='settings_cancel_btn')]
         ]
 
-    def debug_game_mode_screen(self) -> list:
+    @staticmethod
+    def debug_game_mode_screen() -> list:
         """
         Defines the Debug Game Mode screen. This screen shows the Debug game options.
         """
@@ -435,28 +287,29 @@ class GUI:
         return [
             [esm_title_text('Choose your debug mode')],
             [esm_button('Debug Match',
-                        key ='debug_match_btn',
+                        key='debug_match_btn',
                         pad=button_pad,
                         size=button_size
-            )],
+                        )],
             [esm_button('Debug Pick Team',
-                        key ='debug_pickteam_btn',
+                        key='debug_pickteam_btn',
                         pad=button_pad,
                         size=button_size
-            )],
+                        )],
             [esm_button('Cancel',
-                        key ='debug_cancelmain_btn',
+                        key='debug_cancelmain_btn',
                         pad=button_pad,
                         size=button_size
-            )],
+                        )],
             [esm_button('Exit',
-                        key ='main_exit_btn',
+                        key='main_exit_btn',
                         pad=button_pad,
                         size=button_size
-            )],
+                        )],
         ]
-    
-    def debug_pick_a_team(self):
+
+    @staticmethod
+    def debug_pick_a_team():
 
         team_headings = ['Team Name', 'Skill']
         player_headings = ['Lane', 'Nickname', 'Nationality', 'Skill']
@@ -468,81 +321,80 @@ class GUI:
 
         player_list_frame = [
             [esm_form_text('Players:')],
-            [esm_table(values=[['', 'Select a team', '', '']], key='debug_pick_player_table', headings=player_headings, enable_events=True)]
+            [esm_table(values=[['', 'Select a team', '', '']], key='debug_pick_player_table', headings=player_headings,
+                       enable_events=True)]
         ]
 
         return [
             [esm_title_text('Pick your team')],
             [sg.Column(team_list_frame, element_justification='center'),
-            sg.Column(player_list_frame, element_justification='center')],
+             sg.Column(player_list_frame, element_justification='center')],
             [esm_button('Confirm', key='debug_confirmteam_btn'),
-            esm_button('Cancel', key='debug_cancelteam_btn')]
+             esm_button('Cancel', key='debug_cancelteam_btn')]
         ]
 
+    @staticmethod
+    def debug_picks_bans():
 
-    def debug_picks_bans(self):
-        
-        
         return [
             [esm_title_text('Picks and Bans')],
         ]
-    
-    def debug_layout(self):
+
+    @staticmethod
+    def debug_layout():
         headings = ['Lane', 'Player Name', 'Kills', 'Deaths', 'Assists', 'Champion', 'Skill']
 
         team1_column = [
             [esm_form_text('Team1DebugMatch', key='debug_team1name'),
-            esm_form_text('0000', key='debug_team1skill')],
+             esm_form_text('0000', key='debug_team1skill')],
             [esm_form_text('0.0000', key='debug_team1winprob')],
             [esm_table(headings, headings=headings, key='debug_team1table')],
             [esm_form_text({
-                        "top": 3,
-                        "mid": 3,
-                        "bot": 3,
-                        "base": 2
-                    }, key='debug_team1towers')],
+                "top": 3,
+                "mid": 3,
+                "bot": 3,
+                "base": 2
+            }, key='debug_team1towers')],
             [esm_form_text({
-                        "top": 1,
-                        "mid": 1,
-                        "bot": 1
-                    }, key='debug_team1inhibs')]
+                "top": 1,
+                "mid": 1,
+                "bot": 1
+            }, key='debug_team1inhibs')]
         ]
 
-        
         team2_column = [
             [esm_form_text('Team2DebugMatch', key='debug_team2name'),
-            esm_form_text('0000', key='debug_team2skill')],
+             esm_form_text('0000', key='debug_team2skill')],
             [esm_form_text('0.0000', key='debug_team2winprob')],
             [esm_table(headings, headings=headings, key='debug_team2table')],
             [esm_form_text({
-                        "top": 3,
-                        "mid": 3,
-                        "bot": 3,
-                        "base": 2
-                    }, key='debug_team2towers')],
+                "top": 3,
+                "mid": 3,
+                "bot": 3,
+                "base": 2
+            }, key='debug_team2towers')],
             [esm_form_text({
-                        "top": 1,
-                        "mid": 1,
-                        "bot": 1
-                    }, key='debug_team2inhibs')]
+                "top": 1,
+                "mid": 1,
+                "bot": 1
+            }, key='debug_team2inhibs')]
         ]
 
         return [
             [esm_title_text('Debug Match')],
             [sg.Column(layout=team1_column, element_justification='center'),
-            sg.Column(layout=team2_column, element_justification='center')],
-            [sg.ProgressBar(100, size=(80, 20),border_width=1, key='debug_winprob')],
+             sg.Column(layout=team2_column, element_justification='center')],
+            [sg.ProgressBar(100, size=(80, 20), border_width=1, key='debug_winprob')],
             [esm_output()],
             [esm_checkbox('Simulate step-by-step', key='debug_simulate_checkbox')],
             [esm_button('Start Match', key='debug_startmatch_btn'),
-            esm_button('New Teams', key='debug_newteams_btn'),
-            esm_button('Reset Match', key='debug_resetmatch_btn'),
-            esm_button('Cancel', key='debug_cancel_btn')]
+             esm_button('New Teams', key='debug_newteams_btn'),
+             esm_button('Reset Match', key='debug_resetmatch_btn'),
+             esm_button('Cancel', key='debug_cancel_btn')]
         ]
-        
-    def error_message(self, e):
+
+    @staticmethod
+    def error_message(e):
         tb = traceback.format_exc()
         sg.Print('The following error happened:', e, tb)
         sg.popup_error(f'The following error occurred:', e, tb)
-
-

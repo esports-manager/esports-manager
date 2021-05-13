@@ -21,7 +21,7 @@ from src.core.core import Core
 from src.resources.generator.generate_teams import TeamGenerator
 from src.resources.generator.generate_players import MobaPlayerGenerator
 from src.resources.generator.generate_champions import ChampionGenerator
-from src.ui.gui import View
+from src.ui.view import View
 
 
 class ESM:

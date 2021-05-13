@@ -126,8 +126,15 @@ class GUI:
         ]
 
     @staticmethod
-    def generate_data_window():
-        sg.popup_auto_close('Generating data!')
+    def generate_data_window(players, teams, champions):
+        for i, _ in enumerate(champions):
+            sg.one_line_progress_meter('Generating Champions', i + 1, len(champions), 'generate_champ')
+
+        for i, _ in enumerate(players):
+            sg.one_line_progress_meter('Generating players', i + 1, len(players), 'generate_players')
+
+        for i, _ in enumerate(teams):
+            sg.one_line_progress_meter('Generating teams', i + 1, len(teams), 'generate_teams')
 
     @staticmethod
     def main_screen() -> list:

@@ -29,8 +29,8 @@ class View:
     def print_error(self, e):
         self.gui.error_message(e)
 
-    def print_generate_data_window(self):
-        self.gui.generate_data_window()
+    def print_generate_data_window(self, players, teams, champions):
+        self.gui.generate_data_window(players, teams, champions)
 
     def make_screen_visible(self, inv_screen, vis_screen):
         self.gui.window[inv_screen].update(visible=False)

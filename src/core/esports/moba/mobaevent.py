@@ -79,16 +79,19 @@ class MobaEvent:
             lanes.remove("base")
 
         probs = []
-        for lane, value in def_team.towers.items():
-            if lane in lanes:
-                if value == 1:
-                    probs.append(0.5)
-                elif value == 2:
-                    probs.append(0.3)
-                else:
-                    probs.append(0.2)
+        if not lanes:
+            for lane, value in def_team.towers.items():
+                if lane in lanes:
+                    if value == 1:
+                        probs.append(0.5)
+                    elif value == 2:
+                        probs.append(0.3)
+                    else:
+                        probs.append(0.2)
 
-        chosen_lane = random.choices(lanes, weights=probs)[0]
+            chosen_lane = random.choices(lanes, weights=probs)[0]
+        else:
+            chosen_lane = None
 
         return attack_team, def_team, chosen_lane
 
@@ -218,30 +221,33 @@ class MobaEvent:
         This method calculates the tower assault outcome
         """
         attack_team, def_team, lane = self._get_tower_attributes(team1, team2)
+        
+        if not lane:
+            # Chooses which team prevails over the tower assault
+            prevailing = random.choices([attack_team, def_team], [attack_team.win_prob, def_team.win_prob])[0]
 
-        # Chooses which team prevails over the tower assault
-        prevailing = random.choices([attack_team, def_team], [attack_team.win_prob, def_team.win_prob])[0]
+            # If the prevailing team destroys the tower
+            if prevailing == attack_team:
+                # Decides the player that destroys the tower
+                skills = [player.get_player_total_skill() for player in prevailing.list_players]
+                player = random.choices(attack_team.list_players, skills)[0]
 
-        # If the prevailing team destroys the tower
-        if prevailing == attack_team:
-            # Decides the player that destroys the tower
-            skills = [player.get_player_total_skill() for player in prevailing.list_players]
-            player = random.choices(attack_team.list_players, skills)[0]
+                # player gets full points for destroying the tower
+                player.points += self.points
 
-            # player gets full points for destroying the tower
-            player.points += self.points
+                # Other players are awarded points as well, but reduced number of points
+                for other_player in prevailing.list_players:
+                    if other_player != player:
+                        other_player.points += self.points / 4
 
-            # Other players are awarded points as well, but reduced number of points
-            for other_player in prevailing.list_players:
-                if other_player != player:
-                    other_player.points += self.points / 4
+                def_team.towers[lane] -= 1
+                print(def_team.name, "'s ", lane, " tower was destroyed")
+            else:
+                # Defending team will not get points for defending the tower anymore
 
-            def_team.towers[lane] -= 1
-            print(def_team.name, "'s ", lane, " tower was destroyed")
+                print(def_team.name, "'s", lane, " tower was successfully defended")
         else:
-            # Defending team will not get points for defending the tower anymore
-
-            print(def_team.name, "'s", lane, " tower was successfully defended")
+            self.event_name = 'NOTHING'
 
     def calculate_inhib(self, team1, team2):
         if team1.get_exposed_inhibs():

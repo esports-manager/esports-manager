@@ -79,7 +79,7 @@ class MobaEvent:
             lanes.remove("base")
 
         probs = []
-        if not lanes:
+        if lanes:
             for lane, value in def_team.towers.items():
                 if lane in lanes:
                     if value == 1:
@@ -212,7 +212,7 @@ class MobaEvent:
         """
         attack_team, def_team, lane = self._get_tower_attributes(team1, team2)
         
-        if not lane:
+        if lane is not None:
             # Chooses which team prevails over the tower assault
             prevailing = random.choices([attack_team, def_team], [attack_team.win_prob, def_team.win_prob])[0]
             # If the prevailing team destroys the tower

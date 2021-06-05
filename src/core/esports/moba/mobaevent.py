@@ -300,7 +300,6 @@ class MobaEvent:
             self.calculate_inhib(team1, team2)
         if self.event_name == 'NEXUS ASSAULT':
             self.calculate_nexus(team1, team2, which_nexus)
-        print(str(self.event_time) + ' ' + self.event_name)
 
     def print_commentary(self, amount_kills=0, atk_team_name='', def_team_name='', killer='', defended=False, killed_names='', lane='', jg_name='', stole=False, commentaries=None):
         """
@@ -349,6 +348,7 @@ class MobaEvent:
         if self.event_name == 'NEXUS ASSAULT':
             self.commentary = atk_team_name + ' won the match!'
             
+        print(str(self.event_time) + ' ' + self.event_name)
         print(self.commentary)
 
 

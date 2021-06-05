@@ -152,7 +152,6 @@ class MatchLive:
                 time.sleep(self.match_speed)
 
         self.winning_team()
-        print(self.victorious_team, 'Won the match!')
 
 
 def initialize_match(team1,

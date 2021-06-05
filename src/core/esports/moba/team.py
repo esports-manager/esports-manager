@@ -63,6 +63,13 @@ class Team:
             and self.towers['bot'] == 0
             and self.towers['base'] == 0
         )
+    
+    def are_all_lane_towers_down(self) -> bool:
+        return (
+            self.towers['top'] == 0
+            and self.towers['mid'] == 0
+            and self.towers['bot'] == 0
+        )
 
     def is_inhibitor_up(self, lane: str) -> bool:
         return self.inhibitors[lane] != 0

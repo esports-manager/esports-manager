@@ -353,14 +353,17 @@ class GUI:
 
         col_team1 = [
             [esm_form_text('Team1WholeName')],
-            [esm_table(values=[['PLAYERLANE', 'PLAYERNICKNAME', 'PLAYERSKILLLEVEL', 'PLAYERCHAMPIONNAME', 'PLAYERCHAMPIONSKILLLEVEL']], headings=team_headings, key='pickban_team1_table')]
+            [esm_table(values=[['PLAYERLANE', 'PLAYERNICKNAME', 'PLAYERSKILLLEVEL', 'PLAYERCHAMPIONNAME', 'PLAYERCHAMPIONSKILLLEVEL']], headings=team_headings, key='pickban_team1_table', num_rows=5)]
         ]
 
-        col_team2 = []
+        col_team2 = [
+            [esm_form_text('Team2WholeName')],
+            [esm_table(values=[['PLAYERLANE', 'PLAYERNICKNAME', 'PLAYERSKILLLEVEL', 'PLAYERCHAMPIONNAME', 'PLAYERCHAMPIONSKILLLEVEL']], headings=team_headings, key='pickban_team2_table', num_rows=5)]
+        ]
 
         col_champion = [
             [esm_form_text('Champions')],
-            [esm_table(values=[['CHAMPIONWHOLENAME', 'CHAMPIONSKILLLV', 'CHAMPIONSTATUS']], headings=champion_headings, key='pickban_champion_table')]
+            [esm_table(values=[['CHAMPIONWHOLENAME', 'CHAMPIONSKILLLV', 'CHAMPIONSTATUS']], headings=champion_headings, key='pickban_champion_table', num_rows=10)]
         ]
 
         return [

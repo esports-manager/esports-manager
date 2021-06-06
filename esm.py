@@ -81,13 +81,14 @@ class ESM:
         match.event_handler = MobaEventHandler()
         match.victorious_team = None
     
-    def initialize_random_debug_match(self) -> MatchLive:
+    def initialize_random_debug_match(self, picksbans=True) -> MatchLive:
         self.core.initialize_random_debug_match()
 
         # Resetting
         self.reset_generators()
 
-        self.core.match_simulation.picks_and_bans()
+        if picksbans:
+            self.core.match_simulation.picks_and_bans()
         
         self.current_match = self.core.match_simulation
 

@@ -119,6 +119,7 @@ class View:
                 self.make_screen_visible('debug_game_mode_screen', 'debug_pickteam_screen')
 
             elif event == 'debug_picksbans_btn':
+                self.controller.initialize_random_debug_match(False)
                 self.make_screen_visible('debug_game_mode_screen', 'debug_picks_bans_screen')
 
             elif event == 'debug_cancelteam_btn':

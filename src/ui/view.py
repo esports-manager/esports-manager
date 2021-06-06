@@ -118,6 +118,15 @@ class View:
             elif event == 'debug_pickteam_btn':
                 self.make_screen_visible('debug_game_mode_screen', 'debug_pickteam_screen')
 
+            elif event == 'debug_picksbans_btn':
+                self.make_screen_visible('debug_game_mode_screen', 'debug_picks_bans_screen')
+
+            elif event == 'debug_cancelteam_btn':
+                self.make_screen_visible('debug_pickteam_screen', 'debug_game_mode_screen')
+
+            elif event == 'pickban_cancel_btn':
+                self.make_screen_visible('debug_picks_bans_screen', 'debug_game_mode_screen')
+
             elif event == 'debug_match_btn':
                 self.controller.check_files()
                 if not self.controller.current_match:

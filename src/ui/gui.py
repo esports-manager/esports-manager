@@ -179,19 +179,19 @@ class GUI:
     def update_debug_match_info(self, match, data):
         win_prob = match.match.team1.win_prob * 100
         window = self.window
-        window.Element('debug_team1table').update(values=data[0])
-        window.Element('debug_team2table').update(values=data[1])
-        window.Element('debug_team1skill').update(value=match.match.team1.total_skill)
-        window.Element('debug_team2skill').update(value=match.match.team2.total_skill)
-        window.Element('debug_team1winprob').update(value=match.match.team1.win_prob)
-        window.Element('debug_team2winprob').update(value=match.match.team2.win_prob)
-        window.Element('debug_winprob').update_bar(win_prob)
-        window.Element('debug_team1towers').Update(value=match.match.team1.towers)
-        window.Element('debug_team2towers').Update(value=match.match.team2.towers)
-        window.Element('debug_team1inhibs').Update(value=match.match.team1.inhibitors)
-        window.Element('debug_team2inhibs').Update(value=match.match.team2.inhibitors)
-        window.Element('debug_team1name').Update(value=match.match.team1.name)
-        window.Element('debug_team2name').Update(value=match.match.team2.name)
+        window['debug_team1table'].update(values=data[0])
+        window['debug_team2table'].update(values=data[1])
+        window['debug_team1skill'].update(value=match.match.team1.total_skill)
+        window['debug_team2skill'].update(value=match.match.team2.total_skill)
+        window['debug_team1winprob'].update(value=match.match.team1.win_prob)
+        window['debug_team2winprob'].update(value=match.match.team2.win_prob)
+        window['debug_winprob'].update_bar(win_prob)
+        window['debug_team1towers'].Update(value=match.match.team1.towers)
+        window['debug_team2towers'].Update(value=match.match.team2.towers)
+        window['debug_team1inhibs'].Update(value=match.match.team1.inhibitors)
+        window['debug_team2inhibs'].Update(value=match.match.team2.inhibitors)
+        window['debug_team1name'].Update(value=match.match.team1.name)
+        window['debug_team2name'].Update(value=match.match.team2.name)
         window.refresh()
 
     @staticmethod
@@ -303,6 +303,11 @@ class GUI:
                         pad=button_pad,
                         size=button_size
                         )],
+            [esm_button('Debug Picks Bans',
+                        key='debug_picksbans_btn',
+                        pad=button_pad,
+                        size=button_size
+                        )],
             [esm_button('Cancel',
                         key='debug_cancelmain_btn',
                         pad=button_pad,
@@ -342,9 +347,28 @@ class GUI:
 
     @staticmethod
     def debug_picks_bans():
+        team_headings = ['Lane', 'Nickname', 'Skill', 'Champion', 'Ch. Skill']
+
+        champion_headings = ['Name', 'Skill', 'Status']
+
+        col_team1 = [
+            [esm_form_text('Team1WholeName')],
+            [esm_table(values=[['PLAYERLANE', 'PLAYERNICKNAME', 'PLAYERSKILLLEVEL', 'PLAYERCHAMPIONNAME', 'PLAYERCHAMPIONSKILLLEVEL']], headings=team_headings, key='pickban_team1_table')]
+        ]
+
+        col_team2 = []
+
+        col_champion = [
+            [esm_form_text('Champions')],
+            [esm_table(values=[['CHAMPIONWHOLENAME', 'CHAMPIONSKILLLV', 'CHAMPIONSTATUS']], headings=champion_headings, key='pickban_champion_table')]
+        ]
 
         return [
             [esm_title_text('Picks and Bans')],
+            [sg.Column(col_team1)],
+            [sg.Column(col_champion)],
+            [sg.Column(col_team2)],
+            [esm_button('Pick', key='pickban_pick_btn'), esm_button('Cancel', key='pickban_cancel_btn')]
         ]
 
     @staticmethod

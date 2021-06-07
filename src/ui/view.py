@@ -173,8 +173,7 @@ class View:
                     match_live.simulate = False
 
             if self.is_match_running:
-                if not self.controller.current_match.is_match_over and self.controller.match_thread.is_alive():
-                    data = self.team_data(self.controller.current_match)
-                    self.gui.update_debug_match_info(self.controller.current_match, data)
-                else:
+                data = self.team_data(self.controller.current_match)
+                self.gui.update_debug_match_info(self.controller.current_match, data)
+                if self.controller.current_match.is_match_over and not self.controller.match_thread.is_alive():
                     self.is_match_running = False

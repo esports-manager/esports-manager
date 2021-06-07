@@ -53,7 +53,7 @@ class GUI:
             'eSports Manager',
             element_justification='center',
             layout=self.layouts,
-            size=(1300, 780),
+            #  size=(1300, 780),
             icon=encoded_icon,
             resizable=True,
         )

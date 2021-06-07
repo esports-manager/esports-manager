@@ -15,8 +15,9 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import base64
-import PySimpleGUI as sg
 import traceback
+
+import PySimpleGUI as sg
 
 from src.core.esports.moba.match_live import MatchLive
 from src.resources import RES_DIR

@@ -12,6 +12,7 @@ autopep8 = "*"
 setuptools = "*"
 coverage = "*"
 pytest = "*"
+doq = "*"
 
 [requires]
 python_version = "3"

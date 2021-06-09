@@ -17,6 +17,7 @@
 import random
 import uuid
 
+from src.definitions import ROOT_DIR
 from src.resources.utils import write_to_json, get_list_from_file, load_list_from_json
 from src.core.esports.moba.champion import Champion
 
@@ -105,12 +106,12 @@ class ChampionGenerator:
             self.champions_list.append(self.champion_dict)
             self.champions_obj.append(self.champion_obj)
     
-    def get_champions(self):
+    def get_champions(self, folder=ROOT_DIR):
         """
         Retrieves champions from the list of champions. Perhaps at the point when we implement
         a database this can replace the load_list_from_json function.
         """
-        self.champions_list = load_list_from_json(self.file_name)
+        self.champions_list = load_list_from_json(self.file_name, folder)
         self.champion_obj = []
         for champion in self.champions_list:
             self.name = champion['name']
@@ -119,11 +120,11 @@ class ChampionGenerator:
             self.generate_champion_obj()
             self.champions_obj.append(self.champion_obj)
 
-    def generate_file(self) -> None:
+    def generate_file(self, folder=ROOT_DIR) -> None:
         """
         Generates the champion file
         """
-        write_to_json(self.champions_list, self.file_name)
+        write_to_json(self.champions_list, self.file_name, folder)
 
 
 if __name__ == '__main__':

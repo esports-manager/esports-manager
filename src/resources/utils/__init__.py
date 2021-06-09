@@ -20,10 +20,10 @@ import json
 from src.definitions import ROOT_DIR
 
 
-def write_to_json(contents: list, filename: str) -> None:
+def write_to_json(contents: list, filename: str, folder: str = ROOT_DIR) -> None:
     file = filename
     try:
-        file = find_file(filename)
+        file = find_file(filename, folder)
     except FileNotFoundError:
         # Maybe file creation should be in a separate function?
         file = os.path.join(ROOT_DIR, 'resources', 'db', filename)  # prevents hard-coding "/" or "\"
@@ -80,7 +80,7 @@ def get_from_file(file_name: str) -> list:
     return dictionary
 
 
-def load_list_from_json(filepath: str) -> list:
+def load_list_from_json(filepath: str, folder: str = ROOT_DIR) -> list:
     """
     Reads a specified file (champions, player or team json) and
     returns the list from that file
@@ -88,7 +88,7 @@ def load_list_from_json(filepath: str) -> list:
     :return:
     """
     try:
-        file = find_file(filepath)
+        file = find_file(filepath, folder)
     except FileNotFoundError as e:
         print("File was not found!")
         print("Error occurred: {}".format(e.errno))

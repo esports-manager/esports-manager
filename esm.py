@@ -31,6 +31,7 @@ class ESM:
         self.core = Core()
         self._amount_players = amount_players
         self.view = View(self)
+        self.is_match_running = False
         self.current_match = None
         self.match_thread = None
 
@@ -81,6 +82,39 @@ class ESM:
         match.event_handler = MobaEventHandler()
         match.victorious_team = None
     
+    def update_amount(self, value):
+        self.view.gui.window['settings_amount_input'].update(value=value)
+
+    def update_debug_match_info(self, current_match, data):
+        self.view.gui.update_debug_match_info(current_match, data)
+
+    @staticmethod
+    def team_data(match_live=None):
+        if match_live is None:
+            return None
+        players = [[player for player in team.list_players] for team in match_live.match.teams]
+
+        # Event handler shuffles players, this keeps them in order
+        for team in players:
+            team.sort(key=lambda x: x.lane.value)
+
+        data = []
+        for team in players:
+            team_data = [
+                [
+                    player.lane.name,
+                    player.nick_name,
+                    player.kills,
+                    player.deaths,
+                    player.assists,
+                    player.champion,
+                    int(player.get_player_total_skill())
+                ] for player in team
+            ]
+            data.append(team_data)
+
+        return data
+
     def initialize_random_debug_match(self, picksbans=True) -> MatchLive:
         self.core.initialize_random_debug_match()
 

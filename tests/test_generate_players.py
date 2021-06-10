@@ -1,58 +1,64 @@
-def test_generate_id():
-    assert False
+import pytest
+
+from src.resources.generator.generate_players import MobaPlayerGenerator
 
 
-def test_get_nationality():
-    assert False
+@pytest.fixture
+def player_generator():
+    return MobaPlayerGenerator()
 
 
-def test_generate_dob():
-    assert False
+def test_get_nationality(player_generator):
+    pass
 
 
-def test_generate_champions():
-    assert False
+def test_generate_dob(player_generator):
+    pass
 
 
-def test_generate_skill():
-    assert False
+def test_generate_champions(player_generator):
+    pass
 
 
-def test_generate_name():
-    assert False
+def test_generate_skill(player_generator):
+    pass
 
 
-def test_generate_nick():
-    assert False
+def test_generate_name(player_generator):
+    pass
 
 
-def test_get_dictionary():
-    assert False
+def test_generate_nick(player_generator):
+    pass
 
 
-def test_get_object():
-    assert False
+def test_get_dictionary(player_generator):
+    pass
 
 
-def test_generate_multipliers():
-    assert False
+def test_get_object(player_generator):
+    pass
 
 
-def test_generate_player():
-    assert False
+def test_generate_multipliers(player_generator):
+    pass
 
 
-def test_generate_players():
-    assert False
+def test_generate_player(player_generator):
+    pass
 
 
-def test_get_players_dict():
-    assert False
+def test_generate_players(player_generator):
+    pass
 
 
-def test_get_players_objects():
-    assert False
+def test_get_players_dict(player_generator):
+    pass
 
 
-def test_generate_file():
-    assert False
+def test_get_players_objects(player_generator):
+    pass
+
+
+def test_generate_file(player_generator):
+    pass

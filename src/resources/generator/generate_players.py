@@ -17,9 +17,13 @@
 import random
 import uuid
 from datetime import date, timedelta
+from pathlib import Path
+from typing import Union
 
 from src.core.esports.moba.player import MobaPlayer
 from src.resources.generator.generate_champions import ChampionGenerator
+from src.resources.db.default_player_nick_names import get_default_player_nick_names
+from src.definitions import ROOT_DIR, RES_DIR
 from src.resources.utils import load_list_from_json, write_to_json, get_list_from_file
 
 
@@ -68,23 +72,26 @@ class MobaPlayerGenerator:
         self.names = None
         self.nick_names = None
 
-    def get_names(self):
+    def get_names(self) -> None:
         self.names = load_list_from_json('names.json')
 
-    def get_nick_names(self):
-        self.nick_names = get_list_from_file('nicknames.txt')
+    def get_nick_names(self) -> None:
+        try:
+            self.nick_names = get_list_from_file('nicknames.txt')
+        except:
+            self.nick_names = get_default_player_nick_names()
 
-    def generate_id(self):
+    def generate_id(self) -> None:
         self.player_id = uuid.uuid4().int
 
-    def get_nationality(self):
+    def get_nationality(self) -> None:
         """
         Defines players nationalities
         """
         nationality = ['Brazil', 'Korea', 'United States']
         self.nationality = random.choice(nationality)
 
-    def generate_dob(self):
+    def generate_dob(self) -> None:
         """
         Generates the player's date of birth
         """
@@ -99,7 +106,7 @@ class MobaPlayerGenerator:
         rand_date = random.randrange(days_interval.days)    # chooses a random date from the max days interval
         self.dob = min_year + timedelta(days=rand_date)     # assigns date of birth
 
-    def generate_champions(self, amount=0):
+    def generate_champions(self, amount: int = 0) -> None:
         """
         Generates champion skill level for each player.
         Chooses a random amount of champions to generate.
@@ -121,7 +128,7 @@ class MobaPlayerGenerator:
             champion_dict['mult'] = mult
             self.champions.append(champion_dict)
 
-    def generate_skill(self):
+    def generate_skill(self) -> None:
         """
         Randomly generates players skills according to their nationality
         """
@@ -146,7 +153,7 @@ class MobaPlayerGenerator:
         elif self.skill < 30:
             self.skill = 30
 
-    def generate_name(self):
+    def generate_name(self) -> None:
         """
         Generates the player's real name
         """
@@ -157,13 +164,13 @@ class MobaPlayerGenerator:
         # else:
         #    raise ValueError('Nationality not found!')
 
-    def generate_nick(self):
+    def generate_nick(self) -> None:
         """
         Generates the player's nickname
         """
         self.nick_name = random.choice(self.nick_names)
 
-    def get_dictionary(self):
+    def get_dictionary(self) -> None:
         """
         Generates the dictionary based on the class' attributes
         """
@@ -177,7 +184,7 @@ class MobaPlayerGenerator:
                             'multipliers': self.multipliers,
                             'champions': self.champions.copy()}
 
-    def get_object(self):
+    def get_object(self) -> None:
         """
         Generates a player object
         """
@@ -192,7 +199,7 @@ class MobaPlayerGenerator:
                                      self.champions
                                      )
 
-    def generate_multipliers(self):
+    def generate_multipliers(self) -> None:
         """
         Generates players multipliers.
         Multipliers are used to define the player's experience on a lane.
@@ -215,7 +222,7 @@ class MobaPlayerGenerator:
 
         self.multipliers = mult
 
-    def generate_player(self):
+    def generate_player(self) -> None:
         """
         Runs the player generation routine
         """
@@ -236,7 +243,7 @@ class MobaPlayerGenerator:
         self.players.append(self.player_obj)
         self.players_dict.append(self.player_dict)
 
-    def generate_players(self, amount: int = 5):
+    def generate_players(self, amount: int = 5) -> None:
         """
         Generates an "amount" of players.
         If the self.lane attribute is set to -1, then it randomly generates players with variable lanes.
@@ -252,7 +259,7 @@ class MobaPlayerGenerator:
                     self.generate_player()
                 self.lane += 1
 
-    def get_players_dict(self):
+    def get_players_dict(self) -> None:
         """
         Loads the players from the players.json file, storing on the player dictionary list
         """
@@ -260,7 +267,41 @@ class MobaPlayerGenerator:
             self.players_dict.clear()
         self.players_dict = load_list_from_json('players.json')
 
-    def get_players_objects(self):
+    def get_data_from_dict(self, player=None) -> None:
+        """
+        Gets a dictionary and enters data to MobaPlayerGenerator attributes
+        """
+        if player is None:
+            player = self.player_dict
+        
+        self.player_id = player['id']
+        self.first_name = player['first_name']
+        self.last_name = player['last_name']
+        self.dob = player['birthday']
+        self.nationality = player['nationality']
+        self.nick_name = player['nick_name']
+        self.skill = player['skill']
+        self.multipliers = player['multipliers']
+        self.champions = player['champions']
+    
+    def get_data_from_obj(self, player=None) -> None:
+        """
+        Gets an object and enters data to the MobaPlayerGenerator attributes
+        """
+        if player is None:
+            player = self.player_obj
+        
+        self.player_id = player.player_id
+        self.first_name = player.first_name
+        self.last_name = player.last_name
+        self.dob = player.birthday
+        self.nationality = player.nationality
+        self.nick_name = player.nick_name
+        self.skill = player.skill
+        self.multipliers = player.mult
+        self.champions = player.champions
+    
+    def get_players_objects(self) -> None:
         """
         Creates players objects based on the player dictionary
         """
@@ -270,20 +311,12 @@ class MobaPlayerGenerator:
         if not self.players_dict:
             self.get_players_dict()
         for player in self.players_dict:
-            self.player_id = player['id']
-            self.first_name = player['first_name']
-            self.last_name = player['last_name']
-            self.dob = player['birthday']
-            self.nationality = player['nationality']
-            self.nick_name = player['nick_name']
-            self.skill = player['skill']
-            self.multipliers = player['multipliers']
-            self.champions = player['champions']
+            self.get_data_from_dict(player)
             self.get_object()
             self.players.append(self.player_obj)
 
-    def generate_file(self):
+    def generate_file(self, folder: Union[str, Path] = ROOT_DIR, res_folder: Union[str, Path] = RES_DIR) -> None:
         """
         Generates the players.json file
         """
-        write_to_json(self.players_dict, self.file_name)
+        write_to_json(self.players_dict, self.file_name, folder, res_folder)

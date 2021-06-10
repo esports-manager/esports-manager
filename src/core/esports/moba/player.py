@@ -55,7 +55,7 @@ class Player:
         return self._skill
 
     @skill.setter
-    def skill(self, skill):
+    def skill(self, skill) -> None:
         self._skill = skill
     
     def get_age(self, today: date=date.today()) -> int:
@@ -117,32 +117,32 @@ class MobaPlayer(Player):
         return self._points
 
     @champion.setter
-    def champion(self, champion: Champion):
+    def champion(self, champion: Champion) -> None:
         self._champion = champion
 
     @lane.setter
-    def lane(self, lane: int):
+    def lane(self, lane: int) -> None:
         for lane_name in Lanes:
             if lane == lane_name.value:
                 self._lane = lane_name
 
     @kills.setter
-    def kills(self, kills: int):
+    def kills(self, kills: int) -> None:
         self._kills = kills
 
     @deaths.setter
-    def deaths(self, deaths: int):
+    def deaths(self, deaths: int) -> None:
         self._deaths = deaths
 
     @assists.setter
-    def assists(self, assists: int):
+    def assists(self, assists: int) -> None:
         self._assists = assists
 
     @points.setter
-    def points(self, add_pts: int):
+    def points(self, add_pts: int) -> None:
         self._points = add_pts
     
-    def reset_attributes(self):
+    def reset_attributes(self) -> None:
         self.points = 0
         self.kills = 0
         self.deaths = 0
@@ -160,7 +160,7 @@ class MobaPlayer(Player):
         """
         return self.mult.index(self.get_highest_multiplier())
 
-    def get_default_lane(self):
+    def get_default_lane(self) -> None:
         """
         Gets the best lane for the player, and assigns him to it.
         This will be useful for default picks and bans, and is used for debugging as well.
@@ -168,7 +168,7 @@ class MobaPlayer(Player):
         lane = self.get_best_lane()
         self.lane = lane
     
-    def get_curr_lane_multiplier(self):
+    def get_curr_lane_multiplier(self) -> int:
         """
         Gets the current lane multiplier in-game, this will define how good a player is on that particular lane.
 
@@ -179,13 +179,13 @@ class MobaPlayer(Player):
         else:
             raise LaneError('Player may not be playing the game!')
 
-    def get_curr_player_skill(self):
+    def get_curr_player_skill(self) -> float:
         """
         Gets the player's skill according to the lane he is currently at.
         """
         return self.skill * self.get_curr_lane_multiplier()
 
-    def get_champion_skill(self):
+    def get_champion_skill(self) -> float:
         """
         Gets the player_champion_skill according to the multiplier.
         If for some reason a champion is not on the list, it receives a default multiplier of 0.5.
@@ -197,7 +197,7 @@ class MobaPlayer(Player):
                 break
         return (0.5 * self.champion.skill) + (0.5 * self.champion.skill * mult)
 
-    def get_player_total_skill(self):
+    def get_player_total_skill(self) -> float:
         """
         Gets the player + player_champion_skill + points to use in the match.
         This will define how strong or how weak a certain player is on the current match.

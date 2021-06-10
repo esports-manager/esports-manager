@@ -17,16 +17,16 @@
 import os
 import json
 
-from src.definitions import ROOT_DIR
+from src.definitions import ROOT_DIR, RES_DIR
 
 
-def write_to_json(contents: list, filename: str, folder: str = ROOT_DIR) -> None:
+def write_to_json(contents: list, filename: str, folder: str = ROOT_DIR, res_folder: str = RES_DIR) -> None:
     file = filename
     try:
         file = find_file(filename, folder)
     except FileNotFoundError:
         # Maybe file creation should be in a separate function?
-        file = os.path.join(ROOT_DIR, 'resources', 'db', filename)  # prevents hard-coding "/" or "\"
+        file = os.path.join(res_folder, filename)  # prevents hard-coding "/" or "\"
     finally:
         with open(file, 'w') as fp:
             json.dump(contents, fp, sort_keys=True, indent=4)

@@ -16,8 +16,10 @@
 
 import random
 import uuid
+from pathlib import Path
+from typing import Union
 
-from src.definitions import ROOT_DIR
+from src.definitions import ROOT_DIR, RES_DIR
 from src.resources.utils import write_to_json, get_list_from_file, load_list_from_json
 from src.core.esports.moba.champion import Champion
 
@@ -43,13 +45,13 @@ class ChampionGenerator:
         self.champions_list = []
         self.champions_obj = []
     
-    def generate_champion_id(self):
+    def generate_champion_id(self) -> None:
         """
         Generates champion UUID
         """
         self.champion_id = uuid.uuid4().int
 
-    def get_champion_names(self):
+    def get_champion_names(self) -> None:
         """
         List used to generate champions, all these names will be used to generate champions
 
@@ -58,10 +60,10 @@ class ChampionGenerator:
         """
         self.champion_names = get_list_from_file('champions.txt')
 
-    def generate_champion_lanes(self):
+    def generate_champion_lanes(self) -> None:
         pass
 
-    def generate_champion_skill(self):
+    def generate_champion_skill(self) -> None:
         """
         Generates Champion Skills. Perhaps it should also follow a Normal Distribution?
 
@@ -72,7 +74,7 @@ class ChampionGenerator:
         else:
             self.skill = random.randint(50, 99)
     
-    def generate_champion_dict(self):
+    def generate_champion_dict(self) -> None:
         """
         Generates the champion dictionary
         """
@@ -81,7 +83,7 @@ class ChampionGenerator:
                               "skill": self.skill
                               }
     
-    def generate_champion_obj(self):
+    def generate_champion_obj(self) -> None:
         """
         Generates the champion object based on the Champion class
         """
@@ -90,7 +92,7 @@ class ChampionGenerator:
                                      self.skill
                                     )
 
-    def create_champions_list(self):
+    def create_champions_list(self) -> None:
         """
         Creates the list of champions according to the names.
         Essentially this is the champion generation method.
@@ -106,7 +108,7 @@ class ChampionGenerator:
             self.champions_list.append(self.champion_dict)
             self.champions_obj.append(self.champion_obj)
     
-    def get_champions(self, folder=ROOT_DIR):
+    def get_champions(self, folder: Union[str, Path] = ROOT_DIR) -> None:
         """
         Retrieves champions from the list of champions. Perhaps at the point when we implement
         a database this can replace the load_list_from_json function.
@@ -120,14 +122,8 @@ class ChampionGenerator:
             self.generate_champion_obj()
             self.champions_obj.append(self.champion_obj)
 
-    def generate_file(self, folder=ROOT_DIR) -> None:
+    def generate_file(self, folder: Union[str, Path] = ROOT_DIR, res_folder: Union[str, Path] = RES_DIR) -> None:
         """
         Generates the champion file
         """
-        write_to_json(self.champions_list, self.file_name, folder)
-
-
-if __name__ == '__main__':
-    generate_champion = ChampionGenerator()
-    generate_champion.create_champions_list()
-    generate_champion.generate_file()
+        write_to_json(self.champions_list, self.file_name, folder, res_folder)

@@ -16,8 +16,12 @@
 
 import random
 import uuid
+from pathlib import Path
+from typing import Union
 
 from src.core.esports.moba.team import Team
+from src.definitions import ROOT_DIR, RES_DIR
+from src.resources.db.default_team_names import get_default_team_names
 from src.resources.generator.generate_players import MobaPlayerGenerator
 from src.resources.utils import write_to_json, get_list_from_file, load_list_from_json
 
@@ -48,29 +52,35 @@ class TeamGenerator:
         self.amount = amount
         self.organized = organized
 
-    def get_names(self):
-        self.names = get_list_from_file('team_names.txt')
+    def get_names(self) -> None:
+        """
+        Gets all available names from the team_names file
+        """
+        try:
+            self.names = get_list_from_file('team_names.txt')
+        except FileNotFoundError:
+            self.names = get_default_team_names()
 
-    def generate_id(self):
+    def generate_id(self) -> None:
         """
         Generates teams UUID
         """
         self.team_id = uuid.uuid4().int
 
-    def generate_name(self):
+    def generate_name(self) -> None:
         """
         Chooses a random team name
         """
         self.name = random.choice(self.names)
         self.names.remove(self.name)
 
-    def generate_logo(self):
+    def generate_logo(self) -> None:
         """
         Placeholder for a future logo generator
         """
         pass
 
-    def generate_roster(self):
+    def generate_roster(self) -> None:
         """
         Generates a roster.
         If the self.organized attribute is set to True, it is going to generate teams with players that are specialists
@@ -100,7 +110,7 @@ class TeamGenerator:
             self.roster.append(player)
             self.player_list.remove(player)
 
-    def get_roster_ids(self):
+    def get_roster_ids(self) -> None:
         """
         Gets the IDs of each player to save on the dictionary
         """
@@ -113,7 +123,7 @@ class TeamGenerator:
 
         return r_ids
 
-    def get_dictionary(self):
+    def get_dictionary(self) -> None:
         """
         Generates the team dictionary
         """
@@ -121,20 +131,20 @@ class TeamGenerator:
                           'name': self.name,
                           'roster': self.get_roster_ids()}
 
-    def get_object(self):
+    def get_object(self) -> None:
         """
         Generates the team object
         """
         self.team_obj = Team(self.team_id, self.name, self.roster)
 
-    def get_nationality(self):
+    def get_nationality(self) -> None:
         """
         Placeholder for team nationality
         TODO: leagues and cups should also be considered
         """
         pass
 
-    def generate_team(self):
+    def generate_team(self) -> None:
         """
         Runs the team generation routine
         """
@@ -153,14 +163,14 @@ class TeamGenerator:
         self.teams.append(self.team_obj)
         self.teams_dict.append(self.team_dict)
 
-    def generate_teams(self):
+    def generate_teams(self) -> None:
         """
         Generates a "self.amount" of teams
         """
         for _ in range(self.amount):
             self.generate_team()
     
-    def get_teams_dict(self):
+    def get_teams_dict(self) -> None:
         """
         Retrieves teams list based on the teams.json file
         """
@@ -168,7 +178,7 @@ class TeamGenerator:
             self.teams_dict.clear()
         self.teams_dict = load_list_from_json('teams.json')
     
-    def get_roster(self, team):
+    def get_roster(self, team) -> None:
         """
         Gets the roster based on the player's ID
         """
@@ -182,7 +192,7 @@ class TeamGenerator:
         
         return self.roster
     
-    def get_teams_objects(self):
+    def get_teams_objects(self) -> None:
         """
         Retrieves champions objects based on teams list dict
         """
@@ -198,11 +208,11 @@ class TeamGenerator:
             self.get_object()
             self.teams.append(self.team_obj)
 
-    def generate_file(self):
+    def generate_file(self, folder: Union[str, Path] = ROOT_DIR, res_folder: Union[str, Path] = RES_DIR) -> None:
         """
         Generates the teams.json file
         """
-        write_to_json(self.teams_dict, self.file_name)
+        write_to_json(self.teams_dict, self.file_name, folder, res_folder)
 
 
 if __name__ == '__main__':

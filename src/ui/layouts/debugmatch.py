@@ -88,35 +88,38 @@ class DebugMatchLayout(LayoutInterface):
         team_data = self.controller.team_data
         update_debug_match_info = self.controller.update_debug_match_info
 
+        # Click the Start Match button
         if event == 'debug_startmatch_btn':
             self.controller.is_match_running = True
             self.controller.reset_match(self.controller.current_match)
             self.controller.current_match.is_match_over = False
             self.controller.start_match_sim_thread()
 
+        # Click the Cancel button
         if event == 'debug_cancel_btn':
             if self.controller.is_match_running:
                 self.controller.current_match.is_match_over = True
                 self.controller.current_match = None
             make_screen('debug_match_screen', 'main_screen')
 
+        # Click the New Teams button
         elif event == 'debug_newteams_btn':
             self.controller.check_files()
             self.controller.initialize_random_debug_match()
             data = self.controller.team_data(match_live=self.controller.current_match)
             update_debug_match_info(self.controller.current_match, data)
 
+        # Click the Reset Match button
         elif event == 'debug_resetmatch_btn':
             self.controller.reset_match(self.controller.current_match)
             data = self.controller.team_data(match_live=self.controller.current_match)
             update_debug_match_info(self.controller.current_match, data)
 
-        if self.controller.current_match is not None:
-            self.controller.current_match.simulate = bool(values['debug_simulate_checkbox'])
+        # if self.controller.current_match is not None:
+        #     self.controller.current_match.simulate = bool(values['debug_simulate_checkbox'])
 
+        # Check if the match is running to update values on the fly
         if self.controller.is_match_running:
-            data = team_data(self.controller.current_match)
-            update_debug_match_info(self.controller.current_match, data)
             if (
                 self.controller.current_match is not None
                 and self.controller.current_match.is_match_over
@@ -124,4 +127,8 @@ class DebugMatchLayout(LayoutInterface):
             ):
                 self.controller.is_match_running = False
                 self.controller.current_match = None
-
+                
+            if self.controller.current_match is not None:
+                self.controller.current_match.simulate = bool(values['debug_simulate_checkbox'])
+                data = team_data(self.controller.current_match)
+                update_debug_match_info(self.controller.current_match, data)

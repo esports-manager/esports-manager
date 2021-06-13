@@ -21,5 +21,6 @@ __all__ = ['debug',
            'pickteam',
            'picksbans',
            'mainscreen',
-           'settings'
+           'settings',
+           'match_tester',
            ]

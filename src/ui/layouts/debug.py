@@ -57,6 +57,11 @@ class DebugLayout(LayoutInterface):
                         pad=button_pad,
                         size=button_size
                         )],
+            [esm_button('Match Tester',
+                        key='debug_matchtester_btn',
+                        pad=button_pad,
+                        size=button_size
+                        )],
             [esm_button('Cancel',
                         key='debug_cancelmain_btn',
                         pad=button_pad,
@@ -88,3 +93,19 @@ class DebugLayout(LayoutInterface):
             data = team_data(match_live=match_live)
             update_debug_match_info(match_live, data)
             make_screen('debug_game_mode_screen', 'debug_match_screen')
+        
+        elif event == 'debug_matchtester_btn':
+            team_data = self.controller.team_data
+            update_match_tester_match_info = self.controller.update_match_tester_match_info
+
+            self.controller.check_files()
+            if not self.controller.current_match:
+                match_live = self.controller.initialize_random_debug_match()
+            else:
+                match_live = self.controller.current_match
+
+            match_live.simulate = False
+            match_live.show_commentary = False
+            data = team_data(match_live=match_live)
+            update_match_tester_match_info(match_live, data)
+            make_screen('debug_game_mode_screen', 'match_tester_screen')

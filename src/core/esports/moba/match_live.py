@@ -139,7 +139,7 @@ class MatchLive:
                                               self.which_team_nexus_exposed(),
                                               self.is_any_inhib_open(),
                                               self.get_tower_number())
-            self.event_handler.generate_event(self.game_time)
+            self.event_handler.generate_event(self.game_time, self.show_commentary)
             self.event_handler.event.calculate_event(self.match.team1,
                                                      self.match.team2,
                                                      self.which_team_nexus_exposed())

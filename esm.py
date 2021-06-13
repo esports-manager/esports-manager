@@ -31,9 +31,18 @@ class ESM:
         self.core = Core()
         self._amount_players = amount_players
         self.view = View(self)
+        self._amount_test_matches = 1000
         self.is_match_running = False
         self.current_match = None
         self.match_thread = None
+
+    @property
+    def amount_test_matches(self) -> int:
+        return self._amount_test_matches
+
+    @amount_test_matches.setter
+    def amount_test_matches(self, amount) -> None:
+        self.core._amount_test_matches = amount
 
     @property
     def amount_players(self) -> int:
@@ -87,6 +96,9 @@ class ESM:
 
     def update_debug_match_info(self, current_match, data):
         self.view.gui.update_debug_match_info(current_match, data)
+    
+    def update_match_tester_match_info(self, current_match, data):
+        self.view.gui.update_match_tester_match_info(current_match, data)
 
     @staticmethod
     def team_data(match_live=None):

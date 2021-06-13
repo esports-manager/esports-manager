@@ -40,6 +40,7 @@ class GUI:
             loadgame.LoadGameLayout(self.controller),
             picksbans.PicksBansLayout(self.controller),
             pickteam.PickTeamLayout(self.controller),
+            match_tester.MatchTesterLayout(self.controller),
         ]
         self.window = self._create_window()
 
@@ -105,12 +106,32 @@ class GUI:
         window['debug_team1winprob'].update(value=match.match.team1.win_prob)
         window['debug_team2winprob'].update(value=match.match.team2.win_prob)
         window['debug_winprob'].update_bar(win_prob)
+        window['debug_match_current_time'].update(value=match.game_time)
         window['debug_team1towers'].Update(value=match.match.team1.towers)
         window['debug_team2towers'].Update(value=match.match.team2.towers)
         window['debug_team1inhibs'].Update(value=match.match.team1.inhibitors)
         window['debug_team2inhibs'].Update(value=match.match.team2.inhibitors)
         window['debug_team1name'].Update(value=match.match.team1.name)
         window['debug_team2name'].Update(value=match.match.team2.name)
+        window.refresh()
+    
+    def update_match_tester_match_info(self, match, data):
+        win_prob = match.match.team1.win_prob * 100
+        window = self.window
+        window['match_tester_team1table'].update(values=data[0])
+        window['match_tester_team2table'].update(values=data[1])
+        window['match_tester_team1skill'].update(value=match.match.team1.total_skill)
+        window['match_tester_team2skill'].update(value=match.match.team2.total_skill)
+        window['match_tester_team1winprob'].update(value=match.match.team1.win_prob)
+        window['match_tester_team2winprob'].update(value=match.match.team2.win_prob)
+        window['match_tester_winprob'].update_bar(win_prob)
+        window['match_tester_match_current_time'].update(value=match.game_time)
+        window['match_tester_team1towers'].Update(value=match.match.team1.towers)
+        window['match_tester_team2towers'].Update(value=match.match.team2.towers)
+        window['match_tester_team1inhibs'].Update(value=match.match.team1.inhibitors)
+        window['match_tester_team2inhibs'].Update(value=match.match.team2.inhibitors)
+        window['match_tester_team1name'].Update(value=match.match.team1.name)
+        window['match_tester_team2name'].Update(value=match.match.team2.name)
         window.refresh()
 
     @staticmethod

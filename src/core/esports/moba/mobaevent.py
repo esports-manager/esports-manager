@@ -27,14 +27,12 @@ class MobaEvent:
                  priority: int = 0,
                  points: int = 0,
                  event_time: float = 0.0,
-                 commentary=None
+                 show_commentary=True
                  ):
-        if commentary is None:
-            self.commentary = []
-
         self.event_name = event_name
         self.event_id = event_id
         self.priority = priority
+        self.show_commentary = show_commentary
         self.commentary = None
         self.event_time = event_time
         self.factor = random.gauss(0, 1)
@@ -185,7 +183,7 @@ class MobaEvent:
                 duel_players.remove(player)
 
         amount_kills = len(duel_players)
-        killed_players = [deaths.nick_name for deaths in duel_players]
+        killed_players = duel_players
         self.print_commentary(amount_kills, killer=killer.nick_name, killed_names=killed_players)
 
     def calculate_jungle(self, team1, team2, jungle):
@@ -257,7 +255,6 @@ class MobaEvent:
             player.points += self.points / 5
 
         if prevailing == attack_team:
-
             def_team.inhibitors[exposed] -= 1
             self.print_commentary(atk_team_name=prevailing.name, lane=exposed)
         else:
@@ -301,6 +298,16 @@ class MobaEvent:
         if self.event_name == 'NEXUS ASSAULT':
             self.calculate_nexus(team1, team2, which_nexus)
 
+    def list_names(self, players):
+        names = ''
+        for i, player in enumerate(players):
+            if i == len(players) - 1:
+                names = names + player.nick_name + '.'
+            else:
+                names = names + player.nick_name + ', '
+        
+        return names
+
     def print_commentary(self, amount_kills=0, atk_team_name='', def_team_name='', killer='', defended=False, killed_names='', lane='', jg_name='', stole=False, commentaries=None):
         """
         Chooses commentary based on a list of commentaries.
@@ -309,17 +316,22 @@ class MobaEvent:
         on the locale.
         """
         if self.event_name == 'KILL':
-            if amount_kills == 2:
-                self.commentary = killer + ' got a Double Kill!'
-            elif amount_kills == 3:
-                self.commentary = killer + ' got a Triple Kill!'
-            elif amount_kills == 4:
-                self.commentary = killer + ' got a QUADRA KILL!'
-            elif amount_kills == 5:
-                self.commentary = killer + ' got a PENTAKILL! HE IS UNSTOPPABLE!'
+            if killed_names is not None:
+                names = self.list_names(killed_names)
+                if amount_kills == 2:
+                    self.commentary = killer + ' got a Double Kill!'
+                elif amount_kills == 3:
+                    self.commentary = killer + ' got a Triple Kill!'
+                elif amount_kills == 4:
+                    self.commentary = killer + ' got a QUADRA KILL!'
+                elif amount_kills == 5:
+                    self.commentary = killer + ' got a PENTAKILL! HE IS UNSTOPPABLE!'
 
-            if amount_kills != 0:
-                self.commentary = (killer + ' has slain: ').join(killed_names)
+                if amount_kills != 0:
+                    if self.commentary is not None:
+                        self.commentary = self.commentary + '\n' + killer + ' has slain: ' + names
+                    else:
+                        self.commentary = killer + 'has slain ' + names
 
         if self.event_name == 'BARON':
             if stole:
@@ -347,10 +359,10 @@ class MobaEvent:
         
         if self.event_name == 'NEXUS ASSAULT':
             self.commentary = atk_team_name + ' won the match!'
-            
-        print(str(self.event_time) + ' ' + self.event_name)
-        print(self.commentary)
 
+        if self.show_commentary:    
+            print(str(self.event_time) + ' ' + self.event_name)
+            print(self.commentary)
 
 class MobaEventHandler:
     def __init__(self):
@@ -418,7 +430,7 @@ class MobaEventHandler:
     def get_event_priorities(self):
         return [event['priority'] for event in self.enabled_events]
 
-    def generate_event(self, game_time):
+    def generate_event(self, game_time, show_commentary):
         """
         Generates events for the match based on their priorities and available events.
         """
@@ -427,5 +439,6 @@ class MobaEventHandler:
         self.event = MobaEvent(event_name=ev_chosen['name'],
                                priority=ev_chosen['priority'],
                                points=ev_chosen['points'],
-                               event_time=game_time)
+                               event_time=game_time,
+                               show_commentary=show_commentary)
         self.event_history.append(self.event)

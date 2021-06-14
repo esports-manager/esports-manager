@@ -63,9 +63,15 @@ class ESM:
         """
         self.reset_generators()
         try:
-            generate_data_thread = threading.Thread(target=self.core.generate_all, daemon=True)
+            generate_data_thread = threading.Thread(
+                target=self.core.generate_all, daemon=True
+            )
             generate_data_thread.start()
-            self.view.print_generate_data_window(self.core.players.players_dict, self.core.teams.teams_dict, self.core.champions.champions_list)
+            self.view.print_generate_data_window(
+                self.core.players.players_dict,
+                self.core.teams.teams_dict,
+                self.core.champions.champions_list,
+            )
             generate_data_thread.join()
         except Exception as e:
             self.view.print_error(e)
@@ -90,13 +96,13 @@ class ESM:
         match.game_time = 0.0
         match.event_handler = MobaEventHandler()
         match.victorious_team = None
-    
+
     def update_amount(self, value):
-        self.view.gui.window['settings_amount_input'].update(value=value)
+        self.view.gui.window["settings_amount_input"].update(value=value)
 
     def update_debug_match_info(self, current_match, data):
         self.view.gui.update_debug_match_info(current_match, data)
-    
+
     def update_match_tester_match_info(self, current_match, data):
         self.view.gui.update_match_tester_match_info(current_match, data)
 
@@ -104,7 +110,9 @@ class ESM:
     def team_data(match_live=None):
         if match_live is None:
             return None
-        players = [[player for player in team.list_players] for team in match_live.match.teams]
+        players = [
+            [player for player in team.list_players] for team in match_live.match.teams
+        ]
 
         # Event handler shuffles players, this keeps them in order
         for team in players:
@@ -120,8 +128,9 @@ class ESM:
                     player.deaths,
                     player.assists,
                     player.champion,
-                    int(player.get_player_total_skill())
-                ] for player in team
+                    int(player.get_player_total_skill()),
+                ]
+                for player in team
             ]
             data.append(team_data)
 
@@ -135,14 +144,16 @@ class ESM:
 
         if picksbans:
             self.core.match_simulation.picks_and_bans()
-        
+
         self.current_match = self.core.match_simulation
 
         return self.core.match_simulation
 
     def start_match_sim_thread(self) -> None:
         try:
-            self.match_thread = threading.Thread(target=self.start_match_sim, daemon=True)
+            self.match_thread = threading.Thread(
+                target=self.start_match_sim, daemon=True
+            )
             self.match_thread.start()
             self.view.disable_debug_buttons()
         except Exception as e:

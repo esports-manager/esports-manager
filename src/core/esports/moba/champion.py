@@ -14,6 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 class Champion:
     def __init__(self, champion_id: int, name: str, skill: int):
         self.champion_id = champion_id
@@ -24,7 +25,7 @@ class Champion:
         self.skill = skill
 
     def __repr__(self):
-        return '{0} {1}'.format(self.__class__.__name__, self.name)
+        return "{0} {1}".format(self.__class__.__name__, self.name)
 
     def __str__(self):
-        return '{0}'.format(self.name)
+        return "{0}".format(self.name)

@@ -26,70 +26,81 @@ class DebugMatchLayout(LayoutInterface):
         self.col = self.column()
 
     def column(self):
-        return sg.Column(self.lay,
-                         key='debug_match_screen',
-                         visible=False,
-                         element_justification="center"
-                         )
+        return sg.Column(
+            self.lay,
+            key="debug_match_screen",
+            visible=False,
+            element_justification="center",
+        )
 
     def layout(self):
-        headings = ['Lane', 'Player Name', 'Kills',
-                    'Deaths', 'Assists', 'Champion', 'Skill']
+        headings = [
+            "Lane",
+            "Player Name",
+            "Kills",
+            "Deaths",
+            "Assists",
+            "Champion",
+            "Skill",
+        ]
 
         team1_column = [
-            [esm_form_text('Team1DebugMatch', key='debug_team1name'),
-             esm_form_text('0000', key='debug_team1skill')],
-            [esm_form_text('0.0000', key='debug_team1winprob')],
-            [esm_table(headings, headings=headings, key='debug_team1table')],
-            [esm_form_text('Team 1 Towers: '),
-             esm_form_text({
-                 "top": 3,
-                 "mid": 3,
-                 "bot": 3,
-                 "base": 2
-             }, key='debug_team1towers')],
-            [esm_form_text('Team 2 Towers: '),
-             esm_form_text({
-                 "top": 1,
-                 "mid": 1,
-                 "bot": 1
-             }, key='debug_team1inhibs')]
+            [
+                esm_form_text("Team1DebugMatch", key="debug_team1name"),
+                esm_form_text("0000", key="debug_team1skill"),
+            ],
+            [esm_form_text("0.0000", key="debug_team1winprob")],
+            [esm_table(headings, headings=headings, key="debug_team1table")],
+            [
+                esm_form_text("Team 1 Towers: "),
+                esm_form_text(
+                    {"top": 3, "mid": 3, "bot": 3, "base": 2}, key="debug_team1towers"
+                ),
+            ],
+            [
+                esm_form_text("Team 2 Towers: "),
+                esm_form_text({"top": 1, "mid": 1, "bot": 1}, key="debug_team1inhibs"),
+            ],
         ]
 
         team2_column = [
-            [esm_form_text('Team2DebugMatch', key='debug_team2name'),
-             esm_form_text('0000', key='debug_team2skill')],
-            [esm_form_text('0.0000', key='debug_team2winprob')],
-            [esm_table(headings, headings=headings, key='debug_team2table')],
-            [esm_form_text('Team 2 Towers: '),
-                esm_form_text({
-                    "top": 3,
-                    "mid": 3,
-                    "bot": 3,
-                    "base": 2
-                }, key='debug_team2towers')],
-            [esm_form_text('Team 2 Inhibitors: '),
-                esm_form_text({
-                    "top": 1,
-                    "mid": 1,
-                    "bot": 1
-                }, key='debug_team2inhibs')]
+            [
+                esm_form_text("Team2DebugMatch", key="debug_team2name"),
+                esm_form_text("0000", key="debug_team2skill"),
+            ],
+            [esm_form_text("0.0000", key="debug_team2winprob")],
+            [esm_table(headings, headings=headings, key="debug_team2table")],
+            [
+                esm_form_text("Team 2 Towers: "),
+                esm_form_text(
+                    {"top": 3, "mid": 3, "bot": 3, "base": 2}, key="debug_team2towers"
+                ),
+            ],
+            [
+                esm_form_text("Team 2 Inhibitors: "),
+                esm_form_text({"top": 1, "mid": 1, "bot": 1}, key="debug_team2inhibs"),
+            ],
         ]
 
         return [
-            [esm_title_text('Debug Match')],
-            [sg.Column(layout=team1_column, element_justification='center'),
-             sg.Column(layout=team2_column, element_justification='center')],
-            [sg.ProgressBar(100, size=(80, 20), border_width=1,
-                            key='debug_winprob')],
-            [esm_form_text('Current match time: '), esm_form_text('500.00', key='debug_match_current_time')],
+            [esm_title_text("Debug Match")],
+            [
+                sg.Column(layout=team1_column, element_justification="center"),
+                sg.Column(layout=team2_column, element_justification="center"),
+            ],
+            [sg.ProgressBar(100, size=(80, 20), border_width=1, key="debug_winprob")],
+            [
+                esm_form_text("Current match time: "),
+                esm_form_text("500.00", key="debug_match_current_time"),
+            ],
             [esm_output()],
-            [esm_checkbox('Simulate step-by-step',
-                          key='debug_simulate_checkbox')],
-            [esm_button('Start Match', key='debug_startmatch_btn'),
-             esm_button('New Teams', key='debug_newteams_btn'),
-             esm_button('Reset Match', key='debug_resetmatch_btn'),
-             esm_button('Cancel', key='debug_cancel_btn')]
+            [esm_checkbox("Simulate step-by-step", key="debug_simulate_checkbox")],
+            [
+                esm_button("Start Match", key="debug_startmatch_btn"),
+                esm_button("New Teams", key="debug_newteams_btn"),
+                esm_button("Reset Match", key="debug_resetmatch_btn"),
+                esm_button("Cancel", key="debug_cancel_btn"),
+            ],
         ]
 
     def update(self, event, values, make_screen, *args, **kwargs):
@@ -97,32 +108,30 @@ class DebugMatchLayout(LayoutInterface):
         update_debug_match_info = self.controller.update_debug_match_info
 
         # Click the Start Match button
-        if event == 'debug_startmatch_btn':
+        if event == "debug_startmatch_btn":
             self.controller.is_match_running = True
             self.controller.reset_match(self.controller.current_match)
             self.controller.current_match.is_match_over = False
             self.controller.start_match_sim_thread()
 
         # Click the Cancel button
-        if event == 'debug_cancel_btn':
+        if event == "debug_cancel_btn":
             if self.controller.is_match_running:
                 self.controller.current_match.is_match_over = True
                 self.controller.current_match = None
-            make_screen('debug_match_screen', 'main_screen')
+            make_screen("debug_match_screen", "main_screen")
 
         # Click the New Teams button
-        elif event == 'debug_newteams_btn':
+        elif event == "debug_newteams_btn":
             self.controller.check_files()
             self.controller.initialize_random_debug_match()
-            data = self.controller.team_data(
-                match_live=self.controller.current_match)
+            data = self.controller.team_data(match_live=self.controller.current_match)
             update_debug_match_info(self.controller.current_match, data)
 
         # Click the Reset Match button
-        elif event == 'debug_resetmatch_btn':
+        elif event == "debug_resetmatch_btn":
             self.controller.reset_match(self.controller.current_match)
-            data = self.controller.team_data(
-                match_live=self.controller.current_match)
+            data = self.controller.team_data(match_live=self.controller.current_match)
             update_debug_match_info(self.controller.current_match, data)
 
         # if self.controller.current_match is not None:
@@ -139,6 +148,7 @@ class DebugMatchLayout(LayoutInterface):
 
             if self.controller.current_match is not None:
                 self.controller.current_match.simulate = bool(
-                    values['debug_simulate_checkbox'])
+                    values["debug_simulate_checkbox"]
+                )
                 data = team_data(self.controller.current_match)
                 update_debug_match_info(self.controller.current_match, data)

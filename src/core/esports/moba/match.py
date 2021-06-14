@@ -25,10 +25,7 @@ class Match:
     the user's team or not.
     """
 
-    def __init__(self,
-                 championship_id: int,
-                 team1: Team,
-                 team2: Team):
+    def __init__(self, championship_id: int, team1: Team, team2: Team):
         """
         Initializes elements of the match
         :param match_id: match ID
@@ -50,7 +47,7 @@ class Match:
         return self._teams
 
     def __repr__(self) -> str:
-        return '{0} {1}'.format(self.__class__.__name__, self.match_id)
+        return "{0} {1}".format(self.__class__.__name__, self.match_id)
 
     def __str__(self) -> str:
-        return '{0} ID: {1}'.format(self.__class__.__name__, self.match_id)
+        return "{0} ID: {1}".format(self.__class__.__name__, self.match_id)

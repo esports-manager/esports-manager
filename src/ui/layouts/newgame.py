@@ -27,11 +27,12 @@ class NewGameLayout(LayoutInterface):
         self.col = self.column()
 
     def column(self):
-        return sg.Column(self.lay,
-                         key='new_game_screen',
-                         visible=False,
-                         element_justification="center"
-                         )
+        return sg.Column(
+            self.lay,
+            key="new_game_screen",
+            visible=False,
+            element_justification="center",
+        )
 
     def layout(self):
         """
@@ -42,19 +43,23 @@ class NewGameLayout(LayoutInterface):
         size_element = (29, 1)
 
         labels = [
-            [esm_form_text('Game Name:', pad=label_pad)],
+            [esm_form_text("Game Name:", pad=label_pad)],
         ]
 
-        inputs = [
-            [esm_input_text(key='ng_gamename_input', size=size_element)]
-        ]
+        inputs = [[esm_input_text(key="ng_gamename_input", size=size_element)]]
 
         return [
-            [esm_title_text('New Game')],
-            [sg.Column(labels, element_justification='left'), sg.Column(inputs, element_justification='left')],
-            [esm_button('Create Game', key='ng_creategame_btn'), esm_button('Cancel', key='ng_cancel_btn')]
+            [esm_title_text("New Game")],
+            [
+                sg.Column(labels, element_justification="left"),
+                sg.Column(inputs, element_justification="left"),
+            ],
+            [
+                esm_button("Create Game", key="ng_creategame_btn"),
+                esm_button("Cancel", key="ng_cancel_btn"),
+            ],
         ]
 
     def update(self, event, values, make_screen, *args, **kwargs):
-        if event == 'ng_cancel_btn':
-            make_screen('new_game_screen', 'main_screen')
+        if event == "ng_cancel_btn":
+            make_screen("new_game_screen", "main_screen")

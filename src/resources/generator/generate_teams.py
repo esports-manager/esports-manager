@@ -31,12 +31,14 @@ class TeamGeneratorError(Exception):
 
 
 class TeamGenerator:
-    def __init__(self,
-                 nationality: str = None,
-                 amount: int = 1,
-                 players: list = None,
-                 organized: bool = True,
-                 file_name: str = 'teams.json'):
+    def __init__(
+        self,
+        nationality: str = None,
+        amount: int = 1,
+        players: list = None,
+        organized: bool = True,
+        file_name: str = "teams.json",
+    ):
         self.name = None
         self.nationality = nationality
         self.logo = None
@@ -57,7 +59,7 @@ class TeamGenerator:
         Gets all available names from the team_names file
         """
         try:
-            self.names = get_list_from_file('team_names.txt')
+            self.names = get_list_from_file("team_names.txt")
         except FileNotFoundError:
             self.names = get_default_team_names()
 
@@ -89,10 +91,14 @@ class TeamGenerator:
         """
         self.roster = []
         if self.player_list is None:
+            self.player_list = MobaPlayerGenerator()
             try:
-                self.player_list = MobaPlayerGenerator.get_players_objects()
-            except:
-                self.player_list = MobaPlayerGenerator(lane=0).generate_players(self.amount * 5)
+                self.player_list.get_players_objects()
+                self.player_list = self.player_list.players
+            except Exception:
+                self.player_list.lane = 0
+                self.player_list.generate_players(self.amount * 5)
+                self.player_list = self.player_list.players
 
         lane = 0
         for _ in range(5):
@@ -105,12 +111,12 @@ class TeamGenerator:
                         lane += 1
                         break
                 else:
-                    raise TeamGeneratorError('No player found!')
+                    raise TeamGeneratorError("No player found!")
 
             self.roster.append(player)
             self.player_list.remove(player)
 
-    def get_roster_ids(self) -> None:
+    def get_roster_ids(self) -> list:
         """
         Gets the IDs of each player to save on the dictionary
         """
@@ -119,7 +125,7 @@ class TeamGenerator:
             for player in self.roster:
                 r_ids.append(player.player_id)
         else:
-            raise TeamGeneratorError('Player roster is invalid!')
+            raise TeamGeneratorError("Player roster is invalid!")
 
         return r_ids
 
@@ -127,9 +133,11 @@ class TeamGenerator:
         """
         Generates the team dictionary
         """
-        self.team_dict = {'id': self.team_id,
-                          'name': self.name,
-                          'roster': self.get_roster_ids()}
+        self.team_dict = {
+            "id": self.team_id,
+            "name": self.name,
+            "roster": self.get_roster_ids(),
+        }
 
     def get_object(self) -> None:
         """
@@ -150,7 +158,7 @@ class TeamGenerator:
         """
         if self.names is None:
             self.get_names()
-        
+
         # Prevents IndexError
         if len(self.names) < self.amount:
             self.amount = len(self.names)
@@ -169,29 +177,29 @@ class TeamGenerator:
         """
         for _ in range(self.amount):
             self.generate_team()
-    
+
     def get_teams_dict(self) -> None:
         """
         Retrieves teams list based on the teams.json file
         """
         if self.teams_dict:
             self.teams_dict.clear()
-        self.teams_dict = load_list_from_json('teams.json')
-    
-    def get_roster(self, team) -> None:
+        self.teams_dict = load_list_from_json("teams.json")
+
+    def get_roster(self, team) -> list:
         """
         Gets the roster based on the player's ID
         """
         self.roster = []
         if self.player_list is not None:
-            for roster_id in team['roster']:
+            for roster_id in team["roster"]:
                 for player in self.player_list:
                     if player.player_id == roster_id:
                         self.roster.append(player)
                         break
-        
+
         return self.roster
-    
+
     def get_teams_objects(self) -> None:
         """
         Retrieves champions objects based on teams list dict
@@ -202,20 +210,24 @@ class TeamGenerator:
         if not self.teams_dict:
             self.get_teams_dict()
         for team in self.teams_dict:
-            self.team_id = team['id']
-            self.name = team['name']
+            self.team_id = team["id"]
+            self.name = team["name"]
             self.get_roster(team)
             self.get_object()
             self.teams.append(self.team_obj)
 
-    def generate_file(self, folder: Union[str, Path] = ROOT_DIR, res_folder: Union[str, Path] = RES_DIR) -> None:
+    def generate_file(
+        self,
+        folder: Union[str, Path] = ROOT_DIR,
+        res_folder: Union[str, Path] = RES_DIR,
+    ) -> None:
         """
         Generates the teams.json file
         """
         write_to_json(self.teams_dict, self.file_name, folder, res_folder)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from src.resources.generator.generate_players import MobaPlayerGenerator
 
     amount = 100

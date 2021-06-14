@@ -24,6 +24,7 @@ class MatchTester:
     """
     MatchTester receives a match and tests it to print statistics of the match results
     """
+
     def __init__(self, amount_test: int, match: Match):
         self.amount_test = amount_test
         self.match = match
@@ -40,13 +41,10 @@ class MatchTester:
 
         for team, stat in zip(self.match.match.teams, self.amount_team_deaths):
             stat = team.deaths
-        
+
         for team, stat in zip(self.match.match.teams, self.amount_team_assists):
             stat = team.assists
 
     def run_match_test(self):
         for i in range(self.amount_test):
             self.match.simulation()
-
-        
-    

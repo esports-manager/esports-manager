@@ -14,13 +14,14 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-__all__ = ['debug',
-           'debugmatch',
-           'newgame',
-           'loadgame',
-           'pickteam',
-           'picksbans',
-           'mainscreen',
-           'settings',
-           'match_tester',
-           ]
+__all__ = [
+    "debug",
+    "debugmatch",
+    "newgame",
+    "loadgame",
+    "pickteam",
+    "picksbans",
+    "mainscreen",
+    "settings",
+    "match_tester",
+]

@@ -76,8 +76,15 @@ class Core:
     def initialize_match(self, championship_id, team1, team2) -> None:
         self.match = Match(championship_id=championship_id, team1=team1, team2=team2)
 
-    def initialize_match_simulation(self, match, show_commentary=True, match_speed=1, simulate=True) -> None:
-        self.match_simulation = MatchLive(match, show_commentary=show_commentary, match_speed=match_speed, simulate=simulate)
+    def initialize_match_simulation(
+        self, match, show_commentary=True, match_speed=1, simulate=True
+    ) -> None:
+        self.match_simulation = MatchLive(
+            match,
+            show_commentary=show_commentary,
+            match_speed=match_speed,
+            simulate=simulate,
+        )
 
     def initialize_random_debug_match(self) -> None:
         self.players.get_players_objects()
@@ -89,13 +96,13 @@ class Core:
         self.teams.teams.remove(team1)
         team2 = random.choice(self.teams.teams)
         self.teams.teams.remove(team2)
-        
+
         self.initialize_match(uuid.uuid4(), team1, team2)
         self.initialize_match_simulation(self.match)
 
     def get_championship(self) -> Championship:
         pass
-    
+
     @staticmethod
     def reset_team_values(match) -> None:
         match.reset_teams()

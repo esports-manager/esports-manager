@@ -27,59 +27,61 @@ class MainScreenLayout(LayoutInterface):
         self.col = self.column()
 
     def column(self):
-        return sg.Column(self.lay,
-                         key='main_screen',
-                         element_justification="center"
-                         )
+        return sg.Column(self.lay, key="main_screen", element_justification="center")
 
     def layout(self):
         """
         Defines the main screen. This screen shows the initial options to play a new game, load game,
         use the Database Editor, or exit the game.
         """
-        logo_path = find_file('esportsmanager.png')
+        logo_path = find_file("esportsmanager.png")
 
         button_pad = (0, 10)
         button_size = (20, 2)
 
         return [
             [sg.Image(logo_path, pad=(50, 0))],
-            [esm_button('Debug Game Mode',
-                        key='main_debug_btn',
-                        pad=button_pad,
-                        size=button_size
-                        )],
-            [esm_button('New Game',
-                        key='main_newgame_btn',
-                        pad=button_pad,
-                        size=button_size
-                        )],
-            [esm_button('Load Game',
-                        key='main_loadgame_btn',
-                        pad=button_pad,
-                        size=button_size
-                        )],
-            [esm_button('Settings',
-                        key='main_settings_btn',
-                        pad=button_pad,
-                        size=button_size
-                        )],
-            [esm_button('Exit',
-                        key='main_exit_btn',
-                        pad=button_pad,
-                        size=button_size
-                        )],
+            [
+                esm_button(
+                    "Debug Game Mode",
+                    key="main_debug_btn",
+                    pad=button_pad,
+                    size=button_size,
+                )
+            ],
+            [
+                esm_button(
+                    "New Game", key="main_newgame_btn", pad=button_pad, size=button_size
+                )
+            ],
+            [
+                esm_button(
+                    "Load Game",
+                    key="main_loadgame_btn",
+                    pad=button_pad,
+                    size=button_size,
+                )
+            ],
+            [
+                esm_button(
+                    "Settings",
+                    key="main_settings_btn",
+                    pad=button_pad,
+                    size=button_size,
+                )
+            ],
+            [esm_button("Exit", key="main_exit_btn", pad=button_pad, size=button_size)],
         ]
 
     def update(self, event, values, make_screen, *args, **kwargs):
-        if event == 'main_debug_btn':
-            make_screen('main_screen', 'debug_game_mode_screen')
+        if event == "main_debug_btn":
+            make_screen("main_screen", "debug_game_mode_screen")
 
-        elif event == 'main_newgame_btn':
-            make_screen('main_screen', 'new_game_screen')
+        elif event == "main_newgame_btn":
+            make_screen("main_screen", "new_game_screen")
 
-        elif event == 'main_loadgame_btn':
-            make_screen('main_screen', 'load_game_screen')
+        elif event == "main_loadgame_btn":
+            make_screen("main_screen", "load_game_screen")
 
-        elif event == 'main_settings_btn':
-            make_screen('main_screen', 'settings_screen')
+        elif event == "main_settings_btn":
+            make_screen("main_screen", "settings_screen")

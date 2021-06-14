@@ -27,9 +27,9 @@ from src.core.esports.moba.mobaevent import MobaEventHandler
 
 def match_simulation_thread(match, window):
     match.simulation()
-    window.write_event_value('MATCH SIMULATED', 'DONE')
-    window.Element('-StartMatch-').Update(disabled=False)
-    window.Element('-NewTeams-').Update(disabled=False)
+    window.write_event_value("MATCH SIMULATED", "DONE")
+    window.Element("-StartMatch-").Update(disabled=False)
+    window.Element("-NewTeams-").Update(disabled=False)
 
 
 def get_match():
@@ -57,18 +57,18 @@ def get_match():
 
 
 def update_info(match, window, data):
-    window.Element('-Team1Table-').update(values=data[0])
-    window.Element('-Team2Table-').update(values=data[1])
-    window.Element('team1skill').update(value=match.match.team1.total_skill)
-    window.Element('team2skill').update(value=match.match.team2.total_skill)
-    window.Element('team1winprob').Update(value=match.match.team1.win_prob)
-    window.Element('team2winprob').Update(value=match.match.team2.win_prob)
-    window.Element('team1towers').Update(value=match.match.team1.towers)
-    window.Element('team2towers').Update(value=match.match.team2.towers)
-    window.Element('team1inhibs').Update(value=match.match.team1.inhibitors)
-    window.Element('team2inhibs').Update(value=match.match.team2.inhibitors)
-    window.Element('team1name').Update(value=match.match.team1.name)
-    window.Element('team2name').Update(value=match.match.team2.name)
+    window.Element("-Team1Table-").update(values=data[0])
+    window.Element("-Team2Table-").update(values=data[1])
+    window.Element("team1skill").update(value=match.match.team1.total_skill)
+    window.Element("team2skill").update(value=match.match.team2.total_skill)
+    window.Element("team1winprob").Update(value=match.match.team1.win_prob)
+    window.Element("team2winprob").Update(value=match.match.team2.win_prob)
+    window.Element("team1towers").Update(value=match.match.team1.towers)
+    window.Element("team2towers").Update(value=match.match.team2.towers)
+    window.Element("team1inhibs").Update(value=match.match.team1.inhibitors)
+    window.Element("team2inhibs").Update(value=match.match.team2.inhibitors)
+    window.Element("team1name").Update(value=match.match.team1.name)
+    window.Element("team2name").Update(value=match.match.team2.name)
     window.refresh()
 
 
@@ -79,10 +79,10 @@ def match_debugger():
     while True:
         event, values = window.read(timeout=100)
 
-        if event in [sg.WINDOW_CLOSED, 'exit_main']:
+        if event in [sg.WINDOW_CLOSED, "exit_main"]:
             break
 
-        elif event == '-StartMatch-':
+        elif event == "-StartMatch-":
             match.is_match_over = False
             match.game_time = 0.0
             match.event_handler = MobaEventHandler()
@@ -92,31 +92,20 @@ def match_debugger():
                     player.deaths = 0
                     player.assists = 0
                     player.points = 0
-                team.towers.update(
-                    {
-                        "top": 3,
-                        "mid": 3,
-                        "bot": 3,
-                        "base": 2
-                    }
-                )
-                team.inhibitors.update(
-                    {
-                        "top": 1,
-                        "mid": 1,
-                        "bot": 1
-                    }
-                )
+                team.towers.update({"top": 3, "mid": 3, "bot": 3, "base": 2})
+                team.inhibitors.update({"top": 1, "mid": 1, "bot": 1})
                 team.nexus = 1
             try:
-                thread = threading.Thread(target=match_simulation_thread, args=(match, window), daemon=True)
+                thread = threading.Thread(
+                    target=match_simulation_thread, args=(match, window), daemon=True
+                )
                 thread.start()
-                window.Element('-StartMatch-').Update(disabled=True)
-                window.Element('-NewTeams-').Update(disabled=True)
+                window.Element("-StartMatch-").Update(disabled=True)
+                window.Element("-NewTeams-").Update(disabled=True)
             except Exception as e:
-                print('Error starting thread.')
+                print("Error starting thread.")
 
-        elif event == '-NewTeams-':
+        elif event == "-NewTeams-":
             match = get_match()
             data = get_team_data(match)
             update_info(match, window, data)

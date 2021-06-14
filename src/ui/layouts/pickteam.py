@@ -27,35 +27,53 @@ class PickTeamLayout(LayoutInterface):
         self.col = self.column()
 
     def column(self):
-        return sg.Column(self.lay,
-                         key='debug_pickteam_screen',
-                         visible=False,
-                         element_justification="center"
-                         )
+        return sg.Column(
+            self.lay,
+            key="debug_pickteam_screen",
+            visible=False,
+            element_justification="center",
+        )
 
     def layout(self):
-        team_headings = ['Team Name', 'Skill']
-        player_headings = ['Lane', 'Nickname', 'Nationality', 'Skill']
+        team_headings = ["Team Name", "Skill"]
+        player_headings = ["Lane", "Nickname", "Nationality", "Skill"]
 
         team_list_frame = [
-            [esm_form_text('Team:')],
-            [esm_table(values=[['', '']], key='debug_pick_team_table', headings=team_headings, enable_events=True)]
+            [esm_form_text("Team:")],
+            [
+                esm_table(
+                    values=[["", ""]],
+                    key="debug_pick_team_table",
+                    headings=team_headings,
+                    enable_events=True,
+                )
+            ],
         ]
 
         player_list_frame = [
-            [esm_form_text('Players:')],
-            [esm_table(values=[['', 'Select a team', '', '']], key='debug_pick_player_table', headings=player_headings,
-                       enable_events=True)]
+            [esm_form_text("Players:")],
+            [
+                esm_table(
+                    values=[["", "Select a team", "", ""]],
+                    key="debug_pick_player_table",
+                    headings=player_headings,
+                    enable_events=True,
+                )
+            ],
         ]
 
         return [
-            [esm_title_text('Pick your team')],
-            [sg.Column(team_list_frame, element_justification='center'),
-             sg.Column(player_list_frame, element_justification='center')],
-            [esm_button('Confirm', key='debug_confirmteam_btn'),
-             esm_button('Cancel', key='debug_cancelteam_btn')]
+            [esm_title_text("Pick your team")],
+            [
+                sg.Column(team_list_frame, element_justification="center"),
+                sg.Column(player_list_frame, element_justification="center"),
+            ],
+            [
+                esm_button("Confirm", key="debug_confirmteam_btn"),
+                esm_button("Cancel", key="debug_cancelteam_btn"),
+            ],
         ]
 
     def update(self, event, values, make_screen, *args, **kwargs):
-        if event == 'debug_cancelteam_btn':
-            make_screen('debug_pickteam_screen', 'debug_game_mode_screen')
+        if event == "debug_cancelteam_btn":
+            make_screen("debug_pickteam_screen", "debug_game_mode_screen")

@@ -37,15 +37,15 @@ class View:
         self.gui.window[vis_screen].update(visible=True)
 
     def disable_debug_buttons(self):
-        self.gui.window.Element('debug_startmatch_btn').Update(disabled=True)
-        self.gui.window.Element('debug_newteams_btn').Update(disabled=True)
-        self.gui.window.Element('debug_resetmatch_btn').Update(disabled=True)
+        self.gui.window.Element("debug_startmatch_btn").Update(disabled=True)
+        self.gui.window.Element("debug_newteams_btn").Update(disabled=True)
+        self.gui.window.Element("debug_resetmatch_btn").Update(disabled=True)
 
     def update_match_sim_elements(self):
-        self.gui.window.write_event_value('MATCH SIMULATED', 'DONE')
-        self.gui.window.Element('debug_startmatch_btn').Update(disabled=False)
-        self.gui.window.Element('debug_newteams_btn').Update(disabled=False)
-        self.gui.window.Element('debug_resetmatch_btn').Update(disabled=False)
+        self.gui.window.write_event_value("MATCH SIMULATED", "DONE")
+        self.gui.window.Element("debug_startmatch_btn").Update(disabled=False)
+        self.gui.window.Element("debug_newteams_btn").Update(disabled=False)
+        self.gui.window.Element("debug_resetmatch_btn").Update(disabled=False)
 
     def update(self, event, values, make_screen, *args, **kwargs):
         for layout in self.gui.layouts:
@@ -55,10 +55,11 @@ class View:
         while True:
             event, values = self.gui.window.read(timeout=1000)
 
-            if event in [sg.WINDOW_CLOSED, 'main_exit_btn']:
+            if event in [sg.WINDOW_CLOSED, "main_exit_btn"]:
                 break
 
-            self.update(event,
-                        values,
-                        self.make_screen_visible,
-                        )
+            self.update(
+                event,
+                values,
+                self.make_screen_visible,
+            )

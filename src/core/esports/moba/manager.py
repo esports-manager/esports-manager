@@ -18,12 +18,9 @@ from src.core.esports.moba.team import Team
 
 
 class Manager:
-    def __init__(self,
-                 name: str,
-                 birthday: date,
-                 team: Team,
-                 is_player: bool,
-                 quality: int):
+    def __init__(
+        self, name: str, birthday: date, team: Team, is_player: bool, quality: int
+    ):
         self.name = name
         self.birthday = birthday
         self.team = team

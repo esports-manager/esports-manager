@@ -20,7 +20,9 @@ import json
 from src.definitions import ROOT_DIR, RES_DIR
 
 
-def write_to_json(contents: list, filename: str, folder: str = ROOT_DIR, res_folder: str = RES_DIR) -> None:
+def write_to_json(
+    contents: list, filename: str, folder: str = ROOT_DIR, res_folder: str = RES_DIR
+) -> None:
     file = filename
     try:
         file = find_file(filename, folder)
@@ -28,7 +30,7 @@ def write_to_json(contents: list, filename: str, folder: str = ROOT_DIR, res_fol
         # Maybe file creation should be in a separate function?
         file = os.path.join(res_folder, filename)  # prevents hard-coding "/" or "\"
     finally:
-        with open(file, 'w') as fp:
+        with open(file, "w") as fp:
             json.dump(contents, fp, sort_keys=True, indent=4)
 
 
@@ -62,7 +64,7 @@ def find_file(filename: str, folder: str = ROOT_DIR) -> str:
 def get_list_from_file(filename: str) -> list:
     file = find_file(filename)
 
-    with open(file, 'r', encoding='utf-8') as fp:
+    with open(file, "r", encoding="utf-8") as fp:
         lst = fp.read().splitlines()
 
     return lst
@@ -74,7 +76,7 @@ def get_from_file(file_name: str) -> list:
     :param file_name:
     :return:
     """
-    with open(file_name, 'r', encoding='utf-8') as fp:
+    with open(file_name, "r", encoding="utf-8") as fp:
         dictionary = json.load(fp)
 
     return dictionary
@@ -96,7 +98,7 @@ def load_list_from_json(filepath: str, folder: str = ROOT_DIR) -> list:
         return get_from_file(file)
 
 
-def get_key_from_json(key: str = 'name', file: str = 'teams.json') -> list:
+def get_key_from_json(key: str = "name", file: str = "teams.json") -> list:
     """
     Gets a key from a json file. By default it is used by the GUI to get
     names from the file teams.json, but we can repurpose that for other

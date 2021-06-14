@@ -20,10 +20,12 @@ from enum import Enum, auto
 class LaneError(Exception):
     pass
 
+
 class Lanes(Enum):
     """
     Defines lanes that can be played during a MOBA match
     """
+
     TOP = 0
     JG = auto()
     MID = auto()

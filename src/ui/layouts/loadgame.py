@@ -26,29 +26,39 @@ class LoadGameLayout(LayoutInterface):
         self.col = self.column()
 
     def column(self):
-        return sg.Column(self.lay,
-                         key='load_game_screen',
-                         visible=False,
-                         element_justification="center"
-                         )
+        return sg.Column(
+            self.lay,
+            key="load_game_screen",
+            visible=False,
+            element_justification="center",
+        )
 
     def layout(self):
         saved_games = [
-            'Saved Game 1',
-            'Saved Game 2',
-            'Saved Game 3',
+            "Saved Game 1",
+            "Saved Game 2",
+            "Saved Game 3",
         ]
 
         size_btn = (10, 1)
 
         return [
-            [esm_title_text('Load Game')],
-            [esm_form_text('Saved Games:')],
-            [esm_listbox(saved_games, size=(50, 20), key='load_game_listbox', enable_events=True)],
-            [esm_button('Load Game', key='load_game_btn', size=size_btn),
-             esm_button('Cancel', key='load_game_cancel_btn', size=size_btn)]
+            [esm_title_text("Load Game")],
+            [esm_form_text("Saved Games:")],
+            [
+                esm_listbox(
+                    saved_games,
+                    size=(50, 20),
+                    key="load_game_listbox",
+                    enable_events=True,
+                )
+            ],
+            [
+                esm_button("Load Game", key="load_game_btn", size=size_btn),
+                esm_button("Cancel", key="load_game_cancel_btn", size=size_btn),
+            ],
         ]
 
     def update(self, event, values, make_screen, *args, **kwargs):
-        if event == 'load_game_cancel_btn':
-            make_screen('load_game_screen', 'main_screen')
+        if event == "load_game_cancel_btn":
+            make_screen("load_game_screen", "main_screen")

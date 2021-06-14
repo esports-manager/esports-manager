@@ -21,14 +21,15 @@ from src.resources.utils import load_list_from_json
 
 
 class MobaEvent:
-    def __init__(self,
-                 event_id: int = uuid.uuid4(),
-                 event_name: str = None,
-                 priority: int = 0,
-                 points: int = 0,
-                 event_time: float = 0.0,
-                 show_commentary=True
-                 ):
+    def __init__(
+        self,
+        event_id: int = uuid.uuid4(),
+        event_name: str = None,
+        priority: int = 0,
+        points: int = 0,
+        event_time: float = 0.0,
+        show_commentary=True,
+    ):
         self.event_name = event_name
         self.event_id = event_id
         self.priority = priority
@@ -43,7 +44,9 @@ class MobaEvent:
         """
         Gets the team with a higher probability to attack the other team
         """
-        attack_team = random.choices([team1, team2], [team1.win_prob, team2.win_prob])[0]
+        attack_team = random.choices([team1, team2], [team1.win_prob, team2.win_prob])[
+            0
+        ]
 
         def_team = team2 if team1 == attack_team else team1
 
@@ -157,7 +160,9 @@ class MobaEvent:
         team_killer = random.choices(teams, [team1.win_prob, team2.win_prob])[0]
 
         # Chooses the killer player, most probably the highest skill player
-        killer = random.choices(team_killer, [player.get_player_total_skill() for player in team_killer])[0]
+        killer = random.choices(
+            team_killer, [player.get_player_total_skill() for player in team_killer]
+        )[0]
 
         # A player is less likely to get a pentakill in a match
         # TODO: we should in the future try to weight this up with the current player total skill lvl
@@ -165,12 +170,16 @@ class MobaEvent:
         weight = [0.5, 0.3, 0.1, 0.08, 0.02]
 
         # Randomly chooses the amount of kills that the player is going to attempt
-        amount_kills = random.choices([i+1 for i in range(5)], weight)[0]
+        amount_kills = random.choices([i + 1 for i in range(5)], weight)[0]
 
         if killer in teams[0]:
-            amount_kills, duel_players = self.choose_duel_players(killer, teams[1], amount_kills)
+            amount_kills, duel_players = self.choose_duel_players(
+                killer, teams[1], amount_kills
+            )
         else:
-            amount_kills, duel_players = self.choose_duel_players(killer, teams[0], amount_kills)
+            amount_kills, duel_players = self.choose_duel_players(
+                killer, teams[0], amount_kills
+            )
 
         # TODO: Currently, Assists are not awarded to members of the killer's team. This should be implemented
         # TODO: Before 0.1.0-alpha
@@ -184,7 +193,9 @@ class MobaEvent:
 
         amount_kills = len(duel_players)
         killed_players = duel_players
-        self.print_commentary(amount_kills, killer=killer.nick_name, killed_names=killed_players)
+        self.print_commentary(
+            amount_kills, killer=killer.nick_name, killed_names=killed_players
+        )
 
     def calculate_jungle(self, team1, team2, jungle):
         """
@@ -192,9 +203,9 @@ class MobaEvent:
         """
         attack_team, def_team = self._get_probable_team(team1, team2)
 
-        prevailing_team = random.choices([attack_team, def_team],
-                                         [attack_team.win_prob,
-                                          def_team.win_prob])[0]
+        prevailing_team = random.choices(
+            [attack_team, def_team], [attack_team.win_prob, def_team.win_prob]
+        )[0]
 
         for player in prevailing_team.list_players:
             player.points += self.points / 5
@@ -202,21 +213,28 @@ class MobaEvent:
         if prevailing_team == attack_team:
             self.print_commentary(atk_team_name=prevailing_team.name, jg_name=jungle)
         else:
-            self.print_commentary(def_team_name=prevailing_team.name, jg_name=jungle, stole=True)
+            self.print_commentary(
+                def_team_name=prevailing_team.name, jg_name=jungle, stole=True
+            )
 
     def calculate_tower(self, team1, team2):
         """
         This method calculates the tower assault outcome
         """
         attack_team, def_team, lane = self._get_tower_attributes(team1, team2)
-        
+
         if lane is not None:
             # Chooses which team prevails over the tower assault
-            prevailing = random.choices([attack_team, def_team], [attack_team.win_prob, def_team.win_prob])[0]
+            prevailing = random.choices(
+                [attack_team, def_team], [attack_team.win_prob, def_team.win_prob]
+            )[0]
             # If the prevailing team destroys the tower
             if prevailing == attack_team:
                 # Decides the player that destroys the tower
-                skills = [player.get_player_total_skill() for player in prevailing.list_players]
+                skills = [
+                    player.get_player_total_skill()
+                    for player in prevailing.list_players
+                ]
                 player = random.choices(attack_team.list_players, skills)[0]
 
                 # player gets full points for destroying the tower
@@ -230,12 +248,14 @@ class MobaEvent:
                 def_team.towers[lane] -= 1
                 self.print_commentary(atk_team_name=prevailing.name, lane=lane)
             else:
-                self.print_commentary(def_team_name=def_team.name, defended=True, lane=lane)
+                self.print_commentary(
+                    def_team_name=def_team.name, defended=True, lane=lane
+                )
 
                 for player in def_team.list_players:
                     player.points += self.points / 5
         else:
-            self.event_name = 'NOTHING'
+            self.event_name = "NOTHING"
 
     def calculate_inhib(self, team1, team2):
         if team1.get_exposed_inhibs():
@@ -249,7 +269,9 @@ class MobaEvent:
 
         exposed = random.choice(def_team.get_exposed_inhibs())
 
-        prevailing = random.choices([attack_team, def_team], [attack_team.win_prob, def_team.win_prob])[0]
+        prevailing = random.choices(
+            [attack_team, def_team], [attack_team.win_prob, def_team.win_prob]
+        )[0]
 
         for player in prevailing.list_players:
             player.points += self.points / 5
@@ -258,7 +280,9 @@ class MobaEvent:
             def_team.inhibitors[exposed] -= 1
             self.print_commentary(atk_team_name=prevailing.name, lane=exposed)
         else:
-            self.print_commentary(def_team_name=prevailing.name, defended=True, lane=exposed)
+            self.print_commentary(
+                def_team_name=prevailing.name, defended=True, lane=exposed
+            )
 
     def calculate_nexus(self, team1, team2, which_nexus):
         if which_nexus == team1:
@@ -271,154 +295,180 @@ class MobaEvent:
             # gets which team is more likely to attack due to the skill lvl
             atk_team, def_team = self._get_probable_team(team1, team2)
 
-        prevailing = random.choices([atk_team, def_team], [atk_team.total_skill, def_team.total_skill])[0]
+        prevailing = random.choices(
+            [atk_team, def_team], [atk_team.total_skill, def_team.total_skill]
+        )[0]
 
         if prevailing == atk_team:
             def_team.nexus = 0
             self.print_commentary(atk_team_name=prevailing.name)
 
-    def calculate_event(self,
-                        team1,
-                        team2,
-                        which_nexus
-                        ):
+    def calculate_event(self, team1, team2, which_nexus):
         """
         Takes the event to the appropriate function that calculates its outcome.
         """
-        if self.event_name == 'KILL':
+        if self.event_name == "KILL":
             self.calculate_kill(team1, team2)
-        if self.event_name == 'BARON':
-            self.calculate_jungle(team1, team2, 'Baron')
-        if self.event_name == 'DRAGON':
-            self.calculate_jungle(team1, team2, 'Dragon')
-        if self.event_name == 'TOWER ASSAULT':
+        if self.event_name == "BARON":
+            self.calculate_jungle(team1, team2, "Baron")
+        if self.event_name == "DRAGON":
+            self.calculate_jungle(team1, team2, "Dragon")
+        if self.event_name == "TOWER ASSAULT":
             self.calculate_tower(team1, team2)
-        if self.event_name == 'INHIB ASSAULT':
+        if self.event_name == "INHIB ASSAULT":
             self.calculate_inhib(team1, team2)
-        if self.event_name == 'NEXUS ASSAULT':
+        if self.event_name == "NEXUS ASSAULT":
             self.calculate_nexus(team1, team2, which_nexus)
 
     def list_names(self, players):
-        names = ''
+        names = ""
         for i, player in enumerate(players):
             if i == len(players) - 1:
-                names = names + player.nick_name + '.'
+                names = names + player.nick_name + "."
             else:
-                names = names + player.nick_name + ', '
-        
+                names = names + player.nick_name + ", "
+
         return names
 
-    def print_commentary(self, amount_kills=0, atk_team_name='', def_team_name='', killer='', defended=False, killed_names='', lane='', jg_name='', stole=False, commentaries=None):
+    def print_commentary(
+        self,
+        amount_kills=0,
+        atk_team_name="",
+        def_team_name="",
+        killer="",
+        defended=False,
+        killed_names="",
+        lane="",
+        jg_name="",
+        stole=False,
+        commentaries=None,
+    ):
         """
         Chooses commentary based on a list of commentaries.
 
         For now this is a dummy implementation that does nothing, but it will load commentaries depending
         on the locale.
         """
-        if self.event_name == 'KILL':
+        if self.event_name == "KILL":
             if killed_names is not None:
                 names = self.list_names(killed_names)
                 if amount_kills == 2:
-                    self.commentary = killer + ' got a Double Kill!'
+                    self.commentary = killer + " got a Double Kill!"
                 elif amount_kills == 3:
-                    self.commentary = killer + ' got a Triple Kill!'
+                    self.commentary = killer + " got a Triple Kill!"
                 elif amount_kills == 4:
-                    self.commentary = killer + ' got a QUADRA KILL!'
+                    self.commentary = killer + " got a QUADRA KILL!"
                 elif amount_kills == 5:
-                    self.commentary = killer + ' got a PENTAKILL! HE IS UNSTOPPABLE!'
+                    self.commentary = killer + " got a PENTAKILL! HE IS UNSTOPPABLE!"
 
                 if amount_kills != 0:
                     if self.commentary is not None:
-                        self.commentary = self.commentary + '\n' + killer + ' has slain: ' + names
+                        self.commentary = (
+                            self.commentary + "\n" + killer + " has slain: " + names
+                        )
                     else:
-                        self.commentary = killer + 'has slain ' + names
+                        self.commentary = killer + "has slain " + names
 
-        if self.event_name == 'BARON':
+        if self.event_name == "BARON":
             if stole:
-                self.commentary = def_team_name + ' stole the ' + jg_name
+                self.commentary = def_team_name + " stole the " + jg_name
             else:
-                self.commentary = atk_team_name + ' has slain the ' + jg_name
-        
-        if self.event_name == 'DRAGON':
-            if stole:
-                self.commentary = def_team_name + ' stole the ' + jg_name
-            else:
-                self.commentary = atk_team_name + ' has slain the ' + jg_name
-        
-        if self.event_name == 'TOWER ASSAULT':
-            if defended:
-                self.commentary = def_team_name + ' has defended the ' + lane + ' tower successfully'
-            else:
-                self.commentary = atk_team_name + ' has destroyed the ' + lane + ' tower'
-        
-        if self.event_name == 'INHIB ASSAULT':
-            if defended:
-                self.commentary = def_team_name + ' has defended the ' + lane + ' inhibitor successfully'
-            else:
-                self.commentary = atk_team_name + ' has destroyed the ' + lane + ' inhibitor'
-        
-        if self.event_name == 'NEXUS ASSAULT':
-            self.commentary = atk_team_name + ' won the match!'
+                self.commentary = atk_team_name + " has slain the " + jg_name
 
-        if self.show_commentary:    
-            print(str(self.event_time) + ' ' + self.event_name)
+        if self.event_name == "DRAGON":
+            if stole:
+                self.commentary = def_team_name + " stole the " + jg_name
+            else:
+                self.commentary = atk_team_name + " has slain the " + jg_name
+
+        if self.event_name == "TOWER ASSAULT":
+            if defended:
+                self.commentary = (
+                    def_team_name + " has defended the " + lane + " tower successfully"
+                )
+            else:
+                self.commentary = (
+                    atk_team_name + " has destroyed the " + lane + " tower"
+                )
+
+        if self.event_name == "INHIB ASSAULT":
+            if defended:
+                self.commentary = (
+                    def_team_name
+                    + " has defended the "
+                    + lane
+                    + " inhibitor successfully"
+                )
+            else:
+                self.commentary = (
+                    atk_team_name + " has destroyed the " + lane + " inhibitor"
+                )
+
+        if self.event_name == "NEXUS ASSAULT":
+            self.commentary = atk_team_name + " won the match!"
+
+        if self.show_commentary:
+            print(str(self.event_time) + " " + self.event_name)
             print(self.commentary)
+
 
 class MobaEventHandler:
     def __init__(self):
         """
         Initializes the event handler.
         """
-        self.events = load_list_from_json('mobaevents.json')
+        self.events = load_list_from_json("mobaevents.json")
         self.commentaries = None
         self.event = MobaEvent()
         self.enabled_events = []
         self.event_history = []
 
-    def get_game_state(self, game_time, which_nexus_exposed, is_any_inhib_open, towers_number):
+    def get_game_state(
+        self, game_time, which_nexus_exposed, is_any_inhib_open, towers_number
+    ):
         if game_time == 0.0:
-            self.get_enabled_events(['NOTHING', 'KILL'])
+            self.get_enabled_events(["NOTHING", "KILL"])
 
         if game_time >= 10.0:
-            self.get_enabled_events(['TOWER ASSAULT'])
+            self.get_enabled_events(["TOWER ASSAULT"])
         if towers_number == 0:
-            self.remove_enabled_event('TOWER ASSAULT')
+            self.remove_enabled_event("TOWER ASSAULT")
 
-        self.check_jungle(game_time, 'BARON')
-        self.check_jungle(game_time, 'DRAGON')
+        self.check_jungle(game_time, "BARON")
+        self.check_jungle(game_time, "DRAGON")
 
         # TODO: We need to add a Inhibitor Spawn time
         if is_any_inhib_open:
-            self.get_enabled_events(['INHIB ASSAULT'])
+            self.get_enabled_events(["INHIB ASSAULT"])
         else:
-            self.remove_enabled_event('INHIB ASSAULT')
+            self.remove_enabled_event("INHIB ASSAULT")
 
         if which_nexus_exposed is not None:
-            self.get_enabled_events(['NEXUS ASSAULT'])
+            self.get_enabled_events(["NEXUS ASSAULT"])
 
     def check_jungle(self, game_time, jungle):
         for event in self.events:
-            if event['name'] == jungle:
+            if event["name"] == jungle:
                 if self.event.event_name == jungle:
                     if event in self.enabled_events:
                         self.enabled_events.remove(event)
-                    event['spawn_time'] += event['cooldown']
+                    event["spawn_time"] += event["cooldown"]
                 else:
                     if (
-                        game_time >= event['spawn_time']
+                        game_time >= event["spawn_time"]
                         and event not in self.enabled_events
                     ):
-                        self.get_enabled_events([event['name']])
+                        self.get_enabled_events([event["name"]])
 
     def remove_enabled_event(self, name):
         for event in self.enabled_events:
-            if event['name'] == name:
+            if event["name"] == name:
                 self.enabled_events.remove(event)
 
     def get_enabled_events(self, names):
         for event in self.events:
             for name in names:
-                if event['name'] == name and event not in self.enabled_events:
+                if event["name"] == name and event not in self.enabled_events:
                     self.enabled_events.append(event)
 
     def load_commentaries_file(self):
@@ -428,7 +478,7 @@ class MobaEventHandler:
         pass
 
     def get_event_priorities(self):
-        return [event['priority'] for event in self.enabled_events]
+        return [event["priority"] for event in self.enabled_events]
 
     def generate_event(self, game_time, show_commentary):
         """
@@ -436,9 +486,11 @@ class MobaEventHandler:
         """
         priorities = self.get_event_priorities()
         ev_chosen = random.choices(self.enabled_events, priorities)[0]
-        self.event = MobaEvent(event_name=ev_chosen['name'],
-                               priority=ev_chosen['priority'],
-                               points=ev_chosen['points'],
-                               event_time=game_time,
-                               show_commentary=show_commentary)
+        self.event = MobaEvent(
+            event_name=ev_chosen["name"],
+            priority=ev_chosen["priority"],
+            points=ev_chosen["points"],
+            event_time=game_time,
+            show_commentary=show_commentary,
+        )
         self.event_history.append(self.event)

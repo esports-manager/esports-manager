@@ -26,11 +26,12 @@ class DebugLayout(LayoutInterface):
         self.col = self.column()
 
     def column(self):
-        return sg.Column(self.lay,
-                         key='debug_game_mode_screen',
-                         visible=False,
-                         element_justification="center"
-                         )
+        return sg.Column(
+            self.lay,
+            key="debug_game_mode_screen",
+            visible=False,
+            element_justification="center",
+        )
 
     def layout(self):
         """
@@ -41,46 +42,61 @@ class DebugLayout(LayoutInterface):
         button_size = (20, 2)
 
         return [
-            [esm_title_text('Choose your debug mode')],
-            [esm_button('Debug Match',
-                        key='debug_match_btn',
-                        pad=button_pad,
-                        size=button_size
-                        )],
-            [esm_button('Debug Pick Team',
-                        key='debug_pickteam_btn',
-                        pad=button_pad,
-                        size=button_size
-                        )],
-            [esm_button('Debug Picks Bans',
-                        key='debug_picksbans_btn',
-                        pad=button_pad,
-                        size=button_size
-                        )],
-            [esm_button('Match Tester',
-                        key='debug_matchtester_btn',
-                        pad=button_pad,
-                        size=button_size
-                        )],
-            [esm_button('Cancel',
-                        key='debug_cancelmain_btn',
-                        pad=button_pad,
-                        size=button_size
-                        )],
+            [esm_title_text("Choose your debug mode")],
+            [
+                esm_button(
+                    "Debug Match",
+                    key="debug_match_btn",
+                    pad=button_pad,
+                    size=button_size,
+                )
+            ],
+            [
+                esm_button(
+                    "Debug Pick Team",
+                    key="debug_pickteam_btn",
+                    pad=button_pad,
+                    size=button_size,
+                )
+            ],
+            [
+                esm_button(
+                    "Debug Picks Bans",
+                    key="debug_picksbans_btn",
+                    pad=button_pad,
+                    size=button_size,
+                )
+            ],
+            [
+                esm_button(
+                    "Match Tester",
+                    key="debug_matchtester_btn",
+                    pad=button_pad,
+                    size=button_size,
+                )
+            ],
+            [
+                esm_button(
+                    "Cancel",
+                    key="debug_cancelmain_btn",
+                    pad=button_pad,
+                    size=button_size,
+                )
+            ],
         ]
 
     def update(self, event, value, make_screen, *args, **kwargs):
-        if event == 'debug_pickteam_btn':
-            make_screen('debug_game_mode_screen', 'debug_pickteam_screen')
+        if event == "debug_pickteam_btn":
+            make_screen("debug_game_mode_screen", "debug_pickteam_screen")
 
-        elif event == 'debug_cancelmain_btn':
-            make_screen('debug_game_mode_screen', 'main_screen')
+        elif event == "debug_cancelmain_btn":
+            make_screen("debug_game_mode_screen", "main_screen")
 
-        elif event == 'debug_picksbans_btn':
+        elif event == "debug_picksbans_btn":
             self.controller.initialize_random_debug_match(False)
-            make_screen('debug_game_mode_screen', 'debug_picks_bans_screen')
+            make_screen("debug_game_mode_screen", "debug_picks_bans_screen")
 
-        elif event == 'debug_match_btn':
+        elif event == "debug_match_btn":
             team_data = self.controller.team_data
             update_debug_match_info = self.controller.update_debug_match_info
 
@@ -92,11 +108,13 @@ class DebugLayout(LayoutInterface):
 
             data = team_data(match_live=match_live)
             update_debug_match_info(match_live, data)
-            make_screen('debug_game_mode_screen', 'debug_match_screen')
-        
-        elif event == 'debug_matchtester_btn':
+            make_screen("debug_game_mode_screen", "debug_match_screen")
+
+        elif event == "debug_matchtester_btn":
             team_data = self.controller.team_data
-            update_match_tester_match_info = self.controller.update_match_tester_match_info
+            update_match_tester_match_info = (
+                self.controller.update_match_tester_match_info
+            )
 
             self.controller.check_files()
             if not self.controller.current_match:
@@ -108,4 +126,4 @@ class DebugLayout(LayoutInterface):
             match_live.show_commentary = False
             data = team_data(match_live=match_live)
             update_match_tester_match_info(match_live, data)
-            make_screen('debug_game_mode_screen', 'match_tester_screen')
+            make_screen("debug_game_mode_screen", "match_tester_screen")

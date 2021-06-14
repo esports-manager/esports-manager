@@ -32,6 +32,7 @@ class MatchLive:
     current game state. The MatchLive only provides needed information for the simulation to take place, and
     in the end gets the winning team from the EventHandler.
     """
+
     def __init__(self, match: Match, show_commentary, match_speed, simulate=True):
         self.match = match
         self.game_time = 0.0
@@ -46,7 +47,7 @@ class MatchLive:
     def reset_teams(self):
         for team in self.match.teams:
             team.reset_values()
-    
+
     def picks_and_bans(self) -> None:
         """
         Dummy picks and bans implementation. Will be changed in the future.
@@ -67,9 +68,7 @@ class MatchLive:
         Calculates both teams Win probabilities. This is used for internal match simulation calculations. The winning
         team will always have a significant advantage over the losing team.
         """
-        total_prob = sum(
-            team.total_skill for team in self.match.teams
-        )
+        total_prob = sum(team.total_skill for team in self.match.teams)
 
         for team in self.match.teams:
             team.win_prob = team.total_skill / total_prob
@@ -135,14 +134,16 @@ class MatchLive:
 
         while not self.is_match_over:
             self.calculate_both_teams_win_prob()
-            self.event_handler.get_game_state(self.game_time,
-                                              self.which_team_nexus_exposed(),
-                                              self.is_any_inhib_open(),
-                                              self.get_tower_number())
+            self.event_handler.get_game_state(
+                self.game_time,
+                self.which_team_nexus_exposed(),
+                self.is_any_inhib_open(),
+                self.get_tower_number(),
+            )
             self.event_handler.generate_event(self.game_time, self.show_commentary)
-            self.event_handler.event.calculate_event(self.match.team1,
-                                                     self.match.team2,
-                                                     self.which_team_nexus_exposed())
+            self.event_handler.event.calculate_event(
+                self.match.team1, self.match.team2, self.which_team_nexus_exposed()
+            )
             self.check_match_over()
 
             if not self.is_match_over:
@@ -154,9 +155,7 @@ class MatchLive:
         self.winning_team()
 
 
-def initialize_match(team1,
-                     team2,
-                     ch_id):
+def initialize_match(team1, team2, ch_id):
     """
     Instantiate each object that is going to be used by the match, returning
     the match object.

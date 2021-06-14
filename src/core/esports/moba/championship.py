@@ -19,11 +19,7 @@ from src.core.esports.moba.match import Match
 
 
 class Championship:
-    def __init__(self,
-                 name: str,
-                 championship_id: int,
-                 country: str,
-                 teams: list):
+    def __init__(self, name: str, championship_id: int, country: str, teams: list):
         self.name = name
         self.championship_id = championship_id
         self.country = country
@@ -46,21 +42,21 @@ class Championship:
             random.shuffle(self.matches)
 
     def __repr__(self):
-        return '{0}'.format(self.__class__.__name__)
+        return "{0}".format(self.__class__.__name__)
 
     def __str__(self):
-        return '{0}'.format(self.__class__.__name__)
+        return "{0}".format(self.__class__.__name__)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from src.resources.generator.generate_teams import TeamGenerator
 
     team_gen = TeamGenerator()
     team_gen.get_teams_dict()
     team_gen.get_teams_objects()
 
-    championship = Championship('League', 1, 'Brazil', team_gen.teams)
+    championship = Championship("League", 1, "Brazil", team_gen.teams)
     championship.schedule_matches()
 
     for match in championship.matches:
-        print(match.team1.name + ' v ' + match.team2.name)
+        print(match.team1.name + " v " + match.team2.name)

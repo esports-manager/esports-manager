@@ -27,65 +27,88 @@ class SettingsLayout(LayoutInterface):
         self.col = self.column()
 
     def column(self):
-        return sg.Column(self.lay,
-                         key='settings_screen',
-                         visible=False,
-                         element_justification="center"
-                         )
+        return sg.Column(
+            self.lay,
+            key="settings_screen",
+            visible=False,
+            element_justification="center",
+        )
 
     def layout(self):
         size_elements = (45, 2)
 
-        languages = ['English', 'Portuguese']
+        languages = ["English", "Portuguese"]
 
         try:
-            ch_file = find_file('champions.json')
-            pl_file = find_file('players.json')
-            t_file = find_file('teams.json')
+            ch_file = find_file("champions.json")
+            pl_file = find_file("players.json")
+            t_file = find_file("teams.json")
         except FileNotFoundError:
-            ch_file = 'champions.json'
-            pl_file = 'players.json'
-            t_file = 'teams.json'
+            ch_file = "champions.json"
+            pl_file = "players.json"
+            t_file = "teams.json"
 
         labels = [
-            [esm_form_text('Language:')],
-            [esm_form_text('Font scale:')],
-            [esm_form_text('Champions file:')],
-            [esm_form_text('Players file:')],
-            [esm_form_text('Teams file:')],
-            [esm_form_text('Generate new files:')]
+            [esm_form_text("Language:")],
+            [esm_form_text("Font scale:")],
+            [esm_form_text("Champions file:")],
+            [esm_form_text("Players file:")],
+            [esm_form_text("Teams file:")],
+            [esm_form_text("Generate new files:")],
         ]
 
         controls = [
             # TODO: Replace with supported i18n
-            [esm_input_combo(languages, default_value=languages[0], size=size_elements,
-                             key='settings_languages_inpcombo')],
-            [esm_input_text('1', size=size_elements, key='settings_fontsize_input')],
-            [esm_input_text(ch_file, size=size_elements, key='settings_ch_file'),
-             sg.FileBrowse(target='settings_ch_file')],
-            [esm_input_text(pl_file, size=size_elements, key='settings_pl_file'),
-             sg.FileBrowse(target='settings_pl_file')],
-            [esm_input_text(t_file, size=size_elements, key='settings_t_file'),
-             sg.FileBrowse(target='settings_t_file')],
-            [esm_input_text('400', key='settings_amount_input', size=size_elements),
-             esm_button('Generate', font=(default_font, default_font_size), key='settings_generate_btn')]
+            [
+                esm_input_combo(
+                    languages,
+                    default_value=languages[0],
+                    size=size_elements,
+                    key="settings_languages_inpcombo",
+                )
+            ],
+            [esm_input_text("1", size=size_elements, key="settings_fontsize_input")],
+            [
+                esm_input_text(ch_file, size=size_elements, key="settings_ch_file"),
+                sg.FileBrowse(target="settings_ch_file"),
+            ],
+            [
+                esm_input_text(pl_file, size=size_elements, key="settings_pl_file"),
+                sg.FileBrowse(target="settings_pl_file"),
+            ],
+            [
+                esm_input_text(t_file, size=size_elements, key="settings_t_file"),
+                sg.FileBrowse(target="settings_t_file"),
+            ],
+            [
+                esm_input_text("400", key="settings_amount_input", size=size_elements),
+                esm_button(
+                    "Generate",
+                    font=(default_font, default_font_size),
+                    key="settings_generate_btn",
+                ),
+            ],
         ]
 
         return [
-            [esm_title_text('Settings')],
-            [sg.Column(labels, element_justification='right'),
-             sg.Column(controls, element_justification='left')],
-            [esm_button('Apply', key='settings_apply_btn'),
-             esm_button('Cancel', key='settings_cancel_btn')]
+            [esm_title_text("Settings")],
+            [
+                sg.Column(labels, element_justification="right"),
+                sg.Column(controls, element_justification="left"),
+            ],
+            [
+                esm_button("Apply", key="settings_apply_btn"),
+                esm_button("Cancel", key="settings_cancel_btn"),
+            ],
         ]
 
     def update(self, event, values, make_screen, *args, **kwargs):
-        if event == 'settings_cancel_btn':
-            make_screen('settings_screen', 'main_screen')
+        if event == "settings_cancel_btn":
+            make_screen("settings_screen", "main_screen")
 
-        elif event == 'settings_generate_btn':
+        elif event == "settings_generate_btn":
             try:
-                value = int(values['settings_amount_input'])
+                value = int(values["settings_amount_input"])
             except ValueError:
                 self.controller.amount_players = 400
                 self.controller.update_amount(400)

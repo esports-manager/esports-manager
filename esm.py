@@ -58,7 +58,7 @@ class ESM:
 
     def start_match_sim(self) -> None:
         self.current_match.simulation()
-        self.view.update_match_sim_elements()
+        self.view.enable_debug_buttons()
 
     def generate_all_data(self) -> None:
         """
@@ -152,15 +152,23 @@ class ESM:
 
         return self.core.match_simulation
 
+    def reset_match_tester(self):
+        if self.match_tester is not None:
+            self.match_tester.reset_values()
+
     def start_match_tester(self, amount):
         self.match_tester = MatchTester(amount, self.current_match)
+        self.match_tester.running_test = True
         self.match_tester.run_match_test()
+        self.view.enable_match_tester_buttons()
 
     def start_match_tester_thread(self, amount):
         try:
             self.match_tester_thread = threading.Thread(
-                target=self.start_match_tester, args=amount, daemon=True
+                target=self.start_match_tester, args=(int(amount),), daemon=True
             )
+            self.match_tester_thread.start()
+            self.view.disable_match_tester_buttons()
         except Exception as e:
             self.view.print_error(e)
 

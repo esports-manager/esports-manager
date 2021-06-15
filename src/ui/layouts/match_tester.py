@@ -49,21 +49,7 @@ class MatchTesterLayout(LayoutInterface):
                 esm_form_text("Team1DebugMatch", key="match_tester_team1name"),
                 esm_form_text("0000", key="match_tester_team1skill"),
             ],
-            [esm_form_text("0.0000", key="match_tester_team1winprob")],
             [esm_table(headings, headings=headings, key="match_tester_team1table")],
-            [
-                esm_form_text("Team 1 Towers: "),
-                esm_form_text(
-                    {"top": 3, "mid": 3, "bot": 3, "base": 2},
-                    key="match_tester_team1towers",
-                ),
-            ],
-            [
-                esm_form_text("Team 2 Towers: "),
-                esm_form_text(
-                    {"top": 1, "mid": 1, "bot": 1}, key="match_tester_team1inhibs"
-                ),
-            ],
         ]
 
         team2_column = [
@@ -71,21 +57,7 @@ class MatchTesterLayout(LayoutInterface):
                 esm_form_text("Team2DebugMatch", key="match_tester_team2name"),
                 esm_form_text("0000", key="match_tester_team2skill"),
             ],
-            [esm_form_text("0.0000", key="match_tester_team2winprob")],
             [esm_table(headings, headings=headings, key="match_tester_team2table")],
-            [
-                esm_form_text("Team 2 Towers: "),
-                esm_form_text(
-                    {"top": 3, "mid": 3, "bot": 3, "base": 2},
-                    key="match_tester_team2towers",
-                ),
-            ],
-            [
-                esm_form_text("Team 2 Inhibitors: "),
-                esm_form_text(
-                    {"top": 1, "mid": 1, "bot": 1}, key="match_tester_team2inhibs"
-                ),
-            ],
         ]
 
         return [
@@ -99,20 +71,10 @@ class MatchTesterLayout(LayoutInterface):
                 sg.Column(layout=team1_column, element_justification="center"),
                 sg.Column(layout=team2_column, element_justification="center"),
             ],
-            [
-                sg.ProgressBar(
-                    100, size=(80, 20), border_width=1, key="match_tester_winprob"
-                )
-            ],
-            [
-                esm_form_text("Current match time: "),
-                esm_form_text("500.00", key="match_tester_current_time"),
-            ],
             [esm_output()],
             [
                 esm_button("Start Test", key="match_tester_startmatch_btn"),
                 esm_button("New Teams", key="match_tester_newteams_btn"),
-                esm_button("Reset Match", key="match_tester_resetmatch_btn"),
                 esm_button("Cancel", key="match_tester_cancel_btn"),
             ],
         ]
@@ -123,33 +85,21 @@ class MatchTesterLayout(LayoutInterface):
 
         # Click the Start Match button
         if event == "match_tester_startmatch_btn":
-            self.controller.is_match_running = True
-            self.controller.reset_match(self.controller.current_match)
-            self.controller.current_match.is_match_over = False
-            self.controller.start_match_sim_thread()
+            self.controller.reset_match_tester()
+            self.controller.start_match_tester_thread(values['match_tester_amount_of_matches'])
 
         # Click the Cancel button
         if event == "match_tester_cancel_btn":
-            if self.controller.is_match_running:
-                self.controller.current_match.is_match_over = True
-                self.controller.current_match = None
+            if self.controller.match_tester.running_test:
+                self.controller.match_tester.running_test = False
             make_screen("match_tester_screen", "main_screen")
 
         # Click the New Teams button
         elif event == "match_tester_newteams_btn":
             self.controller.check_files()
-            self.controller.initialize_random_match_tester_match()
+            self.controller.initialize_random_debug_match()
             data = self.controller.team_data(match_live=self.controller.current_match)
             update_match_tester_match_info(self.controller.current_match, data)
-
-        # Click the Reset Match button
-        elif event == "match_tester_resetmatch_btn":
-            self.controller.reset_match(self.controller.current_match)
-            data = self.controller.team_data(match_live=self.controller.current_match)
-            update_match_tester_match_info(self.controller.current_match, data)
-
-        # if self.controller.current_match is not None:
-        #     self.controller.current_match.simulate = bool(values['match_tester_simulate_checkbox'])
 
         # Check if the match is running to update values on the fly
         if self.controller.is_match_running:

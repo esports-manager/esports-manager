@@ -41,11 +41,21 @@ class View:
         self.gui.window.Element("debug_newteams_btn").Update(disabled=True)
         self.gui.window.Element("debug_resetmatch_btn").Update(disabled=True)
 
-    def update_match_sim_elements(self):
+    def disable_match_tester_buttons(self):
+        self.gui.window['match_tester_startmatch_btn'].update(disabled=True)
+        self.gui.window['match_tester_newteams_btn'].update(disabled=True)
+        self.gui.window['match_tester_startmatch_btn'].update(disabled=True)
+
+    def enable_debug_buttons(self):
         self.gui.window.write_event_value("MATCH SIMULATED", "DONE")
         self.gui.window.Element("debug_startmatch_btn").Update(disabled=False)
         self.gui.window.Element("debug_newteams_btn").Update(disabled=False)
         self.gui.window.Element("debug_resetmatch_btn").Update(disabled=False)
+
+    def enable_match_tester_buttons(self):
+        self.gui.window.write_event_value("MATCH TESTER", "MATCH TESTER DONE")
+        self.gui.window['match_tester_startmatch_btn'].update(disabled=False)
+        self.gui.window['match_tester_newteams_btn'].update(disabled=False)
 
     def update(self, event, values, make_screen, *args, **kwargs):
         for layout in self.gui.layouts:

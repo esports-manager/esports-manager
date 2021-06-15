@@ -44,6 +44,13 @@ class MatchLive:
         self.event_handler = MobaEventHandler()
         self.champions = ChampionGenerator()
 
+    def reset_match(self):
+        self.reset_teams()
+        self.game_time = 0.0
+        self.victorious_team = None
+        self.is_match_over = False
+        self.event_handler = MobaEventHandler()
+
     def reset_teams(self):
         for team in self.match.teams:
             team.reset_values()

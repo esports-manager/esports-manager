@@ -17,6 +17,7 @@
 import threading
 
 from src.core.esports.moba.mobaevent import MobaEventHandler
+from src.core.esports.moba.match_tester import MatchTester
 from src.core.core import Core
 from src.core.esports.moba.match_live import MatchLive
 
@@ -33,6 +34,8 @@ class ESM:
         self.view = View(self)
         self._amount_test_matches = 1000
         self.is_match_running = False
+        self.match_tester = None
+        self.match_tester_thread = None
         self.current_match = None
         self.match_thread = None
 
@@ -148,6 +151,18 @@ class ESM:
         self.current_match = self.core.match_simulation
 
         return self.core.match_simulation
+
+    def start_match_tester(self, amount):
+        self.match_tester = MatchTester(amount, self.current_match)
+        self.match_tester.run_match_test()
+
+    def start_match_tester_thread(self, amount):
+        try:
+            self.match_tester_thread = threading.Thread(
+                target=self.start_match_tester, args=amount, daemon=True
+            )
+        except Exception as e:
+            self.view.print_error(e)
 
     def start_match_sim_thread(self) -> None:
         try:

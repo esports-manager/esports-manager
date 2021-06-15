@@ -133,7 +133,7 @@ class MatchTesterLayout(LayoutInterface):
             if self.controller.is_match_running:
                 self.controller.current_match.is_match_over = True
                 self.controller.current_match = None
-            make_screen("match_tester_match_screen", "main_screen")
+            make_screen("match_tester_screen", "main_screen")
 
         # Click the New Teams button
         elif event == "match_tester_newteams_btn":

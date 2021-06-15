@@ -125,7 +125,7 @@ class GUI:
         window["match_tester_team1winprob"].update(value=match.match.team1.win_prob)
         window["match_tester_team2winprob"].update(value=match.match.team2.win_prob)
         window["match_tester_winprob"].update_bar(win_prob)
-        window["match_tester_match_current_time"].update(value=match.game_time)
+        window["match_tester_current_time"].update(value=match.game_time)
         window["match_tester_team1towers"].Update(value=match.match.team1.towers)
         window["match_tester_team2towers"].Update(value=match.match.team2.towers)
         window["match_tester_team1inhibs"].Update(value=match.match.team1.inhibitors)

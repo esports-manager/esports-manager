@@ -117,7 +117,7 @@ class Team:
     def kills(self):
         self._kills = 0
         for player in self.list_players:
-            player.kills += self._kills
+            self._kills += player.kills
 
         return self._kills
 
@@ -125,7 +125,7 @@ class Team:
     def deaths(self):
         self._deaths = 0
         for player in self.list_players:
-            player.deaths += self._deaths
+            self._deaths += player.deaths
 
         return self._deaths
 
@@ -133,7 +133,7 @@ class Team:
     def assists(self):
         self._assists = 0
         for player in self.list_players:
-            player.assists += self._assists
+            self._assists += player.assists
 
         return self._assists
 

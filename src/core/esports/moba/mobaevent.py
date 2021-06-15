@@ -193,7 +193,7 @@ class MobaEvent:
 
         amount_kills = len(duel_players)
         killed_players = duel_players
-        self.print_commentary(
+        self.get_commentary(
             amount_kills, killer=killer.nick_name, killed_names=killed_players
         )
 
@@ -211,9 +211,9 @@ class MobaEvent:
             player.points += self.points / 5
 
         if prevailing_team == attack_team:
-            self.print_commentary(atk_team_name=prevailing_team.name, jg_name=jungle)
+            self.get_commentary(atk_team_name=prevailing_team.name, jg_name=jungle)
         else:
-            self.print_commentary(
+            self.get_commentary(
                 def_team_name=prevailing_team.name, jg_name=jungle, stole=True
             )
 
@@ -246,9 +246,9 @@ class MobaEvent:
                         other_player.points += self.points / 4
 
                 def_team.towers[lane] -= 1
-                self.print_commentary(atk_team_name=prevailing.name, lane=lane)
+                self.get_commentary(atk_team_name=prevailing.name, lane=lane)
             else:
-                self.print_commentary(
+                self.get_commentary(
                     def_team_name=def_team.name, defended=True, lane=lane
                 )
 
@@ -278,9 +278,9 @@ class MobaEvent:
 
         if prevailing == attack_team:
             def_team.inhibitors[exposed] -= 1
-            self.print_commentary(atk_team_name=prevailing.name, lane=exposed)
+            self.get_commentary(atk_team_name=prevailing.name, lane=exposed)
         else:
-            self.print_commentary(
+            self.get_commentary(
                 def_team_name=prevailing.name, defended=True, lane=exposed
             )
 
@@ -301,7 +301,7 @@ class MobaEvent:
 
         if prevailing == atk_team:
             def_team.nexus = 0
-            self.print_commentary(atk_team_name=prevailing.name)
+            self.get_commentary(atk_team_name=prevailing.name)
 
     def calculate_event(self, team1, team2, which_nexus):
         """
@@ -330,7 +330,7 @@ class MobaEvent:
 
         return names
 
-    def print_commentary(
+    def get_commentary(
         self,
         amount_kills=0,
         atk_team_name="",

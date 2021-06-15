@@ -17,7 +17,7 @@
 import random
 import time
 
-from src.core.esports.moba.match import Match
+from src.core.esports.moba.match_live import MatchLive
 
 
 class MatchTester:
@@ -25,26 +25,63 @@ class MatchTester:
     MatchTester receives a match and tests it to print statistics of the match results
     """
 
-    def __init__(self, amount_test: int, match: Match):
+    def __init__(self, amount_test: int, match: MatchLive):
         self.amount_test = amount_test
         self.match = match
-        self.amount_team_kills = [0, 0]
-        self.amount_team_deaths = [0, 0]
-        self.amount_team_assists = [0, 0]
+        self.amount_team_kills = [[], []]
+        self.amount_team_deaths = [[], []]
+        self.amount_team_assists = [[], []]
         self.avg_team_kills = [0, 0]
         self.avg_team_deaths = [0, 0]
         self.avg_team_assists = [0, 0]
+        self.match.simulate = False
+        self.match.show_commentary = False
+
+    def _get_team_stats(self, i):
+        team = self.match.match.teams[i]
+        self.amount_team_kills[i].append(team.kills)
+        self.amount_team_deaths[i].append(team.deaths)
+        self.amount_team_assists[i].append(team.assists)
+
+        self.avg_team_kills[i] += team.kills
+        self.avg_team_deaths[i] += team.deaths
+        self.avg_team_assists[i] += team.assists
+
+    def get_avg(self, avg):
+        for i, value in enumerate(avg):
+            avg[i] = value / self.amount_test
 
     def get_team_stats(self):
-        for team, stat in zip(self.match.match.teams, self.amount_team_kills):
-            stat = team.kills
-
-        for team, stat in zip(self.match.match.teams, self.amount_team_deaths):
-            stat = team.deaths
-
-        for team, stat in zip(self.match.match.teams, self.amount_team_assists):
-            stat = team.assists
+        for i in range(2):
+            self._get_team_stats(i)
 
     def run_match_test(self):
-        for i in range(self.amount_test):
+        for _ in range(self.amount_test):
             self.match.simulation()
+            self.get_team_stats()
+            self.match.reset_match()
+
+        self.get_avg(self.avg_team_kills)
+        self.get_avg(self.avg_team_deaths)
+        self.get_avg(self.avg_team_assists)
+
+        print(self.amount_team_kills)
+        print(self.amount_team_deaths)
+        print(self.amount_team_assists)
+        print(self.avg_team_kills)
+        print(self.avg_team_deaths)
+        print(self.avg_team_assists)
+
+
+if __name__ == '__main__':
+    from src.core.core import Core
+
+    core = Core()
+    core.check_files()
+    core.get_champions()
+    core.get_players()
+    core.get_teams()
+    core.initialize_random_debug_match()
+    core.match_simulation.picks_and_bans()
+    match_tester = MatchTester(500, core.match_simulation)
+    match_tester.run_match_test()

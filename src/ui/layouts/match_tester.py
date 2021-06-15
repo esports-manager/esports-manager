@@ -80,7 +80,6 @@ class MatchTesterLayout(LayoutInterface):
         ]
 
     def update(self, event, values, make_screen, *args, **kwargs):
-        team_data = self.controller.team_data
         update_match_tester_match_info = self.controller.update_match_tester_match_info
 
         # Click the Start Match button
@@ -90,8 +89,9 @@ class MatchTesterLayout(LayoutInterface):
 
         # Click the Cancel button
         if event == "match_tester_cancel_btn":
-            if self.controller.match_tester.running_test:
-                self.controller.match_tester.running_test = False
+            if self.controller.match_tester is not None:
+                if self.controller.match_tester.running_test:
+                    self.controller.match_tester.running_test = False
             make_screen("match_tester_screen", "main_screen")
 
         # Click the New Teams button
@@ -100,16 +100,3 @@ class MatchTesterLayout(LayoutInterface):
             self.controller.initialize_random_debug_match()
             data = self.controller.team_data(match_live=self.controller.current_match)
             update_match_tester_match_info(self.controller.current_match, data)
-
-        # Check if the match is running to update values on the fly
-        if self.controller.is_match_running:
-            if (
-                self.controller.current_match is not None
-                and self.controller.current_match.is_match_over
-                and not self.controller.match_thread.is_alive()
-            ):
-                self.controller.is_match_running = False
-
-            if self.controller.current_match is not None:
-                data = team_data(self.controller.current_match)
-                update_match_tester_match_info(self.controller.current_match, data)

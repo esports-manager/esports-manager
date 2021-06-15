@@ -95,10 +95,7 @@ class ESM:
 
     def reset_match(self, match) -> None:
         self.core.reset_team_values(match)
-        match.is_match_over = False
-        match.game_time = 0.0
-        match.event_handler = MobaEventHandler()
-        match.victorious_team = None
+        match.reset_match()
 
     def update_amount(self, value):
         self.view.gui.window["settings_amount_input"].update(value=value)

@@ -30,5 +30,5 @@ class CreateManagerLayout(LayoutInterface):
     def layout(self):
         pass
 
-    def update(self, event, values, make_screen, *args, **kwargs):
+    def update(self, event, values, make_screen):
         pass

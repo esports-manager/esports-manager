@@ -31,5 +31,5 @@ class LayoutInterface(ABC):
         pass
 
     @abstractmethod
-    def update(self, event, values, make_screen, *args, **kwargs):
+    def update(self, *args, **kwargs):
         pass

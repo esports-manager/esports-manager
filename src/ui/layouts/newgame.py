@@ -60,6 +60,6 @@ class NewGameLayout(LayoutInterface):
             ],
         ]
 
-    def update(self, event, values, make_screen, *args, **kwargs):
+    def update(self, event, values, make_screen):
         if event == "ng_cancel_btn":
             make_screen("new_game_screen", "main_screen")

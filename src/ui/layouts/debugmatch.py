@@ -103,7 +103,7 @@ class DebugMatchLayout(LayoutInterface):
             ],
         ]
 
-    def update(self, event, values, make_screen, *args, **kwargs):
+    def update(self, event, values, make_screen):
         team_data = self.controller.team_data
         update_debug_match_info = self.controller.update_debug_match_info
 

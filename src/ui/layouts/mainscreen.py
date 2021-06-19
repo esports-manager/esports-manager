@@ -73,7 +73,7 @@ class MainScreenLayout(LayoutInterface):
             [esm_button("Exit", key="main_exit_btn", pad=button_pad, size=button_size)],
         ]
 
-    def update(self, event, values, make_screen, *args, **kwargs):
+    def update(self, event, values, make_screen):
         if event == "main_debug_btn":
             make_screen("main_screen", "debug_game_mode_screen")
 

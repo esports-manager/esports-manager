@@ -101,6 +101,6 @@ class PicksBansLayout(LayoutInterface):
             ],
         ]
 
-    def update(self, event, values, make_screen, *args, **kwargs):
+    def update(self, event, values, make_screen):
         if event == "pickban_cancel_btn":
             make_screen("debug_picks_bans_screen", "debug_game_mode_screen")

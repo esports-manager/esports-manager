@@ -18,8 +18,8 @@ import PySimpleGUI as sg
 
 default_font = "Arial"
 bold_font = default_font + " Bold"
-default_font_size = "10"
-increased_font_size = "12"
+default_font_size = "12"
+increased_font_size = "14"
 
 
 def create_look_and_feel():

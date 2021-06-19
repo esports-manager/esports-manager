@@ -79,7 +79,7 @@ class MatchTesterLayout(LayoutInterface):
             ],
         ]
 
-    def update(self, event, values, make_screen, *args, **kwargs):
+    def update(self, event, values, make_screen):
         update_match_tester_match_info = self.controller.update_match_tester_match_info
 
         # Click the Start Match button
@@ -89,12 +89,13 @@ class MatchTesterLayout(LayoutInterface):
 
         # Click the Cancel button
         if event == "match_tester_cancel_btn":
-            if self.controller.match_tester is not None:
-                if self.controller.match_tester.running_test:
-                    self.controller.match_tester.running_test = False
+            if (
+                self.controller.match_tester is not None
+                and self.controller.match_tester.running_test
+            ):
+                self.controller.match_tester.running_test = False
             make_screen("match_tester_screen", "main_screen")
 
-        # Click the New Teams button
         elif event == "match_tester_newteams_btn":
             self.controller.check_files()
             self.controller.initialize_random_debug_match()

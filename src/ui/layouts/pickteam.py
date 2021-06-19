@@ -74,6 +74,6 @@ class PickTeamLayout(LayoutInterface):
             ],
         ]
 
-    def update(self, event, values, make_screen, *args, **kwargs):
+    def update(self, event, values, make_screen):
         if event == "debug_cancelteam_btn":
             make_screen("debug_pickteam_screen", "debug_game_mode_screen")

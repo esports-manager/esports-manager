@@ -59,6 +59,6 @@ class LoadGameLayout(LayoutInterface):
             ],
         ]
 
-    def update(self, event, values, make_screen, *args, **kwargs):
+    def update(self, event, values, make_screen):
         if event == "load_game_cancel_btn":
             make_screen("load_game_screen", "main_screen")

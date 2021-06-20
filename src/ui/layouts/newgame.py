@@ -41,12 +41,22 @@ class NewGameLayout(LayoutInterface):
 
         label_pad = (0, 5)
         size_element = (29, 1)
+        esports = ["MOBA", "RTS", "FPS"]
+        seasons = ["2020"]
 
         labels = [
             [esm_form_text("Game Name:", pad=label_pad)],
+            [esm_form_text("Season: ", pad=label_pad)],
+            [esm_form_text("eSport: ", pad=label_pad)],
+            [esm_form_text("")]
         ]
 
-        inputs = [[esm_input_text(key="ng_gamename_input", size=size_element)]]
+        inputs = [
+            [esm_input_text("Game1", key="ng_gamename_input", size=size_element)],
+            [esm_input_combo(seasons, default_value=seasons[0], key="new_game_season")],
+            [esm_input_combo(esports, default_value=esports[0], key="new_game_esport")],
+            [esm_radio("Generate new database", group_id=6)]
+        ]
 
         return [
             [esm_title_text("New Game")],
@@ -63,3 +73,6 @@ class NewGameLayout(LayoutInterface):
     def update(self, event, values, make_screen):
         if event == "ng_cancel_btn":
             make_screen("new_game_screen", "main_screen")
+
+        elif event == "ng_creategame_btn":
+            make_screen("new_game_screen", "create_manager_screen")

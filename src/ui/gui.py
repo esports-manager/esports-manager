@@ -41,6 +41,8 @@ class GUI:
             picksbans.PicksBansLayout(self.controller),
             pickteam.PickTeamLayout(self.controller),
             match_tester.MatchTesterLayout(self.controller),
+            createmanager.CreateManagerLayout(self.controller),
+            # teamselect.TeamSelectLayout(self.controller),
         ]
         self.window = self._create_window()
 

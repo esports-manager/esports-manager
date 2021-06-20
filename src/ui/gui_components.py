@@ -19,7 +19,7 @@ import PySimpleGUI as sg
 default_font = "Arial"
 bold_font = default_font + " Bold"
 default_font_size = "12"
-increased_font_size = "14"
+increased_font_size = "20"
 
 
 def create_look_and_feel():
@@ -116,7 +116,8 @@ def esm_input_combo(
     font=(default_font, default_font_size),
     key=None,
     pad=None,
-    size=(15, 1),
+    readonly=True,
+    size=(28, 1),
     enable_events=True,
 ):
     return sg.InputCombo(
@@ -126,6 +127,7 @@ def esm_input_combo(
         background_color="white",
         key=key,
         pad=pad,
+        readonly=readonly,
         size=size,
         enable_events=enable_events,
     )
@@ -134,13 +136,15 @@ def esm_input_combo(
 def esm_listbox(
     values=None,
     font=(default_font, default_font_size),
-    default_values=[],
+    default_values=None,
     select_mode=sg.LISTBOX_SELECT_MODE_SINGLE,
     key=None,
     pad=None,
     size=(30, 10),
     enable_events=False,
 ):
+    if default_values is None:
+        default_values = []
     return sg.Listbox(
         values=values,
         default_values=default_values,
@@ -228,3 +232,24 @@ def esm_checkbox(
         enable_events=enable_events,
         visible=visible,
     )
+
+
+def esm_radio(
+        text,
+        group_id,
+        default=True,
+        font=(default_font, default_font_size),
+        key=None,
+        enable_events=True,
+        visible=True,
+):
+    return sg.Radio(
+        text=text,
+        group_id=group_id,
+        default=default,
+        font=font,
+        key=key,
+        enable_events=enable_events,
+        visible=visible
+    )
+

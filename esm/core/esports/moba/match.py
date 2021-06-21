@@ -16,7 +16,7 @@
 
 import uuid
 
-from src.core.esports.moba.team import Team
+from esm.core.esports.moba.team import Team
 
 
 class Match:

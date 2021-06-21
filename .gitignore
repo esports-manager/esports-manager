@@ -135,7 +135,7 @@ dmypy.json
 .pyre/
 node_modules/
 .vscode/settings.json
-/src/resources/db/teams.json
-/src/resources/db/players.json
-/src/resources/db/champions.json
+/esm/resources/db/teams.json
+/esm/resources/db/players.json
+/esm/resources/db/champions.json
 Pipfile.lock

@@ -15,7 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import random
 
-from src.core.esports.moba.match import Match
+from esm.core.esports.moba.match import Match
 
 
 class Championship:
@@ -49,7 +49,7 @@ class Championship:
 
 
 if __name__ == "__main__":
-    from src.resources.generator.generate_teams import TeamGenerator
+    from esm.resources.generator.generate_teams import TeamGenerator
 
     team_gen = TeamGenerator()
     team_gen.get_teams_dict()

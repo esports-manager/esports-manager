@@ -17,9 +17,9 @@
 import random
 import time
 
-from src.core.esports.moba.match import Match
-from src.core.esports.moba.mobaevent import MobaEventHandler
-from src.resources.generator.generate_champions import ChampionGenerator
+from esm.core.esports.moba.match import Match
+from esm.core.esports.moba.mobaevent import MobaEventHandler
+from esm.resources.generator.generate_champions import ChampionGenerator
 
 
 class MatchLive:

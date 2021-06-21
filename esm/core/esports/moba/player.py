@@ -15,8 +15,8 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from datetime import date
 
-from src.core.esports.moba.moba_enums_def import Lanes, LaneError
-from src.core.esports.moba.champion import Champion
+from esm.core.esports.moba.moba_enums_def import Lanes, LaneError
+from esm.core.esports.moba.champion import Champion
 
 
 class Player:

@@ -17,7 +17,7 @@
 import random
 import uuid
 
-from src.resources.utils import load_list_from_json
+from esm.resources.utils import load_list_from_json
 
 
 class MobaEvent:

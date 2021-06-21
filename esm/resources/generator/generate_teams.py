@@ -19,11 +19,11 @@ import uuid
 from pathlib import Path
 from typing import Union
 
-from src.core.esports.moba.team import Team
-from src.definitions import ROOT_DIR, RES_DIR
-from src.resources.db.default_team_names import get_default_team_names
-from src.resources.generator.generate_players import MobaPlayerGenerator
-from src.resources.utils import write_to_json, get_list_from_file, load_list_from_json
+from esm.core.esports.moba.team import Team
+from esm.definitions import ROOT_DIR, RES_DIR
+from esm.resources.db.default_team_names import get_default_team_names
+from esm.resources.generator.generate_players import MobaPlayerGenerator
+from esm.resources.utils import write_to_json, get_list_from_file, load_list_from_json
 
 
 class TeamGeneratorError(Exception):
@@ -228,7 +228,7 @@ class TeamGenerator:
 
 
 if __name__ == "__main__":
-    from src.resources.generator.generate_players import MobaPlayerGenerator
+    from esm.resources.generator.generate_players import MobaPlayerGenerator
 
     amount = 100
     teams = int(amount / 5)

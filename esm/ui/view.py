@@ -16,7 +16,7 @@
 
 import PySimpleGUI as sg
 
-from src.core.esports.moba.match_live import MatchLive
+from esm.core.esports.moba.match_live import MatchLive
 
 from .gui import GUI
 

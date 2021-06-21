@@ -18,11 +18,11 @@ import random
 import PySimpleGUI as sg
 import uuid
 
-from src.core.esports.moba.match_live import initialize_match
-from src.resources.generator.generate_players import MobaPlayerGenerator
-from src.resources.generator.generate_teams import TeamGenerator
-from src.resources.generator.generate_champions import ChampionGenerator
-from src.core.esports.moba.mobaevent import MobaEventHandler
+from esm.core.esports.moba.match_live import initialize_match
+from esm.resources.generator.generate_players import MobaPlayerGenerator
+from esm.resources.generator.generate_teams import TeamGenerator
+from esm.resources.generator.generate_champions import ChampionGenerator
+from esm.core.esports.moba.mobaevent import MobaEventHandler
 
 
 def match_simulation_thread(match, window):

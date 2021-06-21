@@ -1,6 +1,6 @@
 import pytest
 
-from src.resources.generator.generate_champions import ChampionGenerator
+from esm.resources.generator.generate_champions import ChampionGenerator
 
 
 # @pytest.fixture
@@ -49,10 +49,10 @@ from src.resources.generator.generate_champions import ChampionGenerator
 # from tempfile import NamedTemporaryFile
 # import random
 
-# from src.core.esports.moba.player import Player
-# from src.resources.utils import load_list_from_json
-# from src.resources.generator.generate_players import MobaPlayerGenerator
-# from src.resources.utils import write_to_json
+# from esm.core.esports.moba.player import Player
+# from esm.resources.utils import load_list_from_json
+# from esm.resources.generator.generate_players import MobaPlayerGenerator
+# from esm.resources.utils import write_to_json
 
 
 # def get_player_dict_test() -> dict:

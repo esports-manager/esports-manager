@@ -16,15 +16,15 @@
 
 import threading
 
-from src.core.esports.moba.mobaevent import MobaEventHandler
-from src.core.esports.moba.match_tester import MatchTester
-from src.core.core import Core
-from src.core.esports.moba.match_live import MatchLive
+from esm.core.esports.moba.mobaevent import MobaEventHandler
+from esm.core.esports.moba.match_tester import MatchTester
+from esm.core.core import Core
+from esm.core.esports.moba.match_live import MatchLive
 
-from src.resources.generator.generate_teams import TeamGenerator
-from src.resources.generator.generate_players import MobaPlayerGenerator
-from src.resources.generator.generate_champions import ChampionGenerator
-from src.ui.view import View
+from esm.resources.generator.generate_teams import TeamGenerator
+from esm.resources.generator.generate_players import MobaPlayerGenerator
+from esm.resources.generator.generate_champions import ChampionGenerator
+from esm.ui.view import View
 
 
 class ESM:

@@ -14,7 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from src.core.esports.moba.match_live import MatchLive
+from esm.core.esports.moba.match_live import MatchLive
 
 
 class MatchTester:
@@ -97,7 +97,7 @@ class MatchTester:
 
 
 if __name__ == '__main__':
-    from src.core.core import Core
+    from esm.core.core import Core
 
     core = Core()
     core.check_files()

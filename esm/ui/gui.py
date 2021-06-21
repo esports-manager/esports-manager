@@ -19,10 +19,10 @@ import traceback
 
 import PySimpleGUI as sg
 
-from src.resources import RES_DIR
-from src.resources.utils import find_file
-from src.ui.gui_components import *
-from src.ui.layouts import *
+from esm.resources import RES_DIR
+from esm.resources.utils import find_file
+from esm.ui.gui_components import *
+from esm.ui.layouts import *
 
 
 class GUI:

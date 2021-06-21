@@ -20,11 +20,11 @@ from datetime import date, timedelta
 from pathlib import Path
 from typing import Union
 
-from src.core.esports.moba.player import MobaPlayer
-from src.resources.generator.generate_champions import ChampionGenerator
-from src.resources.db.default_player_nick_names import get_default_player_nick_names
-from src.definitions import ROOT_DIR, RES_DIR
-from src.resources.utils import load_list_from_json, write_to_json, get_list_from_file
+from esm.core.esports.moba.player import MobaPlayer
+from esm.resources.generator.generate_champions import ChampionGenerator
+from esm.resources.db.default_player_nick_names import get_default_player_nick_names
+from esm.definitions import ROOT_DIR, RES_DIR
+from esm.resources.utils import load_list_from_json, write_to_json, get_list_from_file
 
 
 class MobaPlayerGeneratorError(Exception):

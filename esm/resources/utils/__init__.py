@@ -17,7 +17,7 @@
 import os
 import json
 
-from src.definitions import ROOT_DIR, RES_DIR
+from esm.definitions import ROOT_DIR, RES_DIR
 
 
 def write_to_json(

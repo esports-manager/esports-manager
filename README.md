@@ -1,6 +1,6 @@
 **NOTE:** *THIS PROJECT IS STILL UNDER DEVELOPMENT, AND IS NOT READY FOR GAMEPLAY YET.*
 
-![eSports Manager Logo](src/resources/images/logo/esportsmanager.png)
+![eSports Manager Logo](esm/resources/images/logo/esportsmanager.png)
 
 # eSports Manager
 
@@ -16,13 +16,13 @@ The game is still not ready to be played. Many features are yet to be implemente
 
 ## HOW TO RUN THE DEBUG VERSION
 
-<img src="src/resources/images/main_screen.PNG" width="40%">
+<img src="esm/resources/images/main_screen.PNG" width="40%" alt="">
 
-<img src="src/resources/images/debug_match_screen.PNG" width="40%">
+<img src="esm/resources/images/debug_match_screen.PNG" width="40%" alt="">
 
-<img src="src/resources/images/settings_screen.PNG" width="40%">
+<img src="esm/resources/images/settings_screen.PNG" width="40%" alt="">
 
-<img src="src/resources/images/load_game_screen.PNG" width="40%">
+<img src="esm/resources/images/load_game_screen.PNG" width="40%" alt="">
 
 To run the debug version first you need to have Python 3 installed. Use Python 3.7 or higher, there's no guarantee it will work with Python 3.6 or older.
 

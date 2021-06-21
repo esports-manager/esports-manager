@@ -19,9 +19,9 @@ import uuid
 from pathlib import Path
 from typing import Union
 
-from src.definitions import ROOT_DIR, RES_DIR
-from src.resources.utils import write_to_json, get_list_from_file, load_list_from_json
-from src.core.esports.moba.champion import Champion
+from esm.definitions import ROOT_DIR, RES_DIR
+from esm.resources.utils import write_to_json, get_list_from_file, load_list_from_json
+from esm.core.esports.moba.champion import Champion
 
 
 class ChampionGenerator:

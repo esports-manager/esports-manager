@@ -16,7 +16,7 @@
 
 import PySimpleGUI as sg
 from ..gui_components import *
-from src.resources.utils import find_file
+from esm.resources.utils import find_file
 from .layoutinterface import LayoutInterface
 
 

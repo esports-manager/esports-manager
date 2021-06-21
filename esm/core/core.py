@@ -17,13 +17,13 @@ import math
 import random
 import uuid
 
-from src.core.esports.moba.championship import Championship
-from src.core.esports.moba.match import Match
-from src.core.esports.moba.match_live import MatchLive
-from src.resources.generator.generate_players import MobaPlayerGenerator
-from src.resources.generator.generate_teams import TeamGenerator
-from src.resources.generator.generate_champions import ChampionGenerator
-from src.resources.utils import find_file
+from esm.core.esports.moba.championship import Championship
+from esm.core.esports.moba.match import Match
+from esm.core.esports.moba.match_live import MatchLive
+from esm.resources.generator.generate_players import MobaPlayerGenerator
+from esm.resources.generator.generate_teams import TeamGenerator
+from esm.resources.generator.generate_champions import ChampionGenerator
+from esm.resources.utils import find_file
 
 
 class Core:

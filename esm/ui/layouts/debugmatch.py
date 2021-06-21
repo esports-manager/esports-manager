@@ -88,7 +88,7 @@ class DebugMatchLayout(LayoutInterface):
                 sg.Column(layout=team1_column, element_justification="center"),
                 sg.Column(layout=team2_column, element_justification="center"),
             ],
-            [sg.ProgressBar(100, size=(80, 20), border_width=1, key="debug_winprob")],
+            [sg.ProgressBar(100, size=(80, 20), border_width=0, key="debug_winprob")],
             [
                 esm_form_text("Current match time: "),
                 esm_form_text("500.00", key="debug_match_current_time"),
@@ -133,9 +133,6 @@ class DebugMatchLayout(LayoutInterface):
             self.controller.reset_match(self.controller.current_match)
             data = self.controller.team_data(match_live=self.controller.current_match)
             update_debug_match_info(self.controller.current_match, data)
-
-        # if self.controller.current_match is not None:
-        #     self.controller.current_match.simulate = bool(values['debug_simulate_checkbox'])
 
         # Check if the match is running to update values on the fly
         if self.controller.is_match_running:

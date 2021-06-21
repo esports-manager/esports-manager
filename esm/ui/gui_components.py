@@ -30,9 +30,9 @@ def create_look_and_feel():
         "TEXT_INPUT": "#000000",
         "SCROLL": "#4FC3F7",
         "BUTTON": ("white", "#4FC3F7"),
-        "PROGRESS": ("#4FC3F7", "#FFFFFF"),
+        "PROGRESS": ("#4FC3F7", "#ff4a4a"),
         "BORDER": 0,
-        "SLIDER_DEPTH": 1,
+        "SLIDER_DEPTH": 0,
         "PROGRESS_DEPTH": 0,
     }
 

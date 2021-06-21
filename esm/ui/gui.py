@@ -118,7 +118,6 @@ class GUI:
         window.refresh()
 
     def update_match_tester_match_info(self, match, data):
-        win_prob = match.match.team1.win_prob * 100
         window = self.window
         window["match_tester_team1table"].update(values=data[0])
         window["match_tester_team2table"].update(values=data[1])

@@ -61,11 +61,12 @@ class View:
 
     def start(self):
         while True:
-            event, values = self.gui.window.read(timeout=1000)
+            event, values = self.gui.window.read(timeout=5000)
 
             if event in [sg.WINDOW_CLOSED, "main_exit_btn"]:
                 break
-
+            
+            # Goes through each layout and runs their update method (event handling)
             self.update(
                 event,
                 values,

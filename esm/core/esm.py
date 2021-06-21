@@ -181,7 +181,3 @@ class ESM:
 
     def app(self) -> None:
         self.view.start()
-
-
-esm = ESM()
-esm.app()

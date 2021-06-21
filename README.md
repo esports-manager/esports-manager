@@ -47,7 +47,7 @@ pipenv shell
 To get into the python virtual environment shell. And then just run:
 
 ```
-python esm.py
+python run.py
 ```
 
 You can test the Debug Match window, and check other dummy features like New Game, Load Game, and Settings.

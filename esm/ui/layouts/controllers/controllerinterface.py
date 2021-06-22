@@ -31,4 +31,3 @@ class IController(ABC):
     @abstractmethod
     def notify(self, *args, **kwargs):
         pass
-    

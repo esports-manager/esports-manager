@@ -17,8 +17,6 @@
 import base64
 import traceback
 
-import PySimpleGUI as sg
-
 from esm.resources import RES_DIR
 from esm.resources.utils import find_file
 from esm.ui.gui_components import *

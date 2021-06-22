@@ -27,6 +27,9 @@ from esm.resources.utils import find_file
 
 
 class Core:
+    """
+    The Core module corresponds to a Model on a traditional MVC model.
+    """
     def __init__(self, amount_players=400):
         self.amount_players = amount_players
         self.amount_teams = math.floor(self.amount_players / 5)

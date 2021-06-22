@@ -16,10 +16,10 @@
 
 import PySimpleGUI as sg
 from ..gui_components import *
-from .layoutinterface import LayoutInterface
+from .layoutinterface import ILayout
 
 
-class PicksBansLayout(LayoutInterface):
+class PicksBansLayout(ILayout):
     def __init__(self, controller):
         super().__init__(controller)
         self.lay = self.layout()

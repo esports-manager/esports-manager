@@ -17,10 +17,10 @@
 import PySimpleGUI as sg
 from ..gui_components import *
 from esm.resources.utils import find_file
-from .layoutinterface import LayoutInterface
+from .layoutinterface import ILayout
 
 
-class MainScreenLayout(LayoutInterface):
+class MainScreenLayout(ILayout):
     def __init__(self, controller):
         super().__init__(controller)
         self.lay = self.layout()

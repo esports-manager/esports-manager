@@ -17,19 +17,18 @@
 from abc import ABC, abstractmethod
 
 
-class ILayout(ABC):
+class IController(ABC):
     def __init__(self, controller):
         self.controller = controller
+        
+        if self.controller.controllers is None:
+            self.controller.controllers = []
+        
+        self.controller.controllers.append(self)
+        
         super().__init__()
 
     @abstractmethod
-    def column(self):
+    def notify(self, *args, **kwargs):
         pass
-
-    @abstractmethod
-    def layout(self):
-        pass
-
-    @abstractmethod
-    def update(self, *args, **kwargs):
-        pass
+    

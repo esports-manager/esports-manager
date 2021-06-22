@@ -20,6 +20,9 @@ from .gui import GUI
 
 
 class View:
+    """
+    The View class corresponds to a View on a traditional MVC model. It interacts with the GUI.
+    """
     def __init__(self, controller):
         self.gui = GUI(controller)
         self.controller = controller

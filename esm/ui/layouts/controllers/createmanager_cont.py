@@ -14,22 +14,12 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from abc import ABC, abstractmethod
+from .controllerinterface import IController
 
 
-class ILayout(ABC):
+class CreateManagerController(IController):
     def __init__(self, controller):
-        self.controller = controller
-        super().__init__()
-
-    @abstractmethod
-    def column(self):
-        pass
-
-    @abstractmethod
-    def layout(self):
-        pass
-
-    @abstractmethod
-    def update(self, *args, **kwargs):
+        super().__init__(controller)
+    
+    def notify(self, *args, **kwargs):
         pass

@@ -26,8 +26,10 @@ from esm.resources.generator.generate_players import MobaPlayerGenerator
 from esm.resources.generator.generate_champions import ChampionGenerator
 from esm.ui.view import View
 
-
 class ESM:
+    """
+    The ESM class corresponds to a Controller on a traditional MVC model. Not a full controller yet.
+    """
     def __init__(self, amount_players=400):
         self.core = Core()
         self._amount_players = amount_players
@@ -38,14 +40,15 @@ class ESM:
         self.match_tester_thread = None
         self.current_match = None
         self.match_thread = None
-
+        self.controllers = None
+    
     @property
     def amount_test_matches(self) -> int:
         return self._amount_test_matches
 
     @amount_test_matches.setter
     def amount_test_matches(self, amount) -> None:
-        self.core._amount_test_matches = amount
+        self._amount_test_matches = amount
 
     @property
     def amount_players(self) -> int:

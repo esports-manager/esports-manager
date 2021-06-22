@@ -14,22 +14,16 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from abc import ABC, abstractmethod
-
-
-class ILayout(ABC):
-    def __init__(self, controller):
-        self.controller = controller
-        super().__init__()
-
-    @abstractmethod
-    def column(self):
-        pass
-
-    @abstractmethod
-    def layout(self):
-        pass
-
-    @abstractmethod
-    def update(self, *args, **kwargs):
-        pass
+__all__ = [
+    "debug_cont",
+    "debugmatch_cont",
+    "newgame_cont",
+    "loadgame_cont",
+    "pickteam_cont",
+    "picksbans_cont",
+    "mainscreen_cont",
+    "settings_cont",
+    "createmanager_cont",
+    "match_tester_cont",
+    "teamselect_cont",
+]

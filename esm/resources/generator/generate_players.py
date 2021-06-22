@@ -130,7 +130,7 @@ class MobaPlayerGenerator:
 
         champs = self.champions_list.copy()
         if amount == 0:
-            amount = random.randrange(3, 7)
+            amount = random.randrange(3, 15)
 
         for _ in range(amount):
             champion_dict = {}

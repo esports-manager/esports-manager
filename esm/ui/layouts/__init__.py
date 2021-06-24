@@ -23,7 +23,6 @@ __all__ = [
     "picksbans",
     "mainscreen",
     "settings",
-    "createmanager",
     "match_tester",
     "teamselect",
 ]

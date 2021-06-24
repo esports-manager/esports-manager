@@ -25,7 +25,7 @@ class PicksBansLayout(ILayout):
         self.lay = self.layout()
         self.col = self.column()
 
-    def column(self):
+    def column(self) -> sg.Column:
         return sg.Column(
             self.lay,
             key="debug_picks_bans_screen",
@@ -33,7 +33,7 @@ class PicksBansLayout(ILayout):
             element_justification="center",
         )
 
-    def layout(self):
+    def layout(self) -> list:
         team_headings = ["Lane", "Nickname", "Skill", "Champion", "Ch. Skill"]
 
         champion_headings = ["Name", "Skill", "Status"]
@@ -101,6 +101,6 @@ class PicksBansLayout(ILayout):
             ],
         ]
 
-    def update(self, event, values, make_screen):
+    def update(self, event, values, make_screen) -> None:
         if event == "pickban_cancel_btn":
             make_screen("debug_picks_bans_screen", "debug_game_mode_screen")

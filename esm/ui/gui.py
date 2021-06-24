@@ -29,6 +29,8 @@ class GUI:
         self.icon = "esportsmanagertrophy.png"
         self.controller = controller
         sg.theme("EsmTheme")
+
+        # Each layout is added to the list
         self.layouts = [
             mainscreen.MainScreenLayout(self.controller),
             newgame.NewGameLayout(self.controller),
@@ -42,6 +44,7 @@ class GUI:
             createmanager.CreateManagerLayout(self.controller),
             # teamselect.TeamSelectLayout(self.controller),
         ]
+        
         self.window = self._create_window()
 
     def _encode_icon(self) -> bytes:
@@ -80,7 +83,7 @@ class GUI:
         return [[sg.Pane(cols, relief=sg.RELIEF_FLAT, show_handle=False)]]
 
     @staticmethod
-    def generate_data_window(players, teams, champions):
+    def generate_data_window(players, teams, champions) -> None:
         for i, _ in enumerate(champions):
             sg.one_line_progress_meter(
                 "Generating Champions", i + 1, len(champions), "generate_champ"
@@ -96,7 +99,7 @@ class GUI:
                 "Generating teams", i + 1, len(teams), "generate_teams"
             )
 
-    def update_debug_match_info(self, match, data):
+    def update_debug_match_info(self, match, data) -> None:
         win_prob = match.match.team1.win_prob * 100
         window = self.window
         window["debug_team1table"].update(values=data[0])
@@ -115,7 +118,7 @@ class GUI:
         window["debug_team2name"].Update(value=match.match.team2.name)
         window.refresh()
 
-    def update_match_tester_match_info(self, match, data):
+    def update_match_tester_match_info(self, match, data) -> None:
         window = self.window
         window["match_tester_team1table"].update(values=data[0])
         window["match_tester_team2table"].update(values=data[1])
@@ -126,7 +129,7 @@ class GUI:
         window.refresh()
 
     @staticmethod
-    def error_message(e):
+    def error_message(e) -> None:
         tb = traceback.format_exc()
         sg.Print("The following error happened:", e, tb)
         sg.popup_error(f"The following error occurred:", e, tb)

@@ -16,8 +16,10 @@
 
 import random
 import uuid
-from typing import Union
+from typing import Union, Any
 
+from esm.core.esports.moba.player import MobaPlayer
+from esm.core.esports.moba.team import Team
 from esm.resources.utils import load_list_from_json
 
 
@@ -41,7 +43,7 @@ class MobaEvent:
         self.points = points
 
     @staticmethod
-    def _get_probable_team(team1, team2):
+    def _get_probable_team(team1: Team, team2: Team):
         """
         Gets the team with a higher probability to attack the other team
         """
@@ -54,13 +56,13 @@ class MobaEvent:
         return attack_team, def_team
 
     @staticmethod
-    def _get_team_players(team1, team2):
+    def _get_team_players(team1, team2) -> list:
         """
         Gets all the players from each of the teams
         """
         return [team1.list_players, team2.list_players]
 
-    def _get_tower_attributes(self, team1, team2):
+    def _get_tower_attributes(self, team1: Team, team2: Team):
         """
         Checks which towers are up, and if they can be attacked. If it is a Base tower,
         there is a higher chance to focus on it
@@ -97,7 +99,7 @@ class MobaEvent:
 
         return attack_team, def_team, chosen_lane
 
-    def choose_duel_players(self, killer, team, amount):
+    def choose_duel_players(self, killer: MobaPlayer, team: Team, amount: int):
         """
         Chooses players to duel. The killer is decided in self.calculate_kill()
         """
@@ -127,7 +129,7 @@ class MobaEvent:
 
         return amount, duel_players
 
-    def player_duel(self, player1, player2):
+    def player_duel(self, player1: MobaPlayer, player2: MobaPlayer):
         killed = 0
         total_prob = player1.get_player_total_skill() + player2.get_player_total_skill()
 
@@ -151,7 +153,7 @@ class MobaEvent:
 
         return killed
 
-    def calculate_kill(self, team1, team2):
+    def calculate_kill(self, team1: Team, team2: Team):
         """
         This will calculate the kill event
         """
@@ -198,7 +200,7 @@ class MobaEvent:
             amount_kills, killer=killer.nick_name, killed_names=killed_players
         )
 
-    def calculate_jungle(self, team1, team2, jungle):
+    def calculate_jungle(self, team1: Team, team2: Team, jungle: str):
         """
         Calculates the outcome of a major jungle attempt (baron or dragon)
         """
@@ -218,7 +220,7 @@ class MobaEvent:
                 def_team_name=prevailing_team.name, jg_name=jungle, stole=True
             )
 
-    def calculate_tower(self, team1, team2):
+    def calculate_tower(self, team1: Team, team2: Team):
         """
         This method calculates the tower assault outcome
         """
@@ -258,7 +260,7 @@ class MobaEvent:
         else:
             self.event_name = "NOTHING"
 
-    def calculate_inhib(self, team1, team2):
+    def calculate_inhib(self, team1: Team, team2: Team):
         if team1.get_exposed_inhibs():
             attack_team = team2
             def_team = team1
@@ -285,7 +287,7 @@ class MobaEvent:
                 def_team_name=prevailing.name, defended=True, lane=exposed
             )
 
-    def calculate_nexus(self, team1, team2, which_nexus):
+    def calculate_nexus(self, team1: Team, team2: Team, which_nexus: Union[Team, None]):
         if which_nexus == team1:
             atk_team = team2
             def_team = team1
@@ -304,7 +306,7 @@ class MobaEvent:
             def_team.nexus = 0
             self.get_commentary(atk_team_name=prevailing.name)
 
-    def calculate_event(self, team1, team2, which_nexus):
+    def calculate_event(self, team1: Team, team2: Team, which_nexus: Union[Team, None]):
         """
         Takes the event to the appropriate function that calculates its outcome.
         """
@@ -321,7 +323,7 @@ class MobaEvent:
         if self.event_name == "NEXUS ASSAULT":
             self.calculate_nexus(team1, team2, which_nexus)
 
-    def list_names(self, players):
+    def list_names(self, players: list):
         names = ""
         for i, player in enumerate(players):
             if i == len(players) - 1:
@@ -426,7 +428,7 @@ class MobaEventHandler:
 
     def get_game_state(
         self, game_time, which_nexus_exposed, is_any_inhib_open, towers_number
-    ):
+    ) -> None:
         if game_time == 0.0:
             self.get_enabled_events(["NOTHING", "KILL"])
 
@@ -447,7 +449,10 @@ class MobaEventHandler:
         if which_nexus_exposed is not None:
             self.get_enabled_events(["NEXUS ASSAULT"])
 
-    def check_jungle(self, game_time, jungle):
+    def check_jungle(self, game_time: float, jungle: str) -> None:
+        """
+        Checks if the jungle event is available
+        """
         for event in self.events:
             if event["name"] == jungle:
                 if self.event.event_name == jungle:
@@ -462,11 +467,17 @@ class MobaEventHandler:
                         self.get_enabled_events([event["name"]])
 
     def remove_enabled_event(self, name):
+        """
+        Removes no longer available event from the list of enabled events
+        """
         for event in self.enabled_events:
             if event["name"] == name:
                 self.enabled_events.remove(event)
 
     def get_enabled_events(self, names):
+        """
+        Adds events to the list of enabled events
+        """
         for event in self.events:
             for name in names:
                 if event["name"] == name and event not in self.enabled_events:
@@ -479,9 +490,12 @@ class MobaEventHandler:
         pass
 
     def get_event_priorities(self):
+        """
+        Gets the priority of events
+        """
         return [event["priority"] for event in self.enabled_events]
 
-    def generate_event(self, game_time, show_commentary):
+    def generate_event(self, game_time: float, show_commentary: bool):
         """
         Generates events for the match based on their priorities and available events.
         """

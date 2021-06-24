@@ -58,11 +58,17 @@ class View:
         self.gui.window['match_tester_startmatch_btn'].update(disabled=False)
         self.gui.window['match_tester_newteams_btn'].update(disabled=False)
 
-    def update(self, event, values, make_screen, *args, **kwargs):
+    def update(self, *args, **kwargs) -> None:
+        """
+        Event handling for each layout
+        """
         for layout in self.gui.layouts:
-            layout.update(event, values, make_screen, *args, **kwargs)
+            layout.update(*args, **kwargs)
 
     def start(self):
+        """
+        App loop
+        """
         while True:
             event, values = self.gui.window.read(timeout=5000)
 

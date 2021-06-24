@@ -26,7 +26,7 @@ class NewGameLayout(ILayout):
         self.lay = self.layout()
         self.col = self.column()
 
-    def column(self):
+    def column(self) -> sg.Column:
         return sg.Column(
             self.lay,
             key="new_game_screen",
@@ -34,7 +34,7 @@ class NewGameLayout(ILayout):
             element_justification="center",
         )
 
-    def layout(self):
+    def layout(self) -> list:
         """
         Defines the new game screen.
         """
@@ -70,7 +70,7 @@ class NewGameLayout(ILayout):
             ],
         ]
 
-    def update(self, event, values, make_screen):
+    def update(self, event, values, make_screen) -> None:
         if event == "ng_cancel_btn":
             make_screen("new_game_screen", "main_screen")
 

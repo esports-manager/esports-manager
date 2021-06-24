@@ -26,7 +26,7 @@ class SettingsLayout(ILayout):
         self.lay = self.layout()
         self.col = self.column()
 
-    def column(self):
+    def column(self) -> sg.Column:
         return sg.Column(
             self.lay,
             key="settings_screen",
@@ -34,7 +34,7 @@ class SettingsLayout(ILayout):
             element_justification="center",
         )
 
-    def layout(self):
+    def layout(self) -> list:
         size_elements = (45, 2)
 
         languages = ["English", "Portuguese"]
@@ -102,7 +102,7 @@ class SettingsLayout(ILayout):
             ],
         ]
 
-    def update(self, event, values, make_screen, *args, **kwargs):
+    def update(self, event, values, make_screen) -> None:
         if event == "settings_cancel_btn":
             make_screen("settings_screen", "main_screen")
 

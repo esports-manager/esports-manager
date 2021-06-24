@@ -89,7 +89,7 @@ class Team:
     def are_base_towers_exposed(self) -> bool:
         return not self.are_all_inhibitors_up()
 
-    def reset_values(self):
+    def reset_values(self) -> None:
         for player in self.list_players:
             player.reset_attributes()
 
@@ -114,7 +114,7 @@ class Team:
         self.nexus = 1
 
     @property
-    def kills(self):
+    def kills(self) -> int:
         self._kills = 0
         for player in self.list_players:
             self._kills += player.kills
@@ -122,7 +122,7 @@ class Team:
         return self._kills
 
     @property
-    def deaths(self):
+    def deaths(self) -> int:
         self._deaths = 0
         for player in self.list_players:
             self._deaths += player.deaths
@@ -130,7 +130,7 @@ class Team:
         return self._deaths
 
     @property
-    def assists(self):
+    def assists(self) -> int:
         self._assists = 0
         for player in self.list_players:
             self._assists += player.assists

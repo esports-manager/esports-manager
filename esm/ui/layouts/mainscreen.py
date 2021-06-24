@@ -26,10 +26,10 @@ class MainScreenLayout(ILayout):
         self.lay = self.layout()
         self.col = self.column()
 
-    def column(self):
+    def column(self) -> sg.Column:
         return sg.Column(self.lay, key="main_screen", element_justification="center")
 
-    def layout(self):
+    def layout(self) -> list:
         """
         Defines the main screen. This screen shows the initial options to play a new game, load game,
         use the Database Editor, or exit the game.
@@ -73,7 +73,7 @@ class MainScreenLayout(ILayout):
             [esm_button("Exit", key="main_exit_btn", pad=button_pad, size=button_size)],
         ]
 
-    def update(self, event, values, make_screen):
+    def update(self, event, values, make_screen) -> None:
         if event == "main_debug_btn":
             make_screen("main_screen", "debug_game_mode_screen")
 

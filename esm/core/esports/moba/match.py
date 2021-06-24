@@ -40,7 +40,7 @@ class Match:
         self._teams = []
 
     @property
-    def teams(self):
+    def teams(self) -> list:
         self._teams.clear()
 
         self._teams = [self.team1, self.team2]

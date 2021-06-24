@@ -26,7 +26,7 @@ class PickTeamLayout(ILayout):
         self.lay = self.layout()
         self.col = self.column()
 
-    def column(self):
+    def column(self) -> sg.Column:
         return sg.Column(
             self.lay,
             key="debug_pickteam_screen",
@@ -34,7 +34,7 @@ class PickTeamLayout(ILayout):
             element_justification="center",
         )
 
-    def layout(self):
+    def layout(self) -> list:
         team_headings = ["Team Name", "Skill"]
         player_headings = ["Lane", "Nickname", "Nationality", "Skill"]
 
@@ -74,6 +74,6 @@ class PickTeamLayout(ILayout):
             ],
         ]
 
-    def update(self, event, values, make_screen):
+    def update(self, event, values, make_screen) -> None:
         if event == "debug_cancelteam_btn":
             make_screen("debug_pickteam_screen", "debug_game_mode_screen")

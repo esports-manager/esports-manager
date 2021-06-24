@@ -25,7 +25,7 @@ class DebugLayout(ILayout):
         self.lay = self.layout()
         self.col = self.column()
 
-    def column(self):
+    def column(self) -> sg.Column:
         return sg.Column(
             self.lay,
             key="debug_game_mode_screen",
@@ -33,7 +33,7 @@ class DebugLayout(ILayout):
             element_justification="center",
         )
 
-    def layout(self):
+    def layout(self) -> list:
         """
         Defines the Debug Game Mode screen. This screen shows the Debug game options.
         """
@@ -85,7 +85,7 @@ class DebugLayout(ILayout):
             ],
         ]
 
-    def update(self, event, value, make_screen):
+    def update(self, event, value, make_screen) -> None:
         if event == "debug_pickteam_btn":
             make_screen("debug_game_mode_screen", "debug_pickteam_screen")
 

@@ -17,6 +17,9 @@
 import random
 import time
 
+from typing import Union
+
+from esm.core.esports.moba.team import Team
 from esm.core.esports.moba.match import Match
 from esm.core.esports.moba.mobaevent import MobaEventHandler
 from esm.resources.generator.generate_champions import ChampionGenerator
@@ -44,14 +47,14 @@ class MatchLive:
         self.event_handler = MobaEventHandler()
         self.champions = ChampionGenerator()
 
-    def reset_match(self):
+    def reset_match(self) -> None:
         self.reset_teams()
         self.game_time = 0.0
         self.victorious_team = None
         self.is_match_over = False
         self.event_handler = MobaEventHandler()
 
-    def reset_teams(self):
+    def reset_teams(self) -> None:
         for team in self.match.teams:
             team.reset_values()
 
@@ -86,14 +89,14 @@ class MatchLive:
         """
         self.game_time += quantity
 
-    def get_tower_number(self):
+    def get_tower_number(self) -> int:
         """
         Gets the amount of towers in the game. If neither team has any towers, the game stops trying to generate the
         Tower Assault events.
         """
         return sum(sum(team.towers.values()) for team in self.match.teams)
 
-    def which_team_nexus_exposed(self):
+    def which_team_nexus_exposed(self) -> Union[Team, None]:
         """
         Gets the exposed nexus from one or both of the teams.
         """
@@ -106,7 +109,7 @@ class MatchLive:
         else:
             return None
 
-    def check_match_over(self):
+    def check_match_over(self) -> None:
         """
         Checks if one of the nexus is down and terminates the simulation
         """
@@ -114,7 +117,7 @@ class MatchLive:
             if team.nexus == 0:
                 self.is_match_over = True
 
-    def winning_team(self):
+    def winning_team(self) -> None:
         """
         Assigns the winner to the team that still has the nexus up
         """
@@ -132,7 +135,7 @@ class MatchLive:
                 return True
         return False
 
-    def simulation(self):
+    def simulation(self) -> None:
         """
         Match simulation method. Starts the while loop.
         """
@@ -162,7 +165,7 @@ class MatchLive:
         self.winning_team()
 
 
-def initialize_match(team1, team2, ch_id):
+def initialize_match(team1, team2, ch_id) -> MatchLive:
     """
     Instantiate each object that is going to be used by the match, returning
     the match object.

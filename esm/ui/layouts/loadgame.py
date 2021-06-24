@@ -25,7 +25,7 @@ class LoadGameLayout(ILayout):
         self.lay = self.layout()
         self.col = self.column()
 
-    def column(self):
+    def column(self) -> sg.Column:
         return sg.Column(
             self.lay,
             key="load_game_screen",

@@ -25,7 +25,7 @@ class CreateManagerLayout(ILayout):
         self.lay = self.layout()
         self.col = self.column()
 
-    def column(self):
+    def column(self) -> sg.Column:
         return sg.Column(
             self.lay,
             key="create_manager_screen",
@@ -33,7 +33,7 @@ class CreateManagerLayout(ILayout):
             element_justification="center",
         )
 
-    def layout(self):
+    def layout(self) -> list:
         label_pad = (0, 5)
 
         nationalities = ["Brazil", "Korea", "United States"]
@@ -60,7 +60,7 @@ class CreateManagerLayout(ILayout):
              esm_button("Cancel", key="create_manager_cancel_btn")],
         ]
 
-    def update(self, event, values, make_screen):
+    def update(self, event, values, make_screen) -> None:
         if event == "create_manager_cancel_btn":
             make_screen("create_manager_screen", "new_game_screen")
 

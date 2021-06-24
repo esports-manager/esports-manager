@@ -25,7 +25,7 @@ class DebugMatchLayout(ILayout):
         self.lay = self.layout()
         self.col = self.column()
 
-    def column(self):
+    def column(self) -> sg.Column:
         return sg.Column(
             self.lay,
             key="debug_match_screen",
@@ -33,7 +33,7 @@ class DebugMatchLayout(ILayout):
             element_justification="center",
         )
 
-    def layout(self):
+    def layout(self) -> list:
         headings = [
             "Lane",
             "Player Name",
@@ -103,7 +103,7 @@ class DebugMatchLayout(ILayout):
             ],
         ]
 
-    def update(self, event, values, make_screen):
+    def update(self, event, values, make_screen) -> None:
         team_data = self.controller.team_data
         update_debug_match_info = self.controller.update_debug_match_info
 

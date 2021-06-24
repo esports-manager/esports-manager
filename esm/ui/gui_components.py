@@ -62,6 +62,7 @@ def esm_title_text(
     font=(bold_font, increased_font_size),
     key=None,
     pad=(300, 1),
+    justification="center",
 ):
     return sg.Text(
         text,
@@ -69,6 +70,7 @@ def esm_title_text(
         key=key,
         font=font,
         pad=pad,
+        justification=justification,
     )
 
 
@@ -95,7 +97,7 @@ def esm_input_text(
     border_width=1,
     key=None,
     pad=None,
-    size=(30, 1),
+    size=(35, 1),
     enable_events=True,
 ):
     return sg.InputText(
@@ -117,7 +119,7 @@ def esm_input_combo(
     key=None,
     pad=None,
     readonly=True,
-    size=(28, 1),
+    size=(33, 1),
     enable_events=True,
 ):
     return sg.InputCombo(

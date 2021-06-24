@@ -33,122 +33,38 @@ class TeamSelectLayout(ILayout):
             element_justification="center",
         )
 
+    
     def layout(self) -> list:
-        headings = [
+        headings_teams = [
+            "Name",
+            "Overall"
+        ]
+
+        headings_players = [
             "Lane",
-            "Player Name",
-            "Kills",
-            "Deaths",
-            "Assists",
-            "Champion",
-            "Skill",
+            "Nick name",
+            "Skill"
         ]
 
-        teams = [
-            [
-                esm_form_text("Team1DebugMatch", key="debug_team1name"),
-                esm_form_text("0000", key="debug_team1skill"),
-            ],
-            [esm_form_text("0.0000", key="debug_team1winprob")],
-            [esm_table(headings, headings=headings, key="debug_team1table")],
-            [
-                esm_form_text("Team 1 Towers: "),
-                esm_form_text(
-                    {"top": 3, "mid": 3, "bot": 3, "base": 2}, key="debug_team1towers"
-                ),
-            ],
-            [
-                esm_form_text("Team 2 Towers: "),
-                esm_form_text({"top": 1, "mid": 1, "bot": 1}, key="debug_team1inhibs"),
-            ],
-        ]
-
-        players = [
-            [
-                esm_form_text("Team2DebugMatch", key="debug_team2name"),
-                esm_form_text("0000", key="debug_team2skill"),
-            ],
-            [esm_form_text("0.0000", key="debug_team2winprob")],
-            [esm_table(headings, headings=headings, key="debug_team2table")],
-            [
-                esm_form_text("Team 2 Towers: "),
-                esm_form_text(
-                    {"top": 3, "mid": 3, "bot": 3, "base": 2}, key="debug_team2towers"
-                ),
-            ],
-            [
-                esm_form_text("Team 2 Inhibitors: "),
-                esm_form_text({"top": 1, "mid": 1, "bot": 1}, key="debug_team2inhibs"),
-            ],
-        ]
+        value = [["TEAMNAMES1234567890", "100"]]
 
         return [
-            [esm_title_text("Select your team")],
+            [esm_title_text("Select your team\n")],
+            # TODO: IMPLEMENT REGIONS COMBO BOX
+            # [esm_input_combo(values=regions, key="teamselect_regions_combo")],
             [
-                sg.Column(layout=teams, element_justification="center"),
-                sg.Column(layout=players, element_justification="center"),
+                esm_table(values=value, headings=headings_teams, key="teamselect_team_table", enable_events=True),
+                esm_table(values=[["   ", "Select your team", "   "]], headings=headings_players, key="teamselect_players_table", enable_events=True),
             ],
-            [sg.ProgressBar(100, size=(80, 20), border_width=1, key="debug_winprob")],
-            [
-                esm_form_text("Current match time: "),
-                esm_form_text("500.00", key="debug_match_current_time"),
-            ],
-            [esm_output()],
-            [esm_checkbox("Simulate step-by-step", key="debug_simulate_checkbox")],
-            [
-                esm_button("Start Game", key="debug_startmatch_btn"),
-                esm_button("New Teams", key="debug_newteams_btn"),
-                esm_button("Reset Match", key="debug_resetmatch_btn"),
-                esm_button("Cancel", key="debug_cancel_btn"),
-            ],
+            [esm_button("Select", key="teamselect_select_btn"), esm_button("Cancel", key="teamselect_cancel_btn")],
         ]
 
     def update(self, event, values, make_screen) -> None:
-        team_data = self.controller.team_data
-        update_debug_match_info = self.controller.update_debug_match_info
-
-        # Click the Start Match button
-        if event == "debug_startmatch_btn":
-            self.controller.is_match_running = True
-            self.controller.reset_match(self.controller.current_match)
-            self.controller.current_match.is_match_over = False
-            self.controller.start_match_sim_thread()
+        # Click the Select
+        if event == "teamselect_select_btn":
+            if values["teamselect_team_table"] is not None:
+                pass
 
         # Click the Cancel button
-        if event == "debug_cancel_btn":
-            if self.controller.is_match_running:
-                self.controller.current_match.is_match_over = True
-                self.controller.current_match = None
-            make_screen("debug_match_screen", "main_screen")
-
-        # Click the New Teams button
-        elif event == "debug_newteams_btn":
-            self.controller.check_files()
-            self.controller.initialize_random_debug_match()
-            data = self.controller.team_data(match_live=self.controller.current_match)
-            update_debug_match_info(self.controller.current_match, data)
-
-        # Click the Reset Match button
-        elif event == "debug_resetmatch_btn":
-            self.controller.reset_match(self.controller.current_match)
-            data = self.controller.team_data(match_live=self.controller.current_match)
-            update_debug_match_info(self.controller.current_match, data)
-
-        # if self.controller.current_match is not None:
-        #     self.controller.current_match.simulate = bool(values['debug_simulate_checkbox'])
-
-        # Check if the match is running to update values on the fly
-        if self.controller.is_match_running:
-            if (
-                self.controller.current_match is not None
-                and self.controller.current_match.is_match_over
-                and not self.controller.match_thread.is_alive()
-            ):
-                self.controller.is_match_running = False
-
-            if self.controller.current_match is not None:
-                self.controller.current_match.simulate = bool(
-                    values["debug_simulate_checkbox"]
-                )
-                data = team_data(self.controller.current_match)
-                update_debug_match_info(self.controller.current_match, data)
+        elif event == "teamselect_cancel_btn":
+            make_screen("team_select_screen", "new_game_screen")

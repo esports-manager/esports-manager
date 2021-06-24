@@ -40,29 +40,49 @@ class NewGameLayout(ILayout):
         """
 
         label_pad = (0, 5)
-        size_element = (29, 1)
         esports = ["MOBA", "RTS", "FPS"]
         seasons = ["2020"]
+        nationalities = ["Brazil", "Korea", "United States"]
 
         labels = [
             [esm_form_text("Game Name:", pad=label_pad)],
             [esm_form_text("Season: ", pad=label_pad)],
             [esm_form_text("eSport: ", pad=label_pad)],
-            [esm_form_text("")]
+            [esm_form_text("")],
+        ]
+
+        labels_create_manager = [
+            [esm_form_text("Name: ", pad=label_pad)],
+            [esm_form_text("Nickname: ", pad=label_pad)],
+            [esm_form_text("Birthday: ", pad=label_pad)],
+            [esm_form_text("Nationality: ", pad=label_pad)],
         ]
 
         inputs = [
-            [esm_input_text("Game1", key="ng_gamename_input", size=size_element)],
+            [esm_input_text("Game1", key="ng_gamename_input")],
             [esm_input_combo(seasons, default_value=seasons[0], key="new_game_season")],
             [esm_input_combo(esports, default_value=esports[0], key="new_game_esport")],
-            [esm_radio("Generate new database", group_id=6)]
+            [esm_checkbox("Generate new database", key="new_game_checkbox")],
+        ]
+
+        inputs_create_manager = [
+            [esm_input_text("", key="create_manager_name")],
+            [esm_input_text("", key="create_manager_nickname")],
+            [esm_input_text("", key="create_manager_birthday")],
+            [esm_input_combo(nationalities, default_value=nationalities[0], key="create_manager_nationality")],
         ]
 
         return [
-            [esm_title_text("New Game")],
+            [esm_title_text("New Game\n")],
             [
-                sg.Column(labels, element_justification="left"),
+                sg.Column(labels, element_justification="right"),
                 sg.Column(inputs, element_justification="left"),
+            ],
+            [esm_form_text("")],
+            [esm_title_text("Create Manager\n", font=(bold_font, "15"))],
+            [
+                sg.Column(labels_create_manager, element_justification="right"),
+                sg.Column(inputs_create_manager, element_justification="left"),
             ],
             [
                 esm_button("Create Game", key="ng_creategame_btn"),
@@ -75,4 +95,14 @@ class NewGameLayout(ILayout):
             make_screen("new_game_screen", "main_screen")
 
         elif event == "ng_creategame_btn":
-            make_screen("new_game_screen", "create_manager_screen")
+            if (
+                    values["create_manager_name"] != ""
+                    and values["create_manager_nickname"] != ""
+                    and values["create_manager_birthday"] != ""
+            ):
+                if values["new_game_checkbox"]:
+                    print("Generate new database")
+                
+                make_screen("new_game_screen", "team_select_screen")
+            else:
+                print("This can't be empty!")

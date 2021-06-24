@@ -16,6 +16,7 @@
 
 import random
 import uuid
+from typing import Union
 
 from esm.resources.utils import load_list_from_json
 
@@ -332,16 +333,16 @@ class MobaEvent:
 
     def get_commentary(
         self,
-        amount_kills=0,
-        atk_team_name="",
-        def_team_name="",
-        killer="",
-        defended=False,
-        killed_names="",
-        lane="",
-        jg_name="",
-        stole=False,
-        commentaries=None,
+        amount_kills: int = 0,
+        atk_team_name: str = "",
+        def_team_name: str = "",
+        killer: str = "",
+        defended: bool = False,
+        killed_names: Union[list, str] = "",
+        lane: str = "",
+        jg_name: str = "",
+        stole: bool = False,
+        commentaries: list = None,
     ):
         """
         Chooses commentary based on a list of commentaries.

@@ -105,6 +105,6 @@ if __name__ == '__main__':
     core.get_players()
     core.get_teams()
     core.initialize_random_debug_match()
-    core.match_simulation.picks_and_bans()
-    match_tester = MatchTester(500, core.match_simulation)
+    core.match_live.picks_and_bans()
+    match_tester = MatchTester(500, core.match_live)
     match_tester.run_match_test()

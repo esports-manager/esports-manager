@@ -25,7 +25,7 @@ class Match:
     the user's team or not.
     """
 
-    def __init__(self, championship_id: int, team1: Team, team2: Team):
+    def __init__(self, match_id: int, championship_id: int, team1: Team, team2: Team):
         """
         Initializes elements of the match
         :param match_id: match ID
@@ -33,11 +33,12 @@ class Match:
         :param team1: first team (blue side/radiant)
         :param team2: second team (red side/dire)
         """
-        self.match_id = uuid.uuid4().int
+        self.match_id = match_id
         self.championship_id = championship_id
         self.team1 = team1
         self.team2 = team2
         self._teams = []
+        self.victorious_team = None
 
     @property
     def teams(self) -> list:

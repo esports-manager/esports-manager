@@ -19,9 +19,10 @@ import time
 
 from typing import Union
 
-from esm.core.esports.moba.team import Team
-from esm.core.esports.moba.match import Match
-from esm.core.esports.moba.mobaevent import MobaEventHandler
+from .picksbans import PicksBans
+from .team import Team
+from .match import Match
+from .mobaevent import MobaEventHandler
 from esm.resources.generator.generate_champions import ChampionGenerator
 
 
@@ -43,9 +44,11 @@ class MatchLive:
         self.show_commentary = show_commentary
         self.match_speed = match_speed
         self.is_match_over = False
+        self.bans = []
         self.simulate = simulate
         self.event_handler = MobaEventHandler()
         self.champions = ChampionGenerator()
+        self.picks_bans = PicksBans()
 
     def reset_match(self) -> None:
         self.reset_teams()
@@ -65,14 +68,8 @@ class MatchLive:
         Probably picks and bans should be handled differently in the UI. But I need to come up
         with a general implementation that can be used regardless of the UI.
         """
-        self.champions.get_champions()
-        for team in self.match.teams:
-            for player in team.list_players:
-                player.get_default_lane()
-                champion = random.choice(self.champions.champions_obj)
-                self.champions.champions_obj.remove(champion)
-                player.champion = champion
-
+        self.picks_bans.picks_bans()
+        
     def calculate_both_teams_win_prob(self) -> None:
         """
         Calculates both teams Win probabilities. This is used for internal match simulation calculations. The winning
@@ -124,6 +121,7 @@ class MatchLive:
         for team in self.match.teams:
             if team.nexus == 1:
                 self.victorious_team = team
+                self.match.victorious_team = self.victorious_team
 
     def is_any_inhib_open(self) -> bool:
         """

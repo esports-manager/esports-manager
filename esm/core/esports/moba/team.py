@@ -16,7 +16,7 @@
 
 
 class Team:
-    def __init__(self, team_id, name, list_players):
+    def __init__(self, team_id, name, list_players, is_players_team=False):
         """
         Initiates the team object.
         """
@@ -24,14 +24,16 @@ class Team:
         self.team_id = team_id
         self.name = name
 
+        # MATCH RELATED
         self.towers = {"top": 3, "mid": 3, "bot": 3, "base": 2}
         self.inhibitors = {"top": 1, "mid": 1, "bot": 1}
+
+        self.is_players_team = is_players_team  # Checks if the user is controlling the team
 
         self.nexus = 1
 
         self.win_prob = 0.00
 
-        # list of players in match
         self.list_players = list_players
 
         self._kills = 0
@@ -42,6 +44,8 @@ class Team:
         self._champion_overall = 0
         self._total_skill = 0
 
+        self._bans = []
+    
     def is_tower_up(self, lane: str) -> bool:
         return self.towers[lane] != 0
 
@@ -92,6 +96,8 @@ class Team:
     def reset_values(self) -> None:
         for player in self.list_players:
             player.reset_attributes()
+        
+        self._bans.clear()
 
         self.towers.update(
             {
@@ -113,6 +119,14 @@ class Team:
         self.win_prob = 0
         self.nexus = 1
 
+    @property
+    def bans(self) -> list:
+        return self._bans
+
+    @bans.setter
+    def bans(self, champion) -> None:
+        self._bans.append(champion)
+    
     @property
     def kills(self) -> int:
         self._kills = 0

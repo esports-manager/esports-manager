@@ -146,11 +146,11 @@ class ESM:
         self.reset_generators()
 
         if picksbans:
-            self.core.match_simulation.picks_and_bans()
+            self.core.match_live.picks_and_bans()
 
-        self.current_match = self.core.match_simulation
+        self.current_match = self.core.match_live
 
-        return self.core.match_simulation
+        return self.core.match_live
 
     def reset_match_tester(self):
         if self.match_tester is not None:

@@ -40,7 +40,7 @@ class Core:
         self.match = None
         self.matches = []
 
-        self.match_simulation = None
+        self.match_live = None
 
         self.championship = None
 
@@ -77,12 +77,12 @@ class Core:
         return self.champions.champions_obj
 
     def initialize_match(self, championship_id, team1, team2) -> None:
-        self.match = Match(championship_id=championship_id, team1=team1, team2=team2)
+        self.match = Match(uuid.uuid4().int, championship_id=championship_id, team1=team1, team2=team2)
 
-    def initialize_match_simulation(
+    def initialize_match_live(
         self, match, show_commentary=True, match_speed=1, simulate=True
     ) -> None:
-        self.match_simulation = MatchLive(
+        self.match_live = MatchLive(
             match,
             show_commentary=show_commentary,
             match_speed=match_speed,
@@ -101,7 +101,7 @@ class Core:
         self.teams.teams.remove(team2)
 
         self.initialize_match(uuid.uuid4(), team1, team2)
-        self.initialize_match_simulation(self.match)
+        self.initialize_match_live(self.match)
 
     def get_championship(self) -> Championship:
         pass

@@ -15,9 +15,10 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import random
+import uuid
 import time
 
-from typing import Union
+from typing import Union, Tuple
 
 from .picksbans import PicksBans
 from .team import Team
@@ -41,7 +42,7 @@ class MatchLive:
         self, match: Match,
         show_commentary: bool,
         match_speed: int,
-        simulate: bool =True,
+        simulate: bool = True,
         ban_per_team: int = 5,
         difficulty_level: int = 1,
         is_player_match: bool = False
@@ -56,10 +57,11 @@ class MatchLive:
         self.simulate = simulate
         self.event_handler = MobaEventHandler()
         self.champions = ChampionGenerator()
+        self.champions.get_champions()
         self.picks_bans = PicksBans(
             self.match.team1,
             self.match.team2,
-            self.champions.get_champions(),
+            self.champions.champions_obj,
             ban_per_team,
             difficulty_level,
         )
@@ -72,7 +74,7 @@ class MatchLive:
         self.is_match_over = False
         self.event_handler = MobaEventHandler()
 
-    def check_is_player_match(self) -> None:
+    def check_is_player_match(self) -> bool:
         for team in self.match.teams:
             if team.is_players_team:
                 return True
@@ -115,7 +117,7 @@ class MatchLive:
         """
         return sum(sum(team.towers.values()) for team in self.match.teams)
 
-    def which_team_nexus_exposed(self) -> Union[Team, None]:
+    def which_team_nexus_exposed(self) -> Union[Tuple[Team, Team], Team, None]:
         """
         Gets the exposed nexus from one or both of the teams.
         """
@@ -195,5 +197,5 @@ def initialize_match(team1, team2, ch_id) -> MatchLive:
     :return:
     """
 
-    match = Match(ch_id, team1, team2)
+    match = Match(uuid.uuid4().int, ch_id, team1, team2)
     return MatchLive(match, True, 1)

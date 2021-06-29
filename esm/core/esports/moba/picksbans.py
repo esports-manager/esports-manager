@@ -13,9 +13,12 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from .team import Team
-from .player import MobaPlayer
-from .champion import Champion
+import random
+
+from esm.core.esports.moba.team import Team
+from esm.core.esports.moba.player import MobaPlayer
+from esm.core.esports.moba.champion import Champion
+
 
 class PicksBans:
     """
@@ -63,6 +66,7 @@ class PicksBans:
         Ban turn 0 corresponds to the team1 turn to ban.
         Ban turn 1 corresponds to the team2 turn to ban.
         """
+        champion = None
         if self.bans_turn == 0:
             champion = self.get_input(self.team1)
             self.ban(self.team1, champion)
@@ -71,8 +75,9 @@ class PicksBans:
             champion = self.get_input(self.team2)
             self.ban(self.team2, champion)
             self.bans_turn = 0
-        
-        self.num_bans += 1
+
+        if champion is not None:
+            self.num_bans += 1
 
     def switch_pick_turn(self, player):
         """
@@ -80,12 +85,11 @@ class PicksBans:
         Picks turn 0 corresponds to the team1 turn to ban.
         Picks turn 1 corresponds to the team2 turn to ban.
         """
+        champion = None
         if self.picks_turn == 0:
             champion = self.get_input(self.team1)
         elif self.picks_turn == 1:
             champion = self.get_input(self.team2)
-        
-        self.pick(player, champion)
 
         if self.num_picks == 1 or self.num_picks == 5 or self.num_picks == 9:
             self.picks_turn = 1
@@ -94,8 +98,11 @@ class PicksBans:
         elif self.num_picks == 6:
             self.picks_turn = -1
             self.bans_turn = 1
-        
-        self.picks_order.remove(player)
+
+        if champion is not None:
+            self.pick(player, champion)
+            self.num_picks += 1
+            self.picks_order.remove(player)
     
     def ban_turns(self):
         """
@@ -114,8 +121,6 @@ class PicksBans:
             self.bans_turn = 1
     
     def get_input(self, team):
-        champion = None
-        
         if team.is_players_team:
             champion = self.get_player_input()
         else:
@@ -123,16 +128,23 @@ class PicksBans:
         
         return champion
     
-    def get_player_input(self):
+    def get_player_input(self) -> Champion:
         pass
 
-    def get_ai_input(self):
+    def get_ai_input(self) -> Champion:
+        champion = random.choice(self.champion_list)
+        return champion
+
+    def get_ai_pick_input(self) -> Champion:
+        pass
+
+    def get_ai_ban_input(self):
         pass
     
     def picks_bans(self):
         self.set_up_player_picks()
 
-        while True:
+        while self.num_picks < 10:
             player = self.picks_order[0]
 
             self.switch_ban_turn()

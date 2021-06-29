@@ -145,6 +145,8 @@ class ESM:
         # Resetting
         self.reset_generators()
 
+        self.core.get_player_default_lanes()
+
         if picksbans:
             self.core.match_live.picks_and_bans()
 

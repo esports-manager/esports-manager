@@ -58,6 +58,11 @@ class PicksBans:
         ]
 
     def switch_ban_turn(self):
+        """
+        Starts the ban turn with one team and then passes to the other team to ban.
+        Ban turn 0 corresponds to the team1 turn to ban.
+        Ban turn 1 corresponds to the team2 turn to ban.
+        """
         if self.bans_turn == 0:
             champion = self.get_input(self.team1)
             self.ban(self.team1, champion)
@@ -69,17 +74,45 @@ class PicksBans:
         
         self.num_bans += 1
 
-    def switch_pick_turn(self):
+    def switch_pick_turn(self, player):
+        """
+        Starts the pick turn with one team and then passes to the other team to pick.
+        Picks turn 0 corresponds to the team1 turn to ban.
+        Picks turn 1 corresponds to the team2 turn to ban.
+        """
         if self.picks_turn == 0:
             champion = self.get_input(self.team1)
         elif self.picks_turn == 1:
             champion = self.get_input(self.team2)
+        
+        self.pick(player, champion)
+
+        if self.num_picks == 1 or self.num_picks == 5 or self.num_picks == 9:
+            self.picks_turn = 1
+        elif self.num_picks == 3 or self.num_picks == 7:
+            self.picks_turn = 0 
+        elif self.num_picks == 6:
+            self.picks_turn = -1
+            self.bans_turn = 1
+        
+        self.picks_order.remove(player)
     
     def ban_turns(self):
-        if self.num_bans == 6 or self.num_bans == 10:
+        """
+        Checks if it's time to switch from picks to bans.
+        """
+        if self.num_bans == 6:
             self.bans_turn = -1
             self.picks_turn = 0
+        if self.num_bans == 10:
+            self.bans_turn = -1
+            self.picks_turn = 1
 
+    def pick_turns(self):
+        if self.num_picks == 6:
+            self.picks_turn = -1
+            self.bans_turn = 1
+    
     def get_input(self, team):
         champion = None
         
@@ -98,10 +131,14 @@ class PicksBans:
     
     def picks_bans(self):
         self.set_up_player_picks()
-        
+
         while True:
+            player = self.picks_order[0]
+
             self.switch_ban_turn()
 
-            self.ban_turns()
+            if self.ban_turns != -1:
+                self.ban_turns()
             
-            self.switch_pick_turn()
+            if self.picks_turn != -1:
+                self.switch_pick_turn(player)

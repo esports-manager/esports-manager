@@ -15,6 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
+from esm.resources import RES
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-RES_DIR = os.path.join(ROOT_DIR, "resources", "db")
+RES_DIR = RES

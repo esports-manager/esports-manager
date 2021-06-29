@@ -37,7 +37,15 @@ class MatchLive:
     in the end gets the winning team from the EventHandler.
     """
 
-    def __init__(self, match: Match, show_commentary, match_speed, simulate=True):
+    def __init__(
+        self, match: Match,
+        show_commentary: bool,
+        match_speed: int,
+        simulate: bool =True,
+        ban_per_team: int = 5,
+        difficulty_level: int = 1,
+        is_player_match: bool = False
+    ):
         self.match = match
         self.game_time = 0.0
         self.victorious_team = None
@@ -48,7 +56,14 @@ class MatchLive:
         self.simulate = simulate
         self.event_handler = MobaEventHandler()
         self.champions = ChampionGenerator()
-        self.picks_bans = PicksBans()
+        self.picks_bans = PicksBans(
+            self.match.team1,
+            self.match.team2,
+            self.champions.get_champions(),
+            ban_per_team,
+            difficulty_level,
+        )
+        self.is_player_match = is_player_match
 
     def reset_match(self) -> None:
         self.reset_teams()
@@ -57,6 +72,12 @@ class MatchLive:
         self.is_match_over = False
         self.event_handler = MobaEventHandler()
 
+    def check_is_player_match(self) -> None:
+        for team in self.match.teams:
+            if team.is_players_team:
+                return True
+        return False
+    
     def reset_teams(self) -> None:
         for team in self.match.teams:
             team.reset_values()
@@ -68,6 +89,7 @@ class MatchLive:
         Probably picks and bans should be handled differently in the UI. But I need to come up
         with a general implementation that can be used regardless of the UI.
         """
+        self.is_player_match = self.check_is_player_match()
         self.picks_bans.picks_bans()
         
     def calculate_both_teams_win_prob(self) -> None:

@@ -13,6 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from esm.resources.generator.generate_champions import ChampionGenerator
 import random
 
 from esm.core.esports.moba.team import Team
@@ -37,6 +38,8 @@ class PicksBans:
         self.difficulty_level = difficulty_level
         self.total_bans = int(2 * self.ban_per_team)
         self.picks_order = []
+        self.ai_ban_champions = None
+        self.ai_pick_champions = None
 
     def pick(self, player: MobaPlayer, champion: Champion) -> None:
         player.champion = champion
@@ -44,7 +47,10 @@ class PicksBans:
     
     def ban(self, team: Team, champion: Champion) -> None:
         team.bans = champion
-        self.champion_list.remove(champion)
+        for ch in self.champion_list:
+            if champion.champion_id == ch.champion_id:
+                self.champion_list.remove(ch)
+                break
 
     def set_up_player_picks(self):
         self.picks_order = [
@@ -68,11 +74,11 @@ class PicksBans:
         """
         champion = None
         if self.bans_turn == 0:
-            champion = self.get_input(self.team1)
+            champion = self.get_input(self.team1, self.team2, pick=False)
             self.ban(self.team1, champion)
             self.bans_turn = 1
         elif self.bans_turn == 1:
-            champion = self.get_input(self.team2)
+            champion = self.get_input(self.team2, self.team2, pick=False)
             self.ban(self.team2, champion)
             self.bans_turn = 0
 
@@ -87,9 +93,9 @@ class PicksBans:
         """
         champion = None
         if self.picks_turn == 0:
-            champion = self.get_input(self.team1)
+            champion = self.get_input(self.team1, self.team2, pick=True, player=player)
         elif self.picks_turn == 1:
-            champion = self.get_input(self.team2)
+            champion = self.get_input(self.team2, self.team1, pick=True, player=player)
 
         if self.num_picks == 1 or self.num_picks == 5 or self.num_picks == 9:
             self.picks_turn = 1
@@ -120,26 +126,92 @@ class PicksBans:
             self.picks_turn = -1
             self.bans_turn = 1
     
-    def get_input(self, team):
+    def get_input(self, team, opp_team, pick=True, player=None):
         if team.is_players_team:
             champion = self.get_player_input()
         else:
-            champion = self.get_ai_input()
+            champion = self.get_ai_input(opp_team, pick=pick, player=player)
         
         return champion
     
     def get_player_input(self) -> Champion:
         pass
 
-    def get_ai_input(self) -> Champion:
-        champion = random.choice(self.champion_list)
+    def ai_ban_best_champions(self, team) -> None:
+        """
+        Gets the list of the best champions from the opponent team.
+        """
+        self.ai_ban_champions.clear()
+        champions_id = []
+
+        for player in team.list_players:
+            for champion in player.champions:
+                champions_id.append(champion)
+        
+        for ch_id in champions_id:
+            champion = ChampionGenerator().get_champion_by_id(ch_id["id"], self.champion_list)
+            self.ai_ban_champions.append(champion)
+
+        for champion in self.ai_ban_champions:
+            if champion not in self.champion_list:
+                self.ai_ban_champions.remove(champion)
+
+        # If the list is empty, chooses a random champion from the list
+        if not self.ai_ban_champions:
+            self.ai_ban_champions.append(random.choice(self.champion_list))
+
+    def get_ai_pick_champions(self, player) -> None:
+        self.ai_pick_champions.clear()
+        champions_id = []
+        for champion_id in player.champions:
+            champions_id.append(champion_id)
+        
+        for ch_id in champions_id:
+            champion = ChampionGenerator().get_champion_by_id(ch_id["id"], self.champion_list)
+            self.ai_pick_champions.append(champion)
+        
+        for champion in self.ai_pick_champions:
+            if champion not in self.champion_list:
+                self.ai_pick_champions.remove(champion)
+        
+        # If the list is empty, chooses a random champion from the list
+        if not self.ai_pick_champions:
+            self.ai_pick_champions.append(random.choice(self.champion_list))
+
+    def get_ai_input(self, opp_team, pick=True, player=None) -> Champion:
+        """
+        Gets the AI pick or ban.
+        """
+        if pick is True:
+            champion = self.get_ai_pick_input(player)
+        else:
+            champion = self.get_ai_ban_input(opp_team)
+        
         return champion
 
-    def get_ai_pick_input(self) -> Champion:
-        pass
+    def get_ai_pick_input(self, player) -> Champion:
+        if self.ai_pick_champions is None:
+            self.ai_pick_champions = []
 
-    def get_ai_ban_input(self):
-        pass
+        self.get_ai_pick_champions(player)
+
+        champion = random.choice(self.ai_pick_champions)
+        
+        return champion
+    
+    def get_ai_ban_input(self, opp_team) -> Champion:
+        """
+        Returns the champions that the AI is going to ban, based on the best champions on the opponent's team player pool.
+
+        Still a naive implementation, should consider best players above everything.
+        """
+        if self.ai_ban_champions is None:
+            self.ai_ban_champions = []
+            self.ai_ban_best_champions(opp_team)
+        
+        champion = random.choice(self.ai_ban_champions)
+
+        return champion
     
     def picks_bans(self):
         self.set_up_player_picks()

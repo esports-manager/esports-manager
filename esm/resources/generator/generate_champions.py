@@ -121,6 +121,19 @@ class ChampionGenerator:
             self.generate_champion_obj()
             self.champions_obj.append(self.champion_obj)
 
+    def get_champion_by_id(self, champ_id, ch_list=None) -> Union[Champion, None]:
+        if not self.champions_list:
+            self.get_champions()
+
+        if ch_list:
+            self.champions_obj = ch_list
+
+        for champion in self.champions_obj:
+            if champ_id == champion.champion_id:
+                return champion
+        else:
+            return None
+    
     def generate_file(
         self,
         folder: Union[str, Path] = ROOT_DIR,

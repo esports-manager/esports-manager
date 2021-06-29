@@ -93,6 +93,10 @@ class Team:
     def are_base_towers_exposed(self) -> bool:
         return not self.are_all_inhibitors_up()
 
+    def get_players_default_lanes(self):
+        for player in self.list_players:
+            player.get_default_lane()
+
     def reset_values(self) -> None:
         for player in self.list_players:
             player.reset_attributes()

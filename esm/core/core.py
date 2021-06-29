@@ -103,6 +103,10 @@ class Core:
         self.initialize_match(uuid.uuid4(), team1, team2)
         self.initialize_match_live(self.match)
 
+    def get_player_default_lanes(self) -> None:
+        for team in self.match.teams:
+            team.get_players_default_lanes()
+
     def get_championship(self) -> Championship:
         pass
 

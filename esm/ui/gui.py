@@ -17,7 +17,7 @@
 import base64
 import traceback
 
-from esm.resources import RES_DIR
+from esm.definitions import RES_DIR
 from esm.resources.utils import find_file
 from esm.ui.gui_components import *
 from esm.ui.layouts import *

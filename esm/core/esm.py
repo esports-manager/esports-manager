@@ -16,7 +16,6 @@
 
 import threading
 
-from esm.core.esports.moba.mobaevent import MobaEventHandler
 from esm.core.esports.moba.match_tester import MatchTester
 from esm.core.core import Core
 from esm.core.esports.moba.match_live import MatchLive

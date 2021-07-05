@@ -75,10 +75,7 @@ class MatchLive:
         self.event_handler = MobaEventHandler()
 
     def check_is_player_match(self) -> bool:
-        for team in self.match.teams:
-            if team.is_players_team:
-                return True
-        return False
+        return any(team.is_players_team for team in self.match.teams)
     
     def reset_teams(self) -> None:
         for team in self.match.teams:
@@ -165,26 +162,31 @@ class MatchLive:
             self.event_handler.load_commentaries_file()
 
         while not self.is_match_over:
-            self.calculate_both_teams_win_prob()
-            self.event_handler.get_game_state(
-                self.game_time,
-                self.which_team_nexus_exposed(),
-                self.is_any_inhib_open(),
-                self.get_tower_number(),
-            )
-            self.event_handler.generate_event(self.game_time, self.show_commentary)
-            self.event_handler.event.calculate_event(
-                self.match.team1, self.match.team2, self.which_team_nexus_exposed()
-            )
-            self.check_match_over()
-
-            if not self.is_match_over:
-                self.increment_game_time(0.5)
-
-            if self.simulate:
-                time.sleep(self.match_speed)
-
+            self._run_match()
         self.winning_team()
+
+    def _run_match(self):
+        """
+        Runs the match simulation logic
+        """
+        self.calculate_both_teams_win_prob()
+        self.event_handler.get_game_state(
+            self.game_time,
+            self.which_team_nexus_exposed(),
+            self.is_any_inhib_open(),
+            self.get_tower_number(),
+        )
+        self.event_handler.generate_event(self.game_time, self.show_commentary)
+        self.event_handler.event.calculate_event(
+            self.match.team1, self.match.team2, self.which_team_nexus_exposed()
+        )
+        self.check_match_over()
+
+        if not self.is_match_over:
+            self.increment_game_time(0.5)
+
+        if self.simulate:
+            time.sleep(self.match_speed)
 
 
 def initialize_match(team1, team2, ch_id) -> MatchLive:

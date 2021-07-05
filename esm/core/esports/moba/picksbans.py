@@ -97,10 +97,10 @@ class PicksBans:
         elif self.picks_turn == 1:
             champion = self.get_input(self.team2, self.team1, pick=True, player=player)
 
-        if self.num_picks == 1 or self.num_picks == 5 or self.num_picks == 9:
+        if self.num_picks in [1, 5, 9]:
             self.picks_turn = 1
-        elif self.num_picks == 3 or self.num_picks == 7:
-            self.picks_turn = 0 
+        elif self.num_picks in [3, 7]:
+            self.picks_turn = 0
         elif self.num_picks == 6:
             self.picks_turn = -1
             self.bans_turn = 1
@@ -114,12 +114,12 @@ class PicksBans:
         """
         Checks if it's time to switch from picks to bans.
         """
-        if self.num_bans == 6:
-            self.bans_turn = -1
-            self.picks_turn = 0
         if self.num_bans == 10:
             self.bans_turn = -1
             self.picks_turn = 1
+        elif self.num_bans == 6:
+            self.bans_turn = -1
+            self.picks_turn = 0
 
     def pick_turns(self):
         if self.num_picks == 6:
@@ -128,11 +128,9 @@ class PicksBans:
     
     def get_input(self, team, opp_team, pick=True, player=None):
         if team.is_players_team:
-            champion = self.get_player_input()
+            return self.get_player_input()
         else:
-            champion = self.get_ai_input(opp_team, pick=pick, player=player)
-        
-        return champion
+            return self.get_ai_input(opp_team, pick=pick, player=player)
     
     def get_player_input(self) -> Champion:
         pass
@@ -162,18 +160,15 @@ class PicksBans:
 
     def get_ai_pick_champions(self, player) -> None:
         self.ai_pick_champions.clear()
-        champions_id = []
-        for champion_id in player.champions:
-            champions_id.append(champion_id)
-        
+        champions_id = [champion_id for champion_id in player.champions]
         for ch_id in champions_id:
             champion = ChampionGenerator().get_champion_by_id(ch_id["id"], self.champion_list)
             self.ai_pick_champions.append(champion)
-        
+
         for champion in self.ai_pick_champions:
             if champion not in self.champion_list:
                 self.ai_pick_champions.remove(champion)
-        
+
         # If the list is empty, chooses a random champion from the list
         if not self.ai_pick_champions:
             self.ai_pick_champions.append(random.choice(self.champion_list))
@@ -183,11 +178,9 @@ class PicksBans:
         Gets the AI pick or ban.
         """
         if pick is True:
-            champion = self.get_ai_pick_input(player)
+            return self.get_ai_pick_input(player)
         else:
-            champion = self.get_ai_ban_input(opp_team)
-        
-        return champion
+            return self.get_ai_ban_input(opp_team)
 
     def get_ai_pick_input(self, player) -> Champion:
         if self.ai_pick_champions is None:
@@ -195,9 +188,7 @@ class PicksBans:
 
         self.get_ai_pick_champions(player)
 
-        champion = random.choice(self.ai_pick_champions)
-        
-        return champion
+        return random.choice(self.ai_pick_champions)
     
     def get_ai_ban_input(self, opp_team) -> Champion:
         """
@@ -208,10 +199,8 @@ class PicksBans:
         if self.ai_ban_champions is None:
             self.ai_ban_champions = []
             self.ai_ban_best_champions(opp_team)
-        
-        champion = random.choice(self.ai_ban_champions)
 
-        return champion
+        return random.choice(self.ai_ban_champions)
     
     def picks_bans(self):
         self.set_up_player_picks()

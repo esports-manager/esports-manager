@@ -52,13 +52,13 @@ class DebugMatchLayout(ILayout):
             [esm_form_text("0.0000", key="debug_team1winprob")],
             [esm_table(headings, headings=headings, key="debug_team1table")],
             [
-                esm_form_text("Team 1 Towers: "),
+                esm_form_text("Towers: "),
                 esm_form_text(
                     {"top": 3, "mid": 3, "bot": 3, "base": 2}, key="debug_team1towers"
                 ),
             ],
             [
-                esm_form_text("Team 2 Towers: "),
+                esm_form_text("Inhibitors: "),
                 esm_form_text({"top": 1, "mid": 1, "bot": 1}, key="debug_team1inhibs"),
             ],
         ]
@@ -71,13 +71,13 @@ class DebugMatchLayout(ILayout):
             [esm_form_text("0.0000", key="debug_team2winprob")],
             [esm_table(headings, headings=headings, key="debug_team2table")],
             [
-                esm_form_text("Team 2 Towers: "),
+                esm_form_text("Towers: "),
                 esm_form_text(
                     {"top": 3, "mid": 3, "bot": 3, "base": 2}, key="debug_team2towers"
                 ),
             ],
             [
-                esm_form_text("Team 2 Inhibitors: "),
+                esm_form_text("Inhibitors: "),
                 esm_form_text({"top": 1, "mid": 1, "bot": 1}, key="debug_team2inhibs"),
             ],
         ]

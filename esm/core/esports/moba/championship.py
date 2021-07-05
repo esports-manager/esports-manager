@@ -46,17 +46,3 @@ class Championship:
 
     def __str__(self):
         return "{0}".format(self.__class__.__name__)
-
-
-if __name__ == "__main__":
-    from esm.resources.generator.generate_teams import TeamGenerator
-
-    team_gen = TeamGenerator()
-    team_gen.get_teams_dict()
-    team_gen.get_teams_objects()
-
-    championship = Championship("League", 1, "Brazil", team_gen.teams)
-    championship.schedule_matches()
-
-    for match in championship.matches:
-        print(match.team1.name + " v " + match.team2.name)

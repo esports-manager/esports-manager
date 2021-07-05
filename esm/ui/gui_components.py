@@ -255,3 +255,38 @@ def esm_radio(
         visible=visible
     )
 
+
+def esm_multiline(
+    default_text="",
+    enter_submits=False,
+    disabled=False,
+    size=(80,12),
+    autoscroll=True,
+    enable_events=True,
+    key=None,
+    write_only=False,
+    font=(default_font, default_font_size),
+    reroute_stdout=False,
+    reroute_stderr=False,
+    reroute_cprint=False,
+    echo_stdout_stderr=False,
+    justification="center",
+    visible=True
+):
+    sg.Multiline(
+        default_text=default_text,
+        enter_submits=enter_submits,
+        disabled=disabled,
+        size=size,
+        font=font,
+        autoscroll=autoscroll,
+        enable_events=enable_events,
+        key=key,
+        write_only=write_only,
+        reroute_stdout=reroute_stdout,
+        reroute_stderr=reroute_stderr,
+        reroute_cprint=reroute_cprint,
+        echo_stdout_stderr=echo_stdout_stderr,
+        justification=justification,
+        visible=visible,
+    )

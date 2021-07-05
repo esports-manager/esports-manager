@@ -196,9 +196,11 @@ class MobaEvent:
 
         amount_kills = len(duel_players)
         killed_players = duel_players
-        self.get_commentary(
-            amount_kills, killer=killer.nick_name, killed_names=killed_players
-        )
+
+        if killed_players:
+            self.get_commentary(
+                amount_kills, killer=killer.nick_name, killed_names=killed_players
+            )
 
     def calculate_jungle(self, team1: Team, team2: Team, jungle: str):
         """
@@ -370,7 +372,7 @@ class MobaEvent:
                             self.commentary + "\n" + killer + " has slain: " + names
                         )
                     else:
-                        self.commentary = killer + "has slain " + names
+                        self.commentary = killer + " has slain " + names
 
         if self.event_name == "BARON":
             if stole:

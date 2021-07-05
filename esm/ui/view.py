@@ -70,7 +70,7 @@ class View:
         App loop
         """
         while True:
-            event, values = self.gui.window.read(timeout=5000)
+            event, values = self.gui.window.read(timeout=500)
 
             if event in [sg.WINDOW_CLOSED, "main_exit_btn"]:
                 break

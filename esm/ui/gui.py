@@ -25,27 +25,12 @@ from esm.ui.layouts import *
 
 class GUI:
     def __init__(self, controller):
-        create_look_and_feel()
         self.icon = "esportsmanagertrophy.png"
-        self.controller = controller
-        sg.theme("EsmTheme")
-
         # Each layout is added to the list
-        self.layouts = [
-            mainscreen.MainScreenLayout(self.controller),
-            newgame.NewGameLayout(self.controller),
-            debug.DebugLayout(self.controller),
-            settings.SettingsLayout(self.controller),
-            debugmatch.DebugMatchLayout(self.controller),
-            loadgame.LoadGameLayout(self.controller),
-            picksbans.PicksBansLayout(self.controller),
-            pickteam.PickTeamLayout(self.controller),
-            match_tester.MatchTesterLayout(self.controller),
-            teamselect.TeamSelectLayout(self.controller),
-        ]
+        self.layouts = controller.get_layouts()
         
         self.window = self._create_window()
-
+    
     def _encode_icon(self) -> bytes:
         with open(find_file(self.icon, folder=RES_DIR), "rb") as fp:
             encoded_icon = base64.b64encode(fp.read())
@@ -65,7 +50,6 @@ class GUI:
             "eSports Manager",
             element_justification="center",
             layout=self._get_cols(),
-            #  size=(1300, 780),
             icon=encoded_icon,
             resizable=True,
         )
@@ -132,3 +116,8 @@ class GUI:
         tb = traceback.format_exc()
         sg.Print("The following error happened:", e, tb)
         sg.popup_error(f"The following error occurred:", e, tb)
+
+def init_theme():
+    create_look_and_feel()
+    sg.theme("EsmTheme")
+    

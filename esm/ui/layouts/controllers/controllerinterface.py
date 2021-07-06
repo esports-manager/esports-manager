@@ -25,9 +25,8 @@ class IController(ABC):
             self.controller.controllers = []
         
         self.controller.controllers.append(self)
-        
         super().__init__()
 
     @abstractmethod
-    def notify(self, *args, **kwargs):
+    def update(self, *args, **kwargs):
         pass

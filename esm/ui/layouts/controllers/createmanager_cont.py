@@ -21,5 +21,5 @@ class CreateManagerController(IController):
     def __init__(self, controller):
         super().__init__(controller)
     
-    def notify(self, *args, **kwargs):
+    def update(self, *args, **kwargs):
         pass

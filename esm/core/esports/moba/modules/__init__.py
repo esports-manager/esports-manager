@@ -13,15 +13,3 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-from .controllerinterface import IController
-from ..pickteam import PickTeamLayout
-
-
-class PickTeamController(IController):
-    def __init__(self, controller):
-        super().__init__(controller)
-        self.layout = PickTeamLayout(self)
-    
-    def update(self, *args, **kwargs):
-        pass

@@ -16,7 +16,7 @@
 
 import PySimpleGUI as sg
 
-from .gui import GUI
+from .gui import GUI, init_theme
 
 
 class View:
@@ -25,8 +25,7 @@ class View:
     """
     def __init__(self, controller):
         self.gui = GUI(controller)
-        self.controller = controller
-
+    
     def print_error(self, e):
         self.gui.error_message(e)
 

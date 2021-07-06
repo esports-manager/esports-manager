@@ -1,4 +1,4 @@
-from esm.core.esm import ESM
+from esm.core.esm import ESMMobaController
 
-esm = ESM()
+esm = ESMMobaController()
 esm.app()

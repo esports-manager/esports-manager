@@ -17,22 +17,19 @@
 import threading
 
 from esm.core.esports.moba.match_tester import MatchTester
-from esm.core.core import Core
+from esm.core.core import MobaModel
 from esm.core.esports.moba.match_live import MatchLive
 
-from esm.resources.generator.generate_teams import TeamGenerator
-from esm.resources.generator.generate_players import MobaPlayerGenerator
-from esm.resources.generator.generate_champions import ChampionGenerator
 from esm.ui.view import View
+from esm.ui.layouts.controllers import *
+from esm.ui.gui import init_theme
 
-class ESM:
+class ESMMobaController:
     """
     The ESM class corresponds to a Controller on a traditional MVC model. Not a full controller yet.
     """
     def __init__(self, amount_players=400):
-        self.core = Core()
         self._amount_players = amount_players
-        self.view = View(self)
         self._amount_test_matches = 1000
         self.is_match_running = False
         self.match_tester = None
@@ -40,6 +37,41 @@ class ESM:
         self.current_match = None
         self.match_thread = None
         self.controllers = None
+        self.modules = None
+        init_theme()
+        self.initialize_controllers()
+        self.core = MobaModel()
+        self.view = View(self)
+    
+    @staticmethod
+    def team_data(match_live=None):
+        if match_live is None:
+            return None
+        players = [
+            [player for player in team.list_players] for team in match_live.match.teams
+        ]
+
+        # Event handler shuffles players, this keeps them in order
+        for team in players:
+            team.sort(key=lambda x: x.lane.value)
+
+        data = []
+        for team in players:
+            team_data = [
+                [
+                    player.lane.name,
+                    player.nick_name,
+                    player.kills,
+                    player.deaths,
+                    player.assists,
+                    player.champion,
+                    int(player.get_player_total_skill()),
+                ]
+                for player in team
+            ]
+            data.append(team_data)
+
+        return data
     
     @property
     def amount_test_matches(self) -> int:
@@ -58,6 +90,21 @@ class ESM:
         self.core.amount_players = amount
         self._amount_players = amount
 
+    def initialize_controllers(self):
+        debug_cont.DebugController(self)
+        debugmatch_cont.DebugMatchController(self)
+        loadgame_cont.LoadGameController(self)
+        mainscreen_cont.MainScreenController(self)
+        match_tester_cont.MatchTesterController(self)
+        newgame_cont.NewGameController(self)
+        picksbans_cont.PicksBansController(self)
+        pickteam_cont.PickTeamController(self)
+        settings_cont.SettingsController(self)
+        teamselect_cont.TeamSelectController(self)
+    
+    def get_layouts(self):
+        return [controller.layout for controller in self.controllers]
+    
     def start_match_sim(self) -> None:
         self.current_match.simulation()
         self.view.enable_debug_buttons()
@@ -91,13 +138,11 @@ class ESM:
         """
         Resets all generators. This prevents memory allocation of unnecessary elements.
         """
-        self.core.teams = TeamGenerator()
-        self.core.players = MobaPlayerGenerator()
-        self.core.champions = ChampionGenerator()
+        self.core.reset_generators()
 
     def reset_match(self, match) -> None:
         self.core.reset_team_values(match)
-        match.reset_match()
+        self.core.reset_match(match)
 
     def update_amount(self, value):
         self.view.gui.window["settings_amount_input"].update(value=value)
@@ -107,36 +152,6 @@ class ESM:
 
     def update_match_tester_match_info(self, current_match, data):
         self.view.gui.update_match_tester_match_info(current_match, data)
-
-    @staticmethod
-    def team_data(match_live=None):
-        if match_live is None:
-            return None
-        players = [
-            [player for player in team.list_players] for team in match_live.match.teams
-        ]
-
-        # Event handler shuffles players, this keeps them in order
-        for team in players:
-            team.sort(key=lambda x: x.lane.value)
-
-        data = []
-        for team in players:
-            team_data = [
-                [
-                    player.lane.name,
-                    player.nick_name,
-                    player.kills,
-                    player.deaths,
-                    player.assists,
-                    player.champion,
-                    int(player.get_player_total_skill()),
-                ]
-                for player in team
-            ]
-            data.append(team_data)
-
-        return data
 
     def initialize_random_debug_match(self, picksbans=True) -> MatchLive:
         self.core.initialize_random_debug_match()

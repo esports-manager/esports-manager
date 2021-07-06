@@ -49,7 +49,7 @@ class MatchModule:
             is_player_match=is_player_match
         )
     
-    def initialize_random_debug_match(self, teams):
+    def initialize_random_debug_match(self, teams) -> MatchLive:
         team1 = random.choice(teams)
         teams.remove(team1)
         team2 = random.choice(teams)
@@ -59,7 +59,7 @@ class MatchModule:
         return self.initialize_new_match_live(match)
 
     @staticmethod
-    def get_match(match_id, db_module, team_module):
+    def get_match(match_id, db_module, team_module) -> Match:
         match_dict = db_module.get_dict(match_id)
         
         team1 = team_module.get_team(match_dict["team1_id"])
@@ -81,5 +81,6 @@ class MatchModule:
         
         return match
     
-    def get_match_live(self, match_id, db_module, team_module):
+    def get_match_live(self, match_id, db_module, team_module) -> MatchLive:
         match = self.get_match(match_id, db_module, team_module)
+        return MatchLive(match)

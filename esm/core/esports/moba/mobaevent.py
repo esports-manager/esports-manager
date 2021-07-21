@@ -58,7 +58,7 @@ class MobaEvent:
     @staticmethod
     def _get_team_players(team1, team2) -> list:
         """
-        Gets all the players from each of the teams
+        Gets all the players from each team
         """
         return [team1.list_players, team2.list_players]
 

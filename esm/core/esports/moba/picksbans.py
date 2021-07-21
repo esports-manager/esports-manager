@@ -15,6 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from esm.resources.generator.generate_champions import ChampionGenerator
 import random
+import time
 
 from esm.core.esports.moba.team import Team
 from esm.core.esports.moba.player import MobaPlayer
@@ -225,6 +226,7 @@ class PicksBans:
     
     def picks_bans(self):
         self.set_up_player_picks()
+        start = time.time()
 
         while self.num_picks < 10:
             player = self.picks_order[0]
@@ -235,3 +237,6 @@ class PicksBans:
             
             if self.picks_turn != -1:
                 self.switch_pick_turn(player)
+        
+        end = time.time() - start
+        print("Ran picks and bans in ", str(end))

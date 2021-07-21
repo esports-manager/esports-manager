@@ -75,21 +75,22 @@ class PicksBans:
         champion = None
         if self.bans_turn == 0:
             champion = self.get_input(self.team1, self.team2, pick=False)
-            self.ban(self.team1, champion)
+            team = self.team1
             self.bans_turn = 1
         elif self.bans_turn == 1:
             champion = self.get_input(self.team2, self.team2, pick=False)
-            self.ban(self.team2, champion)
+            team = self.team2
             self.bans_turn = 0
 
         if champion is not None:
             self.num_bans += 1
+            self.ban(team, champion)
 
     def switch_pick_turn(self, player):
         """
         Starts the pick turn with one team and then passes to the other team to pick.
-        Picks turn 0 corresponds to the team1 turn to ban.
-        Picks turn 1 corresponds to the team2 turn to ban.
+        Picks turn 0 corresponds to the team1 turn to pick.
+        Picks turn 1 corresponds to the team2 turn to pick.
         """
         champion = None
         if self.picks_turn == 0:
@@ -208,9 +209,8 @@ class PicksBans:
         while self.num_picks < 10:
             player = self.picks_order[0]
 
-            self.switch_ban_turn()
-
             if self.ban_turns != -1:
+                self.switch_ban_turn()
                 self.ban_turns()
             
             if self.picks_turn != -1:

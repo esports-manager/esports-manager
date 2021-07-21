@@ -24,6 +24,7 @@ from esm.ui.view import View
 from esm.ui.layouts.controllers import *
 from esm.ui.gui import init_theme
 
+
 class ESMMobaController:
     """
     The ESM class corresponds to a Controller on a traditional MVC model. Not a full controller yet.

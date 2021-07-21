@@ -22,38 +22,8 @@ class DebugMatchController(IController):
         super().__init__(controller)
         self.layout = DebugMatchLayout(self)
     
-    @staticmethod
-    def team_data(match_live=None):
-        if match_live is None:
-            return None
-        players = [
-            [player for player in team.list_players] for team in match_live.match.teams
-        ]
-
-        # Event handler shuffles players, this keeps them in order
-        for team in players:
-            team.sort(key=lambda x: x.lane.value)
-
-        data = []
-        for team in players:
-            team_data = [
-                [
-                    player.lane.name,
-                    player.nick_name,
-                    player.kills,
-                    player.deaths,
-                    player.assists,
-                    player.champion,
-                    int(player.get_player_total_skill()),
-                ]
-                for player in team
-            ]
-            data.append(team_data)
-
-        return data
-    
     def update(self, event, values, make_screen):
-        team_data = self.team_data
+        team_data = self.controller.team_data
         update_debug_match_info = self.controller.update_debug_match_info
 
         # Click the Start Match button

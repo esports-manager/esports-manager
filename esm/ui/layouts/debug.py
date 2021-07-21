@@ -85,45 +85,5 @@ class DebugLayout(ILayout):
             ],
         ]
 
-    def update(self, event, value, make_screen) -> None:
-        if event == "debug_pickteam_btn":
-            make_screen("debug_game_mode_screen", "debug_pickteam_screen")
-
-        elif event == "debug_cancelmain_btn":
-            make_screen("debug_game_mode_screen", "main_screen")
-
-        elif event == "debug_picksbans_btn":
-            self.controller.initialize_random_debug_match(False)
-            make_screen("debug_game_mode_screen", "debug_picks_bans_screen")
-
-        elif event == "debug_match_btn":
-            team_data = self.controller.team_data
-            update_debug_match_info = self.controller.update_debug_match_info
-
-            self.controller.check_files()
-            if not self.controller.current_match:
-                match_live = self.controller.initialize_random_debug_match()
-            else:
-                match_live = self.controller.current_match
-
-            data = team_data(match_live=match_live)
-            update_debug_match_info(match_live, data)
-            make_screen("debug_game_mode_screen", "debug_match_screen")
-
-        elif event == "debug_matchtester_btn":
-            team_data = self.controller.team_data
-            update_match_tester_match_info = (
-                self.controller.update_match_tester_match_info
-            )
-
-            self.controller.check_files()
-            if not self.controller.current_match:
-                match_live = self.controller.initialize_random_debug_match()
-            else:
-                match_live = self.controller.current_match
-
-            match_live.simulate = False
-            match_live.show_commentary = False
-            data = team_data(match_live=match_live)
-            update_match_tester_match_info(match_live, data)
-            make_screen("debug_game_mode_screen", "match_tester_screen")
+    def update(self, *args, **kwargs) -> None:
+        self.controller.update(*args, **kwargs)

@@ -117,7 +117,7 @@ class GUI:
         sg.Print("The following error happened:", e, tb)
         sg.popup_error(f"The following error occurred:", e, tb)
 
+
 def init_theme():
     create_look_and_feel()
     sg.theme("EsmTheme")
-    

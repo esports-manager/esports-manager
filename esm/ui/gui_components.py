@@ -194,7 +194,7 @@ def esm_calendar_button(
     auto_size_button=None,
     border_width=0,
     title="Choose date of birth",
-    enable_events=False,
+    enable_events=True,
     key=None,
     format_calendar="%m/%d/%Y",
     month_names=None,

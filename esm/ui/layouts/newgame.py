@@ -16,6 +16,7 @@
 
 import PySimpleGUI as sg
 from ..gui_components import *
+from ...resources.generator.generate_players import MobaPlayerGenerator
 
 from .layoutinterface import ILayout
 
@@ -42,7 +43,9 @@ class NewGameLayout(ILayout):
         label_pad = (0, 5)
         esports = ["MOBA", "RTS", "FPS"]
         seasons = ["2020"]
-        nationalities = ["Brazil", "Korea", "United States"]
+        mp = MobaPlayerGenerator()
+        mp.get_nationalities()
+        nationalities = mp.nationalities
 
         labels = [
             [esm_form_text("Game Name:", pad=label_pad)],
@@ -68,7 +71,10 @@ class NewGameLayout(ILayout):
         inputs_create_manager = [
             [esm_input_text("", key="create_manager_name")],
             [esm_input_text("", key="create_manager_nickname")],
-            [esm_input_text("", key="create_manager_birthday")],
+            [esm_input_text("", key="create_manager_display_calendar", size=(15, 1)),
+             esm_calendar_button("Choose a date of Birth",
+                                 size=(18, 1),
+                                 key="create_manager_calendar")],
             [esm_input_combo(nationalities, default_value=nationalities[0], key="create_manager_nationality")],
         ]
 

@@ -18,7 +18,7 @@ import random
 import uuid
 from datetime import date, timedelta
 from pathlib import Path
-from typing import Union
+from typing import Union, Tuple
 
 from esm.core.esports.moba.player import MobaPlayer
 from esm.resources.generator.generate_champions import ChampionGenerator
@@ -53,7 +53,7 @@ class MobaPlayerGenerator:
         self.nick_name = None
         self.dob = None
         self.skill = None
-        self.nationality = None
+        self.nationalities = None
         self.nationality = None
         self.player_obj = None
 
@@ -89,12 +89,22 @@ class MobaPlayerGenerator:
     def generate_id(self) -> None:
         self.player_id = uuid.uuid4().int
 
+    def get_nationalities(self) -> None:
+        if self.names is None:
+            nationalities = load_list_from_json("names.json")
+        else:
+            nationalities = self.names.copy()
+
+        self.nationalities = []
+        for nat in nationalities:
+            nationalities = nat["region"]
+            self.nationalities.append(nationalities)
+
     def get_nationality(self) -> None:
         """
         Defines players nationalities
         """
-        nationality = ["Brazil", "Korea", "United States"]
-        self.nationality = random.choice(nationality)
+        self.nationality = random.choice(self.nationalities)
 
     def generate_dob(self) -> None:
         """
@@ -141,23 +151,19 @@ class MobaPlayerGenerator:
             champion_dict["mult"] = mult
             self.champions.append(champion_dict)
 
+    def get_nationality_skill(self) -> Tuple[int, int]:
+        for nat in self.names:
+            if nat["region"] == self.nationality:
+                mu = nat["mu"]
+                sigma = nat["sigma"]
+
+                return mu, sigma
+
     def generate_skill(self) -> None:
         """
         Randomly generates players skills according to their nationality
         """
-        if self.nationality == "Brazil":
-            mu = 50
-            sigma = 20
-        elif self.nationality == "Korea":
-            mu = 80
-            sigma = 10
-        elif self.nationality == "United States":
-            mu = 65
-            sigma = 20
-        else:
-            mu = 50
-            sigma = 10
-
+        mu, sigma = self.get_nationality_skill()
         self.skill = int(random.gauss(mu, sigma))
 
         # Players' skill will follow the 30 < skill < 90 interval
@@ -174,6 +180,7 @@ class MobaPlayerGenerator:
             if name_dict["region"] == self.nationality:
                 self.first_name = random.choice(name_dict["male"])
                 self.last_name = random.choice(name_dict["surnames"])
+                break
         # else:
         #    raise ValueError('Nationality not found!')
 
@@ -244,6 +251,8 @@ class MobaPlayerGenerator:
         """
         if self.names is None:
             self.get_names()
+        if self.nationalities is None:
+            self.get_nationalities()
         if self.nick_names is None:
             self.get_nick_names()
         self.generate_id()

@@ -22,6 +22,9 @@ class SettingsController(IController):
     def __init__(self, controller):
         super().__init__(controller)
         self.layout = SettingsLayout(self)
-    
+
+    def generate_all_data(self) -> None:
+        self.controller.generate_all_data()
+
     def update(self, *args, **kwargs):
         pass

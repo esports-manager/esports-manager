@@ -35,7 +35,7 @@ class ChampionGenerator:
         champion_obj: Champion = None,
         champion_names: list = None,
     ):
-        self.champion_id = 0
+        self.champion_id = None
         self.name = name
         self.skill = skill
         self.lane = lane
@@ -68,12 +68,20 @@ class ChampionGenerator:
         """
         Generates Champion Skills. Perhaps it should also follow a Normal Distribution?
 
-        Also, easter egg for Teemo
+        Also, Teemo is never a good champion
         """
         if self.name == "TEEMO":
-            self.skill = random.randint(0, 50)
+            self.skill = 30
         else:
-            self.skill = random.randint(50, 99)
+            self.skill = random.gauss(55, 20)
+
+        if self.skill >= 90:
+            self.skill = 90
+        if self.skill <= 30:
+            self.skill = 30
+
+        # converting skill to int
+        self.skill = int(self.skill)
 
     def generate_champion_dict(self) -> None:
         """

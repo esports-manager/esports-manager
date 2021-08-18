@@ -41,7 +41,9 @@ class PicksBans:
         self.picks_order = []
         self.picked_champions = []
         self.banned_champions = []
-        self.ai_ban_champions = None
+        self.ai_ban_champions_team1 = None
+        self.ai_ban_champions_team2 = None
+        self.ai_ban_champions = []
         self.ai_pick_champions = None
 
     def pick(self, player: MobaPlayer, champion: Champion) -> None:
@@ -147,7 +149,7 @@ class PicksBans:
     def get_ai_pick_champions(self, player) -> None:
         self.ai_pick_champions.clear()
         champions_id = [champion_id for champion_id in player.champions]
-        
+
         for ch_id in champions_id:
             champion = ChampionGenerator().get_champion_by_id(ch_id["id"], self.champion_list)
             self.ai_pick_champions.append(champion)
@@ -205,7 +207,14 @@ class PicksBans:
         # If the list is empty, chooses a random champion from the list
         if not self.ai_ban_champions:
             self.ai_ban_champions.append(random.choice(self.champion_list))
-    
+
+        if team == self.team1:
+            self.ai_ban_champions_team1 = self.ai_ban_champions.copy()
+        elif team == self.team2:
+            self.ai_ban_champions_team2 = self.ai_ban_champions.copy()
+
+        self.ai_ban_champions.clear()
+
     def get_ai_ban_input(self, opp_team) -> Champion:
         """
         Returns the champions that the AI is going to ban, based on the best champions on the opponent's team player pool.
@@ -214,8 +223,11 @@ class PicksBans:
         """
         if self.ai_ban_champions is None:
             self.ai_ban_champions = []
-        
-        self.get_opponents_best_champions(opp_team)
+
+        if opp_team == self.team1:
+            self.ai_ban_champions = self.ai_ban_champions_team1
+        elif opp_team == self.team2:
+            self.ai_ban_champions = self.ai_ban_champions_team2
 
         champion = random.choice(self.ai_ban_champions)
         
@@ -228,6 +240,14 @@ class PicksBans:
         self.set_up_player_picks()
         start = time.time()
 
+        if self.team1.is_players_team:
+            self.get_opponents_best_champions(self.team1)
+        elif self.team2.is_players_team:
+            self.get_opponents_best_champions(self.team2)
+        else:
+            self.get_opponents_best_champions(self.team1)
+            self.get_opponents_best_champions(self.team2)
+
         while self.num_picks < 10:
             player = self.picks_order[0]
 
@@ -237,6 +257,9 @@ class PicksBans:
             
             if self.picks_turn != -1:
                 self.switch_pick_turn(player)
-        
+
         end = time.time() - start
         print("Ran picks and bans in ", str(end))
+        self.ai_ban_champions_team1.clear()
+        self.ai_ban_champions_team2.clear()
+        self.ai_ban_champions.clear()

@@ -127,6 +127,8 @@ class ESMMobaController:
             )
         except Exception as e:
             self.view.print_error(e)
+        
+        generate_data_thread.join()
 
     def check_files(self) -> None:
         try:

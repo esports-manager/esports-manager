@@ -91,7 +91,7 @@ class NewGameLayout(ILayout):
                 sg.Column(inputs_create_manager, element_justification="left"),
             ],
             [
-                esm_button("Create Game", key="ng_creategame_btn"),
+                esm_button("Next", key="ng_next_btn"),
                 esm_button("Cancel", key="ng_cancel_btn"),
             ],
         ]
@@ -100,7 +100,7 @@ class NewGameLayout(ILayout):
         if event == "ng_cancel_btn":
             make_screen("new_game_screen", "main_screen")
 
-        elif event == "ng_creategame_btn":
+        elif event == "ng_next_btn":
             if (
                     values["create_manager_name"] != ""
                     and values["create_manager_nickname"] != ""

@@ -46,6 +46,7 @@ class MobaPlayer(Player):
         self._deaths = 0
         self._assists = 0
         self._points = 0
+        self.consecutive_kills = 0
         self.champions = champions
         super().__init__(
             player_id, nationality, first_name, last_name, birthday, nick_name, skill
@@ -106,6 +107,7 @@ class MobaPlayer(Player):
         self.kills = 0
         self.deaths = 0
         self.assists = 0
+        self.consecutive_kills = 0
 
     def get_highest_multiplier(self) -> float:
         """
@@ -164,6 +166,22 @@ class MobaPlayer(Player):
         return (
             self.get_curr_player_skill() + self.get_champion_skill()
         ) / 2 + self.points
+
+    def is_player_on_killing_spree(self) -> bool:
+        """
+        Returns true if the player is on killing spree. False otherwise.
+        """
+        if 2 <= self.consecutive_kills <= 4:
+            return True
+        return False
+
+    def is_player_godlike(self) -> bool:
+        """
+        Returns true if the player is godlike. False otherwise
+        """
+        if self.consecutive_kills > 4:
+            return True
+        return False
 
     def __repr__(self):
         return "{0} {1}".format(self.__class__.__name__, self.nick_name)

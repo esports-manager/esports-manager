@@ -148,10 +148,33 @@ class MobaEvent:
 
         if killed == 1:
             player1.kills += 1
+            if player1.is_player_on_killing_spree():
+                self.points += 5
+            if player1.is_player_godlike():
+                self.points += 10
+            if player2.is_player_on_killing_spree():
+                self.points += 10
+            if player2.is_player_godlike():
+                self.points += 20
             player1.points += self.points
             player2.deaths += 1
 
         return killed
+
+    def calculate_assists(self, team: list, killer: MobaPlayer, amount_kills: int):
+        aux_team = team.copy()
+        aux_team.remove(killer)
+
+        for i in range(amount_kills):
+            # Get players to assign assists
+            assists = random.choices(
+                aux_team, [player.get_player_total_skill() for player in aux_team]
+            )
+
+            for player in assists:
+                player.assists += 1
+                player.points += self.points / len(assists)
+
 
     def calculate_kill(self, team1: Team, team2: Team):
         """
@@ -186,8 +209,6 @@ class MobaEvent:
 
         # TODO: Currently, Assists are not awarded to members of the killer's team. This should be implemented
         # TODO: Before 0.1.0-alpha
-        # TODO: if a player is on a killing spree, he should win more points
-        # TODO: the same would happen for a player that kills another that is on a killing spree
         # The player enters in duel mode against other players, to decide who wins the fight
         for player in duel_players:
             killed = self.player_duel(killer, player)
@@ -195,6 +216,7 @@ class MobaEvent:
                 duel_players.remove(player)
 
         amount_kills = len(duel_players)
+        self.calculate_assists(team_killer, killer, amount_kills)
         killed_players = duel_players
 
         if killed_players:

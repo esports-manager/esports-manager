@@ -154,27 +154,31 @@ class MobaEvent:
                 self.points += 10
             if player2.is_player_on_killing_spree():
                 self.points += 10
+                player2.consecutive_kills = 0
             if player2.is_player_godlike():
                 self.points += 20
+                player2.consecutive_kills = 0
             player1.points += self.points
+            player1.consecutive_kills += 1
             player2.deaths += 1
 
         return killed
 
     def calculate_assists(self, team: list, killer: MobaPlayer, amount_kills: int):
-        aux_team = team.copy()
-        aux_team.remove(killer)
+        will_there_be_assists = random.randint(0, 1)
+        if will_there_be_assists == 1:
+            aux_team = team.copy()
+            aux_team.remove(killer)
 
-        for i in range(amount_kills):
-            # Get players to assign assists
-            assists = random.choices(
-                aux_team, [player.get_player_total_skill() for player in aux_team]
-            )
+            for i in range(amount_kills):
+                # Get players to assign assists
+                assists = random.choices(
+                    aux_team, [player.get_player_total_skill() for player in aux_team]
+                )
 
-            for player in assists:
-                player.assists += 1
-                player.points += self.points / len(assists)
-
+                for player in assists:
+                    player.assists += 1
+                    player.points += self.points / len(assists)
 
     def calculate_kill(self, team1: Team, team2: Team):
         """
@@ -353,7 +357,8 @@ class MobaEvent:
         if self.event_name == "NEXUS ASSAULT":
             self.calculate_nexus(team1, team2, which_nexus)
 
-    def list_names(self, players: list):
+    @staticmethod
+    def list_names(players: list):
         names = ""
         for i, player in enumerate(players):
             if i == len(players) - 1:
@@ -434,7 +439,6 @@ class MobaEvent:
                 atk_team_name + " has destroyed the " + lane + " tower"
             )
     
-    
     def get_commentary(
         self,
         amount_kills: int = 0,
@@ -472,6 +476,7 @@ class MobaEvent:
         if self.show_commentary:
             print(str(self.event_time) + " " + self.event_name)
             print(self.commentary)
+
 
 class MobaEventHandler:
     def __init__(self):

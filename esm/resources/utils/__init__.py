@@ -16,12 +16,14 @@
 
 import os
 import json
+import cbor2
+from datetime import date, timezone
 
-from esm.definitions import ROOT_DIR, RES_DIR
+from esm.definitions import ROOT_DIR, DB_DIR, TEAMS_FILE
 
 
-def write_to_json(
-    contents: list, filename: str, folder: str = ROOT_DIR, res_folder: str = RES_DIR
+def write_to_file(
+    contents: list, filename: str, folder: str = ROOT_DIR, res_folder: str = DB_DIR
 ) -> None:
     file = filename
     try:
@@ -30,8 +32,12 @@ def write_to_json(
         # Maybe file creation should be in a separate function?
         file = os.path.join(res_folder, filename)  # prevents hard-coding "/" or "\"
     finally:
-        with open(file, "w") as fp:
-            json.dump(contents, fp, sort_keys=True, indent=4)
+        if filename.endswith(".json"):
+            with open(file, "w") as fp:
+                json.dump(contents, fp, sort_keys=True, indent=4)
+        elif filename.endswith(".cbor"):
+            with open(file, "wb") as fp:
+                cbor2.dump(contents, fp)
 
 
 def find_file(filename: str, folder: str = ROOT_DIR) -> str:
@@ -76,13 +82,17 @@ def get_from_file(file_name: str) -> list:
     :param file_name:
     :return:
     """
-    with open(file_name, "r", encoding="utf-8") as fp:
-        dictionary = json.load(fp)
+    if file_name.endswith(".json"):
+        with open(file_name, "r", encoding="utf-8") as fp:
+            dictionary = json.load(fp)
+    else:
+        with open(file_name, "rb") as fp:
+            dictionary = cbor2.load(fp)
 
     return dictionary
 
 
-def load_list_from_json(filepath: str, folder: str = ROOT_DIR) -> list:
+def load_list_from_file(filepath: str, folder: str = ROOT_DIR) -> list:
     """
     Reads a specified file (champions, player or team json) and
     returns the list from that file
@@ -98,13 +108,13 @@ def load_list_from_json(filepath: str, folder: str = ROOT_DIR) -> list:
         return get_from_file(file)
 
 
-def get_key_from_json(key: str = "name", file: str = "teams.json") -> list:
+def get_key_from_json(key: str = "name", file: str = TEAMS_FILE) -> list:
     """
     Gets a key from a json file. By default it is used by the GUI to get
-    names from the file teams.json, but we can repurpose that for other
+    names from the file teams.cbor, but we can repurpose that for other
     files too, such as get player names, champion names, etc...
     :param key:
     :param file:
     :return:
     """
-    return [obj[key] for obj in load_list_from_json(file)]
+    return [obj[key] for obj in load_list_from_file(file)]

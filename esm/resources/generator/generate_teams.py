@@ -20,10 +20,10 @@ from pathlib import Path
 from typing import Union
 
 from esm.core.esports.moba.team import Team
-from esm.definitions import ROOT_DIR, RES_DIR
+from esm.definitions import ROOT_DIR, DB_DIR, TEAMS_FILE
 from esm.resources.db.default_team_names import get_default_team_names
 from esm.resources.generator.generate_players import MobaPlayerGenerator
-from esm.resources.utils import write_to_json, get_list_from_file, load_list_from_json
+from esm.resources.utils import write_to_file, get_list_from_file, load_list_from_file
 
 
 class TeamGeneratorError(Exception):
@@ -37,7 +37,7 @@ class TeamGenerator:
         amount: int = 1,
         players: list = None,
         organized: bool = True,
-        file_name: str = "teams.json",
+        file_name: str = TEAMS_FILE,
     ):
         self.name = None
         self.nationality = nationality
@@ -180,11 +180,11 @@ class TeamGenerator:
 
     def get_teams_dict(self) -> None:
         """
-        Retrieves teams list based on the teams.json file
+        Retrieves teams list based on the teams file
         """
         if self.teams_dict:
             self.teams_dict.clear()
-        self.teams_dict = load_list_from_json("teams.json")
+        self.teams_dict = load_list_from_file(TEAMS_FILE)
 
     def get_roster(self, team) -> list:
         """
@@ -219,12 +219,12 @@ class TeamGenerator:
     def generate_file(
         self,
         folder: Union[str, Path] = ROOT_DIR,
-        res_folder: Union[str, Path] = RES_DIR,
+        res_folder: Union[str, Path] = DB_DIR,
     ) -> None:
         """
-        Generates the teams.json file
+        Generates the teams file
         """
-        write_to_json(self.teams_dict, self.file_name, folder, res_folder)
+        write_to_file(self.teams_dict, self.file_name, folder, res_folder)
 
 
 if __name__ == "__main__":

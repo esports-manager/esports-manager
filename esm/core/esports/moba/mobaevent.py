@@ -20,7 +20,7 @@ from typing import Union, Any
 
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.esports.moba.team import Team
-from esm.resources.utils import load_list_from_json
+from esm.resources.utils import load_list_from_file
 
 
 class MobaEvent:
@@ -453,7 +453,7 @@ class MobaEventHandler:
         """
         Initializes the event handler.
         """
-        self.events = load_list_from_json("mobaevents.json")
+        self.events = load_list_from_file("mobaevents.json")
         self.commentaries = None
         self.event = MobaEvent()
         self.enabled_events = []

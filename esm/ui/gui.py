@@ -32,6 +32,7 @@ class GUI:
         self.window = self._create_window()
     
     def _encode_icon(self) -> bytes:
+
         with open(find_file(self.icon, folder=RES_DIR), "rb") as fp:
             encoded_icon = base64.b64encode(fp.read())
 

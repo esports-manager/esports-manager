@@ -19,8 +19,8 @@ import uuid
 from pathlib import Path
 from typing import Union
 
-from esm.definitions import ROOT_DIR, RES_DIR
-from esm.resources.utils import write_to_json, get_list_from_file, load_list_from_json
+from esm.definitions import ROOT_DIR, DB_DIR, CHAMPIONS_FILE
+from esm.resources.utils import write_to_file, get_list_from_file, load_list_from_file
 from esm.core.esports.moba.champion import Champion
 
 
@@ -31,7 +31,7 @@ class ChampionGenerator:
         skill: int = None,
         lane: str = None,
         champion_dict: dict = None,
-        file_name: str = "champions.json",
+        file_name: str = CHAMPIONS_FILE,
         champion_obj: Champion = None,
         champion_names: list = None,
     ):
@@ -120,7 +120,7 @@ class ChampionGenerator:
         Retrieves champions from the list of champions. Perhaps at the point when we implement
         a database this can replace the load_list_from_json function.
         """
-        self.champions_list = load_list_from_json(self.file_name, folder)
+        self.champions_list = load_list_from_file(self.file_name, folder)
         self.champion_obj = []
         for champion in self.champions_list:
             self.name = champion["name"]
@@ -145,9 +145,9 @@ class ChampionGenerator:
     def generate_file(
         self,
         folder: Union[str, Path] = ROOT_DIR,
-        res_folder: Union[str, Path] = RES_DIR,
+        res_folder: Union[str, Path] = DB_DIR,
     ) -> None:
         """
         Generates the champion file
         """
-        write_to_json(self.champions_list, self.file_name, folder, res_folder)
+        write_to_file(self.champions_list, self.file_name, folder, res_folder)

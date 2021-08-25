@@ -125,7 +125,7 @@ class ESMMobaController:
                 self.core.teams.teams_dict,
                 self.core.champions.champions_list,
             )
-        except Exception as e:
+        except RuntimeError as e:
             self.view.print_error(e)
         
         generate_data_thread.join()

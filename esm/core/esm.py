@@ -52,10 +52,6 @@ class ESMMobaController:
             [player for player in team.list_players] for team in match_live.match.teams
         ]
 
-        # Event handler shuffles players, this keeps them in order
-        for team in players:
-            team.sort(key=lambda x: x.lane.value)
-
         data = []
         for team in players:
             team_data = [

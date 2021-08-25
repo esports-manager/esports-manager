@@ -99,7 +99,7 @@ class MobaEvent:
 
         return attack_team, def_team, chosen_lane
 
-    def choose_duel_players(self, killer: MobaPlayer, team: Team, amount: int):
+    def choose_duel_players(self, killer: MobaPlayer, team: list, amount: int):
         """
         Chooses players to duel. The killer is decided in self.calculate_kill()
         """
@@ -124,6 +124,9 @@ class MobaEvent:
                 amount = len(duel_players)
             else:
                 duel_players.append(random.choice(team))
+
+        # sort teams back to normal
+        team.sort(key=lambda x: x.lane.value)
 
         return amount, duel_players
 

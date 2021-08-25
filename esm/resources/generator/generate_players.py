@@ -23,8 +23,8 @@ from typing import Union, Tuple
 from esm.core.esports.moba.player import MobaPlayer
 from esm.resources.generator.generate_champions import ChampionGenerator
 from esm.resources.db.default_player_nick_names import get_default_player_nick_names
-from esm.definitions import ROOT_DIR, RES_DIR
-from esm.resources.utils import load_list_from_json, write_to_json, get_list_from_file
+from esm.definitions import ROOT_DIR, DB_DIR, PLAYERS_FILE
+from esm.resources.utils import load_list_from_file, write_to_file, get_list_from_file
 
 
 class MobaPlayerGeneratorError(Exception):
@@ -43,7 +43,7 @@ class MobaPlayerGenerator:
         max_age: int = 25,
         lane: int = 0,
         champions_list: list = None,
-        file_name: str = "players.json",
+        file_name: str = PLAYERS_FILE,
     ):
         if champions_list is None:
             champions_list = []
@@ -78,7 +78,7 @@ class MobaPlayerGenerator:
         self.nick_names = None
 
     def get_names(self) -> None:
-        self.names = load_list_from_json("names.json")
+        self.names = load_list_from_file("names.json")
 
     def get_nick_names(self) -> None:
         try:
@@ -91,7 +91,7 @@ class MobaPlayerGenerator:
 
     def get_nationalities(self) -> None:
         if self.names is None:
-            nationalities = load_list_from_json("names.json")
+            nationalities = load_list_from_file("names.json")
         else:
             nationalities = self.names.copy()
 
@@ -286,11 +286,11 @@ class MobaPlayerGenerator:
 
     def get_players_dict(self) -> None:
         """
-        Loads the players from the players.json file, storing on the player dictionary list
+        Loads the players from the players.cbor file, storing on the player dictionary list
         """
         if self.players_dict:
             self.players_dict.clear()
-        self.players_dict = load_list_from_json("players.json")
+        self.players_dict = load_list_from_file(PLAYERS_FILE)
 
     def get_data_from_dict(self, player=None) -> None:
         """
@@ -343,9 +343,9 @@ class MobaPlayerGenerator:
     def generate_file(
         self,
         folder: Union[str, Path] = ROOT_DIR,
-        res_folder: Union[str, Path] = RES_DIR,
+        res_folder: Union[str, Path] = DB_DIR,
     ) -> None:
         """
         Generates the players.json file
         """
-        write_to_json(self.players_dict, self.file_name, folder, res_folder)
+        write_to_file(self.players_dict, self.file_name, folder, res_folder)

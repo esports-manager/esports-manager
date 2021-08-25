@@ -13,11 +13,13 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import os
 
 import PySimpleGUI as sg
 from ..gui_components import *
 from esm.resources.utils import find_file
 from .layoutinterface import ILayout
+from esm.definitions import DB_DIR, CHAMPIONS_FILE, PLAYERS_FILE, TEAMS_FILE
 
 
 class SettingsLayout(ILayout):
@@ -40,13 +42,13 @@ class SettingsLayout(ILayout):
         languages = ["English", "Portuguese"]
 
         try:
-            ch_file = find_file("champions.json")
-            pl_file = find_file("players.json")
-            t_file = find_file("teams.json")
+            ch_file = find_file(CHAMPIONS_FILE)
+            pl_file = find_file(PLAYERS_FILE)
+            t_file = find_file(TEAMS_FILE)
         except FileNotFoundError:
-            ch_file = "champions.json"
-            pl_file = "players.json"
-            t_file = "teams.json"
+            ch_file = os.path.join(DB_DIR, CHAMPIONS_FILE)
+            pl_file = os.path.join(DB_DIR, PLAYERS_FILE)
+            t_file = os.path.join(DB_DIR, TEAMS_FILE)
 
         labels = [
             [esm_form_text("Language:")],

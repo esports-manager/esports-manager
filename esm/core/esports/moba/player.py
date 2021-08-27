@@ -177,9 +177,17 @@ class MobaPlayer(Player):
 
     def is_player_godlike(self) -> bool:
         """
-        Returns true if the player is godlike. False otherwise
+        Returns true if the player is godlike. False otherwise.
         """
-        if self.consecutive_kills > 4:
+        if 4 < self.consecutive_kills < 9:
+            return True
+        return False
+
+    def is_player_legendary(self):
+        """
+        Returns true if the player is legendary. False otherwise.
+        """
+        if self.consecutive_kills >= 9:
             return True
         return False
 

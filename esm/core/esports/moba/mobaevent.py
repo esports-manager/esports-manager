@@ -152,11 +152,16 @@ class MobaEvent:
                 self.points += 5
             if player1.is_player_godlike():
                 self.points += 10
+            if player1.is_player_legendary():
+                self.points += 20
             if player2.is_player_on_killing_spree():
                 self.points += 10
                 player2.consecutive_kills = 0
             if player2.is_player_godlike():
                 self.points += 20
+                player2.consecutive_kills = 0
+            if player2.is_player_legendary():
+                self.points += 50
                 player2.consecutive_kills = 0
             player1.points += self.points
             player1.consecutive_kills += 1
@@ -225,7 +230,7 @@ class MobaEvent:
 
         if killed_players:
             self.get_commentary(
-                amount_kills, killer=killer.nick_name, killed_names=killed_players
+                amount_kills, killer=killer, killed_names=killed_players
             )
 
     def calculate_jungle(self, team1: Team, team2: Team, jungle: str):
@@ -376,21 +381,35 @@ class MobaEvent:
     ):
         names = self.list_names(killed_names)
         if amount_kills == 2:
-            self.commentary = killer + " got a Double Kill!"
+            self.commentary = killer.nick_name + " got a Double Kill!"
         elif amount_kills == 3:
-            self.commentary = killer + " got a Triple Kill!"
+            self.commentary = killer.nick_name + " got a Triple Kill!"
         elif amount_kills == 4:
-            self.commentary = killer + " got a QUADRA KILL!"
+            self.commentary = killer.nick_name + " got a QUADRA KILL!"
         elif amount_kills == 5:
-            self.commentary = killer + " got a PENTAKILL! HE IS UNSTOPPABLE!"
+            self.commentary = killer.nick_name + " got a PENTAKILL!"
 
         if amount_kills != 0:
             if self.commentary is not None:
                 self.commentary = (
-                    self.commentary + "\n" + killer + " has slain: " + names
+                    self.commentary + "\n" + killer.nick_name + " has slain: " + names
                 )
             else:
-                self.commentary = killer + " has slain " + names
+                self.commentary = killer.nick_name + " has slain " + names
+
+        if self.commentary is not None:
+            if killer.is_player_godlike():
+                self.commentary = (
+                    self.commentary + "\n" + killer.nick_name + " is GODLIKE!"
+                )
+            if killer.is_player_on_killing_spree():
+                self.commentary = (
+                    self.commentary + "\n" + killer.nick_name + " is on a KILLING SPREE!"
+                )
+            if killer.is_player_legendary():
+                self.commentary = (
+                    self.commentary + "\n" + killer.nick_name + " is LEGENDARY!!"
+                )
     
     def _get_jg_commentary(
         self,
@@ -444,7 +463,7 @@ class MobaEvent:
         amount_kills: int = 0,
         atk_team_name: str = "",
         def_team_name: str = "",
-        killer: str = "",
+        killer: MobaPlayer = None,
         defended: bool = False,
         killed_names: Union[list, str] = "",
         lane: str = "",

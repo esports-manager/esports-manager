@@ -172,18 +172,17 @@ class MobaEvent:
     def calculate_assists(self, team: list, killer: MobaPlayer, amount_kills: int):
         will_there_be_assists = random.randint(0, 1)
         if will_there_be_assists == 1:
-            aux_team = team.copy()
-            aux_team.remove(killer)
 
             for i in range(amount_kills):
                 # Get players to assign assists
                 assists = random.choices(
-                    aux_team, [player.get_player_total_skill() for player in aux_team]
+                    team, [player.get_player_total_skill() for player in team]
                 )
 
                 for player in assists:
-                    player.assists += 1
-                    player.points += self.points / len(assists)
+                    if player is not killer:
+                        player.assists += 1
+                        player.points += self.points / len(assists)
 
     def calculate_kill(self, team1: Team, team2: Team):
         """

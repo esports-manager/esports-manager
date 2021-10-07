@@ -70,16 +70,9 @@ class ChampionGenerator:
 
         Also, Teemo is never a good champion
         """
-        if self.name == "TEEMO":
-            self.skill = 30
-        else:
-            self.skill = random.gauss(55, 20)
-
-        if self.skill >= 90:
-            self.skill = 90
-        if self.skill <= 30:
-            self.skill = 30
-
+        self.skill = 30 if self.name == "TEEMO" else random.gauss(55, 20)
+        self.skill = min(self.skill, 90)
+        self.skill = max(self.skill, 30)
         # converting skill to int
         self.skill = int(self.skill)
 

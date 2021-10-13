@@ -166,7 +166,7 @@ def esm_table(
     headings=None,
     auto_size_columns=True,
     justification="left",
-    num_rows=15,
+    num_rows=6,
     display_row_numbers=False,
     font=(default_font, default_font_size),
     enable_events=True,

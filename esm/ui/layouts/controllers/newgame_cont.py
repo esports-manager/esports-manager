@@ -23,5 +23,20 @@ class NewGameController(IController):
         super().__init__(controller)
         self.layout = NewGameLayout(self)
     
-    def update(self, *args, **kwargs):
-        pass
+    def update(self, event, values, make_screen):
+        if event == "ng_cancel_btn":
+            make_screen("new_game_screen", "main_screen")
+
+        elif event == "ng_next_btn":
+            if (
+                    values["create_manager_name"] != ""
+                    and values["create_manager_nickname"] != ""
+                    and values["create_manager_display_calendar"] != ""
+            ):
+                if values["new_game_checkbox"]:
+                    self.controller.generate_all_data()
+                
+                make_screen("new_game_screen", "team_select_screen")
+            else:
+                print("This can't be empty!")
+        

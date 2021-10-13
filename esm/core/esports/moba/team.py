@@ -163,6 +163,11 @@ class Team:
 
         return self._points
 
+    def get_team_overall(self) -> int:
+        return int(sum(
+            player.skill for player in self.list_players
+        ) / len(self.list_players))
+    
     @property
     def player_overall(self) -> int:
         """

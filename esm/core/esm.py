@@ -43,6 +43,7 @@ class ESMMobaController:
         self.initialize_controllers()
         self.core = MobaModel()
         self.view = View(self)
+        self.manager = None
     
     @staticmethod
     def team_data(match_live=None):

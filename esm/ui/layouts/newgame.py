@@ -41,42 +41,37 @@ class NewGameLayout(ILayout):
         """
 
         label_pad = (0, 5)
-        esports = ["MOBA", "RTS", "FPS"]
+        esports = ["MOBA"]
         seasons = ["2020"]
         mp = MobaPlayerGenerator()
         mp.get_nationalities()
         nationalities = mp.nationalities
 
         labels = [
-            [esm_form_text("Game Name:", pad=label_pad)],
-            [esm_form_text("Season: ", pad=label_pad)],
-            [esm_form_text("eSport: ", pad=label_pad)],
-            [esm_form_text("")],
-        ]
-
-        labels_create_manager = [
+            [esm_form_text("Save game name: ", pad=label_pad)],
             [esm_form_text("Name: ", pad=label_pad)],
             [esm_form_text("Nickname: ", pad=label_pad)],
             [esm_form_text("Birthday: ", pad=label_pad)],
             [esm_form_text("Nationality: ", pad=label_pad)],
+            [esm_form_text("Starting season: ", pad=label_pad)],
+            [esm_form_text("eSport: ", pad=label_pad)],
+            [esm_form_text("Database option: ", pad=label_pad)],
         ]
 
         inputs = [
             [esm_input_text("Game1", key="ng_gamename_input")],
+            [esm_input_text("John", key="create_manager_name")],
+            [esm_input_text("Doe", key="create_manager_nickname")],
+            [esm_input_text("", key="create_manager_display_calendar", size=(23, 1)),
+             esm_calendar_button("Choose date",
+                                 size=(10, 1),
+                                 key="create_manager_calendar")],
+            [esm_input_combo(nationalities, default_value=nationalities[9], key="create_manager_nationality")],
             [esm_input_combo(seasons, default_value=seasons[0], key="new_game_season")],
             [esm_input_combo(esports, default_value=esports[0], key="new_game_esport")],
             [esm_checkbox("Generate new database", key="new_game_checkbox")],
         ]
 
-        inputs_create_manager = [
-            [esm_input_text("", key="create_manager_name")],
-            [esm_input_text("", key="create_manager_nickname")],
-            [esm_input_text("", key="create_manager_display_calendar", size=(15, 1)),
-             esm_calendar_button("Choose a date of Birth",
-                                 size=(18, 1),
-                                 key="create_manager_calendar")],
-            [esm_input_combo(nationalities, default_value=nationalities[0], key="create_manager_nationality")],
-        ]
 
         return [
             [esm_title_text("New Game\n")],
@@ -84,31 +79,11 @@ class NewGameLayout(ILayout):
                 sg.Column(labels, element_justification="right"),
                 sg.Column(inputs, element_justification="left"),
             ],
-            [esm_form_text("")],
-            [esm_title_text("Create Manager\n", font=(bold_font, "15"))],
-            [
-                sg.Column(labels_create_manager, element_justification="right"),
-                sg.Column(inputs_create_manager, element_justification="left"),
-            ],
             [
                 esm_button("Next", key="ng_next_btn"),
                 esm_button("Cancel", key="ng_cancel_btn"),
             ],
         ]
 
-    def update(self, event, values, make_screen) -> None:
-        if event == "ng_cancel_btn":
-            make_screen("new_game_screen", "main_screen")
-
-        elif event == "ng_next_btn":
-            if (
-                    values["create_manager_name"] != ""
-                    and values["create_manager_nickname"] != ""
-                    and values["create_manager_birthday"] != ""
-            ):
-                if values["new_game_checkbox"]:
-                    print("Generate new database")
-                
-                make_screen("new_game_screen", "team_select_screen")
-            else:
-                print("This can't be empty!")
+    def update(self, *args, **kwargs) -> None:
+        self.controller.update(*args, **kwargs)

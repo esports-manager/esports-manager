@@ -53,18 +53,11 @@ class TeamSelectLayout(ILayout):
             # TODO: IMPLEMENT REGIONS COMBO BOX
             # [esm_input_combo(values=regions, key="teamselect_regions_combo")],
             [
-                esm_table(values=value, headings=headings_teams, key="teamselect_team_table", enable_events=True),
-                esm_table(values=[["   ", "Select your team", "   "]], headings=headings_players, key="teamselect_players_table", enable_events=True),
+                esm_table(values=value, num_rows=20, headings=headings_teams, key="teamselect_team_table", enable_events=True),
+                esm_table(values=[["   ", "Select your team", "   "]], num_rows=20, headings=headings_players, key="teamselect_players_table", enable_events=True),
             ],
             [esm_button("Select", key="teamselect_select_btn"), esm_button("Cancel", key="teamselect_cancel_btn")],
         ]
 
-    def update(self, event, values, make_screen) -> None:
-        # Click the Select
-        if event == "teamselect_select_btn":
-            if values["teamselect_team_table"] is not None:
-                pass
-
-        # Click the Cancel button
-        elif event == "teamselect_cancel_btn":
-            make_screen("team_select_screen", "new_game_screen")
+    def update(self, *args, **kwargs) -> None:
+        self.controller.update(*args, **kwargs)

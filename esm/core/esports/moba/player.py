@@ -128,7 +128,7 @@ class MobaPlayer(Player):
         """
         lane = self.get_best_lane()
         self.lane = lane
-
+    
     def get_curr_lane_multiplier(self) -> int:
         """
         Gets the current lane multiplier in-game, this will define how good a player is on that particular lane.
@@ -171,25 +171,19 @@ class MobaPlayer(Player):
         """
         Returns true if the player is on killing spree. False otherwise.
         """
-        if 2 <= self.consecutive_kills <= 4:
-            return True
-        return False
+        return 2 <= self.consecutive_kills <= 4
 
     def is_player_godlike(self) -> bool:
         """
         Returns true if the player is godlike. False otherwise.
         """
-        if 4 < self.consecutive_kills < 9:
-            return True
-        return False
+        return 4 < self.consecutive_kills < 9
 
     def is_player_legendary(self):
         """
         Returns true if the player is legendary. False otherwise.
         """
-        if self.consecutive_kills >= 9:
-            return True
-        return False
+        return self.consecutive_kills >= 9
 
     def __repr__(self):
         return "{0} {1}".format(self.__class__.__name__, self.nick_name)

@@ -32,11 +32,9 @@ class TeamSelectController(IController):
         self.teams = None
 
     def get_teams(self):
-        players_list = MobaPlayerGenerator()
-        players_list.get_players_objects()
-
-        self.teams = TeamGenerator(players=players_list.players)
-        self.teams.get_teams_objects()
+        self.controller.check_files()
+        self.teams = self.controller.core.teams
+        self.controller.core.get_teams()
     
     def get_team_list(self):
         return [
@@ -76,3 +74,5 @@ class TeamSelectController(IController):
                 self.teams.teams[team].is_players_team = True
                 self.controller.manager = manager
                 # make_screen("team_select_screen", "game_screen")
+        else:
+            self.teams = None

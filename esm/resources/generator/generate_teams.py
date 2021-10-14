@@ -81,6 +81,17 @@ class TeamGenerator:
         Placeholder for a future logo generator
         """
         pass
+    
+    def get_players_list(self) -> None:
+        if not self.player_list or self.player_list is None:
+            self.player_list = MobaPlayerGenerator()
+            try:
+                self.player_list.get_players_objects()
+                self.player_list = self.player_list.players
+            except Exception:
+                self.player_list.lane = 0
+                self.player_list.generate_players(self.amount * 5)
+                self.player_list = self.player_list.players
 
     def generate_roster(self) -> None:
         """
@@ -90,15 +101,7 @@ class TeamGenerator:
         Otherwise, it selects random players, regardless of their lane specialty.
         """
         self.roster = []
-        if self.player_list is None:
-            self.player_list = MobaPlayerGenerator()
-            try:
-                self.player_list.get_players_objects()
-                self.player_list = self.player_list.players
-            except Exception:
-                self.player_list.lane = 0
-                self.player_list.generate_players(self.amount * 5)
-                self.player_list = self.player_list.players
+        self.get_players_list()
 
         lane = 0
         for _ in range(5):
@@ -120,14 +123,10 @@ class TeamGenerator:
         """
         Gets the IDs of each player to save on the dictionary
         """
-        r_ids = []
-        if self.roster is not None and self.roster != []:
-            for player in self.roster:
-                r_ids.append(player.player_id)
-        else:
+        if self.roster is None or self.roster == []:
             raise TeamGeneratorError("Player roster is invalid!")
 
-        return r_ids
+        return [player.player_id for player in self.roster]
 
     def get_dictionary(self) -> None:
         """
@@ -184,6 +183,7 @@ class TeamGenerator:
         """
         if self.teams_dict:
             self.teams_dict.clear()
+        self.get_players_list()
         self.teams_dict = load_list_from_file(TEAMS_FILE)
 
     def get_roster(self, team) -> list:
@@ -209,6 +209,7 @@ class TeamGenerator:
             self.teams.clear()
         if not self.teams_dict:
             self.get_teams_dict()
+        self.get_players_list()
         for team in self.teams_dict:
             self.team_id = team["id"]
             self.name = team["name"]

@@ -50,13 +50,14 @@ class SettingsLayout(ILayout):
             pl_file = os.path.join(DB_DIR, PLAYERS_FILE)
             t_file = os.path.join(DB_DIR, TEAMS_FILE)
 
+        label_pad = (0, 5)
         labels = [
-            [esm_form_text("Language:")],
-            [esm_form_text("Font scale:")],
-            [esm_form_text("Champions file:")],
-            [esm_form_text("Players file:")],
-            [esm_form_text("Teams file:")],
-            [esm_form_text("Generate new files:")],
+            [esm_form_text("Language:", pad=label_pad)],
+            [esm_form_text("Font scale:", pad=label_pad)],
+            [esm_form_text("Champions file:", pad=label_pad)],
+            [esm_form_text("Players file:", pad=label_pad)],
+            [esm_form_text("Teams file:", pad=label_pad)],
+            [esm_form_text("Generate new files:", pad=label_pad)],
         ]
 
         controls = [

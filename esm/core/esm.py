@@ -112,20 +112,20 @@ class ESMMobaController:
         Starts a thread to generate data and show a window progress bar.
         """
         self.reset_generators()
-        try:
-            generate_data_thread = threading.Thread(
-                target=self.core.generate_all, daemon=True
-            )
-            generate_data_thread.start()
-            self.view.print_generate_data_window(
-                self.core.players.players_dict,
-                self.core.teams.teams_dict,
-                self.core.champions.champions_list,
-            )
-        except RuntimeError as e:
-            self.view.print_error(e)
-        
-        generate_data_thread.join()
+        self.core.generate_all()
+        # try:
+        #     generate_data_thread = threading.Thread(
+        #         target=self.core.generate_all, daemon=True
+        #     )
+        #     generate_data_thread.start()
+        #     # self.view.print_generate_data_window(
+        #     #     self.core.players.players_dict,
+        #     #     self.core.teams.teams_dict,
+        #     #     self.core.champions.champions_list,
+        #     # )
+        #     generate_data_thread.join()
+        # except RuntimeError as e:
+        #     self.view.print_error(e)
 
     def check_files(self) -> None:
         try:

@@ -32,6 +32,7 @@ class TeamSelectController(IController):
         self.teams = None
 
     def get_teams(self):
+        self.controller.reset_generators()
         self.controller.check_files()
         self.teams = self.controller.core.teams
         self.controller.core.get_teams()
@@ -60,6 +61,8 @@ class TeamSelectController(IController):
 
             # Click the Cancel button
             if event == "teamselect_cancel_btn":
+                self.teams = None
+                self.controller.reset_generators()
                 make_screen("team_select_screen", "new_game_screen")
             
             if event == "teamselect_next_btn":
@@ -74,5 +77,3 @@ class TeamSelectController(IController):
                 self.teams.teams[team].is_players_team = True
                 self.controller.manager = manager
                 # make_screen("team_select_screen", "game_screen")
-        else:
-            self.teams = None

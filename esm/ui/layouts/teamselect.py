@@ -33,7 +33,6 @@ class TeamSelectLayout(ILayout):
             element_justification="center",
         )
 
-    
     def layout(self) -> list:
         headings_teams = [
             "Name",
@@ -46,14 +45,14 @@ class TeamSelectLayout(ILayout):
             "Skill"
         ]
 
-        value = [["TEAMNAMES1234567890", "100"]]
+        value = [["                                ", "   "]]
 
         return [
             [esm_title_text("Select your team\n")],
             # TODO: IMPLEMENT REGIONS COMBO BOX
             # [esm_input_combo(values=regions, key="teamselect_regions_combo")],
             [
-                esm_table(values=value, num_rows=20, headings=headings_teams, key="teamselect_team_table", enable_events=True),
+                esm_table(values=value, display_row_numbers=True, num_rows=20, headings=headings_teams, key="teamselect_team_table", enable_events=True),
                 esm_table(values=[["   ", "Select your team", "   "]], num_rows=20, headings=headings_players, key="teamselect_players_table", enable_events=True),
             ],
             [esm_button("Select", key="teamselect_select_btn"), esm_button("Cancel", key="teamselect_cancel_btn")],

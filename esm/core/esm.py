@@ -29,7 +29,7 @@ class ESMMobaController:
     """
     The ESM class corresponds to a Controller on a traditional MVC model. Not a full controller yet.
     """
-    def __init__(self, amount_players=400):
+    def __init__(self, amount_players=100):
         self._amount_players = amount_players
         self._amount_test_matches = 1000
         self.is_match_running = False

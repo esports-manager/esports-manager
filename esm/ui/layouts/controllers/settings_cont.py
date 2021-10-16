@@ -26,5 +26,16 @@ class SettingsController(IController):
     def generate_all_data(self) -> None:
         self.controller.generate_all_data()
 
-    def update(self, *args, **kwargs):
-        pass
+    def update(self, event, values, make_screen):
+        if event == "settings_cancel_btn":
+            make_screen("settings_screen", "main_screen")
+
+        elif event == "settings_generate_btn":
+            try:
+                value = int(values["settings_amount_input"])
+            except ValueError:
+                self.controller.amount_players = 400
+                self.controller.update_amount(400)
+            else:
+                self.controller.amount_players = value
+            self.controller.generate_all_data()

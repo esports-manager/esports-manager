@@ -29,6 +29,7 @@ class DebugChampionshipController(IController):
         self.teams = None
         self.match_details = []
         self.championship_details = []
+        self.championship_thread = None
 
     def initialize_random_championship(self):
         self.controller.reset_generators()
@@ -45,7 +46,7 @@ class DebugChampionshipController(IController):
 
     def get_default_championship_details(self):
         self.championship_details = [
-            [team.name, 0, 0, 0]
+            [team.name, team.get_team_overall(), 0, 0, 0]
             for team in self.teams
         ]
 
@@ -59,18 +60,20 @@ class DebugChampionshipController(IController):
         for detail in self.championship_details:
             if detail[0] == match.match.team1.name or detail[0] == match.match.team2.name:
                 if detail[0] == match.match.victorious_team.name:
-                    detail[1] += 1
-                    detail[3] += 3
-                else:
                     detail[2] += 1
+                    detail[4] += 3
+                else:
+                    detail[3] += 1
 
     def get_winning_team(self, match):
         for detail in self.match_details:
             if match.match.team1.name == detail[0] and match.match.team2.name == detail[1]:
                 if match.victorious_team.name == detail[0]:
                     detail[2] = detail[0]
-                else:
+                elif match.victorious_team.name == detail[1]:
                     detail[2] = detail[1]
+                else:
+                    detail[2] = "None"
 
     def play_championship(self):
         for match in self.championship.matches:
@@ -84,8 +87,13 @@ class DebugChampionshipController(IController):
             for team in match.match.teams:
                 team.reset_values()
 
+    def reset_championship(self):
+        self.championship.reset_championship()
+        self.get_default_championship_details()
+        self.get_default_match_details()
+
     def update_data_in_championship_table(self):
-        self.championship_details.sort(key=lambda x: x[3], reverse=True)
+        self.championship_details.sort(key=lambda x: x[4], reverse=True)
         self.controller.view.gui.window["debug_championship_table"].update(values=self.championship_details)
 
     def update_data_in_matches_table(self):
@@ -100,15 +108,20 @@ class DebugChampionshipController(IController):
             self.update_data_in_matches_table()
 
             if event == "debug_startchampionship_btn":
+                self.reset_championship()
                 try:
-                    championship_thread = threading.Thread(target=self.play_championship, daemon=True)
-                    championship_thread.start()
-                    self.controller.view.gui.window["debug_startchampionship_btn"].disable = True
+                    self.championship_thread = threading.Thread(target=self.play_championship, daemon=True)
+                    self.championship_thread.start()
+                    self.controller.view.gui.window["debug_startchampionship_btn"].update(disabled=True)
                 except RuntimeError as e:
                     self.controller.view.print_error(e)
 
+            if self.championship_thread is not None:
+                if not self.championship_thread.is_alive():
+                    self.controller.view.gui.window["debug_startchampionship_btn"].update(disabled=False)
+
             # Click the Cancel button
-            elif event == "debug_championshipcancel_btn":
+            if event == "debug_championshipcancel_btn":
                 make_screen("debug_championship_screen", "main_screen")
         else:
             self.championship = None

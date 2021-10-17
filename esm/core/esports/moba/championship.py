@@ -50,6 +50,10 @@ class Championship:
 
         random.shuffle(self.matches)
 
+    def reset_championship(self):
+        for match in self.matches:
+            match.reset_match()
+
     def count_matches_per_team(self):
         matches_per_team = []
 

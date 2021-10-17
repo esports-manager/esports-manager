@@ -36,6 +36,7 @@ class DebugChampionshipLayout(ILayout):
     def layout(self) -> list:
         headings_championship_table = [
             "Team Name",
+            "Skill",
             "Wins",
             "Losses",
             "Points",
@@ -50,7 +51,7 @@ class DebugChampionshipLayout(ILayout):
         championship_table_column = [
             [esm_form_text("Debug Championhsip")],
             [
-                esm_table([["TEAM1NAME123456789", "00", "00", "0000"]],
+                esm_table([["TEAM1NAME123456789", "000", "00", "00", "0000"]],
                           num_rows=20,
                           display_row_numbers=True,
                           headings=headings_championship_table,

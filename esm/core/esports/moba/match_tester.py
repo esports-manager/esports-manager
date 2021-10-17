@@ -99,7 +99,7 @@ class MatchTester:
 if __name__ == '__main__':
     from esm.core.core import MobaModel
 
-    core = MobaModel()
+    core = MobaModel(50)
     core.check_files()
     core.get_champions()
     core.get_players()

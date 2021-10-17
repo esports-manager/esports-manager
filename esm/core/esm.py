@@ -29,7 +29,7 @@ class ESMMobaController:
     """
     The ESM class corresponds to a Controller on a traditional MVC model. Not a full controller yet.
     """
-    def __init__(self, amount_players=100):
+    def __init__(self, amount_players=50):
         self._amount_players = amount_players
         self._amount_test_matches = 1000
         self.is_match_running = False
@@ -41,7 +41,7 @@ class ESMMobaController:
         self.modules = None
         init_theme()
         self.initialize_controllers()
-        self.core = MobaModel()
+        self.core = MobaModel(self.amount_players)
         self.view = View(self)
         self.manager = None
     
@@ -91,6 +91,7 @@ class ESMMobaController:
     def initialize_controllers(self):
         debug_cont.DebugController(self)
         debugmatch_cont.DebugMatchController(self)
+        debug_championship_controller.DebugChampionshipController(self)
         loadgame_cont.LoadGameController(self)
         mainscreen_cont.MainScreenController(self)
         match_tester_cont.MatchTesterController(self)
@@ -184,7 +185,7 @@ class ESMMobaController:
             )
             self.match_tester_thread.start()
             self.view.disable_match_tester_buttons()
-        except Exception as e:
+        except RuntimeError as e:
             self.view.print_error(e)
 
     def start_match_sim_thread(self) -> None:
@@ -194,7 +195,7 @@ class ESMMobaController:
             )
             self.match_thread.start()
             self.view.disable_debug_buttons()
-        except Exception as e:
+        except RuntimeError as e:
             self.view.print_error(e)
 
     def app(self) -> None:

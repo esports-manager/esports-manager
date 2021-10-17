@@ -40,8 +40,8 @@ class MatchLive:
 
     def __init__(
         self, match: Match,
-        show_commentary: bool,
-        match_speed: int,
+        show_commentary: bool = True,
+        match_speed: int = 1,
         simulate: bool = True,
         ban_per_team: int = 5,
         difficulty_level: int = 1,

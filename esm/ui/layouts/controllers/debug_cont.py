@@ -30,6 +30,9 @@ class DebugController(IController):
         elif event == "debug_cancelmain_btn":
             make_screen("debug_game_mode_screen", "main_screen")
 
+        elif event == "debug_championship_btn":
+            make_screen("debug_game_mode_screen", "debug_championship_screen")
+
         elif event == "debug_picksbans_btn":
             self.controller.initialize_random_debug_match(False)
             make_screen("debug_game_mode_screen", "debug_picks_bans_screen")

@@ -331,8 +331,6 @@ class MobaPlayerGenerator:
         Creates players objects based on the player dictionary
         """
         self.players = []
-        if self.players:
-            self.players.clear()
         if not self.players_dict:
             self.get_players_dict()
         for player in self.players_dict:

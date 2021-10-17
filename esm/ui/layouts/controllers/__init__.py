@@ -17,6 +17,7 @@
 __all__ = [
     "debug_cont",
     "debugmatch_cont",
+    "debug_championship_controller",
     "newgame_cont",
     "loadgame_cont",
     "pickteam_cont",

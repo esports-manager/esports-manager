@@ -13,6 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import gc
 import uuid
 import threading
 
@@ -43,6 +44,14 @@ class DebugChampionshipController(IController):
         self.get_default_match_details()
         self.update_data_in_matches_table()
         self.update_data_in_championship_table()
+
+    def reset_details(self):
+        self.championship_details = [
+            ["TEAM1NAME123456789", "000", "00", "00", "000"]
+        ]
+        self.match_details = [
+            ["TEAM1NAME123456789", "TEAMNAME123456789", "None"]
+        ]
 
     def get_default_championship_details(self):
         self.championship_details = [
@@ -84,8 +93,9 @@ class DebugChampionshipController(IController):
             self.get_winning_team(match)
             self.assign_win_and_loss_in_championship_table(match)
 
-            for team in match.match.teams:
-                team.reset_values()
+            # Using deepcopies of team objects, we don't need to reset team values anymore
+            # for team in match.match.teams:
+            #     team.reset_values()
 
     def reset_championship(self):
         self.championship.reset_championship()
@@ -122,6 +132,9 @@ class DebugChampionshipController(IController):
 
             # Click the Cancel button
             if event == "debug_championshipcancel_btn":
+                self.controller.reset_generators()
+                self.reset_details()
+                gc.collect()
                 make_screen("debug_championship_screen", "main_screen")
         else:
             self.championship = None

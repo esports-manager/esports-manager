@@ -15,6 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import random
 import uuid
+import copy
 
 from esm.core.esports.moba.match import Match
 from esm.core.esports.moba.match_live import MatchLive
@@ -42,7 +43,7 @@ class Championship:
             for opp_team in opp_teams:
                 self.matches.append(
                     MatchLive(
-                        Match(uuid.uuid4(), self.championship_id, team, opp_team),
+                        Match(uuid.uuid4(), self.championship_id, copy.deepcopy(team), copy.deepcopy(opp_team)),
                         show_commentary=False,
                         simulate=False,
                     )

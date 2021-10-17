@@ -35,9 +35,7 @@ class LoadGameLayout(ILayout):
 
     def layout(self):
         saved_games = [
-            "Saved Game 1",
-            "Saved Game 2",
-            "Saved Game 3",
+            "No save games encountered",
         ]
 
         size_btn = (10, 1)

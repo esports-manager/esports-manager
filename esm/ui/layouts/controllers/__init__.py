@@ -24,7 +24,6 @@ __all__ = [
     "picksbans_cont",
     "mainscreen_cont",
     "settings_cont",
-    "createmanager_cont",
     "match_tester_cont",
     "teamselect_cont",
 ]

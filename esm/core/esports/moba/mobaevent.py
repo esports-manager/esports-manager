@@ -541,12 +541,11 @@ class MobaEventHandler:
                     if event in self.enabled_events:
                         self.enabled_events.remove(event)
                     event["spawn_time"] += event["cooldown"]
-                else:
-                    if (
+                elif (
                         game_time >= event["spawn_time"]
                         and event not in self.enabled_events
                     ):
-                        self.get_enabled_events([event["name"]])
+                    self.get_enabled_events([event["name"]])
 
     def remove_enabled_event(self, name):
         """

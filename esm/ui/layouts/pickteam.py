@@ -74,6 +74,5 @@ class PickTeamLayout(ILayout):
             ],
         ]
 
-    def update(self, event, values, make_screen) -> None:
-        if event == "debug_cancelteam_btn":
-            make_screen("debug_pickteam_screen", "debug_game_mode_screen")
+    def update(self, *args, **kwargs) -> None:
+        self.controller.update(*args, **kwargs)

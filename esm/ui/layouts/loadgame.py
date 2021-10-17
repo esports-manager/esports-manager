@@ -57,6 +57,5 @@ class LoadGameLayout(ILayout):
             ],
         ]
 
-    def update(self, event, values, make_screen):
-        if event == "load_game_cancel_btn":
-            make_screen("load_game_screen", "main_screen")
+    def update(self, *args, **kwargs):
+        self.controller.update(*args, **kwargs)

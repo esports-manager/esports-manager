@@ -43,7 +43,7 @@ class Championship:
             for opp_team in opp_teams:
                 self.matches.append(
                     MatchLive(
-                        Match(uuid.uuid4(), self.championship_id, copy.deepcopy(team), copy.deepcopy(opp_team)),
+                        Match(uuid.uuid4(), self.championship_id, team, opp_team),
                         show_commentary=False,
                         simulate=False,
                     )
@@ -59,10 +59,7 @@ class Championship:
         matches_per_team = []
 
         for team in self.teams:
-            count = 0
-            for match in self.matches:
-                if team in match.match.teams:
-                    count += 1
+            count = sum(team in match.match.teams for match in self.matches)
             matches_per_team.append([team, count])
 
         return matches_per_team

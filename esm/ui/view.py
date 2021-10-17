@@ -64,6 +64,12 @@ class View:
         for layout in self.gui.layouts:
             layout.update(*args, **kwargs)
 
+    def update_element_on_screen(self, element, **kwargs):
+        self.gui.window[element].update(**kwargs)
+
+    def get_screen_element(self, element):
+        return self.gui.window[element]
+
     def start(self):
         """
         App loop

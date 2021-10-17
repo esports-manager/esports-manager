@@ -67,7 +67,7 @@ class DebugChampionshipController(IController):
 
     def assign_win_and_loss_in_championship_table(self, match):
         for detail in self.championship_details:
-            if detail[0] == match.match.team1.name or detail[0] == match.match.team2.name:
+            if detail[0] in [match.match.team1.name, match.match.team2.name]:
                 if detail[0] == match.match.victorious_team.name:
                     detail[2] += 1
                     detail[4] += 3
@@ -93,9 +93,8 @@ class DebugChampionshipController(IController):
             self.get_winning_team(match)
             self.assign_win_and_loss_in_championship_table(match)
 
-            # Using deepcopies of team objects, we don't need to reset team values anymore
-            # for team in match.match.teams:
-            #     team.reset_values()
+            for team in match.match.teams:
+                team.reset_values()
 
     def reset_championship(self):
         self.championship.reset_championship()
@@ -104,13 +103,13 @@ class DebugChampionshipController(IController):
 
     def update_data_in_championship_table(self):
         self.championship_details.sort(key=lambda x: x[4], reverse=True)
-        self.controller.view.gui.window["debug_championship_table"].update(values=self.championship_details)
+        self.controller.update_gui_element("debug_championship_table", values=self.championship_details)
 
     def update_data_in_matches_table(self):
-        self.controller.view.gui.window["debug_matches_table"].update(values=self.match_details)
+        self.controller.update_gui_element("debug_matches_table", values=self.match_details)
 
     def update(self, event, values, make_screen):
-        if self.controller.view.gui.window["debug_championship_screen"].visible is True:
+        if self.controller.get_gui_element("debug_championship_screen").visible is True:
             if self.championship is None:
                 self.initialize_random_championship()
 
@@ -122,13 +121,15 @@ class DebugChampionshipController(IController):
                 try:
                     self.championship_thread = threading.Thread(target=self.play_championship, daemon=True)
                     self.championship_thread.start()
-                    self.controller.view.gui.window["debug_startchampionship_btn"].update(disabled=True)
+                    self.controller.update_gui_element("debug_startchampionship_btn", disabled=True)
                 except RuntimeError as e:
                     self.controller.view.print_error(e)
 
-            if self.championship_thread is not None:
-                if not self.championship_thread.is_alive():
-                    self.controller.view.gui.window["debug_startchampionship_btn"].update(disabled=False)
+            if (
+                self.championship_thread is not None
+                and not self.championship_thread.is_alive()
+            ):
+                self.controller.update_gui_element("debug_startchampionship_btn", disabled=False)
 
             # Click the Cancel button
             if event == "debug_championshipcancel_btn":

@@ -188,6 +188,12 @@ class ESMMobaController:
         except RuntimeError as e:
             self.view.print_error(e)
 
+    def update_gui_element(self, element, **kwargs):
+        self.view.update_element_on_screen(element, **kwargs)
+
+    def get_gui_element(self, element):
+        return self.view.get_screen_element(element)
+
     def start_match_sim_thread(self) -> None:
         try:
             self.match_thread = threading.Thread(

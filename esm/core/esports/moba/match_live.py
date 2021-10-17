@@ -17,6 +17,7 @@
 import random
 import uuid
 import time
+import math
 
 from typing import Union, Tuple
 
@@ -39,13 +40,13 @@ class MatchLive:
     """
 
     def __init__(
-        self, match: Match,
-        show_commentary: bool = True,
-        match_speed: int = 1,
-        simulate: bool = True,
-        ban_per_team: int = 5,
-        difficulty_level: int = 1,
-        is_player_match: bool = False
+            self, match: Match,
+            show_commentary: bool = True,
+            match_speed: int = 1,
+            simulate: bool = True,
+            ban_per_team: int = 5,
+            difficulty_level: int = 1,
+            is_player_match: bool = False
     ):
         self.match = match
         self.game_time = 0.0
@@ -76,7 +77,7 @@ class MatchLive:
 
     def check_is_player_match(self) -> bool:
         return any(team.is_players_team for team in self.match.teams)
-    
+
     def reset_teams(self) -> None:
         for team in self.match.teams:
             team.reset_values()
@@ -90,7 +91,7 @@ class MatchLive:
         """
         self.is_player_match = self.check_is_player_match()
         self.picks_bans.picks_bans()
-        
+
     def calculate_both_teams_win_prob(self) -> None:
         """
         Calculates both teams Win probabilities. This is used for internal match simulation calculations. The winning
@@ -187,6 +188,79 @@ class MatchLive:
 
         if self.simulate:
             time.sleep(self.match_speed)
+
+
+class MatchSeries:
+    def __init__(
+            self,
+            team1,
+            team2,
+            championship_id,
+            best_of=3,
+            show_commentary: bool = True,
+            match_speed: int = 1,
+            simulate: bool = True,
+            ban_per_team: int = 5,
+            difficulty_level: int = 1,
+            is_player_match: bool = False
+    ):
+        self.championship_id = championship_id
+        self.team1 = team1
+        self.team2 = team2
+        self.best_of = best_of
+        self.drawable = self.best_of % 2 == 0
+        # How many wins a team must have to be declared winner
+        if not self.drawable:
+            self.required_wins = math.ceil(self.best_of / 2)
+        else:
+            self.required_wins = math.ceil(self.best_of / 2) + 1
+        self.matches = []
+        self.team_wins = [0, 0]
+
+        # MatchLive related
+        self.show_commentary = show_commentary
+        self.match_speed = match_speed
+        self.simulate = simulate
+        self.is_player_match = is_player_match
+        self.ban_per_team = ban_per_team
+        self.difficulty_level = difficulty_level
+
+    def is_series_over(self):
+        if len(self.matches) == self.best_of:
+            return True
+
+        return self.required_wins in self.team_wins
+
+    def get_winning_team(self):
+        if self.team_wins[0] > self.team_wins[1]:
+            return self.team1
+        elif self.team_wins[1] > self.team_wins[0]:
+            return self.team2
+        else:
+            return self.team1, self.team2
+
+    def get_matches(self):
+        if not self.is_series_over():
+            teams = [self.team1, self.team2]
+            # Randomly assign teams to a side
+            random.shuffle(teams)
+            self.matches.append(
+                MatchLive(
+                    Match(uuid.uuid4(), self.championship_id, teams[0], teams[1]),
+                    self.show_commentary,
+                    self.match_speed,
+                    self.simulate,
+                    self.ban_per_team,
+                    self.difficulty_level,
+                    self.is_player_match,
+                )
+            )
+
+    def assign_match_winner(self, match):
+        if match.victorious_team.name == self.team1.name:
+            self.team_wins[0] += 1
+        else:
+            self.team_wins[1] += 1
 
 
 def initialize_match(team1, team2, ch_id) -> MatchLive:

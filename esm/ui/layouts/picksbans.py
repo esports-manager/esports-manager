@@ -101,6 +101,5 @@ class PicksBansLayout(ILayout):
             ],
         ]
 
-    def update(self, event, values, make_screen) -> None:
-        if event == "pickban_cancel_btn":
-            make_screen("debug_picks_bans_screen", "debug_game_mode_screen")
+    def update(self, *args, **kwargs) -> None:
+        self.controller.update(*args, **kwargs)

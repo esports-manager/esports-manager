@@ -32,9 +32,9 @@ class MobaModel:
     """
     The Core module corresponds to a Model on a traditional MVC model.
     """
-    def __init__(self, amount_players=400):
-        self.amount_players = amount_players
-        self.amount_teams = math.floor(self.amount_players / 5)
+    def __init__(self, amount_players):
+        self._amount_players = amount_players
+        self._amount_teams = math.floor(self.amount_players / 5)
         self.champions = ChampionGenerator()
         self.players = MobaPlayerGenerator()
         self.teams = TeamGenerator()
@@ -45,6 +45,19 @@ class MobaModel:
         self.match_live = None
 
         self.championship = None
+
+    @property
+    def amount_players(self):
+        return self._amount_players
+
+    @amount_players.setter
+    def amount_players(self, amount):
+        self._amount_players = amount
+
+    @property
+    def amount_teams(self):
+        self._amount_teams = math.floor(self.amount_players / 5)
+        return self._amount_teams
 
     def reset_generators(self):
         self.champions = ChampionGenerator()
@@ -84,7 +97,7 @@ class MobaModel:
         return self.champions.champions_obj
 
     def initialize_match(self, championship_id, team1, team2) -> None:
-        self.match = Match(uuid.uuid4().int, championship_id=championship_id, team1=team1, team2=team2)
+        self.match = Match(uuid.uuid4(), championship_id=championship_id, team1=team1, team2=team2)
 
     def initialize_match_live(
         self, match, show_commentary=True, match_speed=1, simulate=True

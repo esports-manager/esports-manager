@@ -170,6 +170,7 @@ def esm_table(
     display_row_numbers=False,
     font=(default_font, default_font_size),
     enable_events=True,
+    row_colors=None,
 ):
     return sg.Table(
         values=values,
@@ -181,6 +182,7 @@ def esm_table(
         enable_events=enable_events,
         display_row_numbers=display_row_numbers,
         font=font,
+        row_colors=row_colors
     )
 
 

@@ -13,8 +13,8 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-import uuid
+from typing import Union
+from uuid import UUID
 
 from esm.core.esports.moba.team import Team
 
@@ -25,7 +25,13 @@ class Match:
     the user's team or not.
     """
 
-    def __init__(self, match_id: int, championship_id: int, team1: Team, team2: Team):
+    def __init__(
+            self,
+            match_id: Union[UUID, int],
+            championship_id: Union[UUID, int],
+            team1: Team,
+            team2: Team,
+    ):
         """
         Initializes elements of the match
         :param match_id: match ID

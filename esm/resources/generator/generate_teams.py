@@ -205,8 +205,6 @@ class TeamGenerator:
         Retrieves champions objects based on teams list dict
         """
         self.teams = []
-        if self.teams:
-            self.teams.clear()
         if not self.teams_dict:
             self.get_teams_dict()
         self.get_players_list()

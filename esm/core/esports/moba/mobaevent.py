@@ -326,23 +326,24 @@ class MobaEvent:
             )
 
     def calculate_nexus(self, team1: Team, team2: Team, which_nexus: Union[Team, None]):
-        if which_nexus == team1:
-            atk_team = team2
-            def_team = team1
-        elif which_nexus == team2:
-            atk_team = team1
-            def_team = team2
-        else:
-            # gets which team is more likely to attack due to the skill lvl
-            atk_team, def_team = self._get_probable_team(team1, team2)
+        if which_nexus is not None:
+            if which_nexus == team1:
+                atk_team = team2
+                def_team = team1
+            elif which_nexus == team2:
+                atk_team = team1
+                def_team = team2
+            else:
+                # gets which team is more likely to attack due to the skill lvl
+                atk_team, def_team = self._get_probable_team(team1, team2)
 
-        prevailing = random.choices(
-            [atk_team, def_team], [atk_team.total_skill, def_team.total_skill]
-        )[0]
+            prevailing = random.choices(
+                [atk_team, def_team], [atk_team.total_skill, def_team.total_skill]
+            )[0]
 
-        if prevailing == atk_team:
-            def_team.nexus = 0
-            self.get_commentary(atk_team_name=prevailing.name)
+            if prevailing == atk_team:
+                def_team.nexus = 0
+                self.get_commentary(atk_team_name=prevailing.name)
 
     def calculate_event(self, team1: Team, team2: Team, which_nexus: Union[Team, None]):
         """
@@ -540,12 +541,11 @@ class MobaEventHandler:
                     if event in self.enabled_events:
                         self.enabled_events.remove(event)
                     event["spawn_time"] += event["cooldown"]
-                else:
-                    if (
+                elif (
                         game_time >= event["spawn_time"]
                         and event not in self.enabled_events
                     ):
-                        self.get_enabled_events([event["name"]])
+                    self.get_enabled_events([event["name"]])
 
     def remove_enabled_event(self, name):
         """

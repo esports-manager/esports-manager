@@ -17,13 +17,13 @@
 __all__ = [
     "debug_cont",
     "debugmatch_cont",
+    "debug_championship_controller",
     "newgame_cont",
     "loadgame_cont",
     "pickteam_cont",
     "picksbans_cont",
     "mainscreen_cont",
     "settings_cont",
-    "createmanager_cont",
     "match_tester_cont",
     "teamselect_cont",
 ]

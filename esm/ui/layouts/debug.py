@@ -69,6 +69,14 @@ class DebugLayout(ILayout):
             ],
             [
                 esm_button(
+                    "Debug Championship",
+                    key="debug_championship_btn",
+                    pad=button_pad,
+                    size=button_size,
+                )
+            ],
+            [
+                esm_button(
                     "Match Tester",
                     key="debug_matchtester_btn",
                     pad=button_pad,

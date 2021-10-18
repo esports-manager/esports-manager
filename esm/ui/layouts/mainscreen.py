@@ -15,6 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import PySimpleGUI as sg
+from esm.definitions import DEBUG
 from ..gui_components import *
 from esm.resources.utils import find_file
 from .layoutinterface import ILayout
@@ -39,16 +40,21 @@ class MainScreenLayout(ILayout):
         button_pad = (0, 10)
         button_size = (20, 2)
 
-        return [
-            [sg.Image(logo_path, pad=(50, 0))],
-            [
+        if DEBUG:
+            debug_button = [
                 esm_button(
                     "Debug Game Mode",
                     key="main_debug_btn",
                     pad=button_pad,
                     size=button_size,
                 )
-            ],
+            ]
+        else:
+            debug_button = []
+
+        return [
+            [sg.Image(logo_path, pad=(50, 0))],
+            debug_button,
             [
                 esm_button(
                     "New Game", key="main_newgame_btn", pad=button_pad, size=button_size

@@ -19,6 +19,7 @@ import threading
 from esm.core.esports.moba.match_tester import MatchTester
 from esm.core.core import MobaModel
 from esm.core.esports.moba.match_live import MatchLive
+from esm.definitions import DEBUG
 
 from esm.ui.view import View
 from esm.ui.layouts.controllers import *
@@ -89,16 +90,20 @@ class ESMMobaController:
         self._amount_players = amount
 
     def initialize_controllers(self):
-        debug_cont.DebugController(self)
-        debugmatch_cont.DebugMatchController(self)
         loadgame_cont.LoadGameController(self)
         mainscreen_cont.MainScreenController(self)
-        match_tester_cont.MatchTesterController(self)
         newgame_cont.NewGameController(self)
-        picksbans_cont.PicksBansController(self)
-        pickteam_cont.PickTeamController(self)
         settings_cont.SettingsController(self)
-        teamselect_cont.TeamSelectController(self)
+        
+        # Debug controllers
+        if DEBUG:
+            debug_cont.DebugController(self)
+            debugmatch_cont.DebugMatchController(self)
+            teamselect_cont.TeamSelectController(self)
+            picksbans_cont.PicksBansController(self)
+            pickteam_cont.PickTeamController(self)
+            match_tester_cont.MatchTesterController(self)
+
     
     def get_layouts(self):
         return [controller.layout for controller in self.controllers]

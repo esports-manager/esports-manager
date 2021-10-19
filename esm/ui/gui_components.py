@@ -264,18 +264,21 @@ def esm_multiline(
     disabled=False,
     size=(80,12),
     autoscroll=True,
+    border_width=1,
     enable_events=True,
     key=None,
     write_only=False,
     font=(default_font, default_font_size),
+    auto_refresh=True,
+    do_not_clear=True,
     reroute_stdout=False,
     reroute_stderr=False,
     reroute_cprint=False,
     echo_stdout_stderr=False,
-    justification="center",
+    justification="left",
     visible=True
 ):
-    sg.Multiline(
+    return sg.Multiline(
         default_text=default_text,
         enter_submits=enter_submits,
         disabled=disabled,
@@ -284,6 +287,9 @@ def esm_multiline(
         autoscroll=autoscroll,
         enable_events=enable_events,
         key=key,
+        border_width=border_width,
+        auto_refresh=auto_refresh,
+        do_not_clear=do_not_clear,
         write_only=write_only,
         reroute_stdout=reroute_stdout,
         reroute_stderr=reroute_stderr,

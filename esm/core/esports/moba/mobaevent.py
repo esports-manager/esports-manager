@@ -82,8 +82,8 @@ class MobaEvent:
         if not def_team.are_base_towers_exposed():
             lanes.remove("base")
 
-        probs = []
         if lanes:
+            probs = []
             for lane, value in def_team.towers.items():
                 if lane in lanes:
                     if value == 1:
@@ -147,42 +147,63 @@ class MobaEvent:
             killed = 1
 
         if killed == 1:
-            player1.kills += 1
+            
+            # Player gets more points for killing more players consecutively
             if player1.is_player_on_killing_spree():
                 self.points += 5
             if player1.is_player_godlike():
                 self.points += 10
             if player1.is_player_legendary():
                 self.points += 20
+            
+            # Shutdown gives more gold to enemy team and ends the player streak
             if player2.is_player_on_killing_spree():
                 self.points += 10
-                player2.consecutive_kills = 0
             if player2.is_player_godlike():
                 self.points += 20
-                player2.consecutive_kills = 0
             if player2.is_player_legendary():
                 self.points += 50
-                player2.consecutive_kills = 0
+            
+            # Awards points to the player that killed
             player1.points += self.points
             player1.consecutive_kills += 1
+            player1.kills += 1
+            
             player2.deaths += 1
+            player2.consecutive_kills = 0
 
-        return killed
+            return player2
+        
+        return None
 
-    def calculate_assists(self, team: list, killer: MobaPlayer, amount_kills: int):
+    def calculate_assists(self, team: list, killer: MobaPlayer):
+        # 50% chance to get assists
         will_there_be_assists = random.randint(0, 1)
+        assistance_players = []
+        
         if will_there_be_assists == 1:
+            # Higher level players are more likely to get assists
+            assists = random.choices(
+                team, [player.get_player_total_skill() for player in team]
+            )
+            
+            for player in assists:
+                if player is not killer:
+                    player.assists += 1
+                    player.points += self.points / len(assists)
+                    assistance_players.append(player)
 
-            for i in range(amount_kills):
-                # Get players to assign assists
-                assists = random.choices(
-                    team, [player.get_player_total_skill() for player in team]
-                )
+        return assistance_players
 
-                for player in assists:
-                    if player is not killer:
-                        player.assists += 1
-                        player.points += self.points / len(assists)
+    def get_kill_dict(self, killer: MobaPlayer, killed_players: list, team: list):
+        return [
+            {
+                "killer": killer,
+                "killed_player": killed_player,
+                "assists": self.calculate_assists(team, killer)
+            }
+            for killed_player in killed_players
+        ]
 
     def calculate_kill(self, team1: Team, team2: Team):
         """
@@ -215,21 +236,17 @@ class MobaEvent:
                 killer, teams[0], amount_kills
             )
 
-        # TODO: Currently, Assists are not awarded to members of the killer's team. This should be implemented
-        # TODO: Before 0.1.0-alpha
         # The player enters in duel mode against other players, to decide who wins the fight
+        killed_players = []
         for player in duel_players:
-            killed = self.player_duel(killer, player)
-            if killed == 0:
-                duel_players.remove(player)
-
-        amount_kills = len(duel_players)
-        self.calculate_assists(team_killer, killer, amount_kills)
-        killed_players = duel_players
+            result = self.player_duel(killer, player)
+            if result is not None:
+                killed_players.append(player)
 
         if killed_players:
+            kill_dict = self.get_kill_dict(killer, killed_players, team_killer)
             self.get_commentary(
-                amount_kills, killer=killer, killed_names=killed_players
+                kill_dict_event=kill_dict
             )
 
     def calculate_jungle(self, team1: Team, team2: Team, jungle: str):
@@ -367,19 +384,20 @@ class MobaEvent:
         names = ""
         for i, player in enumerate(players):
             if i == len(players) - 1:
-                names = names + player.nick_name + "."
+                names = names + player["killed_player"].nick_name + "."
             else:
-                names = names + player.nick_name + ", "
+                names = names + player["killed_player"].nick_name + ", "
 
         return names
 
     def _get_kill_commentaries(
         self,
-        killed_names,
-        amount_kills,
-        killer
+        kill_dict_event,
     ):
-        names = self.list_names(killed_names)
+        names = self.list_names(kill_dict_event)
+        killer = kill_dict_event[0]["killer"]
+        amount_kills = len(kill_dict_event)
+        
         if amount_kills == 2:
             self.commentary = killer.nick_name + " got a Double Kill!"
         elif amount_kills == 3:
@@ -460,12 +478,10 @@ class MobaEvent:
     
     def get_commentary(
         self,
-        amount_kills: int = 0,
+        kill_dict_event: list = None,
         atk_team_name: str = "",
         def_team_name: str = "",
-        killer: MobaPlayer = None,
         defended: bool = False,
-        killed_names: Union[list, str] = "",
         lane: str = "",
         jg_name: str = "",
         stole: bool = False,
@@ -477,8 +493,8 @@ class MobaEvent:
         For now this is a dummy implementation that does nothing, but it will load commentaries depending
         on the locale.
         """
-        if self.event_name == "KILL" and killed_names is not None:
-            self._get_kill_commentaries(killed_names, amount_kills, killer)
+        if self.event_name == "KILL" and kill_dict_event is not None:
+            self._get_kill_commentaries(kill_dict_event)
 
         if self.event_name in ["BARON", "DRAGON"]:
             self._get_jg_commentary(stole, def_team_name, atk_team_name, jg_name)
@@ -493,8 +509,7 @@ class MobaEvent:
             self._get_tower_commentary(defended, def_team_name, atk_team_name, lane)
             
         if self.show_commentary:
-            print(str(self.event_time) + " " + self.event_name)
-            print(self.commentary)
+            print(str(self.event_time) + " - " + self.commentary)
 
 
 class MobaEventHandler:

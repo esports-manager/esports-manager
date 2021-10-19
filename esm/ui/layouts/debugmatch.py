@@ -93,7 +93,7 @@ class DebugMatchLayout(ILayout):
                 esm_form_text("Current match time: "),
                 esm_form_text("500.00", key="debug_match_current_time"),
             ],
-            [esm_output()],
+            [esm_multiline(key="DebugMatchOutput", reroute_cprint=True)],
             [esm_checkbox("Simulate step-by-step", key="debug_simulate_checkbox")],
             [
                 esm_button("Start Match", key="debug_startmatch_btn"),

@@ -159,8 +159,8 @@ class MatchLive:
         """
         Match simulation method. Starts the while loop.
         """
-        if self.show_commentary:
-            self.event_handler.load_commentaries_file()
+        # if self.show_commentary:
+        #     self.event_handler.load_commentaries_file()
 
         while not self.is_match_over:
             self._run_match()

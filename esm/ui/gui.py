@@ -54,6 +54,7 @@ class GUI:
             size=(1280, 720),
             icon=encoded_icon,
             resizable=True,
+            finalize=True,
         )
 
     def _get_cols(self) -> list:

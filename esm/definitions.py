@@ -24,4 +24,4 @@ CHAMPIONS_FILE = "champions.cbor"
 PLAYERS_FILE = "players.cbor"
 TEAMS_FILE = "teams.cbor"
 UNIFIED_DATA_FILE = "data.cbor"
-DEBUG = False
+DEBUG = True

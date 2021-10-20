@@ -57,7 +57,7 @@ class SettingsLayout(ILayout):
             [esm_form_text("Champions file:", pad=label_pad)],
             [esm_form_text("Players file:", pad=label_pad)],
             [esm_form_text("Teams file:", pad=label_pad)],
-            [esm_form_text("Generate new files:", pad=label_pad)],
+            [esm_form_text("Amount of players to generate:", pad=label_pad)],
         ]
 
         controls = [
@@ -99,6 +99,8 @@ class SettingsLayout(ILayout):
                 sg.Column(labels, element_justification="right"),
                 sg.Column(controls, element_justification="left"),
             ],
+            [esm_form_text("Generating players will replace the current champions, players and teams file!")],
+            [esm_form_text("", pad=(0, 175))],
             [
                 esm_button("Apply", key="settings_apply_btn"),
                 esm_button("Cancel", key="settings_cancel_btn"),

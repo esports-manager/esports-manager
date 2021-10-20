@@ -104,7 +104,6 @@ class ESMMobaController:
             pickteam_cont.PickTeamController(self)
             match_tester_cont.MatchTesterController(self)
 
-    
     def get_layouts(self):
         return [controller.layout for controller in self.controllers]
     
@@ -144,9 +143,9 @@ class ESMMobaController:
         """
         self.core.reset_generators()
 
-    def reset_match(self, match) -> None:
+    def reset_match(self, match, queue=None) -> None:
         self.core.reset_team_values(match)
-        self.core.reset_match(match)
+        self.core.reset_match(match, queue)
 
     def update_amount(self, value):
         self.view.gui.window["settings_amount_input"].update(value=value)

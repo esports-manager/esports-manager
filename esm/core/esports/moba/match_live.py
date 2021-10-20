@@ -19,6 +19,7 @@ import uuid
 import time
 import math
 
+from queue import Queue
 from typing import Union, Tuple
 
 from .picksbans import PicksBans
@@ -46,7 +47,8 @@ class MatchLive:
             simulate: bool = True,
             ban_per_team: int = 5,
             difficulty_level: int = 1,
-            is_player_match: bool = False
+            is_player_match: bool = False,
+            queue: Queue = None,
     ):
         self.match = match
         self.game_time = 0.0
@@ -56,7 +58,7 @@ class MatchLive:
         self.is_match_over = False
         self.bans = []
         self.simulate = simulate
-        self.event_handler = MobaEventHandler()
+        self.event_handler = MobaEventHandler(self.show_commentary, queue)
         self.champions = ChampionGenerator()
         self.champions.get_champions()
         self.picks_bans = PicksBans(
@@ -68,12 +70,12 @@ class MatchLive:
         )
         self.is_player_match = is_player_match
 
-    def reset_match(self) -> None:
+    def reset_match(self, queue=None) -> None:
         self.reset_teams()
         self.game_time = 0.0
         self.victorious_team = None
         self.is_match_over = False
-        self.event_handler = MobaEventHandler()
+        self.event_handler = MobaEventHandler(self.show_commentary, queue)
 
     def check_is_player_match(self) -> bool:
         return any(team.is_players_team for team in self.match.teams)
@@ -177,7 +179,7 @@ class MatchLive:
             self.is_any_inhib_open(),
             self.get_tower_number(),
         )
-        self.event_handler.generate_event(self.game_time, self.show_commentary)
+        self.event_handler.generate_event(self.game_time)
         self.event_handler.event.calculate_event(
             self.match.team1, self.match.team2, self.which_team_nexus_exposed()
         )

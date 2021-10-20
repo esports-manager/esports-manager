@@ -135,5 +135,5 @@ class MobaModel:
         match.reset_teams()
     
     @staticmethod
-    def reset_match(match) -> None:
-        match.reset_match()
+    def reset_match(match, queue=None) -> None:
+        match.reset_match(queue)

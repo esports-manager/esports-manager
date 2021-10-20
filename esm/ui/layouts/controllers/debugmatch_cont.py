@@ -13,6 +13,8 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from queue import Queue
+
 from .controllerinterface import IController
 from ..debugmatch import DebugMatchLayout
 
@@ -21,15 +23,24 @@ class DebugMatchController(IController):
     def __init__(self, controller):
         super().__init__(controller)
         self.layout = DebugMatchLayout(self)
-    
+        self.queue = Queue()
+
+    def get_queue_messages_and_update(self):
+        if not self.queue.empty():
+            message = self.queue.get(block=False)
+            self.controller.update_gui_element("debug_match_output", value=message, append=True)
+
     def update(self, event, values, make_screen):
         team_data = self.controller.team_data
         update_debug_match_info = self.controller.update_debug_match_info
 
+        self.get_queue_messages_and_update()
+
         # Click the Start Match button
         if event == "debug_startmatch_btn":
+            self.controller.update_gui_element("debug_match_output", value="", append=False)
             self.controller.is_match_running = True
-            self.controller.reset_match(self.controller.current_match)
+            self.controller.reset_match(self.controller.current_match, self.queue)
             self.controller.current_match.is_match_over = False
             self.controller.start_match_sim_thread()
 

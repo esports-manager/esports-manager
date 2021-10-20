@@ -16,6 +16,8 @@
 
 import random
 import uuid
+from datetime import timedelta
+from queue import Queue
 from typing import Union, Any
 
 from esm.core.esports.moba.player import MobaPlayer
@@ -31,7 +33,8 @@ class MobaEvent:
         priority: int = 0,
         points: int = 0,
         event_time: float = 0.0,
-        show_commentary=True,
+        show_commentary: bool = True,
+        queue: Queue = None,
     ):
         self.event_name = event_name
         self.event_id = event_id
@@ -41,6 +44,7 @@ class MobaEvent:
         self.event_time = event_time
         self.factor = random.gauss(0, 1)
         self.points = points
+        self.queue = queue
 
     @staticmethod
     def _get_probable_team(team1: Team, team2: Team):
@@ -509,11 +513,12 @@ class MobaEvent:
             self._get_tower_commentary(defended, def_team_name, atk_team_name, lane)
             
         if self.show_commentary:
-            print(str(self.event_time) + " - " + self.commentary)
+            self.commentary = (str(timedelta(minutes=self.event_time)) + " - " + self.commentary + "\n")
+            self.queue.put(self.commentary, block=False)
 
 
 class MobaEventHandler:
-    def __init__(self):
+    def __init__(self, show_commentary: bool = False, queue: Queue = None):
         """
         Initializes the event handler.
         """
@@ -522,6 +527,8 @@ class MobaEventHandler:
         self.event = MobaEvent()
         self.enabled_events = []
         self.event_history = []
+        self.show_commentary = show_commentary
+        self.queue = queue if self.show_commentary else None
 
     def get_game_state(
         self, game_time, which_nexus_exposed, is_any_inhib_open, towers_number
@@ -591,7 +598,7 @@ class MobaEventHandler:
         """
         return [event["priority"] for event in self.enabled_events]
 
-    def generate_event(self, game_time: float, show_commentary: bool):
+    def generate_event(self, game_time: float):
         """
         Generates events for the match based on their priorities and available events.
         """
@@ -602,6 +609,7 @@ class MobaEventHandler:
             priority=ev_chosen["priority"],
             points=ev_chosen["points"],
             event_time=game_time,
-            show_commentary=show_commentary,
+            show_commentary=self.show_commentary,
+            queue=self.queue,
         )
         self.event_history.append(self.event)

@@ -38,18 +38,19 @@ class PicksBansLayout(ILayout):
 
         champion_headings = ["Name", "Skill", "Status"]
 
+        values = [
+            "PLAYERLANE",
+            "PLAYERNICKNAME",
+            "0000",
+            "CHAMPIONNAME",
+            "0000",
+        ]
         col_team1 = [
             [esm_form_text("Team1WholeName", key="pickban_team1_label"), esm_form_text("(Your team)")],
             [
                 esm_table(
                     values=[
-                        [
-                            "PLAYERLANE",
-                            "PLAYERNICKNAME",
-                            "0000",
-                            "CHAMPIONNAME",
-                            "0000",
-                        ]
+                        values
                     ],
                     headings=team_headings,
                     key="pickban_team1_table",
@@ -61,13 +62,7 @@ class PicksBansLayout(ILayout):
             [
                 esm_table(
                     values=[
-                        [
-                            "PLAYERLANE",
-                            "PLAYERNICKNAME",
-                            "0000",
-                            "CHAMPIONNAME",
-                            "0000",
-                        ]
+                        values
                     ],
                     headings=team_headings,
                     key="pickban_team2_table",

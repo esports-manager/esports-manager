@@ -100,16 +100,18 @@ class MobaModel:
         self.match = Match(uuid.uuid4(), championship_id=championship_id, team1=team1, team2=team2)
 
     def initialize_match_live(
-        self, match, show_commentary=True, match_speed=1, simulate=True
+        self, match, show_commentary=True, match_speed=1, simulate=True, queue=None, picks_bans_queue=None,
     ) -> None:
         self.match_live = MatchLive(
             match,
             show_commentary=show_commentary,
             match_speed=match_speed,
             simulate=simulate,
+            queue=queue,
+            picks_bans_queue=picks_bans_queue
         )
 
-    def initialize_random_debug_match(self) -> None:
+    def initialize_random_debug_match(self, queue=None, picks_bans_queue=None) -> None:
         self.players.get_players_objects()
 
         self.teams.player_list = self.players.players
@@ -121,7 +123,7 @@ class MobaModel:
         self.teams.teams.remove(team2)
 
         self.initialize_match(uuid.uuid4(), team1, team2)
-        self.initialize_match_live(self.match)
+        self.initialize_match_live(self.match, queue=queue, picks_bans_queue=picks_bans_queue)
 
     def get_player_default_lanes(self) -> None:
         for team in self.match.teams:
@@ -135,5 +137,5 @@ class MobaModel:
         match.reset_teams()
     
     @staticmethod
-    def reset_match(match, queue=None) -> None:
-        match.reset_match(queue)
+    def reset_match(match, queue=None, picks_bans_queue=None) -> None:
+        match.reset_match(queue, picks_bans_queue)

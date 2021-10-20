@@ -76,10 +76,11 @@ class PicksBansLayout(ILayout):
             [esm_form_text("Champions")],
             [
                 esm_table(
-                    values=[["CHAMPIONWHOLENAME", "0000", "NONE"]],
+                    values=[["CHAMPIONWHOLENAME", "0000", "Not picked"]],
                     headings=champion_headings,
                     key="pickban_champion_table",
                     num_rows=30,
+                    enable_events=True,
                 )
             ],
         ]

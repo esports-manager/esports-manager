@@ -153,9 +153,9 @@ class ESMMobaController:
         """
         self.core.reset_generators()
 
-    def reset_match(self, match, queue=None) -> None:
+    def reset_match(self, match, queue=None, picks_bans_queue=None) -> None:
         self.core.reset_team_values(match)
-        self.core.reset_match(match, queue)
+        self.core.reset_match(match, queue, picks_bans_queue)
 
     def update_amount(self, value):
         self.view.gui.window["settings_amount_input"].update(value=value)
@@ -166,8 +166,8 @@ class ESMMobaController:
     def update_match_tester_match_info(self, current_match, data):
         self.view.gui.update_match_tester_match_info(current_match, data)
 
-    def initialize_random_debug_match(self, picksbans=True) -> MatchLive:
-        self.core.initialize_random_debug_match()
+    def initialize_random_debug_match(self, picksbans=True, queue=None, picks_bans_queue=None) -> MatchLive:
+        self.core.initialize_random_debug_match(queue=queue, picks_bans_queue=picks_bans_queue)
 
         # Resetting
         self.reset_generators()

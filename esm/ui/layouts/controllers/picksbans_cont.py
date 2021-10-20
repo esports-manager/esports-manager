@@ -13,7 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+import threading
 from queue import Queue
 
 from .controllerinterface import IController
@@ -44,17 +44,17 @@ class PicksBansController(IController):
             [
                 champion.name,
                 champion.skill,
+                champion.status
             ]
             for champion in ch_list
         ]
 
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("debug_picks_bans_screen").visible:
-            if self.controller.current_match is None:
-                self.controller.initialize_random_debug_match(False)
-                self.controller.current_match.match.team1.is_players_team = True
 
-            if self.controller.current_match is not None:
+            if self.controller.current_match is None:
+                self.controller.initialize_random_debug_match(False, picks_bans_queue=self.queue)
+                self.controller.current_match.match.team1.is_players_team = True
                 team1 = self.controller.current_match.match.team1
                 team2 = self.controller.current_match.match.team2
                 ch_list = self.controller.current_match.picks_bans.champion_list
@@ -63,7 +63,24 @@ class PicksBansController(IController):
                 self.controller.update_gui_element("pickban_team1_table", values=self.get_players(team1.list_players))
                 self.controller.update_gui_element("pickban_team2_table", values=self.get_players(team2.list_players))
                 self.controller.update_gui_element("pickban_champion_table", values=self.get_champions(ch_list))
+                try:
+                    pick_ban_thread = threading.Thread(target=self.controller.current_match.picks_and_bans, daemon=True)
+                    pick_ban_thread.start()
+                except RuntimeError as e:
+                    self.controller.view.print_error(e)
 
             if event == "pickban_cancel_btn":
                 make_screen("debug_picks_bans_screen", "debug_game_mode_screen")
                 self.controller.current_match = None
+
+            if event == "pickban_pick_btn":
+                champion = self.controller.current_match.picks_bans.champion_list[values["pickban_champion_table"][0]]
+                self.queue.put(champion)
+                team1 = self.controller.current_match.match.team1
+                team2 = self.controller.current_match.match.team2
+                ch_list = self.controller.current_match.picks_bans.champion_list
+                self.controller.update_gui_element("pickban_team1_label", value=team1.name)
+                self.controller.update_gui_element("pickban_team2_label", value=team2.name)
+                self.controller.update_gui_element("pickban_team1_table", values=self.get_players(team1.list_players))
+                self.controller.update_gui_element("pickban_team2_table", values=self.get_players(team2.list_players))
+                self.controller.update_gui_element("pickban_champion_table", values=self.get_champions(ch_list))

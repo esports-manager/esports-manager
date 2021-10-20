@@ -234,9 +234,9 @@ class PicksBans:
             self.ai_ban_champions = []
 
         if opp_team == self.team1:
-            self.ai_ban_champions = self.ai_ban_champions_team1
-        elif opp_team == self.team2:
             self.ai_ban_champions = self.ai_ban_champions_team2
+        elif opp_team == self.team2:
+            self.ai_ban_champions = self.ai_ban_champions_team1
 
         champion = random.choice(self.ai_ban_champions)
         

@@ -19,6 +19,7 @@ class Champion:
     def __init__(self, champion_id: int, name: str, skill: int):
         self.champion_id = champion_id
         self.name = name
+        self.status = "Not picked"
 
         # TODO: champions should belong to different classes such as mages, carries, etc
         # TODO: implement attributes dictionary for skill

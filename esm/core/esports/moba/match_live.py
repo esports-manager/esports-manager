@@ -49,6 +49,7 @@ class MatchLive:
             difficulty_level: int = 1,
             is_player_match: bool = False,
             queue: Queue = None,
+            picks_bans_queue: Queue = None,
     ):
         self.match = match
         self.game_time = 0.0
@@ -67,15 +68,17 @@ class MatchLive:
             self.champions.champions_obj,
             ban_per_team,
             difficulty_level,
+            picks_bans_queue,
         )
         self.is_player_match = is_player_match
 
-    def reset_match(self, queue=None) -> None:
+    def reset_match(self, queue=None, picks_bans_queue=None) -> None:
         self.reset_teams()
         self.game_time = 0.0
         self.victorious_team = None
         self.is_match_over = False
         self.event_handler = MobaEventHandler(self.show_commentary, queue)
+        self.picks_bans.queue = picks_bans_queue
 
     def check_is_player_match(self) -> bool:
         return any(team.is_players_team for team in self.match.teams)

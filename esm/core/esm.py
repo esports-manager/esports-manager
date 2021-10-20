@@ -36,7 +36,7 @@ class ESMMobaController:
         self.is_match_running = False
         self.match_tester = None
         self.match_tester_thread = None
-        self.current_match = None
+        self._current_match = None
         self.match_thread = None
         self.controllers = None
         self.modules = None
@@ -45,7 +45,18 @@ class ESMMobaController:
         self.core = MobaModel(self.amount_players)
         self.view = View(self)
         self.manager = None
-    
+
+    @property
+    def current_match(self):
+        self._current_match = self.core.match_live
+        return self._current_match
+
+    @current_match.setter
+    def current_match(self, value: MatchLive):
+        self.core.match_live = value
+        self._current_match = self.core.match_live
+        return self._current_match
+
     @staticmethod
     def team_data(match_live=None):
         if match_live is None:

@@ -39,41 +39,38 @@ class PicksBansLayout(ILayout):
         champion_headings = ["Name", "Skill", "Status"]
 
         col_team1 = [
-            [esm_form_text("Team1WholeName")],
+            [esm_form_text("Team1WholeName", key="pickban_team1_label"), esm_form_text("(Your team)")],
             [
                 esm_table(
                     values=[
                         [
                             "PLAYERLANE",
                             "PLAYERNICKNAME",
-                            "PLAYERSKILLLEVEL",
-                            "PLAYERCHAMPIONNAME",
-                            "PLAYERCHAMPIONSKILLLEVEL",
+                            "0000",
+                            "CHAMPIONNAME",
+                            "0000",
                         ]
                     ],
                     headings=team_headings,
                     key="pickban_team1_table",
-                    num_rows=5,
+                    num_rows=8,
                 )
             ],
-        ]
-
-        col_team2 = [
-            [esm_form_text("Team2WholeName")],
+            [esm_form_text("Team2WholeName", key="pickban_team2_label")],
             [
                 esm_table(
                     values=[
                         [
                             "PLAYERLANE",
                             "PLAYERNICKNAME",
-                            "PLAYERSKILLLEVEL",
-                            "PLAYERCHAMPIONNAME",
-                            "PLAYERCHAMPIONSKILLLEVEL",
+                            "0000",
+                            "CHAMPIONNAME",
+                            "0000",
                         ]
                     ],
                     headings=team_headings,
                     key="pickban_team2_table",
-                    num_rows=5,
+                    num_rows=8,
                 )
             ],
         ]
@@ -82,19 +79,18 @@ class PicksBansLayout(ILayout):
             [esm_form_text("Champions")],
             [
                 esm_table(
-                    values=[["CHAMPIONWHOLENAME", "CHAMPIONSKILLLV", "CHAMPIONSTATUS"]],
+                    values=[["CHAMPIONWHOLENAME", "0000", "NONE"]],
                     headings=champion_headings,
                     key="pickban_champion_table",
-                    num_rows=10,
+                    num_rows=30,
                 )
             ],
         ]
 
         return [
             [esm_title_text("Picks and Bans")],
-            [sg.Column(col_team1)],
-            [sg.Column(col_champion)],
-            [sg.Column(col_team2)],
+            [sg.Column(col_team1), sg.Column(col_champion)],
+            # [sg.Column(col_team2)],
             [
                 esm_button("Pick", key="pickban_pick_btn"),
                 esm_button("Cancel", key="pickban_cancel_btn"),

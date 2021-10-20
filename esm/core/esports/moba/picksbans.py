@@ -13,9 +13,10 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from esm.resources.generator.generate_champions import ChampionGenerator
 import random
+from queue import Queue
 
+from esm.resources.generator.generate_champions import ChampionGenerator
 from esm.core.esports.moba.team import Team
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.esports.moba.champion import Champion
@@ -26,11 +27,20 @@ class PicksBans:
     Picks and Bans module
     """
 
-    def __init__(self, team1: Team, team2: Team, champion_list: list, ban_per_team: int = 5, difficulty_level=1):
+    def __init__(
+            self,
+            team1: Team,
+            team2: Team,
+            champion_list: list,
+            ban_per_team: int = 5,
+            difficulty_level=1,
+            queue: Queue = None,
+    ):
         self.bans_turn = 0
         self.picks_turn = -1
         self.num_bans = 0
         self.num_picks = 0
+        self.queue = queue
         self.team1 = team1
         self.team2 = team2
         self.champion_list = champion_list
@@ -143,7 +153,7 @@ class PicksBans:
             return self.get_ai_input(opp_team, pick=pick, player=player)
     
     def get_player_input(self) -> Champion:
-        pass
+        return self.queue.get()
 
     def get_ai_pick_champions(self, player) -> None:
         self.ai_pick_champions.clear()
@@ -246,13 +256,14 @@ class PicksBans:
             self.get_opponents_best_champions(self.team1)
             self.get_opponents_best_champions(self.team2)
 
-        while self.num_picks < 10:
-            player = self.picks_order[0]
+        if not self.team1.is_players_team or not self.team2.is_players_team:
+            while self.num_picks < 10:
+                player = self.picks_order[0]
 
-            if self.ban_turns != -1:
-                self.switch_ban_turn()
-                self.ban_turns()
-            
-            if self.picks_turn != -1:
-                self.switch_pick_turn(player)
+                if self.ban_turns != -1:
+                    self.switch_ban_turn()
+                    self.ban_turns()
+
+                if self.picks_turn != -1:
+                    self.switch_pick_turn(player)
 

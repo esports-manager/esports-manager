@@ -57,10 +57,14 @@ class PicksBans:
 
     def pick(self, player: MobaPlayer, champion: Champion) -> None:
         player.champion = champion
+        champion.status = "Picked"
+        # self.champion_list.remove(champion)
         self.picked_champions.append(champion)
     
     def ban(self, team: Team, champion: Champion) -> None:
         team.bans = champion
+        champion.status = "Banned"
+        # self.champion_list.remove(champion)
         self.banned_champions.append(champion)
 
     def set_up_player_picks(self):

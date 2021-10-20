@@ -54,10 +54,12 @@ class PicksBansLayout(ILayout):
                     ],
                     headings=team_headings,
                     key="pickban_team1_table",
-                    num_rows=8,
+                    num_rows=5,
                     enable_events=True,
                 )
             ],
+            [esm_form_text("Bans:")],
+            [esm_multiline(key="pickban_team1_bans", size=(60,4))],
             [esm_form_text("Team2WholeName", key="pickban_team2_label")],
             [
                 esm_table(
@@ -66,10 +68,12 @@ class PicksBansLayout(ILayout):
                     ],
                     headings=team_headings,
                     key="pickban_team2_table",
-                    num_rows=8,
+                    num_rows=5,
                     enable_events=True,
                 )
             ],
+            [esm_form_text("Bans:")],
+            [esm_multiline(key="pickban_team2_bans", size=(60,4))]
         ]
 
         col_champion = [

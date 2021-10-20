@@ -48,7 +48,7 @@ class DebugMatchController(IController):
         if event == "debug_cancel_btn":
             if self.controller.is_match_running:
                 self.controller.current_match.is_match_over = True
-                self.controller.current_match = None
+            self.controller.current_match = None
             make_screen("debug_match_screen", "main_screen")
 
         # Click the New Teams button

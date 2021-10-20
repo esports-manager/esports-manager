@@ -55,7 +55,6 @@ class ESMMobaController:
     def current_match(self, value: MatchLive):
         self.core.match_live = value
         self._current_match = self.core.match_live
-        return self._current_match
 
     @staticmethod
     def team_data(match_live=None):

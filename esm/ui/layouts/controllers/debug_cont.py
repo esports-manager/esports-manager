@@ -34,7 +34,6 @@ class DebugController(IController):
             make_screen("debug_game_mode_screen", "debug_championship_screen")
 
         elif event == "debug_picksbans_btn":
-            self.controller.initialize_random_debug_match(False)
             make_screen("debug_game_mode_screen", "debug_picks_bans_screen")
 
         elif event == "debug_match_btn":
@@ -42,10 +41,7 @@ class DebugController(IController):
             update_debug_match_info = self.controller.update_debug_match_info
 
             self.controller.check_files()
-            if not self.controller.current_match:
-                match_live = self.controller.initialize_random_debug_match()
-            else:
-                match_live = self.controller.current_match
+            match_live = self.controller.initialize_random_debug_match()
 
             data = team_data(match_live=match_live)
             update_debug_match_info(match_live, data)

@@ -256,14 +256,13 @@ class PicksBans:
             self.get_opponents_best_champions(self.team1)
             self.get_opponents_best_champions(self.team2)
 
-        if not self.team1.is_players_team or not self.team2.is_players_team:
-            while self.num_picks < 10:
-                player = self.picks_order[0]
+        while self.num_picks < 10:
+            player = self.picks_order[0]
 
-                if self.ban_turns != -1:
-                    self.switch_ban_turn()
-                    self.ban_turns()
+            if self.ban_turns != -1:
+                self.switch_ban_turn()
+                self.ban_turns()
 
-                if self.picks_turn != -1:
-                    self.switch_pick_turn(player)
+            if self.picks_turn != -1:
+                self.switch_pick_turn(player)
 

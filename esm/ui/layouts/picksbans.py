@@ -54,6 +54,7 @@ class PicksBansLayout(ILayout):
                     headings=team_headings,
                     key="pickban_team1_table",
                     num_rows=8,
+                    enable_events=True,
                 )
             ],
             [esm_form_text("Team2WholeName", key="pickban_team2_label")],
@@ -71,6 +72,7 @@ class PicksBansLayout(ILayout):
                     headings=team_headings,
                     key="pickban_team2_table",
                     num_rows=8,
+                    enable_events=True,
                 )
             ],
         ]
@@ -90,7 +92,6 @@ class PicksBansLayout(ILayout):
         return [
             [esm_title_text("Picks and Bans")],
             [sg.Column(col_team1), sg.Column(col_champion)],
-            # [sg.Column(col_team2)],
             [
                 esm_button("Pick", key="pickban_pick_btn"),
                 esm_button("Cancel", key="pickban_cancel_btn"),

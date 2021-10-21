@@ -20,7 +20,7 @@ If you can't code, but you have other skills that you can help us, don't worry, 
 If you really want to help us directly, thank you very much! We have a few jobs that you might be interested in:
 
 - **Report a problem**  
-    You can report bugs or issues you encounter in the game. Open an Issue and follow the steps to report the problem. Please read carefully the bug reporting issue template before submitting a new bug report. Provide as much information as you can to help us track the bug and solve it as fast as we possibly can.
+  You can report bugs or issues you encounter in the game. Open an Issue and follow the steps to report the problem. Please read carefully the bug reporting issue template before submitting a new bug report. Provide as much information as you can to help us track the bug and solve it as fast as we possibly can.
 
 - **Propose enhancements**  
   You can also propose new enhancements or improvements to the game. We're considering new ideas every day, and you can propose yours by opening an Issue and following the steps to propose enhancements. Just make sure to check the Issues page for similar ideas before opening up a new Issue. We don't want to flood the page with duplicated issues.
@@ -34,6 +34,41 @@ If you really want to help us directly, thank you very much! We have a few jobs 
 - **Create new content**  
   You can create content to the game, like images, logos, database improvements, whatever you'd like. Soon this option will be available, and you will be able to submit your new content proposal easily.
 
-  
+## Submitting code
 
+The most traditional way to contribute is to submit new code. **eSports Manager** is a GPLv3 licensed project, read the [LICENSE.md](LICENSE.md) before submitting your code. Your code must be GPLv3 compliant, which means you understand that any code submitted here is 100% original and must not depend on patents or copyrighted third-party content. Your code is subject to a free and open source license that will be available to the entire open source community.
+
+Once you understand that concept, you're welcome to write new code.
+
+### Understanding the code
+
+I'll soon write a very brief explanatory documentation on the project's architecture, so you can understand how the project works without having to look every file up first. For now, you'll have to look at the code and try to understand how it works, sorry.
+
+### Fork and Pull
+
+We work with a [Fork & Pull](https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests#fork--pull) method. Fork this repo, write your code in a feature branch (make sure it is up to date with the project's `develop` branch) and open a **Pull Request** to the `develop` repository, describing your changes or even referencing the **Issue** that inspired your code.
+
+If you're working on a new feature that has no prior **Issue** related to it, please open an **Issue** describing the feature and then reference it in your new **Pull Request**.
+
+### Code conventions
+
+Follow [PEP 8](https://www.python.org/dev/peps/pep-0008/). It's a must.
+
+I'm still studying a way to make the entire code uniform, and I'm inclined to only accepting [Black](https://github.com/psf/black) formatted code.
+
+Make descriptive variable names, as best you can.
+
+### Python versions
+
+Python is rapidly changing, and I plan to adjust to Python's changes as we go. Currently supported Python version is 3.10.
+
+I'll soon implement tox to test out all features.
+
+### Tests
+
+If you're writing new features, it is always a good idea to include tests with your code. I know the current code is not filled with tests (it soon will be), but make sure to add tests with your PR, and if you're changing some feature, make sure to pass all tests before submitting code.
+
+We'll also soon be using CI/CD to make development go faster, and tests are an essential part of that.
+
+### 
 

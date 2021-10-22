@@ -14,8 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import PySimpleGUI as sg
-
+from .gui_components import sg
 from .gui import GUI, init_theme
 
 

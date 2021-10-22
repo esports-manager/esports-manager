@@ -19,11 +19,13 @@ import uuid
 from datetime import timedelta
 from queue import Queue
 from typing import Union, Any
+import logging
 
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.esports.moba.team import Team
 from esm.resources.utils import load_list_from_file
 
+logger = logging.getLogger(__name__)
 
 class MobaEvent:
     def __init__(
@@ -249,8 +251,11 @@ class MobaEvent:
             if result is not None:
                 killed_players.append(player)
 
+        logger.debug("Killer: {0} killed {1}".format(killer.nick_name, len(killed_players)))
+        
         if killed_players:
             kill_dict = self.get_kill_dict(killer, killed_players, team_killer)
+            logger.debug(kill_dict)
             self.get_commentary(
                 kill_dict_event=kill_dict
             )
@@ -301,6 +306,8 @@ class MobaEvent:
                     player.points += self.points / 5
         else:
             self.event_name = "NOTHING"
+        
+        logger.debug("Calculate tower method done!")
 
     def _destroy_tower(self, prevailing, attack_team, def_team, lane):
         # Decides the player that destroys the tower
@@ -320,6 +327,8 @@ class MobaEvent:
 
         def_team.towers[lane] -= 1
         self.get_commentary(atk_team_name=prevailing.name, lane=lane)
+
+        logger.debug("Team {0} destroyed the {1} tower".format(prevailing.name, lane))
 
     def calculate_inhib(self, team1: Team, team2: Team):
         if team1.get_exposed_inhibs():

@@ -14,7 +14,6 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import PySimpleGUI as sg
 from esm.definitions import DEBUG
 from ..gui_components import *
 from esm.resources.utils import find_file

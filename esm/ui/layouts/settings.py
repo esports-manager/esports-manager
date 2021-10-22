@@ -15,7 +15,6 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
 
-import PySimpleGUI as sg
 from ..gui_components import *
 from esm.resources.utils import find_file
 from .layoutinterface import ILayout

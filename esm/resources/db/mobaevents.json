@@ -21,18 +21,31 @@
     "points": 20
   },
   {
-    "name": "BARON",
+    "name": "JUNGLE",
+    "jg_name": "HERALD",
+    "priority": 25,
+    "points": 50,
+    "spawn_time": 8.0,
+    "cooldown": 6.0,
+    "end_time": 19.5
+  },
+  {
+    "name": "JUNGLE",
+    "jg_name": "BARON",
     "priority": 50,
     "points": 200,
     "spawn_time": 20.0,
-    "cooldown": 6.0
+    "cooldown": 6.0,
+    "end_time": 0.0
   },
   {
-    "name": "DRAGON",
+    "name": "JUNGLE",
+    "jg_name": "DRAGON",
     "priority": 25,
     "points": 20,
     "spawn_time": 5.0,
-    "cooldown": 5.0
+    "cooldown": 5.0,
+    "end_time": 0.0
   },
   {
     "name": "NEXUS ASSAULT",

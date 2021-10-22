@@ -30,6 +30,7 @@ class MobaEvent:
         self,
         event_id: int = uuid.uuid4(),
         event_name: str = None,
+        event_type: str = None,
         priority: int = 0,
         points: int = 0,
         event_time: float = 0.0,
@@ -37,6 +38,7 @@ class MobaEvent:
         queue: Queue = None,
     ):
         self.event_name = event_name
+        self.event_type = event_type
         self.event_id = event_id
         self.priority = priority
         self.show_commentary = show_commentary
@@ -253,9 +255,9 @@ class MobaEvent:
                 kill_dict_event=kill_dict
             )
 
-    def calculate_jungle(self, team1: Team, team2: Team, jungle: str):
+    def calculate_jungle(self, team1: Team, team2: Team):
         """
-        Calculates the outcome of a major jungle attempt (baron or dragon)
+        Calculates the outcome of a major jungle attempt (baron, dragon or herald)
         """
         attack_team, def_team = self._get_probable_team(team1, team2)
 
@@ -267,10 +269,10 @@ class MobaEvent:
             player.points += self.points / 5
 
         if prevailing_team == attack_team:
-            self.get_commentary(atk_team_name=prevailing_team.name, jg_name=jungle)
+            self.get_commentary(atk_team_name=prevailing_team.name, jg_name=self.event_type)
         else:
             self.get_commentary(
-                def_team_name=prevailing_team.name, jg_name=jungle, stole=True
+                def_team_name=prevailing_team.name, jg_name=self.event_type, stole=True
             )
 
     def calculate_tower(self, team1: Team, team2: Team):
@@ -372,10 +374,8 @@ class MobaEvent:
         """
         if self.event_name == "KILL":
             self.calculate_kill(team1, team2)
-        if self.event_name == "BARON":
-            self.calculate_jungle(team1, team2, "Baron")
-        if self.event_name == "DRAGON":
-            self.calculate_jungle(team1, team2, "Dragon")
+        if self.event_name == "JUNGLE":
+            self.calculate_jungle(team1, team2)
         if self.event_name == "TOWER ASSAULT":
             self.calculate_tower(team1, team2)
         if self.event_name == "INHIB ASSAULT":
@@ -500,7 +500,7 @@ class MobaEvent:
         if self.event_name == "KILL" and kill_dict_event is not None:
             self._get_kill_commentaries(kill_dict_event)
 
-        if self.event_name in ["BARON", "DRAGON"]:
+        if self.event_name == "JUNGLE":
             self._get_jg_commentary(stole, def_team_name, atk_team_name, jg_name)
 
         if self.event_name == "INHIB ASSAULT":
@@ -541,8 +541,7 @@ class MobaEventHandler:
         if towers_number == 0:
             self.remove_enabled_event("TOWER ASSAULT")
 
-        self.check_jungle(game_time, "BARON")
-        self.check_jungle(game_time, "DRAGON")
+        self.check_jungle(game_time)
 
         # TODO: We need to add a Inhibitor Spawn time
         if is_any_inhib_open:
@@ -553,21 +552,24 @@ class MobaEventHandler:
         if which_nexus_exposed is not None:
             self.get_enabled_events(["NEXUS ASSAULT"])
 
-    def check_jungle(self, game_time: float, jungle: str) -> None:
+    def check_jungle(self, game_time: float) -> None:
         """
         Checks if the jungle event is available
         """
-        for event in self.events:
-            if event["name"] == jungle:
-                if self.event.event_name == jungle:
-                    if event in self.enabled_events:
-                        self.enabled_events.remove(event)
-                    event["spawn_time"] += event["cooldown"]
-                elif (
-                        game_time >= event["spawn_time"]
-                        and event not in self.enabled_events
-                    ):
-                    self.get_enabled_events([event["name"]])
+        jungle_names = [event for event in self.events if event["name"] == "JUNGLE"]
+
+        for event in jungle_names:
+            if self.event.event_type == event["jg_name"]:
+                if event in self.enabled_events:
+                    self.enabled_events.remove(event)
+                event["spawn_time"] += event["cooldown"]
+            elif (
+                game_time >= event["spawn_time"]
+                and event not in self.enabled_events
+            ):
+                self.enabled_events.append(event)
+            if 0.0 < event["end_time"] <= game_time and event in self.enabled_events:
+                self.enabled_events.remove(event)
 
     def remove_enabled_event(self, name):
         """
@@ -604,12 +606,23 @@ class MobaEventHandler:
         """
         priorities = self.get_event_priorities()
         ev_chosen = random.choices(self.enabled_events, priorities)[0]
-        self.event = MobaEvent(
-            event_name=ev_chosen["name"],
-            priority=ev_chosen["priority"],
-            points=ev_chosen["points"],
-            event_time=game_time,
-            show_commentary=self.show_commentary,
-            queue=self.queue,
-        )
+        if ev_chosen["name"] != "JUNGLE":
+            self.event = MobaEvent(
+                event_name=ev_chosen["name"],
+                priority=ev_chosen["priority"],
+                points=ev_chosen["points"],
+                event_time=game_time,
+                show_commentary=self.show_commentary,
+                queue=self.queue,
+            )
+        else:
+            self.event = MobaEvent(
+                event_name=ev_chosen["name"],
+                event_type=ev_chosen["jg_name"],
+                priority=ev_chosen["priority"],
+                points=ev_chosen["points"],
+                event_time=game_time,
+                show_commentary=self.show_commentary,
+                queue=self.queue,
+            )
         self.event_history.append(self.event)

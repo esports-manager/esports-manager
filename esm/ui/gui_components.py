@@ -61,6 +61,7 @@ def esm_title_text(
     auto_size=True,
     font=(bold_font, increased_font_size),
     key=None,
+    size=(None, 1),
     pad=(300, 1),
     justification="center",
 ):
@@ -68,6 +69,7 @@ def esm_title_text(
         text,
         auto_size_text=auto_size,
         key=key,
+        size=size,
         font=font,
         pad=pad,
         justification=justification,
@@ -77,6 +79,8 @@ def esm_title_text(
 def esm_form_text(
     text="",
     font=(default_font, default_font_size),
+    auto_size_text=True,
+    size=(None,1),
     key=None,
     pad=None,
     justification="center",
@@ -84,7 +88,8 @@ def esm_form_text(
     return sg.Text(
         text,
         key=key,
-        auto_size_text=True,
+        auto_size_text=auto_size_text,
+        size=size,
         font=font,
         pad=pad,
         justification=justification,

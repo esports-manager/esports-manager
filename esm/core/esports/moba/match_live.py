@@ -18,6 +18,7 @@ import random
 import uuid
 import time
 import math
+import gc
 
 from queue import Queue
 from typing import Union, Tuple
@@ -62,13 +63,16 @@ class MatchLive:
         self.event_handler = MobaEventHandler(self.show_commentary, queue)
         self.champions = ChampionGenerator()
         self.champions.get_champions()
+        self.ban_per_team = ban_per_team
+        self.difficulty_level = difficulty_level
+        self.picks_bans_queue = picks_bans_queue
         self.picks_bans = PicksBans(
             self.match.team1,
             self.match.team2,
             self.champions.champions_obj,
-            ban_per_team,
-            difficulty_level,
-            picks_bans_queue,
+            self.ban_per_team,
+            self.difficulty_level,
+            self.picks_bans_queue,
         )
         self.is_player_match = is_player_match
 
@@ -78,7 +82,10 @@ class MatchLive:
         self.victorious_team = None
         self.is_match_over = False
         self.event_handler = MobaEventHandler(self.show_commentary, queue)
+        self.champions.get_champions()
+        self.picks_bans.champion_list = self.champions.champions_obj
         self.picks_bans.queue = picks_bans_queue
+        gc.collect()
 
     def check_is_player_match(self) -> bool:
         return any(team.is_players_team for team in self.match.teams)

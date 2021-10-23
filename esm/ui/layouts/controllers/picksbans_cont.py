@@ -93,4 +93,5 @@ class PicksBansController(IController):
                 if values["pickban_champion_table"]:
                     champion = self.controller.current_match.picks_bans.champion_list[values["pickban_champion_table"][0]]
                     self.queue.put(champion)
-                self.update_elements()
+
+            self.update_elements()

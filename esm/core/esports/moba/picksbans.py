@@ -43,6 +43,8 @@ class PicksBans:
         self.queue = queue
         self.team1 = team1
         self.team2 = team2
+        self.team1_ai = None
+        self.team2_ai = None
         self.champion_list = champion_list
         self.ban_per_team = ban_per_team
         self.difficulty_level = difficulty_level
@@ -50,17 +52,23 @@ class PicksBans:
         self.picks_order = []
         self.picked_champions = []
         self.banned_champions = []
-        self.ai_ban_champions_team1 = None
-        self.ai_ban_champions_team2 = None
-        self.ai_ban_champions = []
-        self.ai_pick_champions = None
+
+    # def reset_picks_bans(self, champions_list):
+    #     self.picks_order = []
+    #     self.picked_champions = []
+    #     self.banned_champions = []
+    #     self.champion_list = champions_list
+    #     if self.team1_ai is not None:
+    #         self.team1_ai.reset()
+    #     if self.team2_ai is not None:
+    #         self.team2_ai.reset()
 
     def pick(self, player: MobaPlayer, champion: Champion) -> None:
         player.champion = champion
         champion.status = "Picked"
         # self.champion_list.remove(champion)
         self.picked_champions.append(champion)
-    
+
     def ban(self, team: Team, champion: Champion) -> None:
         team.bans = champion
         champion.status = "Banned"
@@ -93,7 +101,7 @@ class PicksBans:
             team = self.team1
             self.bans_turn = 1
         elif self.bans_turn == 1:
-            champion = self.get_input(self.team2, self.team2, pick=False)
+            champion = self.get_input(self.team2, self.team1, pick=False)
             team = self.team2
             self.bans_turn = 0
 
@@ -126,13 +134,13 @@ class PicksBans:
             self.num_picks += 1
             self.picks_order.remove(player)
 
-        if self.num_picks in [1, 5, 9]:
-            self.picks_turn = 1
-        elif self.num_picks in [3, 7]:
-            self.picks_turn = 0
-        elif self.num_picks == 6:
-            self.picks_turn = -1
-            self.bans_turn = 1
+            if self.num_picks in [1, 5, 9]:
+                self.picks_turn = 1
+            elif self.num_picks in [3, 7]:
+                self.picks_turn = 0
+            elif self.num_picks == 6:
+                self.picks_turn = -1
+                self.bans_turn = 1
     
     def ban_turns(self):
         """
@@ -156,117 +164,122 @@ class PicksBans:
         else:
             return self.get_ai_input(opp_team, pick=pick, player=player)
     
-    def get_player_input(self) -> Champion:
-        return self.queue.get()
-
-    def get_ai_pick_champions(self, player) -> None:
-        self.ai_pick_champions.clear()
-        champions_id = [champion_id for champion_id in player.champions]
-
-        for ch_id in champions_id:
-            champion = ChampionGenerator().get_champion_by_id(ch_id["id"], self.champion_list)
-            self.ai_pick_champions.append(champion)
-
-        self.check_champion_used(self.ai_pick_champions)
-
-        # If the list is empty, chooses a random champion from the list
-        if not self.ai_pick_champions:
-            self.ai_pick_champions.append(random.choice(self.champion_list))
-
-    def get_ai_input(self, opp_team, pick=True, player=None) -> Champion:
-        """
-        Gets the AI pick or ban.
-        """
-        if pick is True:
-            return self.get_ai_pick_input(player)
+    def get_ai_input(self, opp_team, pick=True, player=None):
+        if self.team1_ai is not None and self.team1_ai.opp_team == opp_team:
+            ai = self.team1_ai
         else:
-            return self.get_ai_ban_input(opp_team)
-    
-    def get_ai_pick_input(self, player) -> Champion:
-        if self.ai_pick_champions is None:
-            self.ai_pick_champions = []
+            ai = self.team2_ai
 
-        self.get_ai_pick_champions(player)
+        return ai.get_input(pick, player)
 
-        return random.choice(self.ai_pick_champions)
-    
-    def check_champion_used(self, ch_list):
-        """
-        Checks if the champion was picked or banned before
-        """
-        for ch in ch_list:
-            if ch in self.banned_champions or ch in self.picked_champions:
-                ch_list.remove(ch)
-    
-    def get_opponents_best_champions(self, team) -> None:
-        """
-        Gets the list of the best champions from the opponent team.
-        """
-        self.ai_ban_champions.clear()
-        champions_id = []
+    def get_player_input(self) -> Champion:
+        champion = self.queue.get()
+        if champion is not isinstance(champion, Champion) and champion in self.banned_champions and self.picked_champions:
+            champion = None
 
-        # Adds all the best champions to the list of champion_ids
-        for player in team.list_players:
-            for champion in player.champions:
-                champions_id.append(champion)
-        
-        # Transforms champion dictionaries in objects
-        for ch_id in champions_id:
-            champion = ChampionGenerator().get_champion_by_id(ch_id["id"], self.champion_list)
-            self.ai_ban_champions.append(champion)
-        
-        self.check_champion_used(self.ai_ban_champions)
-        
-        # If the list is empty, chooses a random champion from the list
-        if not self.ai_ban_champions:
-            self.ai_ban_champions.append(random.choice(self.champion_list))
-
-        if team == self.team1:
-            self.ai_ban_champions_team1 = self.ai_ban_champions.copy()
-        elif team == self.team2:
-            self.ai_ban_champions_team2 = self.ai_ban_champions.copy()
-
-        self.ai_ban_champions.clear()
-
-    def get_ai_ban_input(self, opp_team) -> Champion:
-        """
-        Returns the champions that the AI is going to ban, based on the best champions on the opponent's team player pool.
-
-        Still a naive implementation, should consider best players above everything.
-        """
-        if self.ai_ban_champions is None:
-            self.ai_ban_champions = []
-
-        if opp_team == self.team1:
-            self.ai_ban_champions = self.ai_ban_champions_team2
-        elif opp_team == self.team2:
-            self.ai_ban_champions = self.ai_ban_champions_team1
-
-        champion = random.choice(self.ai_ban_champions)
-        
-        if champion is None:
-            random.choice(self.champion_list)
-        
         return champion
     
     def picks_bans(self):
         self.set_up_player_picks()
 
         if self.team1.is_players_team:
-            self.get_opponents_best_champions(self.team1)
+            self.team2_ai = PickBanAI(self.team2, self.team1, self.champion_list, self.difficulty_level)
         elif self.team2.is_players_team:
-            self.get_opponents_best_champions(self.team2)
+            self.team1_ai = PickBanAI(self.team1, self.team2, self.champion_list, self.difficulty_level)
         else:
-            self.get_opponents_best_champions(self.team1)
-            self.get_opponents_best_champions(self.team2)
+            self.team1_ai = PickBanAI(self.team1, self.team2, self.champion_list, self.difficulty_level)
+            self.team2_ai = PickBanAI(self.team2, self.team1, self.champion_list, self.difficulty_level)
 
         while self.num_picks < 10:
             player = self.picks_order[0]
 
-            if self.ban_turns != -1:
+            if self.bans_turn != -1:
                 self.switch_ban_turn()
                 self.ban_turns()
 
             if self.picks_turn != -1:
                 self.switch_pick_turn(player)
 
+
+class PickBanAI:
+    """
+    This is the Pick and Ban AI
+    """
+    def __init__(self, team, opp_team, champion_list, difficulty_level):
+        self.team = team
+        self.opp_team = opp_team
+        self.champion_list = champion_list
+        self.difficulty_level = difficulty_level
+        self.best_champions = []
+        self.opponents_best_champions = []
+
+        self.get_opponents_best_champions()
+
+    def reset(self):
+        self.best_champions = []
+        self.opponents_best_champions = []
+
+        self.get_opponents_best_champions()
+
+    def get_input(self, pick=True, player=None):
+        if pick is True:
+            return self.get_ai_pick_input(player)
+        else:
+            return self.get_ai_ban_input()
+
+    def get_best_champions(self, player) -> None:
+        self.best_champions.clear()
+
+        for ch_id in player.champions:
+            champion = ChampionGenerator().get_champion_by_id(ch_id["id"], self.champion_list)
+            self.best_champions.append(champion)
+
+        self.check_champion_used()
+
+        # If the list is empty, chooses a random champion from the list
+        if not self.best_champions:
+            self.best_champions.append(random.choice(self.champion_list))
+
+    def get_ai_pick_input(self, player):
+        self.get_best_champions(player)
+
+        return random.choice(self.best_champions)
+
+    def get_ai_ban_input(self) -> Champion:
+        """
+        Returns the champions that the AI is going to ban, based on the best champions on the opponent's team player pool.
+
+        Still a naive implementation, should consider best players above everything.
+        """
+        return (
+            random.choice(self.opponents_best_champions)
+            if self.opponents_best_champions
+            else random.choice(self.champion_list)
+        )
+
+    def get_opponents_best_champions(self) -> None:
+        """
+        Gets the list of the best champions from the opponent team.
+        """
+        self.opponents_best_champions.clear()
+
+        # Adds all the best champions to the list of best champions
+        for player in self.opp_team.list_players:
+            for champion in player.champions:
+                ch = ChampionGenerator().get_champion_by_id(champion["id"], self.champion_list)
+                self.opponents_best_champions.append(ch)
+
+        self.check_champion_used()
+
+        # If the list is empty, chooses a random champion from the list
+        if not self.opponents_best_champions:
+            self.opponents_best_champions.append(random.choice(self.champion_list))
+
+    def check_champion_used(self):
+        for champion in self.champion_list:
+            if champion.status in ["Banned", "Picked"]:
+                self.champion_list.remove(champion)
+                if champion in self.best_champions:
+                    self.best_champions.remove(champion)
+                if champion in self.opponents_best_champions:
+                    self.opponents_best_champions.remove(champion)

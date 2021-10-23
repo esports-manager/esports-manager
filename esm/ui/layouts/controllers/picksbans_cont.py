@@ -72,7 +72,6 @@ class PicksBansController(IController):
         self.controller.update_gui_element("pickban_team1_bans", value=self.get_bans(team1_bans))
         self.controller.update_gui_element("pickban_team2_bans", value=self.get_bans(team2_bans))
 
-
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("debug_picks_bans_screen").visible:
 
@@ -91,6 +90,7 @@ class PicksBansController(IController):
                 self.controller.current_match = None
 
             if event == "pickban_pick_btn":
-                champion = self.controller.current_match.picks_bans.champion_list[values["pickban_champion_table"][0]]
-                self.queue.put(champion)
+                if values["pickban_champion_table"]:
+                    champion = self.controller.current_match.picks_bans.champion_list[values["pickban_champion_table"][0]]
+                    self.queue.put(champion)
                 self.update_elements()

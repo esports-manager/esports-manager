@@ -25,6 +25,7 @@ class PicksBansController(IController):
         super().__init__(controller)
         self.layout = PicksBansLayout(self)
         self.queue = Queue()
+        self.pick_ban_thread = None
 
     @staticmethod
     def get_players(team):
@@ -40,6 +41,7 @@ class PicksBansController(IController):
 
     @staticmethod
     def get_champions(ch_list):
+        ch_list.sort(key=lambda x: x.skill, reverse=True)
         return [
             [
                 champion.name,
@@ -51,10 +53,8 @@ class PicksBansController(IController):
     
     @staticmethod
     def get_bans(bans):
-        return[ 
-            [
-                ban.name
-            ]
+        return[
+            ban.name
             for ban in bans
         ]
     
@@ -74,13 +74,14 @@ class PicksBansController(IController):
 
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("debug_picks_bans_screen").visible:
+
             if self.controller.current_match is None:
                 self.controller.initialize_random_debug_match(False, picks_bans_queue=self.queue)
                 self.controller.current_match.match.team1.is_players_team = True
                 self.update_elements()
                 try:
-                    pick_ban_thread = threading.Thread(target=self.controller.current_match.picks_and_bans, daemon=True)
-                    pick_ban_thread.start()
+                    self.pick_ban_thread = threading.Thread(target=self.controller.current_match.picks_and_bans, daemon=True)
+                    self.pick_ban_thread.start()
                 except RuntimeError as e:
                     self.controller.view.print_error(e)
 
@@ -94,3 +95,7 @@ class PicksBansController(IController):
                     self.queue.put(champion)
 
                 self.update_elements()
+
+            if self.pick_ban_thread is not None and not self.pick_ban_thread.is_alive():
+                self.update_elements()
+                self.pick_ban_thread = None

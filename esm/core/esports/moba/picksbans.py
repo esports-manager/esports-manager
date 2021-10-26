@@ -230,11 +230,7 @@ class PickBanAI:
     def get_best_champions(self, player) -> None:
         self.best_champions.clear()
 
-        for ch_id in player.champions:
-            champion = ChampionGenerator().get_champion_by_id(ch_id["id"], self.champion_list)
-            self.best_champions.append(champion)
-
-        self.check_champion_used()
+        self.check_champion(player.champions)
 
         # If the list is empty, chooses a random champion from the list
         if not self.best_champions:
@@ -257,6 +253,13 @@ class PickBanAI:
             else random.choice(self.champion_list)
         )
 
+    def check_champion(self, list_ch):
+        for champion in list_ch:
+            ch = ChampionGenerator().get_champion_by_id(champion["id"], self.champion_list)
+            self.opponents_best_champions.append(ch)
+
+        self.check_champion_used()
+
     def get_opponents_best_champions(self) -> None:
         """
         Gets the list of the best champions from the opponent team.
@@ -264,12 +267,8 @@ class PickBanAI:
         self.opponents_best_champions.clear()
 
         # Adds all the best champions to the list of best champions
-        for player in self.opp_team.list_players:
-            for champion in player.champions:
-                ch = ChampionGenerator().get_champion_by_id(champion["id"], self.champion_list)
-                self.opponents_best_champions.append(ch)
-
-        self.check_champion_used()
+        for player in self.opponents_best_champions:
+            self.check_champion(player.champions)
 
         # If the list is empty, chooses a random champion from the list
         if not self.opponents_best_champions:

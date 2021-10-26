@@ -26,6 +26,11 @@ class PicksBansController(IController):
         self.layout = PicksBansLayout(self)
         self.queue = Queue()
         self.pick_ban_thread = None
+        self.team1 = None
+        self.team2 = None
+        self.ch_list = None
+        self.team1_bans = None
+        self.team2_bans = None
 
     @staticmethod
     def get_players(team):
@@ -34,9 +39,9 @@ class PicksBansController(IController):
                 player.lane.name,
                 player.nick_name,
                 player.skill,
-                player.champion
-            ]
-            for player in team
+                player.champion,
+                player.get_player_total_skill()
+            ] for player in team
         ]
 
     @staticmethod
@@ -59,18 +64,20 @@ class PicksBansController(IController):
         ]
     
     def update_elements(self):
-        team1 = self.controller.current_match.match.team1
-        team2 = self.controller.current_match.match.team2
-        ch_list = self.controller.current_match.picks_bans.champion_list
-        team1_bans = self.controller.current_match.match.team1.bans
-        team2_bans = self.controller.current_match.match.team2.bans
-        self.controller.update_gui_element("pickban_team1_label", value=team1.name)
-        self.controller.update_gui_element("pickban_team2_label", value=team2.name)
-        self.controller.update_gui_element("pickban_team1_table", values=self.get_players(team1.list_players))
-        self.controller.update_gui_element("pickban_team2_table", values=self.get_players(team2.list_players))
-        self.controller.update_gui_element("pickban_team1_bans", value=self.get_bans(team1_bans))
-        self.controller.update_gui_element("pickban_team2_bans", value=self.get_bans(team2_bans))
-        self.controller.update_gui_element("pickban_champion_table", values=self.get_champions(ch_list))
+        self.controller.update_gui_element("pickban_team1_label", value=self.team1.name)
+        self.controller.update_gui_element("pickban_team2_label", value=self.team2.name)
+        self.controller.update_gui_element("pickban_team1_table", values=self.get_players(self.team1.list_players))
+        self.controller.update_gui_element("pickban_team2_table", values=self.get_players(self.team2.list_players))
+        self.controller.update_gui_element("pickban_team1_bans", value=self.get_bans(self.team1_bans))
+        self.controller.update_gui_element("pickban_team2_bans", value=self.get_bans(self.team2_bans))
+        self.controller.update_gui_element("pickban_champion_table", values=self.get_champions(self.ch_list))
+
+    def get_elements(self):
+        self.team1 = self.controller.current_match.match.team1
+        self.team2 = self.controller.current_match.match.team2
+        self.ch_list = self.controller.current_match.picks_bans.champion_list
+        self.team1_bans = self.controller.current_match.match.team1.bans
+        self.team2_bans = self.controller.current_match.match.team2.bans
 
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("debug_picks_bans_screen").visible:
@@ -78,6 +85,7 @@ class PicksBansController(IController):
             if self.controller.current_match is None:
                 self.controller.initialize_random_debug_match(False, picks_bans_queue=self.queue)
                 self.controller.current_match.match.team1.is_players_team = True
+                self.get_elements()
                 self.update_elements()
                 try:
                     self.pick_ban_thread = threading.Thread(target=self.controller.current_match.picks_and_bans, daemon=True)

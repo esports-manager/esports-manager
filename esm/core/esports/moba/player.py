@@ -151,6 +151,8 @@ class MobaPlayer(Player):
         Gets the player_champion_skill according to the multiplier.
         If for some reason a champion is not on the list, it receives a default multiplier of 0.5.
         """
+        if self.champion is None:
+            return 0
         mult = 0.5  # default champion multiplier
         for champion in self.champions:
             if champion["id"] == self.champion.champion_id:

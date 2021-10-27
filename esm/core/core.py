@@ -17,7 +17,6 @@ import math
 import random
 import uuid
 
-from esm.core.esports.moba.championship import Championship
 from esm.core.esports.moba.match import Match
 from esm.core.esports.moba.match_live import MatchLive
 from esm.resources.generator.generate_players import MobaPlayerGenerator
@@ -30,7 +29,8 @@ class MobaModel:
     """
     The Core module corresponds to a Model on a traditional MVC model.
     """
-    def __init__(self, amount_players):
+
+    def __init__(self, amount_players=50):
         self._amount_players = amount_players
         self._amount_teams = math.floor(self.amount_players / 5)
         self.champions = ChampionGenerator()
@@ -61,7 +61,7 @@ class MobaModel:
         self.champions = ChampionGenerator()
         self.players = MobaPlayerGenerator()
         self.teams = TeamGenerator()
-    
+
     def generate_all(self) -> None:
         self.champions.create_champions_list()
         self.players.champions_list = self.champions.champions_obj
@@ -94,13 +94,15 @@ class MobaModel:
         self.champions.get_champions()
         return self.champions.champions_obj
 
-    def initialize_match(self, championship_id, team1, team2) -> None:
-        self.match = Match(uuid.uuid4(), championship_id=championship_id, team1=team1, team2=team2)
+    @staticmethod
+    def initialize_match(championship_id, team1, team2) -> Match:
+        return Match(uuid.uuid4(), championship_id=championship_id, team1=team1, team2=team2)
 
+    @staticmethod
     def initialize_match_live(
-        self, match, show_commentary=True, match_speed=1, simulate=True, queue=None, picks_bans_queue=None,
-    ) -> None:
-        self.match_live = MatchLive(
+            match, show_commentary=True, match_speed=1, simulate=True, queue=None, picks_bans_queue=None,
+    ) -> MatchLive:
+        return MatchLive(
             match,
             show_commentary=show_commentary,
             match_speed=match_speed,
@@ -109,7 +111,7 @@ class MobaModel:
             picks_bans_queue=picks_bans_queue
         )
 
-    def initialize_random_debug_match(self, queue=None, picks_bans_queue=None) -> None:
+    def initialize_random_debug_match(self, queue=None, picksbans=True, picks_bans_queue=None) -> MatchLive:
         self.players.get_players_objects()
 
         self.teams.player_list = self.players.players
@@ -120,20 +122,30 @@ class MobaModel:
         team2 = random.choice(self.teams.teams)
         self.teams.teams.remove(team2)
 
-        self.initialize_match(uuid.uuid4(), team1, team2)
-        self.initialize_match_live(self.match, queue=queue, picks_bans_queue=picks_bans_queue)
+        self.match = self.initialize_match(uuid.uuid4(), team1, team2)
+        self.match_live = self.initialize_match_live(
+            self.match,
+            queue=queue,
+            picks_bans_queue=picks_bans_queue
+        )
+
+        self.reset_generators()
+
+        self.get_player_default_lanes()
+
+        if picksbans:
+            self.match_live.picks_and_bans()
+
+        return self.match_live
 
     def get_player_default_lanes(self) -> None:
         for team in self.match.teams:
             team.get_players_default_lanes()
 
-    def get_championship(self) -> Championship:
-        pass
-
     @staticmethod
     def reset_team_values(match) -> None:
         match.reset_teams()
-    
+
     @staticmethod
     def reset_match(match, queue=None, picks_bans_queue=None) -> None:
         match.reset_match(queue, picks_bans_queue)

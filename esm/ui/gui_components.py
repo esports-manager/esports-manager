@@ -13,6 +13,11 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
+This file wraps the PySimpleGUI components in functions to use them throughout the project.
+That way I can make the GUI elements uniform and work like GUI components.
+"""
+
 
 import PySimpleGUI as sg
 

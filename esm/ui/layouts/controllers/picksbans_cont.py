@@ -25,6 +25,7 @@ class PicksBansController(IController):
         super().__init__(controller)
         self.layout = PicksBansLayout(self)
         self.queue = Queue()
+        self.current_match = None
         self.pick_ban_thread = None
         self.team1 = None
         self.team2 = None
@@ -73,37 +74,37 @@ class PicksBansController(IController):
         self.controller.update_gui_element("pickban_champion_table", values=self.get_champions(self.ch_list))
 
     def get_elements(self):
-        self.team1 = self.controller.current_match.match.team1
-        self.team2 = self.controller.current_match.match.team2
-        self.ch_list = self.controller.current_match.picks_bans.champion_list
-        self.team1_bans = self.controller.current_match.match.team1.bans
-        self.team2_bans = self.controller.current_match.match.team2.bans
+        self.team1 = self.current_match.match.team1
+        self.team2 = self.current_match.match.team2
+        self.ch_list = self.current_match.picks_bans.champion_list
+        self.team1_bans = self.current_match.match.team1.bans
+        self.team2_bans = self.current_match.match.team2.bans
 
     def update(self, event, values, make_screen):
-        if self.controller.get_gui_element("debug_picks_bans_screen").visible:
+        if not self.controller.get_gui_element("debug_picks_bans_screen").visible:
+            return
+        if self.current_match is None:
+            self.current_match = self.controller.initialize_random_debug_match(False, picks_bans_queue=self.queue)
+            self.current_match.match.team1.is_players_team = True
+            self.get_elements()
+            self.update_elements()
+            try:
+                self.pick_ban_thread = threading.Thread(target=self.current_match.picks_and_bans, daemon=True)
+                self.pick_ban_thread.start()
+            except RuntimeError as e:
+                self.controller.print_error(e)
 
-            if self.controller.current_match is None:
-                self.controller.initialize_random_debug_match(False, picks_bans_queue=self.queue)
-                self.controller.current_match.match.team1.is_players_team = True
-                self.get_elements()
-                self.update_elements()
-                try:
-                    self.pick_ban_thread = threading.Thread(target=self.controller.current_match.picks_and_bans, daemon=True)
-                    self.pick_ban_thread.start()
-                except RuntimeError as e:
-                    self.controller.view.print_error(e)
+        if event == "pickban_cancel_btn":
+            make_screen("debug_picks_bans_screen", "debug_game_mode_screen")
+            self.current_match = None
 
-            if event == "pickban_cancel_btn":
-                make_screen("debug_picks_bans_screen", "debug_game_mode_screen")
-                self.controller.current_match = None
+        if event == "pickban_pick_btn":
+            if values["pickban_champion_table"]:
+                champion = self.current_match.picks_bans.champion_list[values["pickban_champion_table"][0]]
+                self.queue.put(champion)
 
-            if event == "pickban_pick_btn":
-                if values["pickban_champion_table"]:
-                    champion = self.controller.current_match.picks_bans.champion_list[values["pickban_champion_table"][0]]
-                    self.queue.put(champion)
+            self.update_elements()
 
-                self.update_elements()
-
-            if self.pick_ban_thread is not None and not self.pick_ban_thread.is_alive():
-                self.update_elements()
-                self.pick_ban_thread = None
+        if self.pick_ban_thread is not None and not self.pick_ban_thread.is_alive():
+            self.update_elements()
+            self.pick_ban_thread = None

@@ -22,9 +22,22 @@ class SettingsController(IController):
     def __init__(self, controller):
         super().__init__(controller)
         self.layout = SettingsLayout(self)
+        self._amount_players = 50
+
+    @property
+    def amount_players(self) -> int:
+        return self._amount_players
+
+    @amount_players.setter
+    def amount_players(self, amount):
+        self.controller.core.amount_players = amount
+        self._amount_players = amount
 
     def generate_all_data(self) -> None:
         self.controller.generate_all_data()
+
+    def update_amount(self, amount):
+        self.controller.update_gui_element("settings_amount_input", value=amount)
 
     def update(self, event, values, make_screen):
         if event == "settings_cancel_btn":
@@ -34,8 +47,9 @@ class SettingsController(IController):
             try:
                 value = int(values["settings_amount_input"])
             except ValueError:
-                self.controller.amount_players = 400
-                self.controller.update_amount(400)
+                self.amount_players = 400
+                self.update_amount(400)
             else:
                 self.controller.amount_players = value
+
             self.controller.generate_all_data()

@@ -36,9 +36,6 @@ class MatchTesterLayout(ILayout):
         headings = [
             "Lane",
             "Player Name",
-            "Kills",
-            "Deaths",
-            "Assists",
             "Champion",
             "Skill",
         ]

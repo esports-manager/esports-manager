@@ -28,76 +28,16 @@ from esm.ui.gui import init_theme
 
 class ESMMobaController:
     """
-    The ESM class corresponds to a Controller on a traditional MVC model. Not a full controller yet.
+    This class is a general class for MOBA-related control activities. It initializes all controllers
+    and layouts, and also communicates with the View and MobaModel modules. It is the bread and butter
+    for all other layout controllers.
     """
-    def __init__(self, amount_players=50):
-        self._amount_players = amount_players
-        self._amount_test_matches = 1000
-        self.is_match_running = False
-        self.match_tester = None
-        self.match_tester_thread = None
-        self._current_match = None
-        self.match_thread = None
-        self.controllers = None
-        self.modules = None
+    def __init__(self):
         init_theme()
+        self.controllers = None
         self.initialize_controllers()
-        self.core = MobaModel(self.amount_players)
+        self.core = MobaModel()
         self.view = View(self)
-        self.manager = None
-
-    @property
-    def current_match(self):
-        self._current_match = self.core.match_live
-        return self._current_match
-
-    @current_match.setter
-    def current_match(self, value: MatchLive):
-        self.core.match_live = value
-        self._current_match = self.core.match_live
-
-    @staticmethod
-    def team_data(match_live=None):
-        if match_live is None:
-            return None
-        players = [
-            [player for player in team.list_players] for team in match_live.match.teams
-        ]
-
-        data = []
-        for team in players:
-            team_data = [
-                [
-                    player.lane.name,
-                    player.nick_name,
-                    player.kills,
-                    player.deaths,
-                    player.assists,
-                    player.champion,
-                    int(player.get_player_total_skill()),
-                ]
-                for player in team
-            ]
-            data.append(team_data)
-
-        return data
-    
-    @property
-    def amount_test_matches(self) -> int:
-        return self._amount_test_matches
-
-    @amount_test_matches.setter
-    def amount_test_matches(self, amount) -> None:
-        self._amount_test_matches = amount
-
-    @property
-    def amount_players(self) -> int:
-        return self._amount_players
-
-    @amount_players.setter
-    def amount_players(self, amount):
-        self.core.amount_players = amount
-        self._amount_players = amount
 
     def initialize_controllers(self):
         loadgame_cont.LoadGameController(self)
@@ -113,17 +53,16 @@ class ESMMobaController:
             picksbans_cont.PicksBansController(self)
             pickteam_cont.PickTeamController(self)
             match_tester_cont.MatchTesterController(self)
-
-    def get_layouts(self):
-        return [controller.layout for controller in self.controllers]
     
-    def start_match_sim(self) -> None:
-        self.current_match.simulation()
-        self.view.enable_debug_buttons()
+    def write_event_values(self, first_message: str, second_message: str):
+        self.view.write_event_value(first_message, second_message)
+
+    def print_error(self, e):
+        self.view.print_error(e)
 
     def generate_all_data(self) -> None:
         """
-        Starts a thread to generate data and show a window progress bar.
+        Resets generators and generates data in the background.
         """
         self.reset_generators()
         self.core.generate_all()
@@ -142,9 +81,12 @@ class ESMMobaController:
         #     self.view.print_error(e)
 
     def check_files(self) -> None:
+        """
+        Check if game files exist. If they don't, it creates them.
+        """
         try:
             self.core.check_files()
-        except FileNotFoundError as e:
+        except FileNotFoundError:
             self.generate_all_data()
 
     def reset_generators(self) -> None:
@@ -153,69 +95,30 @@ class ESMMobaController:
         """
         self.core.reset_generators()
 
-    def reset_match(self, match, queue=None, picks_bans_queue=None) -> None:
-        self.core.reset_team_values(match)
-        self.core.reset_match(match, queue, picks_bans_queue)
-
-    def update_amount(self, value):
-        self.view.gui.window["settings_amount_input"].update(value=value)
-
-    def update_debug_match_info(self, current_match, data):
-        self.view.gui.update_debug_match_info(current_match, data)
-
-    def update_match_tester_match_info(self, current_match, data):
-        self.view.gui.update_match_tester_match_info(current_match, data)
-
     def initialize_random_debug_match(self, picksbans=True, queue=None, picks_bans_queue=None) -> MatchLive:
-        self.core.initialize_random_debug_match(queue=queue, picks_bans_queue=picks_bans_queue)
-
-        # Resetting
-        self.reset_generators()
-
-        self.core.get_player_default_lanes()
-
-        if picksbans:
-            self.core.match_live.picks_and_bans()
-
-        self.current_match = self.core.match_live
-
-        return self.core.match_live
-
-    def reset_match_tester(self):
-        if self.match_tester is not None:
-            self.match_tester.reset_values()
-
-    def start_match_tester(self, amount):
-        self.match_tester = MatchTester(amount, self.current_match)
-        self.match_tester.running_test = True
-        self.match_tester.run_match_test()
-        self.view.enable_match_tester_buttons()
-
-    def start_match_tester_thread(self, amount):
-        try:
-            self.match_tester_thread = threading.Thread(
-                target=self.start_match_tester, args=(int(amount),), daemon=True
-            )
-            self.match_tester_thread.start()
-            self.view.disable_match_tester_buttons()
-        except RuntimeError as e:
-            self.view.print_error(e)
+        """
+        Initializes a random debug match. Just works when debugging is enabled.
+        """
+        return self.core.initialize_random_debug_match(
+            queue=queue,
+            picksbans=picksbans,
+            picks_bans_queue=picks_bans_queue,
+        )
 
     def update_gui_element(self, element, **kwargs):
+        """
+        Wrapper for calling the View to update a GUI element with keyword arguments
+        """
         self.view.update_element_on_screen(element, **kwargs)
 
-    def get_gui_element(self, element):
-        return self.view.get_screen_element(element)
+    def update_progress_bar(self, key, value):
+        self.view.update_progress_bar(key, value)
 
-    def start_match_sim_thread(self) -> None:
-        try:
-            self.match_thread = threading.Thread(
-                target=self.start_match_sim, daemon=True
-            )
-            self.match_thread.start()
-            self.view.disable_debug_buttons()
-        except RuntimeError as e:
-            self.view.print_error(e)
+    def get_gui_element(self, element):
+        """
+        Wrapper for calling the View to return the given GUI element
+        """
+        return self.view.get_screen_element(element)
 
     def app(self) -> None:
         self.view.start()

@@ -15,12 +15,13 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .gui_components import sg
-from .gui import GUI, init_theme
+from .gui import GUI
 
 
 class View:
     """
-    The View class corresponds to a View on a traditional MVC model. It interacts with the GUI.
+    The View class is an abstraction layer over the GUI. It should provide functions that interact
+    with the GUI, but do not expose any details about the GUI itself.
     """
     def __init__(self, controller):
         self.gui = GUI(controller)
@@ -28,33 +29,21 @@ class View:
     def print_error(self, e):
         self.gui.error_message(e)
 
-    def print_generate_data_window(self, players, teams, champions):
-        self.gui.generate_data_window(players, teams, champions)
-
     def make_screen_visible(self, inv_screen, vis_screen):
         self.gui.window[inv_screen].update(visible=False)
         self.gui.window[vis_screen].update(visible=True)
 
-    def disable_debug_buttons(self):
-        self.gui.window.Element("debug_startmatch_btn").Update(disabled=True)
-        self.gui.window.Element("debug_newteams_btn").Update(disabled=True)
-        self.gui.window.Element("debug_resetmatch_btn").Update(disabled=True)
+    def update_element_on_screen(self, element, **kwargs):
+        self.gui.window[element].update(**kwargs)
 
-    def disable_match_tester_buttons(self):
-        self.gui.window['match_tester_startmatch_btn'].update(disabled=True)
-        self.gui.window['match_tester_newteams_btn'].update(disabled=True)
-        self.gui.window['match_tester_startmatch_btn'].update(disabled=True)
+    def get_screen_element(self, element):
+        return self.gui.window[element]
 
-    def enable_debug_buttons(self):
-        self.gui.window.write_event_value("MATCH SIMULATED", "DONE")
-        self.gui.window.Element("debug_startmatch_btn").Update(disabled=False)
-        self.gui.window.Element("debug_newteams_btn").Update(disabled=False)
-        self.gui.window.Element("debug_resetmatch_btn").Update(disabled=False)
+    def write_event_value(self, first_message, second_message):
+        self.gui.window.write_event_value(first_message, second_message)
 
-    def enable_match_tester_buttons(self):
-        self.gui.window.write_event_value("MATCH TESTER", "MATCH TESTER DONE")
-        self.gui.window['match_tester_startmatch_btn'].update(disabled=False)
-        self.gui.window['match_tester_newteams_btn'].update(disabled=False)
+    def update_progress_bar(self, key, value):
+        self.gui.window[key].update_bar(value)
 
     def update(self, *args, **kwargs) -> None:
         """
@@ -62,12 +51,6 @@ class View:
         """
         for layout in self.gui.layouts:
             layout.update(*args, **kwargs)
-
-    def update_element_on_screen(self, element, **kwargs):
-        self.gui.window[element].update(**kwargs)
-
-    def get_screen_element(self, element):
-        return self.gui.window[element]
 
     def start(self):
         """

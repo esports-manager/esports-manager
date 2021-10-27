@@ -54,10 +54,10 @@ class TeamSelectController(IController):
         if self.controller.get_gui_element("team_select_screen").visible:
             if self.teams is None:
                 self.get_teams()
-                self.controller.get_gui_element("teamselect_team_table", values=self.get_team_list())
+                self.controller.update_gui_element("teamselect_team_table", values=self.get_team_list())
 
             if values["teamselect_team_table"]:
-                self.controller.get_gui_element(
+                self.controller.update_gui_element(
                     "teamselect_players_table",
                     values=self.get_player_list(values["teamselect_team_table"])
                 )

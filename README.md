@@ -18,7 +18,19 @@ The game is still not ready to be played. Many features are yet to be implemente
 
 <img src="esm/resources/images/main_screen.PNG" width="40%" alt="">
 
+<img src="esm/resources/images/new_game_screen.PNG" width="40%" alt="">
+
+<img src="esm/resources/images/debug_picks_and_bans.PNG" width="40%" alt="">
+
+<img src="esm/resources/images/load_game_screen.PNG" width="40%" alt="">
+
 <img src="esm/resources/images/debug_match_screen.PNG" width="40%" alt="">
+
+<img src="esm/resources/images/match_tester.PNG" width="40%" alt="">
+
+<img src="esm/resources/images/debug_championship_screen.PNG" width="40%" alt="">
+
+<img src="esm/resources/images/team_select_screen.PNG" width="40%" alt="">
 
 <img src="esm/resources/images/settings_screen.PNG" width="40%" alt="">
 

@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Union
 
 from esm.core.esports.moba.team import Team
+from esm.resources.generator.generate_players import MobaPlayerGenerator
 from esm.definitions import ROOT_DIR, DB_DIR, TEAMS_FILE
 from esm.resources.db.default_team_names import get_default_team_names
 from esm.core.utils import write_to_file, get_list_from_file, load_list_from_file

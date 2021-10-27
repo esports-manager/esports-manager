@@ -49,6 +49,7 @@ class ESMMobaController:
         if DEBUG:
             debug_cont.DebugController(self)
             debugmatch_cont.DebugMatchController(self)
+            debug_championship_cont.DebugChampionshipController(self)
             teamselect_cont.TeamSelectController(self)
             picksbans_cont.PicksBansController(self)
             pickteam_cont.PickTeamController(self)

@@ -1,48 +1,59 @@
 import pytest
 
 from esm.resources.generator.generate_champions import ChampionGenerator
+from esm.core.esports.moba.champion import Champion
+from esm.core.utils import get_from_file
 
 
-# @pytest.fixture
-# def champion_generator():
-#     return ChampionGenerator()
+@pytest.fixture
+def champion_generator():
+    return ChampionGenerator()
 
 
-# def test_get_champion_lanes(champion_generator):
-#     pass
+def test_get_champion_lanes(champion_generator):
+    pass
 
 
-# def test_generate_champion_skill(champion_generator):
-#     pass
+def test_generate_champion_skill(champion_generator):
+    pass
 
 
-# def test_generate_champion_dict(champion_generator):
-#     pass
+def test_generate_champion_dict(champion_generator):
+    pass
 
 
-# def test_generate_champion_obj(champion_generator):
-#     pass
+def test_generate_champion_obj(champion_generator):
+    pass
 
 
-# def test_create_champions_list(champion_generator):
-#     pass
+def test_create_champions_list(champion_generator, tmpdir):
+    temporary = tmpdir.mkdir('db')
+    champion_generator.create_champions_list()
+    champion_generator.generate_file(temporary.strpath, temporary.strpath)
+    champion_generator.champions_list = []
+    champion_generator.get_champions(temporary.strpath)
+    file_contents = get_from_file(str(temporary.join(champion_generator.file_name)))
+    assert file_contents == champion_generator.champions_list
 
 
-# def test_get_champions(champion_generator, tmpdir):
-#     temporary = tmpdir.mkdir('resources')
-#     champion_generator.file_name = temporary.join('champions.json')
-#     champion_generator.create_champions_list()
-#     champion_generator.generate_file(temporary, temporary)
-#     champion_generator.get_champions(temporary)
-#     assert champion_generator.file_name.read_text('utf-8') == champion_generator.champions_list
+def test_get_champions(champion_generator, tmpdir):
+    temporary = tmpdir.mkdir('db')
+    champion_generator.create_champions_list()
+    champion_generator.generate_file(temporary.strpath, temporary.strpath)
+    champion_generator.champions_list = []
+    champion_generator.get_champions(temporary.strpath)
+    file_contents = get_from_file(str(temporary.join(champion_generator.file_name)))
+    assert len(file_contents) == len(champion_generator.champions_obj)
 
 
-# def test_generate_file(champion_generator, tmpdir):
-#     temporary = tmpdir.mkdir('db')
-#     champion_generator.file_name = tmpdir.join('champions.json')
-#     champion_generator.create_champions_list()
-#     champion_generator.generate_file(temporary, temporary)
-#     assert champion_generator.file_name.read_text('utf-8') == champion_generator.champions_list
+def test_generate_file(champion_generator, tmpdir):
+    temporary = tmpdir.mkdir('db')
+    champion_generator.file_name = temporary.join('champions.json')
+    champion_generator.champions_list = []
+    champion_generator.create_champions_list()
+    champion_generator.generate_file(temporary.strpath, temporary.strpath)
+    file_contents = get_from_file(str(champion_generator.file_name))
+    assert file_contents == champion_generator.champions_list
 
 # import unittest
 # import json

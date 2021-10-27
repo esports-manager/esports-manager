@@ -18,12 +18,12 @@ import random
 import uuid
 from datetime import timedelta
 from queue import Queue
-from typing import Union, Any
+from typing import Union
 import logging
 
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.esports.moba.team import Team
-from esm.resources.utils import load_list_from_file
+from esm.core.utils import load_list_from_file
 
 logger = logging.getLogger(__name__)
 

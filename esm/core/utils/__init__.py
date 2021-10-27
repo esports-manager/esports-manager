@@ -17,13 +17,17 @@
 import os
 import json
 import cbor2
-from datetime import date, timezone
+from typing import Union
+from pathlib import Path
 
 from esm.definitions import ROOT_DIR, DB_DIR, TEAMS_FILE
 
 
 def write_to_file(
-    contents: list, filename: str, folder: str = ROOT_DIR, res_folder: str = DB_DIR
+        contents: list,
+        filename: Union[str, Path],
+        folder: Union[str, Path] = ROOT_DIR,
+        res_folder: Union[str, Path] = DB_DIR,
 ) -> None:
     file = filename
     try:
@@ -32,6 +36,9 @@ def write_to_file(
         # Maybe file creation should be in a separate function?
         file = os.path.join(res_folder, filename)  # prevents hard-coding "/" or "\"
     finally:
+        if not os.path.exists(res_folder):
+            os.makedirs(res_folder)
+        filename = str(filename)
         if filename.endswith(".json"):
             with open(file, "w") as fp:
                 json.dump(contents, fp, sort_keys=True, indent=4)
@@ -40,7 +47,7 @@ def write_to_file(
                 cbor2.dump(contents, fp)
 
 
-def find_file(filename: str, folder: str = ROOT_DIR) -> str:
+def find_file(filename: str, folder: Union[str, Path] = ROOT_DIR) -> str:
     """
     This function is used to find files used by the project. It receives the
     folder and searches from there. It removes the need to hard-code
@@ -67,7 +74,7 @@ def find_file(filename: str, folder: str = ROOT_DIR) -> str:
         raise FileNotFoundError("File not found!")
 
 
-def get_list_from_file(filename: str) -> list:
+def get_list_from_file(filename: Union[str, Path]) -> list:
     file = find_file(filename)
 
     with open(file, "r", encoding="utf-8") as fp:
@@ -76,9 +83,9 @@ def get_list_from_file(filename: str) -> list:
     return lst
 
 
-def get_from_file(file_name: str) -> list:
+def get_from_file(file_name: Union[str, Path]) -> list:
     """
-    General function used to read a JSON file, extracting its data to a dictionary/list
+    General function used to read a JSON/CBOR file, extracting its data to a dictionary/list
     :param file_name:
     :return:
     """
@@ -92,11 +99,12 @@ def get_from_file(file_name: str) -> list:
     return dictionary
 
 
-def load_list_from_file(filepath: str, folder: str = ROOT_DIR) -> list:
+def load_list_from_file(filepath: Union[str, Path], folder: Union[str, Path] = ROOT_DIR) -> list:
     """
     Reads a specified file (champions, player or team json) and
     returns the list from that file
     :param filepath:
+    :param folder:
     :return:
     """
     try:
@@ -108,10 +116,10 @@ def load_list_from_file(filepath: str, folder: str = ROOT_DIR) -> list:
         return get_from_file(file)
 
 
-def get_key_from_json(key: str = "name", file: str = TEAMS_FILE) -> list:
+def get_key_from_json(key: str = "name", file: Union[str, Path] = TEAMS_FILE) -> list:
     """
     Gets a key from a json file. By default it is used by the GUI to get
-    names from the file teams.cbor, but we can repurpose that for other
+    names from the file teams.json, but we can repurpose that for other
     files too, such as get player names, champion names, etc...
     :param key:
     :param file:

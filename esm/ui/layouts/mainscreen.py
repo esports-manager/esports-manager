@@ -16,7 +16,7 @@
 
 from esm.definitions import DEBUG
 from ..gui_components import *
-from esm.resources.utils import find_file
+from esm.core.utils import find_file
 from .layoutinterface import ILayout
 
 

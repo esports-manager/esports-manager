@@ -16,7 +16,7 @@
 import os
 
 from ..gui_components import *
-from esm.resources.utils import find_file
+from esm.core.utils import find_file
 from .layoutinterface import ILayout
 from esm.definitions import DB_DIR, CHAMPIONS_FILE, PLAYERS_FILE, TEAMS_FILE
 

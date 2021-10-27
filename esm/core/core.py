@@ -13,7 +13,6 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from esm.core.esports.moba.team import Team
 import math
 import random
 import uuid
@@ -21,11 +20,10 @@ import uuid
 from esm.core.esports.moba.championship import Championship
 from esm.core.esports.moba.match import Match
 from esm.core.esports.moba.match_live import MatchLive
-from esm.core.esports.moba.modules import *
 from esm.resources.generator.generate_players import MobaPlayerGenerator
 from esm.resources.generator.generate_teams import TeamGenerator
 from esm.resources.generator.generate_champions import ChampionGenerator
-from esm.resources.utils import find_file
+from esm.core.utils import find_file
 
 
 class MobaModel:

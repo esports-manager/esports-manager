@@ -20,8 +20,7 @@ from esm.resources import RES
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 RES_DIR = RES
 DB_DIR = os.path.join(RES, "db")
-CHAMPIONS_FILE = "champions.cbor"
-PLAYERS_FILE = "players.cbor"
-TEAMS_FILE = "teams.cbor"
-UNIFIED_DATA_FILE = "data.cbor"
+CHAMPIONS_FILE = "champions.json"
+PLAYERS_FILE = "players.json"
+TEAMS_FILE = "teams.json"
 DEBUG = True

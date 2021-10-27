@@ -13,6 +13,16 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from datetime import date
+from esm.core.esports.moba.team import Team
 
-class TeamModule:
-    pass
+
+class Manager:
+    def __init__(
+        self, name: str, birthday: date, team: Team, is_player: bool, quality: int
+    ):
+        self.name = name
+        self.birthday = birthday
+        self.team = team
+        self.is_player = is_player
+        self.quality = quality

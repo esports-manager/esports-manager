@@ -17,7 +17,7 @@ from datetime import date
 from esm.core.esports.moba.team import Team
 
 
-class Manager:
+class MobaManager:
     def __init__(
         self, name: str, birthday: date, team: Team, is_player: bool, quality: int
     ):

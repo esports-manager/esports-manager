@@ -13,3 +13,19 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from esm.core.utils import load_list_from_file
+
+
+class LoadGame:
+    def __init__(self, filename):
+        self.filename = filename
+
+    def check_game_file(self):
+        """
+        Checks the integrity of the game file. If there are missing keywords, it's a corrupted savefile, and the game cannot be loaded.
+        """
+        pass
+    
+    def load_game_file(self):
+        self.check_game_file()
+        

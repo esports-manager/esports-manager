@@ -14,5 +14,13 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-class PlayerModule:
-    pass
+class GameState:
+    def __init__(self, gamename, filename, manager, season, esport, teams, players, champions):
+        self.gamename = gamename
+        self.filename = filename
+        self.manager = manager
+        self.season = season
+        self.esport = esport
+        self.teams = teams
+        self.players = players
+        self.champions = champions

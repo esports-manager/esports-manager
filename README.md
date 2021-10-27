@@ -14,27 +14,29 @@ In this game, you will be able set up your team, get them to play in whatever po
 
 The game is still not ready to be played. Many features are yet to be implemented, and a lot of things are missing. There's no gameplay experience, only testing material here.
 
+## SCREENSHOTS
+
+<img src="esm/resources/images/main_screen.PNG" width="30%" alt="">
+
+<img src="esm/resources/images/new_game_screen.PNG" width="30%" alt="">
+
+<img src="esm/resources/images/debug_picks_and_bans.PNG" width="30%" alt="">
+
+<img src="esm/resources/images/load_game_screen.PNG" width="30%" alt="">
+
+<img src="esm/resources/images/debug_match_screen.PNG" width="30%" alt="">
+
+<img src="esm/resources/images/match_tester.PNG" width="30%" alt="">
+
+<img src="esm/resources/images/debug_championship_screen.PNG" width="30%" alt="">
+
+<img src="esm/resources/images/team_select_screen.PNG" width="30%" alt="">
+
+<img src="esm/resources/images/settings_screen.PNG" width="30%" alt="">
+
+<img src="esm/resources/images/load_game_screen.PNG" width="30%" alt="">
+
 ## HOW TO RUN THE DEBUG VERSION
-
-<img src="esm/resources/images/main_screen.PNG" width="40%" alt="">
-
-<img src="esm/resources/images/new_game_screen.PNG" width="40%" alt="">
-
-<img src="esm/resources/images/debug_picks_and_bans.PNG" width="40%" alt="">
-
-<img src="esm/resources/images/load_game_screen.PNG" width="40%" alt="">
-
-<img src="esm/resources/images/debug_match_screen.PNG" width="40%" alt="">
-
-<img src="esm/resources/images/match_tester.PNG" width="40%" alt="">
-
-<img src="esm/resources/images/debug_championship_screen.PNG" width="40%" alt="">
-
-<img src="esm/resources/images/team_select_screen.PNG" width="40%" alt="">
-
-<img src="esm/resources/images/settings_screen.PNG" width="40%" alt="">
-
-<img src="esm/resources/images/load_game_screen.PNG" width="40%" alt="">
 
 To run the debug version first you need to have Python 3 installed. Use Python 3.7 or higher, there's no guarantee it will work with Python 3.6 or older.
 

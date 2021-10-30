@@ -82,7 +82,7 @@ class DebugMatchController(IController):
         self.controller.update_gui_element("debug_team2name", value=self.current_match.match.team2.name)
 
     def enable_debug_buttons(self):
-        self.controller.write_event_value("MATCH SIMULATED", "DONE")
+        self.controller.write_event_values("MATCH SIMULATED", "DONE")
         self.controller.update_gui_element("debug_startmatch_btn", disabled=False)
         self.controller.update_gui_element("debug_newteams_btn", disabled=False)
         self.controller.update_gui_element("debug_resetmatch_btn", disabled=False)

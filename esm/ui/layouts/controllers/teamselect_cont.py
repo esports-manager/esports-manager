@@ -16,8 +16,6 @@
 
 from .controllerinterface import IController
 from ..teamselect import TeamSelectLayout
-from esm.resources.generator.generate_teams import TeamGenerator
-from esm.resources.generator.generate_players import MobaPlayerGenerator
 from esm.core.esports.moba.manager import MobaManager
 
 
@@ -81,3 +79,5 @@ class TeamSelectController(IController):
                 self.controller.manager = manager
                 # Probably here we should delete the old window and create a new one with new layouts
                 # make_screen("team_select_screen", "game_screen")
+        else:
+            self.teams = None

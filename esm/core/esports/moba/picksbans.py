@@ -255,7 +255,9 @@ class PickBanAI:
 
     def check_champion(self, list_ch, second_list):
         for champion in list_ch:
-            ch = ChampionGenerator().get_champion_by_id(champion["id"], self.champion_list)
+            ch = ChampionGenerator()
+            ch.champions_list = self.champion_list
+            ch = ch.get_champion_by_id(champion["id"], self.champion_list)
             second_list.append(ch)
 
         self.check_champion_used()

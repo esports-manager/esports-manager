@@ -18,7 +18,7 @@ from .controllerinterface import IController
 from ..teamselect import TeamSelectLayout
 from esm.resources.generator.generate_teams import TeamGenerator
 from esm.resources.generator.generate_players import MobaPlayerGenerator
-from esm.core.esports.moba.manager import Manager
+from esm.core.esports.moba.manager import MobaManager
 
 
 class TeamSelectControllerError(Exception):
@@ -69,14 +69,15 @@ class TeamSelectController(IController):
                 make_screen("team_select_screen", "new_game_screen")
             
             if event == "teamselect_next_btn":
-                team = values["teamselect_team_table"][0]
-                manager = Manager(
+                team_index = values["teamselect_team_table"][0]
+                manager = MobaManager(
                     values["create_manager_name"],
                     values["create_manager_display_calendar"],
-                    self.teams.teams[team],
+                    self.teams.teams[team_index],
                     True,
                     50
                 )
-                self.teams.teams[team].is_players_team = True
+                self.teams.teams[team_index].is_players_team = True
                 self.controller.manager = manager
+                # Probably here we should delete the old window and create a new one with new layouts
                 # make_screen("team_select_screen", "game_screen")

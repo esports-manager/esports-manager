@@ -47,8 +47,8 @@ class GameManager:
             self.players.players,
             self.champions.champions_obj
         )
-        self.load = LoadGame()
-        self.save = SaveGame(self.gamestate)
+        self.load = LoadGame(filename)
+        self.save = SaveGame(self.gamestate, filename)
     
     def save_game(self):
         self.save.save_game()

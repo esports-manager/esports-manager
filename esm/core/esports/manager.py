@@ -26,3 +26,11 @@ class Manager:
         self.team = team
         self.is_player = is_player
         self.quality = quality
+
+    def get_dict(self):
+        return {
+            "name": self.name,
+            "birthday": self.birthday,
+            "team": self.team.team_id,
+            "quality": self.quality
+        }

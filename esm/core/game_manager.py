@@ -49,6 +49,12 @@ class GameManager:
         )
         self.load = LoadGame(filename)
         self.save = SaveGame(self.gamestate, filename)
+        self.temporary_file = None
     
     def save_game(self):
         self.save.save_game()
+
+    def get_temporary_file(self):
+        self.gamestate.create_temporary_file()
+        self.gamestate.write_to_temporary_file()
+        return self.gamestate.temporary_file

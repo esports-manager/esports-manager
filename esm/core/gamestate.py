@@ -13,6 +13,9 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import cbor2
+from tempfile import NamedTemporaryFile
+
 
 class GameState:
     def __init__(self, gamename, filename, manager, season, esport, teams, players, champions):
@@ -24,3 +27,28 @@ class GameState:
         self.teams = teams
         self.players = players
         self.champions = champions
+        self.temporary_file = None
+        
+    def create_temporary_file(self):
+        """
+        Creates the temporary file as a backup for savefile
+        """
+        if self.temporary_file is None:
+            self.temporary_file = NamedTemporaryFile()
+
+    def normalize_data(self) -> dict:
+        return {
+            "filename": self.filename,
+            "game_name": self.gamename,
+            "manager": self.manager.get_dict(),
+            "season": self.season,
+            "esport": self.esport,
+            "teams": self.teams.teams_dict,
+            "champions": self.champions.champions_list,
+            "players": self.players.players_dict,
+        }
+
+    def write_to_temporary_file(self):
+        self.create_temporary_file()
+        with open(self.temporary_file) as fp:
+            cbor2.dump(self.normalize_data(), fp)

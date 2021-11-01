@@ -92,13 +92,13 @@ class PicksBansController(IController):
         if self.current_match is None:
             self.current_match = self.controller.initialize_random_debug_match(False, picks_bans_queue=self.queue)
             self.current_match.match.team1.is_players_team = True
-            self.get_elements()
-            self.update_elements()
             try:
                 self.pick_ban_thread = threading.Thread(target=self.current_match.picks_and_bans, daemon=True)
                 self.pick_ban_thread.start()
             except RuntimeError as e:
                 self.controller.print_error(e)
+            self.get_elements()
+            self.update_elements()
 
         if event == "pickban_cancel_btn":
             make_screen("debug_picks_bans_screen", "debug_game_mode_screen")

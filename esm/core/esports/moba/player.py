@@ -146,19 +146,25 @@ class MobaPlayer(Player):
         """
         return self.skill * self.get_curr_lane_multiplier()
 
+    def get_projected_champion_skill(self, champion) -> float:
+        """
+        Gets a projected champion skill level, for champions that are not yet picked.
+        """
+        if champion is None:
+            return 0
+        mult = 0.5  # default champion multiplier
+        for ch in self.champions:
+            if ch["id"] == champion.champion_id:
+                mult = ch["mult"]
+                break
+        return (0.5 * champion.skill) * (1 + mult)
+    
     def get_champion_skill(self) -> float:
         """
         Gets the player_champion_skill according to the multiplier.
         If for some reason a champion is not on the list, it receives a default multiplier of 0.5.
         """
-        if self.champion is None:
-            return 0
-        mult = 0.5  # default champion multiplier
-        for champion in self.champions:
-            if champion["id"] == self.champion.champion_id:
-                mult = champion["mult"]
-                break
-        return (0.5 * self.champion.skill) + (0.5 * self.champion.skill * mult)
+        return self.get_projected_champion_skill(self.champion)
 
     def get_player_total_skill(self) -> float:
         """

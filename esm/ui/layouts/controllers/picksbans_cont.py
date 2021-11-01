@@ -30,6 +30,7 @@ class PicksBansController(IController):
         self.team1 = None
         self.team2 = None
         self.ch_list = None
+        self.list_of_champions = None
         self.team1_bans = None
         self.team2_bans = None
 
@@ -45,17 +46,22 @@ class PicksBansController(IController):
             ] for player in team
         ]
 
-    @staticmethod
-    def get_champions(ch_list):
-        ch_list.sort(key=lambda x: x.skill, reverse=True)
-        return [
+    def get_champions(self):
+        player = None
+        if self.current_match.picks_bans.picks_order:
+            player = self.current_match.picks_bans.picks_order[0]
+        
+        self.list_of_champions = [
             [
-                champion.name,
+                champion,
                 champion.skill,
+                player.get_projected_champion_skill(champion) if player is not None else 0,
                 champion.status
             ]
-            for champion in ch_list
+            for champion in self.ch_list
         ]
+        self.list_of_champions.sort(key=lambda x: x[2], reverse=True)
+        return self.list_of_champions
     
     @staticmethod
     def get_bans(bans):
@@ -71,7 +77,7 @@ class PicksBansController(IController):
         self.controller.update_gui_element("pickban_team2_table", values=self.get_players(self.team2.list_players))
         self.controller.update_gui_element("pickban_team1_bans", value=self.get_bans(self.team1_bans))
         self.controller.update_gui_element("pickban_team2_bans", value=self.get_bans(self.team2_bans))
-        self.controller.update_gui_element("pickban_champion_table", values=self.get_champions(self.ch_list))
+        self.controller.update_gui_element("pickban_champion_table", values=self.get_champions())
 
     def get_elements(self):
         self.team1 = self.current_match.match.team1
@@ -100,7 +106,7 @@ class PicksBansController(IController):
 
         if event == "pickban_pick_btn":
             if values["pickban_champion_table"]:
-                champion = self.current_match.picks_bans.champion_list[values["pickban_champion_table"][0]]
+                champion = self.list_of_champions[values["pickban_champion_table"][0]][0]
                 self.queue.put(champion)
 
             self.update_elements()

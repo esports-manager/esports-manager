@@ -35,15 +35,16 @@ class PicksBansLayout(ILayout):
     def layout(self) -> list:
         team_headings = ["Lane", "Nickname", "Skill", "Champion", "Ch. Skill"]
 
-        champion_headings = ["Name", "Skill", "Status"]
+        champion_headings = ["Name", "Skill", "Pl. Skill", "Status"]
 
         values = [
-            "PLAYERLANE",
-            "PLAYERNICKNAME",
+            "LANE",
+            "PLAYERNICKNAME123456",
             "0000",
             "CHAMPIONNAME",
             "0000",
         ]
+        
         col_team1 = [
             [esm_form_text("Team1WholeName", key="pickban_team1_label"), esm_form_text("(Your team)")],
             [
@@ -58,7 +59,7 @@ class PicksBansLayout(ILayout):
                 )
             ],
             [esm_form_text("Bans:")],
-            [esm_multiline(key="pickban_team1_bans", size=(60,4))],
+            [esm_multiline(key="pickban_team1_bans", size=(60,3))],
             [esm_form_text("Team2WholeName", key="pickban_team2_label")],
             [
                 esm_table(
@@ -72,14 +73,14 @@ class PicksBansLayout(ILayout):
                 )
             ],
             [esm_form_text("Bans:")],
-            [esm_multiline(key="pickban_team2_bans", size=(60,4))]
+            [esm_multiline(key="pickban_team2_bans", size=(60,3))]
         ]
 
         col_champion = [
             [esm_form_text("Champions")],
             [
                 esm_table(
-                    values=[["CHAMPIONWHOLENAME", "0000", "Not picked"]],
+                    values=[["CHAMPIONWHOLENAME", "0000", "0000", "Not picked"]],
                     headings=champion_headings,
                     key="pickban_champion_table",
                     num_rows=30,

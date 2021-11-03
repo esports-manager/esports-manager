@@ -42,6 +42,7 @@ class ESMMobaController:
         mainscreen_cont.MainScreenController(self)
         newgame_cont.NewGameController(self)
         settings_cont.SettingsController(self)
+        game_dashboard_cont.GameDashboardController(self)
         
         # Debug controllers
         if DEBUG:

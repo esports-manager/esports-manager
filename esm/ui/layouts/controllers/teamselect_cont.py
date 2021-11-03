@@ -78,6 +78,6 @@ class TeamSelectController(IController):
                 self.teams.teams[team_index].is_players_team = True
                 self.controller.manager = manager
                 # Probably here we should delete the old window and create a new one with new layouts
-                # make_screen("team_select_screen", "game_screen")
+                make_screen("team_select_screen", "game_dashboard_screen")
         else:
             self.teams = None

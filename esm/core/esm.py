@@ -14,8 +14,8 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from esm.core.esports.moba.match_tester import MatchTester
 from esm.core.core import MobaModel
+from esm.core.game_manager import GameManager
 from esm.core.esports.moba.match_live import MatchLive
 from esm.definitions import DEBUG
 
@@ -36,6 +36,7 @@ class ESMMobaController:
         self.initialize_controllers()
         self.core = MobaModel()
         self.view = View(self)
+        self.game_manager = None
 
     def initialize_controllers(self):
         loadgame_cont.LoadGameController(self)
@@ -56,6 +57,9 @@ class ESMMobaController:
     
     def write_event_values(self, first_message: str, second_message: str):
         self.view.write_event_value(first_message, second_message)
+
+    def create_game_manager(self, manager, filename, esport, season, game_name):
+        self.game_manager = GameManager(manager, filename, esport, season, game_name)
 
     def print_error(self, e):
         self.view.print_error(e)

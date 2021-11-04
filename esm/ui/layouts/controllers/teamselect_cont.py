@@ -78,6 +78,13 @@ class TeamSelectController(IController):
                 self.teams.teams[team_index].is_players_team = True
                 self.controller.manager = manager
                 # Probably here we should delete the old window and create a new one with new layouts
+                self.controller.create_game_manager(
+                    manager,
+                    values["ng_gamename_input"],
+                    values["new_game_esport"],
+                    values["new_game_season"],
+                    values["ng_gamename_input"],
+                )
                 make_screen("team_select_screen", "game_dashboard_screen")
         else:
             self.teams = None

@@ -71,7 +71,6 @@ class NewGameLayout(ILayout):
             [esm_checkbox("Generate new database", key="new_game_checkbox")],
         ]
 
-
         return [
             [esm_title_text("New Game\n")],
             [

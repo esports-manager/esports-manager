@@ -24,5 +24,6 @@ class GameDashboardController(IController):
         self.layout = GameDashboardLayout(self)
     
     def update(self, event, values, make_screen):
-        pass
+        if event == "dashboard_cancel_btn":
+            make_screen("game_dashboard_screen", "main_screen")
         

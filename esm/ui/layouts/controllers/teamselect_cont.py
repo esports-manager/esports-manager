@@ -66,7 +66,7 @@ class TeamSelectController(IController):
                 self.controller.reset_generators()
                 make_screen("team_select_screen", "new_game_screen")
             
-            if event == "teamselect_next_btn":
+            if event == "teamselect_select_btn":
                 team_index = values["teamselect_team_table"][0]
                 manager = MobaManager(
                     values["create_manager_name"],

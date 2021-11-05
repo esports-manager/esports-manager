@@ -41,7 +41,8 @@ class GameDashboardLayout(ILayout):
         
         return [
             [esm_title_text("TEAMNAME123456\n")],
-            
+            [esm_title_text("Testing screen")],
+            [esm_button("Cancel", key="dashboard_cancel_btn")]
         ]
 
     def update(self, *args, **kwargs) -> None:

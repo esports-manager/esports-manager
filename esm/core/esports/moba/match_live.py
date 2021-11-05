@@ -220,12 +220,15 @@ class MatchSeries:
         self.team1 = team1
         self.team2 = team2
         self.best_of = best_of
+
+        # If there is a chance to draw a match
         self.drawable = self.best_of % 2 == 0
+
         # How many wins a team must have to be declared winner
-        if not self.drawable:
-            self.required_wins = math.ceil(self.best_of / 2)
-        else:
-            self.required_wins = math.ceil(self.best_of / 2) + 1
+        self.required_wins = math.ceil(self.best_of / 2)
+        if self.drawable:
+            self.required_wins = self.required_wins + 1
+
         self.matches = []
         self.team_wins = [0, 0]
 
@@ -254,8 +257,9 @@ class MatchSeries:
     def get_matches(self):
         if not self.is_series_over():
             teams = [self.team1, self.team2]
-            # Randomly assign teams to a side
+            # Randomly assign teams to a side, so we can have a rotation of team sides
             random.shuffle(teams)
+
             self.matches.append(
                 MatchLive(
                     Match(uuid.uuid4(), self.championship_id, teams[0], teams[1]),

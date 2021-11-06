@@ -30,7 +30,7 @@ class PicksBansController(IController):
         self.team1 = None
         self.team2 = None
         self.ch_list = None
-        self.list_of_champions = None
+        self.champion_table_data = None
         self.team1_bans = None
         self.team2_bans = None
 
@@ -51,7 +51,7 @@ class PicksBansController(IController):
         if self.current_match.picks_bans.picks_order:
             player = self.current_match.picks_bans.picks_order[0]
         
-        self.list_of_champions = [
+        self.champion_table_data = [
             [
                 champion,
                 champion.skill,
@@ -60,8 +60,8 @@ class PicksBansController(IController):
             ]
             for champion in self.ch_list
         ]
-        self.list_of_champions.sort(key=lambda x: x[2], reverse=True)
-        return self.list_of_champions
+        self.champion_table_data.sort(key=lambda x: x[2], reverse=True)
+        return self.champion_table_data
     
     @staticmethod
     def get_bans(bans):
@@ -106,8 +106,9 @@ class PicksBansController(IController):
 
         if event == "pickban_pick_btn":
             if values["pickban_champion_table"]:
-                champion = self.list_of_champions[values["pickban_champion_table"][0]][0]
-                self.queue.put(champion)
+                champion = self.champion_table_data[values["pickban_champion_table"][0]][0]
+                if champion.status not in ["Picked", "Banned"]:
+                    self.queue.put(champion)
 
             self.update_elements()
 

@@ -125,6 +125,9 @@ class PicksBansController(IController):
             self.current_match.picks_bans.num_picks = 10
             self.current_match = None
             self.pick_ban_thread = None
+            self.queue = Queue()
+
+            # Get rid of the rest of the objects that are not being used
             gc.collect()
             make_screen("debug_picks_bans_screen", "debug_game_mode_screen")
 

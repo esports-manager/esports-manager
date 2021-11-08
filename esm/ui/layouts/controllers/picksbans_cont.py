@@ -14,6 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import threading
+import gc
 from queue import Queue
 
 from .controllerinterface import IController
@@ -120,13 +121,17 @@ class PicksBansController(IController):
             self.update_elements()
 
         if event == "pickban_cancel_btn":
-            make_screen("debug_picks_bans_screen", "debug_game_mode_screen")
+            # This will terminate the pick_ban_thread
+            self.current_match.picks_bans.num_picks = 10
             self.current_match = None
+            self.pick_ban_thread = None
+            gc.collect()
+            make_screen("debug_picks_bans_screen", "debug_game_mode_screen")
 
         if event == "pickban_pick_btn":
             if values["pickban_champion_table"]:
                 champion = self.champion_table_data[values["pickban_champion_table"][0]][0]
-                if champion.status not in ["Picked", "Banned"]:
+                if champion.status == "Not picked":
                     self.queue.put(champion)
 
             self.update_elements()

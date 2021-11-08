@@ -42,24 +42,38 @@ class PicksBansController(IController):
                 player.nick_name,
                 player.skill,
                 player.champion,
-                player.get_player_total_skill()
+                int(player.get_player_total_skill())
             ] for player in team
         ]
 
     def get_champions(self):
         player = None
-        if self.current_match.picks_bans.picks_order:
-            player = self.current_match.picks_bans.picks_order[0]
-        
-        self.champion_table_data = [
-            [
-                champion,
-                champion.skill,
-                player.get_projected_champion_skill(champion) if player is not None else 0,
-                champion.status
+        picks_bans = self.current_match.picks_bans
+
+        if picks_bans.bans_turn == -1:
+            if self.current_match.picks_bans.picks_order:
+                player = picks_bans.picks_order[0]
+
+            self.champion_table_data = [
+                [
+                    champion,
+                    champion.skill,
+                    int(player.get_projected_champion_skill(champion)) if player is not None else 0,
+                    champion.status
+                ]
+                for champion in self.ch_list
             ]
-            for champion in self.ch_list
-        ]
+        else:
+            self.champion_table_data = [
+                [
+                    champion,
+                    champion.skill,
+                    champion.skill,
+                    champion.status
+                ]
+                for champion in self.ch_list
+            ]
+
         self.champion_table_data.sort(key=lambda x: x[2], reverse=True)
         return self.champion_table_data
     
@@ -71,6 +85,7 @@ class PicksBansController(IController):
         ]
     
     def update_elements(self):
+        pick_ban = self.current_match.picks_bans
         self.controller.update_gui_element("pickban_team1_label", value=self.team1.name)
         self.controller.update_gui_element("pickban_team2_label", value=self.team2.name)
         self.controller.update_gui_element("pickban_team1_table", values=self.get_players(self.team1.list_players))
@@ -78,6 +93,10 @@ class PicksBansController(IController):
         self.controller.update_gui_element("pickban_team1_bans", value=self.get_bans(self.team1_bans))
         self.controller.update_gui_element("pickban_team2_bans", value=self.get_bans(self.team2_bans))
         self.controller.update_gui_element("pickban_champion_table", values=self.get_champions())
+        if pick_ban.bans_turn != -1:
+            self.controller.update_gui_element("pickban_pick_btn", text="Ban")
+        else:
+            self.controller.update_gui_element("pickban_pick_btn", text="Pick")
 
     def get_elements(self):
         self.team1 = self.current_match.match.team1

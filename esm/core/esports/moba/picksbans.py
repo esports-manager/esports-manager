@@ -53,16 +53,6 @@ class PicksBans:
         self.picked_champions = []
         self.banned_champions = []
 
-    # def reset_picks_bans(self, champions_list):
-    #     self.picks_order = []
-    #     self.picked_champions = []
-    #     self.banned_champions = []
-    #     self.champion_list = champions_list
-    #     if self.team1_ai is not None:
-    #         self.team1_ai.reset()
-    #     if self.team2_ai is not None:
-    #         self.team2_ai.reset()
-
     def pick(self, player: MobaPlayer, champion: Champion) -> None:
         player.champion = champion
         champion.status = "Picked"

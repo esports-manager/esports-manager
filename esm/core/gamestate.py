@@ -33,8 +33,7 @@ class GameState:
         """
         Creates the temporary file as a backup for savefile
         """
-        if self.temporary_file is None:
-            self.temporary_file = NamedTemporaryFile()
+        self.temporary_file = NamedTemporaryFile()
 
     def normalize_data(self) -> dict:
         return {
@@ -49,6 +48,7 @@ class GameState:
         }
 
     def write_to_temporary_file(self):
-        self.create_temporary_file()
+        if self.temporary_file is None:
+            self.create_temporary_file()
         with open(self.temporary_file) as fp:
             cbor2.dump(self.normalize_data(), fp)

@@ -38,11 +38,26 @@ class GameDashboardLayout(ILayout):
         """
         Defines the main game dashboard screen.
         """
-        
-        return [
+        tab1_layout = [
             [esm_title_text("TEAMNAME123456\n")],
             [esm_title_text("Testing screen")],
-            [esm_button("Cancel", key="dashboard_cancel_btn")]
+        ]
+
+        tab2_layout = [
+            [esm_title_text("ROSTER\n")],
+            [esm_title_text("Testing tabs")],
+        ]
+
+        return [
+            [esm_button("Next match", size=(15, 2), )],
+            [sg.TabGroup([
+                [sg.Tab('Main', tab1_layout),
+                 sg.Tab('Roster', tab2_layout)]
+            ],
+                border_width=0,
+                font=(default_font, increased_font_size),
+            )],
+            [esm_button("Cancel", key="dashboard_cancel_btn")],
         ]
 
     def update(self, *args, **kwargs) -> None:

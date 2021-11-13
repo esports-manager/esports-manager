@@ -13,19 +13,35 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import cbor2
 from esm.core.utils import load_list_from_file
 
 
-class LoadGame:
-    def __init__(self, filename):
-        self.filename = filename
+class LoadGameError(Exception):
+    pass
 
-    def check_game_file(self):
+
+class LoadGame:
+    def __init__(self, folder):
+        self.folder = folder
+
+    def check_game_file(self, filename) -> bool:
         """
-        Checks the integrity of the game file. If there are missing keywords, it's a corrupted savefile, and the game cannot be loaded.
+        Checks the integrity of the game file. If there are missing keywords, it's a corrupted savefile,
+        and the game cannot be loaded.
+        Returns True if the file is okay, or False otherwise.
         """
         pass
     
-    def load_game_file(self):
-        self.check_game_file()
-        
+    def load_game_file(self, filename):
+        if self.check_game_file(filename):
+            with open(filename, 'r') as fp:
+                return cbor2.load(fp)
+        else:
+            raise LoadGameError("The save file is corrupted!")
+
+    def get_load_game_files(self) -> list:
+        """
+        Returns a list of available load game files
+        """
+        pass

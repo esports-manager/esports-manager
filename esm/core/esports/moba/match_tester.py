@@ -32,6 +32,7 @@ class MatchTester:
         self.avg_team_kills = [0, 0]
         self.avg_team_deaths = [0, 0]
         self.avg_team_assists = [0, 0]
+        self.game_times = []
         self.match.simulate = False
         self.match.show_commentary = False
         self.running_test = False
@@ -44,6 +45,7 @@ class MatchTester:
         self.avg_team_kills = [0, 0]
         self.avg_team_deaths = [0, 0]
         self.avg_team_assists = [0, 0]
+        self.game_times = []
         self.match.simulate = False
         self.match.show_commentary = False
         self.running_test = False
@@ -54,6 +56,8 @@ class MatchTester:
         self.amount_team_deaths[i].append(team.deaths)
         self.amount_team_assists[i].append(team.assists)
 
+        self.game_times.append(self.match.game_time)
+
         self.avg_team_kills[i] += team.kills
         self.avg_team_deaths[i] += team.deaths
         self.avg_team_assists[i] += team.assists
@@ -63,6 +67,16 @@ class MatchTester:
             self.amount_team_wins[0] += 1
         else:
             self.amount_team_wins[1] += 1
+
+    def get_max_game_time(self):
+        max_game_time = 0
+        for game_time in self.game_times:
+            max_game_time = max(max_game_time, game_time)
+
+        return max_game_time
+
+    def get_avg_game_time(self):
+        return sum(self.game_times) / len(self.game_times)
 
     def get_avg(self, avg):
         for i, value in enumerate(avg):
@@ -93,6 +107,8 @@ class MatchTester:
         print(self.match.match.team1.name, 'won', self.amount_team_wins[0], 'times')
         percentage = (self.amount_team_wins[0] / self.amount_test) * 100
         print('Won about ', percentage, '% of the games')
+        print('Avg gametime was', self.get_avg_game_time())
+        print('Max gametime was', self.get_max_game_time())
         self.running_test = False
 
 

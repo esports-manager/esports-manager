@@ -118,16 +118,13 @@ class MatchTesterController(IController):
 
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("match_tester_screen").visible:
-            get_team_data = self.get_team_data
-            update_match_tester_match_info = self.update_match_tester_match_info
-
             if not self.current_match:
                 self.controller.check_files()
                 self.current_match = self.controller.initialize_random_debug_match()
                 self.current_match.simulate = False
                 self.current_match.show_commentary = False
-                data = get_team_data()
-                update_match_tester_match_info(data)
+                data = self.get_team_data()
+                self.update_match_tester_match_info(data)
 
             # Click the Start Match button
             if event == "match_tester_startmatch_btn":
@@ -148,7 +145,7 @@ class MatchTesterController(IController):
                 self.controller.check_files()
                 self.current_match = self.controller.initialize_random_debug_match()
                 data = self.get_team_data()
-                update_match_tester_match_info(data)
+                self.update_match_tester_match_info(data)
 
         else:
             self.current_match = None

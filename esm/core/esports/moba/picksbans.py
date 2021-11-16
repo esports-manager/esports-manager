@@ -33,7 +33,7 @@ class PicksBans:
             team2: Team,
             champion_list: list,
             ban_per_team: int = 5,
-            difficulty_level=1,
+            difficulty_level: int = 1,
             queue: Queue = None,
     ):
         self.bans_turn = 0
@@ -212,7 +212,7 @@ class PickBanAI:
         self.get_opponents_best_champions()
 
     def get_input(self, pick=True, player=None):
-        if pick is True:
+        if pick:
             return self.get_ai_pick_input(player)
         else:
             return self.get_ai_ban_input()
@@ -231,10 +231,14 @@ class PickBanAI:
 
     def get_ai_ban_input(self) -> Champion:
         """
-        Returns the champions that the AI is going to ban, based on the best champions on the opponent's team player pool.
+        Returns the champions that the AI is going to ban, based on the best champions on the opponent's team player
+        pool.
 
         Still a naive implementation, should consider best players above everything.
         """
+        # Prevents selecting banned or picked champions
+        self.check_champion_used()
+
         return (
             random.choice(self.opponents_best_champions)
             if self.opponents_best_champions
@@ -247,8 +251,11 @@ class PickBanAI:
         for champion in list_ch:
             ch = ChampionGenerator()
             ch.champions_list = self.champion_list
-            ch = ch.get_champion_by_id(champion["id"], self.champion_list)
-            second_list.append(ch)
+            champ = ch.get_champion_by_id(champion["id"], self.champion_list)
+            # attempt to fix a bug that all champions return None
+            if champ is None:
+                champ = random.choice(self.champion_list)
+            second_list.append(champ)
 
         self.check_champion_used()
 

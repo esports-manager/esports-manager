@@ -23,9 +23,11 @@ import logging
 
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.esports.moba.team import Team
+from esm.core.esports.moba.commentaries import Commentaries
 from esm.core.utils import load_list_from_file
 
 logger = logging.getLogger(__name__)
+
 
 class MobaEvent:
     def __init__(
@@ -392,103 +394,6 @@ class MobaEvent:
         if self.event_name == "NEXUS ASSAULT":
             self.calculate_nexus(team1, team2, which_nexus)
 
-    @staticmethod
-    def list_names(players: list):
-        names = ""
-        for i, player in enumerate(players):
-            if i == len(players) - 1:
-                names = names + player["killed_player"].nick_name + "."
-            else:
-                names = names + player["killed_player"].nick_name + ", "
-
-        return names
-
-    def _get_kill_commentaries(
-        self,
-        kill_dict_event,
-    ):
-        names = self.list_names(kill_dict_event)
-        killer = kill_dict_event[0]["killer"]
-        amount_kills = len(kill_dict_event)
-        
-        if amount_kills == 2:
-            self.commentary = killer.nick_name + " got a Double Kill!"
-        elif amount_kills == 3:
-            self.commentary = killer.nick_name + " got a Triple Kill!"
-        elif amount_kills == 4:
-            self.commentary = killer.nick_name + " got a QUADRA KILL!"
-        elif amount_kills == 5:
-            self.commentary = killer.nick_name + " got a PENTAKILL!"
-
-        if amount_kills != 0:
-            if self.commentary is not None:
-                self.commentary = (
-                    self.commentary + "\n" + killer.nick_name + " has slain: " + names
-                )
-            else:
-                self.commentary = killer.nick_name + " has slain " + names
-
-        if self.commentary is not None:
-            if killer.is_player_godlike():
-                self.commentary = (
-                    self.commentary + "\n" + killer.nick_name + " is GODLIKE!"
-                )
-            if killer.is_player_on_killing_spree():
-                self.commentary = (
-                    self.commentary + "\n" + killer.nick_name + " is on a KILLING SPREE!"
-                )
-            if killer.is_player_legendary():
-                self.commentary = (
-                    self.commentary + "\n" + killer.nick_name + " is LEGENDARY!!"
-                )
-    
-    def _get_jg_commentary(
-        self,
-        stole,
-        def_team_name,
-        atk_team_name,
-        jg_name,
-    ):
-        if stole:
-            self.commentary = def_team_name + " stole the " + jg_name
-        else:
-            self.commentary = atk_team_name + " has slain the " + jg_name
-
-    def _get_inhib_commentary(
-        self,
-        defended,
-        def_team_name,
-        atk_team_name,
-        lane,
-    ):
-        if defended:
-            self.commentary = (
-                def_team_name
-                + " has defended the "
-                + lane
-                + " inhibitor successfully"
-            )
-        else:
-            self.commentary = (
-                atk_team_name + " has destroyed the " + lane + " inhibitor"
-            )
-
-    def _get_tower_commentary(
-        self,
-        defended,
-        def_team_name,
-        atk_team_name,
-        lane
-    ):
-        if defended:
-            self.commentary = (
-                def_team_name + " has defended the " + lane + " tower successfully"
-            )
-        else:
-            self.commentary = (
-                atk_team_name + " has destroyed the " + lane + " tower"
-            )
-    
     def get_commentary(
         self,
         kill_dict_event: list = None,
@@ -502,27 +407,21 @@ class MobaEvent:
     ):
         """
         Chooses commentary based on a list of commentaries.
-
-        For now this is a dummy implementation that does nothing, but it will load commentaries depending
-        on the locale.
         """
-        if self.event_name == "KILL" and kill_dict_event is not None:
-            self._get_kill_commentaries(kill_dict_event)
+        self.commentary = Commentaries(
+            self.event_name,
+            kill_dict_event,
+            atk_team_name,
+            def_team_name,
+            defended,
+            lane,
+            jg_name,
+            stole,
+            commentaries
+        )
 
-        if self.event_name == "JUNGLE":
-            self._get_jg_commentary(stole, def_team_name, atk_team_name, jg_name)
-
-        if self.event_name == "INHIB ASSAULT":
-            self._get_inhib_commentary(defended, def_team_name, atk_team_name, lane)
-
-        elif self.event_name == "NEXUS ASSAULT":
-            self.commentary = atk_team_name + " won the match!"
-
-        elif self.event_name == "TOWER ASSAULT":
-            self._get_tower_commentary(defended, def_team_name, atk_team_name, lane)
-            
         if self.show_commentary:
-            self.commentary = (str(timedelta(minutes=self.event_time)) + " - " + self.commentary + "\n")
+            self.commentary = (str(timedelta(minutes=self.event_time)) + " - " + self.commentary.commentary + "\n")
             self.queue.put(self.commentary, block=False)
 
 

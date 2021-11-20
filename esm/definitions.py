@@ -20,6 +20,7 @@ from esm.resources import RES
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 RES_DIR = RES
 DB_DIR = os.path.join(RES, "db")
+SAVE_FILE_DIR = os.path.join(RES, "save")
 CHAMPIONS_FILE = "champions.json"
 PLAYERS_FILE = "players.json"
 TEAMS_FILE = "teams.json"

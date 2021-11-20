@@ -13,7 +13,9 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import os
 import cbor2
+from esm.definitions import SAVE_FILE_DIR
 from esm.core.utils import load_list_from_file
 
 
@@ -22,7 +24,7 @@ class LoadGameError(Exception):
 
 
 class LoadGame:
-    def __init__(self, folder):
+    def __init__(self, folder=SAVE_FILE_DIR):
         self.folder = folder
 
     def check_game_file(self, filename) -> bool:
@@ -44,4 +46,13 @@ class LoadGame:
         """
         Returns a list of available load game files
         """
-        pass
+        if not os.path.exists(self.folder):
+            os.mkdir(self.folder)
+
+        load_game_files = []
+        for root, _, files in os.walk(self.folder):
+            for file in files:
+                if file.endswith(".cbor") and self.check_game_file(file):
+                    load_game_files.append(file)
+
+        return load_game_files

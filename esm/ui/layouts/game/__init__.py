@@ -14,16 +14,6 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .controllerinterface import IController
-from ..game_dashboard import GameDashboardLayout
-
-
-class GameDashboardController(IController):
-    def __init__(self, controller):
-        super().__init__(controller)
-        self.layout = GameDashboardLayout(self)
-    
-    def update(self, event, values, make_screen):
-        if event == "dashboard_cancel_btn":
-            make_screen("game_dashboard_screen", "main_screen")
-        
+__all__ = [
+    "game_dashboard"
+]

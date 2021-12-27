@@ -15,15 +15,5 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 __all__ = [
-    "debug_cont",
-    "debugmatch_cont",
-    "debug_championship_cont",
-    "newgame_cont",
-    "loadgame_cont",
-    "pickteam_cont",
-    "picksbans_cont",
-    "mainscreen_cont",
-    "settings_cont",
-    "match_tester_cont",
-    "teamselect_cont",
+    "game_dashboard_cont"
 ]

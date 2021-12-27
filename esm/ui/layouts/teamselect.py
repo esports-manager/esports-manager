@@ -51,8 +51,10 @@ class TeamSelectLayout(ILayout):
             # TODO: IMPLEMENT REGIONS COMBO BOX
             # [esm_input_combo(values=regions, key="teamselect_regions_combo")],
             [
-                esm_table(values=value, display_row_numbers=True, num_rows=20, headings=headings_teams, key="teamselect_team_table", enable_events=True),
-                esm_table(values=[["   ", "Select your team", "   "]], num_rows=20, headings=headings_players, key="teamselect_players_table", enable_events=True),
+                esm_table(values=value, display_row_numbers=True, num_rows=20, headings=headings_teams,
+                          key="teamselect_team_table", enable_events=True),
+                esm_table(values=[["   ", "Select your team", "   "]], num_rows=20, headings=headings_players,
+                          key="teamselect_players_table", enable_events=True),
             ],
             [esm_button("Select", key="teamselect_select_btn"), esm_button("Cancel", key="teamselect_cancel_btn")],
         ]

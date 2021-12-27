@@ -21,6 +21,7 @@ from esm.definitions import DEBUG
 
 from esm.ui.view import View
 from esm.ui.layouts.controllers import *
+from esm.ui.layouts.controllers.game import *
 from esm.ui.gui import init_theme
 
 

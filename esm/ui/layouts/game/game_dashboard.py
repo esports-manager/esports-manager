@@ -14,10 +14,10 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from ..gui_components import *
-from ...resources.generator.generate_players import MobaPlayerGenerator
+from esm.ui.gui_components import *
+from esm.resources.generator.generate_players import MobaPlayerGenerator
 
-from .layoutinterface import ILayout
+from esm.ui.layouts.layoutinterface import ILayout
 
 
 class GameDashboardLayout(ILayout):

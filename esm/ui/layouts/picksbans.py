@@ -14,8 +14,8 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from ..gui_components import *
 from .layoutinterface import ILayout
+from ..gui_components import *
 
 
 class PicksBansLayout(ILayout):
@@ -44,7 +44,7 @@ class PicksBansLayout(ILayout):
             "CHAMPIONNAME",
             "0000",
         ]
-        
+
         col_team1 = [
             [esm_form_text("Team1WholeName", key="pickban_team1_label"), esm_form_text("(Your team)")],
             [
@@ -59,7 +59,7 @@ class PicksBansLayout(ILayout):
                 )
             ],
             [esm_form_text("Bans:")],
-            [esm_multiline(key="pickban_team1_bans", size=(60,3))],
+            [esm_multiline(key="pickban_team1_bans", size=(60, 3))],
             [esm_form_text("Team2WholeName", key="pickban_team2_label")],
             [
                 esm_table(
@@ -73,7 +73,7 @@ class PicksBansLayout(ILayout):
                 )
             ],
             [esm_form_text("Bans:")],
-            [esm_multiline(key="pickban_team2_bans", size=(60,3))]
+            [esm_multiline(key="pickban_team2_bans", size=(60, 3))]
         ]
 
         col_champion = [

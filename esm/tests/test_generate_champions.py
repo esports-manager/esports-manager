@@ -1,8 +1,7 @@
 import pytest
 
-from esm.resources.generator.generate_champions import ChampionGenerator
-from esm.core.esports.moba.champion import Champion
 from esm.core.utils import get_from_file
+from esm.resources.generator.generate_champions import ChampionGenerator
 
 
 @pytest.fixture

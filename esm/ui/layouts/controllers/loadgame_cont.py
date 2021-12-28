@@ -21,7 +21,7 @@ class LoadGameController(IController):
     def __init__(self, controller):
         super().__init__(controller)
         self.layout = LoadGameLayout(self)
-    
+
     def update(self, event, values, make_screen):
         if event == "load_game_cancel_btn":
             make_screen("load_game_screen", "main_screen")

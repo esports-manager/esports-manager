@@ -20,10 +20,9 @@ from pathlib import Path
 from typing import Union
 
 from esm.core.esports.moba.team import Team
-from esm.resources.generator.generate_players import MobaPlayerGenerator
+from esm.core.utils import write_to_file, get_list_from_file, load_list_from_file
 from esm.definitions import ROOT_DIR, DB_DIR, TEAMS_FILE
 from esm.resources.db.default_team_names import get_default_team_names
-from esm.core.utils import write_to_file, get_list_from_file, load_list_from_file
 
 
 class TeamGeneratorError(Exception):
@@ -32,12 +31,12 @@ class TeamGeneratorError(Exception):
 
 class TeamGenerator:
     def __init__(
-        self,
-        nationality: str = None,
-        amount: int = 1,
-        players: list = None,
-        organized: bool = True,
-        file_name: str = TEAMS_FILE,
+            self,
+            nationality: str = None,
+            amount: int = 1,
+            players: list = None,
+            organized: bool = True,
+            file_name: str = TEAMS_FILE,
     ):
         self.name = None
         self.nationality = nationality
@@ -81,7 +80,7 @@ class TeamGenerator:
         Placeholder for a future logo generator
         """
         pass
-    
+
     def get_players_list(self) -> None:
         if not self.player_list or self.player_list is None:
             self.player_list = MobaPlayerGenerator()
@@ -216,9 +215,9 @@ class TeamGenerator:
             self.teams.append(self.team_obj)
 
     def generate_file(
-        self,
-        folder: Union[str, Path] = ROOT_DIR,
-        res_folder: Union[str, Path] = DB_DIR,
+            self,
+            folder: Union[str, Path] = ROOT_DIR,
+            res_folder: Union[str, Path] = DB_DIR,
     ) -> None:
         """
         Generates the teams file

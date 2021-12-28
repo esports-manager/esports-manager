@@ -14,11 +14,12 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import os
 import json
-import cbor2
-from typing import Union
+import os
 from pathlib import Path
+from typing import Union
+
+import cbor2
 
 from esm.definitions import ROOT_DIR, DB_DIR, TEAMS_FILE
 

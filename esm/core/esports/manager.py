@@ -13,16 +13,24 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from datetime import date
+from datetime import datetime, date
+from typing import Union
+
 from esm.core.esports.moba.team import Team
 
 
 class Manager:
     def __init__(
-        self, name: str, birthday: date, team: Team, is_player: bool, quality: int
+            self, name: str, birthday: Union[date, datetime, str], team: Union[int, Team], is_player: bool, quality: int
     ):
         self.name = name
-        self.birthday = birthday
+
+        # This might be necessary if we are using JSON deserialization
+        if isinstance(birthday, str):
+            self.birthday = datetime.strptime(birthday, "%m/%d/%Y").date()
+        elif isinstance(birthday, (datetime, date)):
+            self.birthday = birthday
+
         self.team = team
         self.is_player = is_player
         self.quality = quality

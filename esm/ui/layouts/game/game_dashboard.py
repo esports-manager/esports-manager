@@ -15,7 +15,6 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from esm.ui.gui_components import *
-from esm.resources.generator.generate_players import MobaPlayerGenerator
 
 from esm.ui.layouts.layoutinterface import ILayout
 

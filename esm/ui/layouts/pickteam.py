@@ -14,8 +14,8 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from ..gui_components import *
 from .layoutinterface import ILayout
+from ..gui_components import *
 
 
 class PickTeamLayout(ILayout):

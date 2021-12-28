@@ -15,14 +15,13 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from esm.core.core import MobaModel
-from esm.core.game_manager import GameManager
 from esm.core.esports.moba.match_live import MatchLive
+from esm.core.game_manager import GameManager
 from esm.definitions import DEBUG
-
-from esm.ui.view import View
+from esm.ui.gui import init_theme
 from esm.ui.layouts.controllers import *
 from esm.ui.layouts.controllers.game import *
-from esm.ui.gui import init_theme
+from esm.ui.view import View
 
 
 class ESMMobaController:
@@ -31,6 +30,7 @@ class ESMMobaController:
     and layouts, and also communicates with the View and MobaModel modules. It is the bread and butter
     for all other layout controllers.
     """
+
     def __init__(self):
         init_theme()
         self.controllers = None
@@ -45,7 +45,7 @@ class ESMMobaController:
         newgame_cont.NewGameController(self)
         settings_cont.SettingsController(self)
         game_dashboard_cont.GameDashboardController(self)
-        
+
         # Debug controllers
         if DEBUG:
             debug_cont.DebugController(self)
@@ -55,7 +55,7 @@ class ESMMobaController:
             picksbans_cont.PicksBansController(self)
             pickteam_cont.PickTeamController(self)
             match_tester_cont.MatchTesterController(self)
-    
+
     def write_event_values(self, first_message: str, second_message: str):
         self.view.write_event_value(first_message, second_message)
 

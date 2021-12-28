@@ -2027,7 +2027,12 @@
     ]
   },
   {
-    "exceptions": [["/^(.*) (.*)$/", "$2 $1"]],
+    "exceptions": [
+      [
+        "/^(.*) (.*)$/",
+        "$2 $1"
+      ]
+    ],
     "female": [
       "\u4fde",
       "\u5029",
@@ -2626,8 +2631,17 @@
     ]
   },
   {
-    "female": ["Alexa", "Sophia"],
-    "male": ["Adrian", "Carlos Roberto", "Dennis", "Gerarod", "Pablo"],
+    "female": [
+      "Alexa",
+      "Sophia"
+    ],
+    "male": [
+      "Adrian",
+      "Carlos Roberto",
+      "Dennis",
+      "Gerarod",
+      "Pablo"
+    ],
     "sigma": 27,
     "region": "Costa Rica",
     "mu": 85,
@@ -2696,8 +2710,20 @@
     ]
   },
   {
-    "female": ["Eli\u0161ka", "Tereza", "Anna", "Ad\u00e9la", "Nat\u00e1lie"],
-    "male": ["Jakub", "Tom\u00e1\u0161", "Jan", "Maty\u00e1\u0161", "Adam"],
+    "female": [
+      "Eli\u0161ka",
+      "Tereza",
+      "Anna",
+      "Ad\u00e9la",
+      "Nat\u00e1lie"
+    ],
+    "male": [
+      "Jakub",
+      "Tom\u00e1\u0161",
+      "Jan",
+      "Maty\u00e1\u0161",
+      "Adam"
+    ],
     "sigma": 10,
     "region": "Czech Republic",
     "mu": 56,
@@ -5220,7 +5246,12 @@
     ]
   },
   {
-    "exceptions": [["/^(.*) (.*)$/", "$2 $1"]],
+    "exceptions": [
+      [
+        "/^(.*) (.*)$/",
+        "$2 $1"
+      ]
+    ],
     "female": [
       "Abig\u00e9l",
       "Amanda",
@@ -6576,7 +6607,12 @@
     ]
   },
   {
-    "exceptions": [["/^(.*) (.*)$/", "$2 $1"]],
+    "exceptions": [
+      [
+        "/^(.*) (.*)$/",
+        "$2 $1"
+      ]
+    ],
     "female": [
       "\u4e45\u7f8e\u5b50",
       "\u9806\u5b50",
@@ -6838,7 +6874,12 @@
     ]
   },
   {
-    "exceptions": [["/^(.*) (.*)$/", "$2 $1"]],
+    "exceptions": [
+      [
+        "/^(.*) (.*)$/",
+        "$2 $1"
+      ]
+    ],
     "female": [
       "\uacbd\uc219",
       "\uacbd\ud76c",
@@ -11233,7 +11274,12 @@
       "\u042e\u043b\u0438\u044f",
       "\u042f\u043d\u0430"
     ],
-    "female_exceptions": [["/.* .*[\u0432|\u043d]$/", "$0a"]],
+    "female_exceptions": [
+      [
+        "/.* .*[\u0432|\u043d]$/",
+        "$0a"
+      ]
+    ],
     "male": [
       "\u0410\u0434\u0430\u043c",
       "\u0410\u043b\u0435\u043a\u0441\u0430\u043d\u0434\u0440",
@@ -14094,7 +14140,12 @@
     ]
   },
   {
-    "exceptions": [["/^(.*) (.*)$/", "$2 $1"]],
+    "exceptions": [
+      [
+        "/^(.*) (.*)$/",
+        "$2 $1"
+      ]
+    ],
     "female": [
       "An",
       "Anh",

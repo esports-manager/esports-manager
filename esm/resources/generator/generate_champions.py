@@ -19,22 +19,21 @@ import uuid
 from pathlib import Path
 from typing import Union
 
-
-from esm.definitions import ROOT_DIR, DB_DIR, CHAMPIONS_FILE
-from esm.core.utils import write_to_file, get_list_from_file, load_list_from_file
 from esm.core.esports.moba.champion import Champion
+from esm.core.utils import write_to_file, get_list_from_file, load_list_from_file
+from esm.definitions import ROOT_DIR, DB_DIR, CHAMPIONS_FILE
 
 
 class ChampionGenerator:
     def __init__(
-        self,
-        name: str = None,
-        skill: int = None,
-        lane: str = None,
-        champion_dict: dict = None,
-        file_name: Union[str, Path] = CHAMPIONS_FILE,
-        champion_obj: Champion = None,
-        champion_names: list = None,
+            self,
+            name: str = None,
+            skill: int = None,
+            lane: str = None,
+            champion_dict: dict = None,
+            file_name: Union[str, Path] = CHAMPIONS_FILE,
+            champion_obj: Champion = None,
+            champion_names: list = None,
     ):
         self.champion_id = None
         self.name = name
@@ -136,11 +135,11 @@ class ChampionGenerator:
                 return champion
         else:
             return None
-    
+
     def generate_file(
-        self,
-        folder: Union[str, Path] = ROOT_DIR,
-        res_folder: Union[str, Path] = DB_DIR,
+            self,
+            folder: Union[str, Path] = ROOT_DIR,
+            res_folder: Union[str, Path] = DB_DIR,
     ) -> None:
         """
         Generates the champion file

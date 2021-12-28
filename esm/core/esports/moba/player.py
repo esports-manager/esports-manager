@@ -15,8 +15,8 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from datetime import date
 
-from esm.core.esports.moba.moba_enums_def import Lanes, LaneError
 from esm.core.esports.moba.champion import Champion
+from esm.core.esports.moba.moba_enums_def import Lanes, LaneError
 from esm.core.esports.player import Player
 
 
@@ -28,16 +28,16 @@ class MobaPlayer(Player):
     """
 
     def __init__(
-        self,
-        player_id: int,
-        nationality: str,
-        first_name: str,
-        last_name: str,
-        birthday: date,
-        nick_name: str,
-        mult: list,
-        skill: int,
-        champions: list,
+            self,
+            player_id: int,
+            nationality: str,
+            first_name: str,
+            last_name: str,
+            birthday: date,
+            nick_name: str,
+            mult: list,
+            skill: int,
+            champions: list,
     ):
         self._champion = None
         self.mult = mult
@@ -128,7 +128,7 @@ class MobaPlayer(Player):
         """
         lane = self.get_best_lane()
         self.lane = lane
-    
+
     def get_curr_lane_multiplier(self) -> int:
         """
         Gets the current lane multiplier in-game, this will define how good a player is on that particular lane.
@@ -158,7 +158,7 @@ class MobaPlayer(Player):
                 mult = ch["mult"]
                 break
         return (0.5 * champion.skill) * (1 + mult)
-    
+
     def get_champion_skill(self) -> float:
         """
         Gets the player_champion_skill according to the multiplier.
@@ -172,8 +172,8 @@ class MobaPlayer(Player):
         This will define how strong or how weak a certain player is on the current match.
         """
         return (
-            self.get_curr_player_skill() + self.get_champion_skill()
-        ) / 2 + self.points
+                       self.get_curr_player_skill() + self.get_champion_skill()
+               ) / 2 + self.points
 
     def is_player_on_killing_spree(self) -> bool:
         """

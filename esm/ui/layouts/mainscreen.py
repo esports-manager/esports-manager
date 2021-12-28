@@ -14,10 +14,10 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from esm.definitions import DEBUG
-from ..gui_components import *
 from esm.core.utils import find_file
+from esm.definitions import DEBUG
 from .layoutinterface import ILayout
+from ..gui_components import *
 
 
 class MainScreenLayout(ILayout):

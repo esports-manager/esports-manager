@@ -14,16 +14,16 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import logging
 import random
 import uuid
 from datetime import timedelta
 from queue import Queue
 from typing import Union
-import logging
 
+from esm.core.esports.moba.commentaries import Commentaries
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.esports.moba.team import Team
-from esm.core.esports.moba.commentaries import Commentaries
 from esm.core.utils import load_list_from_file
 
 logger = logging.getLogger(__name__)
@@ -31,15 +31,15 @@ logger = logging.getLogger(__name__)
 
 class MobaEvent:
     def __init__(
-        self,
-        event_id: int = uuid.uuid4(),
-        event_name: str = None,
-        event_type: str = None,
-        priority: int = 0,
-        points: int = 0,
-        event_time: float = 0.0,
-        show_commentary: bool = True,
-        queue: Queue = None,
+            self,
+            event_id: int = uuid.uuid4(),
+            event_name: str = None,
+            event_type: str = None,
+            priority: int = 0,
+            points: int = 0,
+            event_time: float = 0.0,
+            show_commentary: bool = True,
+            queue: Queue = None,
     ):
         self.event_name = event_name
         self.event_type = event_type
@@ -150,14 +150,14 @@ class MobaEvent:
         diff_probs = abs(player1_prob - player2_prob)
 
         if player1_prob > player2_prob and (
-            -1.0 <= self.factor <= 1.0 or diff_probs >= 0.3
+                -1.0 <= self.factor <= 1.0 or diff_probs >= 0.3
         ):
             killed = 1
         elif diff_probs <= 0.15 and -0.5 <= self.factor <= 0.5:
             killed = 1
 
         if killed == 1:
-            
+
             # Player gets more points for killing more players consecutively
             if player1.is_player_on_killing_spree():
                 self.points += 5
@@ -165,7 +165,7 @@ class MobaEvent:
                 self.points += 10
             if player1.is_player_legendary():
                 self.points += 20
-            
+
             # Shutdown gives more gold to enemy team and ends the player streak
             if player2.is_player_on_killing_spree():
                 self.points += 10
@@ -173,30 +173,30 @@ class MobaEvent:
                 self.points += 20
             if player2.is_player_legendary():
                 self.points += 50
-            
+
             # Awards points to the player that killed
             player1.points += self.points
             player1.consecutive_kills += 1
             player1.kills += 1
-            
+
             player2.deaths += 1
             player2.consecutive_kills = 0
 
             return player2
-        
+
         return None
 
     def calculate_assists(self, team: list, killer: MobaPlayer):
         # 50% chance to get assists
         will_there_be_assists = random.randint(0, 1)
         assistance_players = []
-        
+
         if will_there_be_assists == 1:
             # Higher level players are more likely to get assists
             assists = random.choices(
                 team, [player.get_player_total_skill() for player in team]
             )
-            
+
             for player in assists:
                 if player is not killer:
                     player.assists += 1
@@ -254,7 +254,7 @@ class MobaEvent:
                 killed_players.append(player)
 
         logger.debug("Killer: {0} killed {1}".format(killer.nick_name, len(killed_players)))
-        
+
         if killed_players:
             kill_dict = self.get_kill_dict(killer, killed_players, team_killer)
             logger.debug(kill_dict)
@@ -308,7 +308,7 @@ class MobaEvent:
                     player.points += self.points / 5
         else:
             self.event_name = "NOTHING"
-        
+
         logger.debug("Calculate tower method done!")
 
     def _destroy_tower(self, prevailing, attack_team, def_team, lane):
@@ -395,15 +395,15 @@ class MobaEvent:
             self.calculate_nexus(team1, team2, which_nexus)
 
     def get_commentary(
-        self,
-        kill_dict_event: list = None,
-        atk_team_name: str = "",
-        def_team_name: str = "",
-        defended: bool = False,
-        lane: str = "",
-        jg_name: str = "",
-        stole: bool = False,
-        commentaries: list = None,
+            self,
+            kill_dict_event: list = None,
+            atk_team_name: str = "",
+            def_team_name: str = "",
+            defended: bool = False,
+            lane: str = "",
+            jg_name: str = "",
+            stole: bool = False,
+            commentaries: list = None,
     ):
         """
         Chooses commentary based on a list of commentaries.
@@ -439,7 +439,7 @@ class MobaEventHandler:
         self.queue = queue if self.show_commentary else None
 
     def get_game_state(
-        self, game_time, which_nexus_exposed, is_any_inhib_open, towers_number
+            self, game_time, which_nexus_exposed, is_any_inhib_open, towers_number
     ) -> None:
         if game_time == 0.0:
             self.get_enabled_events(["NOTHING", "KILL"])
@@ -472,8 +472,8 @@ class MobaEventHandler:
                     self.enabled_events.remove(event)
                 event["spawn_time"] += event["cooldown"]
             elif (
-                game_time >= event["spawn_time"]
-                and event not in self.enabled_events
+                    game_time >= event["spawn_time"]
+                    and event not in self.enabled_events
             ):
                 self.enabled_events.append(event)
             if 0.0 < event["end_time"] <= game_time and event in self.enabled_events:

@@ -23,14 +23,14 @@ class Player:
     """
 
     def __init__(
-        self,
-        player_id: int,
-        nationality: str,
-        first_name: str,
-        last_name: str,
-        birthday: date,
-        nick_name: str,
-        skill: int,
+            self,
+            player_id: int,
+            nationality: str,
+            first_name: str,
+            last_name: str,
+            birthday: date,
+            nick_name: str,
+            skill: int,
     ):
         self.player_id = player_id
 

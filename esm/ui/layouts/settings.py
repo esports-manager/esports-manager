@@ -15,10 +15,10 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
 
-from ..gui_components import *
 from esm.core.utils import find_file
-from .layoutinterface import ILayout
 from esm.definitions import DB_DIR, CHAMPIONS_FILE, PLAYERS_FILE, TEAMS_FILE
+from .layoutinterface import ILayout
+from ..gui_components import *
 
 
 class SettingsLayout(ILayout):

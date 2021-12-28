@@ -16,10 +16,10 @@
 import random
 from queue import Queue
 
-from esm.resources.generator.generate_champions import ChampionGenerator
-from esm.core.esports.moba.team import Team
-from esm.core.esports.moba.player import MobaPlayer
 from esm.core.esports.moba.champion import Champion
+from esm.core.esports.moba.player import MobaPlayer
+from esm.core.esports.moba.team import Team
+from esm.resources.generator.generate_champions import ChampionGenerator
 
 
 class PicksBans:
@@ -131,7 +131,7 @@ class PicksBans:
             elif self.num_picks == 6:
                 self.picks_turn = -1
                 self.bans_turn = 1
-    
+
     def ban_turns(self):
         """
         Checks if it's time to switch from picks to bans.
@@ -147,13 +147,13 @@ class PicksBans:
         if self.num_picks == 6:
             self.picks_turn = -1
             self.bans_turn = 1
-    
+
     def get_input(self, team, opp_team, pick=True, player=None):
         if team.is_players_team:
             return self.get_player_input()
         else:
             return self.get_ai_input(opp_team, pick=pick, player=player)
-    
+
     def get_ai_input(self, opp_team, pick=True, player=None):
         if self.team1_ai is not None and self.team1_ai.opp_team == opp_team:
             ai = self.team1_ai
@@ -164,11 +164,12 @@ class PicksBans:
 
     def get_player_input(self) -> Champion:
         champion = self.queue.get()
-        if champion is not isinstance(champion, Champion) and champion in self.banned_champions and self.picked_champions:
+        if champion is not isinstance(champion,
+                                      Champion) and champion in self.banned_champions and self.picked_champions:
             champion = None
 
         return champion
-    
+
     def picks_bans(self):
         self.set_up_player_picks()
 
@@ -195,6 +196,7 @@ class PickBanAI:
     """
     This is the Pick and Ban AI
     """
+
     def __init__(self, team, opp_team, champion_list, difficulty_level):
         self.team = team
         self.opp_team = opp_team

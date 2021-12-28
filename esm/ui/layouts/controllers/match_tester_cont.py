@@ -40,7 +40,7 @@ class MatchTesterController(IController):
 
     def initialize_random_debug_match(self, picksbans=True):
         self.current_match = self.controller.initialize_random_debug_match(picksbans)
-    
+
     def start_match_tester_thread(self):
         """
         Starts a thread to run the match tester task.
@@ -53,7 +53,7 @@ class MatchTesterController(IController):
             self.disable_match_tester_buttons()
         except RuntimeError as e:
             self.controller.print_error(e)
-    
+
     def reset_match_tester(self):
         """
         Reset the match tester function
@@ -69,7 +69,7 @@ class MatchTesterController(IController):
         self.match_tester.running_test = True
         self.match_tester.run_match_test()
         self.enable_match_tester_buttons()
-    
+
     def enable_match_tester_buttons(self):
         """
         Tells the GUI we are done with match testing, and we can enable the layout buttons again
@@ -77,7 +77,7 @@ class MatchTesterController(IController):
         self.controller.write_event_value("MATCH TESTER", "MATCH TESTER DONE")
         self.controller.update_gui_element('match_tester_startmatch_btn', disabled=False)
         self.controller.update_gui_element('match_tester_newteams_btn', disabled=False)
-    
+
     def disable_match_tester_buttons(self):
         """
         Tells the GUI match tester has started, and we should disable the layout buttons
@@ -135,8 +135,8 @@ class MatchTesterController(IController):
             # Click the Cancel button
             if event == "match_tester_cancel_btn":
                 if (
-                    self.match_tester is not None
-                    and self.match_tester.running_test
+                        self.match_tester is not None
+                        and self.match_tester.running_test
                 ):
                     self.match_tester.running_test = False
                 make_screen("match_tester_screen", "main_screen")

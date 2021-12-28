@@ -17,8 +17,8 @@
 import base64
 import traceback
 
-from esm.definitions import RES_DIR
 from esm.core.utils import find_file
+from esm.definitions import RES_DIR
 from esm.ui.gui_components import *
 
 
@@ -28,14 +28,15 @@ class GUI:
     are all the implementation details from PySimpleGUI, and the code in each layout is also very
     specific to the GUI we are currently using.
     """
+
     def __init__(self, controller):
         self.icon = "esportsmanagertrophy.png"
         # Each layout is added to the list
         self.controller = controller
         self.layouts = self.get_layouts()
-        
+
         self.window = self._create_window()
-    
+
     def _encode_icon(self) -> bytes:
         """
         Encodes the icon used for the window title. This is the default icon for the window and the

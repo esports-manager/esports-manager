@@ -14,20 +14,19 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import random
-import uuid
-import time
-import math
 import gc
-
+import math
+import random
+import time
+import uuid
 from queue import Queue
 from typing import Union, Tuple
 
-from .picksbans import PicksBans
-from .team import Team
+from esm.resources.generator.generate_champions import ChampionGenerator
 from .match import Match
 from .mobaevent import MobaEventHandler
-from esm.resources.generator.generate_champions import ChampionGenerator
+from .picksbans import PicksBans
+from .team import Team
 
 
 class MatchLive:

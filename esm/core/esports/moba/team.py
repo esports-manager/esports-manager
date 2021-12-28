@@ -45,7 +45,7 @@ class Team:
         self._total_skill = 0
 
         self._bans = []
-    
+
     def is_tower_up(self, lane: str) -> bool:
         return self.towers[lane] != 0
 
@@ -54,17 +54,17 @@ class Team:
 
     def are_all_towers_down(self) -> bool:
         return (
-            self.towers["top"] == 0
-            and self.towers["mid"] == 0
-            and self.towers["bot"] == 0
-            and self.towers["base"] == 0
+                self.towers["top"] == 0
+                and self.towers["mid"] == 0
+                and self.towers["bot"] == 0
+                and self.towers["base"] == 0
         )
 
     def are_all_lane_towers_down(self) -> bool:
         return (
-            self.towers["top"] == 0
-            and self.towers["mid"] == 0
-            and self.towers["bot"] == 0
+                self.towers["top"] == 0
+                and self.towers["mid"] == 0
+                and self.towers["bot"] == 0
         )
 
     def is_inhibitor_up(self, lane: str) -> bool:
@@ -75,9 +75,9 @@ class Team:
 
     def are_inhibs_exposed(self) -> bool:
         return (
-            self.towers["top"] == 0
-            or self.towers["mid"] == 0
-            or self.towers["bot"] == 0
+                self.towers["top"] == 0
+                or self.towers["mid"] == 0
+                or self.towers["bot"] == 0
         )
 
     def get_exposed_inhibs(self):
@@ -100,7 +100,7 @@ class Team:
     def reset_values(self) -> None:
         for player in self.list_players:
             player.reset_attributes()
-        
+
         self._bans.clear()
 
         self.towers.update(
@@ -130,7 +130,7 @@ class Team:
     @bans.setter
     def bans(self, champion) -> None:
         self._bans.append(champion)
-    
+
     @property
     def kills(self) -> int:
         self._kills = 0
@@ -167,7 +167,7 @@ class Team:
         return int(sum(
             player.skill for player in self.list_players
         ) / len(self.list_players))
-    
+
     @property
     def player_overall(self) -> int:
         """
@@ -196,8 +196,8 @@ class Team:
     def total_skill(self) -> int:
         self._total_skill = 0
         self._total_skill = (
-            (self.player_overall + self.champion_overall) / 10
-        ) + self.points
+                                    (self.player_overall + self.champion_overall) / 10
+                            ) + self.points
 
         return int(self._total_skill)
 

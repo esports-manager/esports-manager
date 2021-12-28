@@ -14,9 +14,9 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from esm.core.esports.moba.manager import MobaManager
 from .controllerinterface import IController
 from ..teamselect import TeamSelectLayout
-from esm.core.esports.moba.manager import MobaManager
 
 
 class TeamSelectControllerError(Exception):
@@ -34,20 +34,20 @@ class TeamSelectController(IController):
         self.controller.check_files()
         self.teams = self.controller.core.teams
         self.controller.core.get_teams()
-    
+
     def get_team_list(self):
         return [
             [team.name, team.get_team_overall()] for team in self.teams.teams
         ]
-    
+
     def get_player_list(self, team):
         data = []
         for player in self.teams.teams[team[0]].list_players:
             player.get_default_lane()
             data.append([player.lane.name, player.nick_name, player.skill])
-        
+
         return data
-        
+
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("team_select_screen").visible:
             if self.teams is None:
@@ -65,7 +65,7 @@ class TeamSelectController(IController):
                 self.teams = None
                 self.controller.reset_generators()
                 make_screen("team_select_screen", "new_game_screen")
-            
+
             if event == "teamselect_select_btn":
                 team_index = values["teamselect_team_table"][0]
                 manager = MobaManager(

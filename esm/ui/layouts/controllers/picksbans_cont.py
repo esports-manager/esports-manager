@@ -13,8 +13,8 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import threading
 import gc
+import threading
 from queue import Queue
 
 from .controllerinterface import IController
@@ -77,14 +77,14 @@ class PicksBansController(IController):
 
         self.champion_table_data.sort(key=lambda x: x[2], reverse=True)
         return self.champion_table_data
-    
+
     @staticmethod
     def get_bans(bans):
-        return[
+        return [
             ban.name
             for ban in bans
         ]
-    
+
     def update_elements(self):
         pick_ban = self.current_match.picks_bans
         self.controller.update_gui_element("pickban_team1_label", value=self.team1.name)

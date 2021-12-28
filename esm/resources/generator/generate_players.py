@@ -21,10 +21,10 @@ from pathlib import Path
 from typing import Union, Tuple
 
 from esm.core.esports.moba.player import MobaPlayer
-from esm.resources.generator.generate_champions import ChampionGenerator
-from esm.resources.db.default_player_nick_names import get_default_player_nick_names
-from esm.definitions import ROOT_DIR, DB_DIR, PLAYERS_FILE
 from esm.core.utils import load_list_from_file, write_to_file, get_list_from_file
+from esm.definitions import ROOT_DIR, DB_DIR, PLAYERS_FILE
+from esm.resources.db.default_player_nick_names import get_default_player_nick_names
+from esm.resources.generator.generate_champions import ChampionGenerator
 
 
 class MobaPlayerGeneratorError(Exception):
@@ -37,13 +37,13 @@ class MobaPlayerGenerator:
     """
 
     def __init__(
-        self,
-        today: date = date.today(),
-        min_age: int = 16,
-        max_age: int = 25,
-        lane: int = 0,
-        champions_list: list = None,
-        file_name: str = PLAYERS_FILE,
+            self,
+            today: date = date.today(),
+            min_age: int = 16,
+            max_age: int = 25,
+            lane: int = 0,
+            champions_list: list = None,
+            file_name: str = PLAYERS_FILE,
     ):
         if champions_list is None:
             champions_list = []
@@ -113,10 +113,10 @@ class MobaPlayerGenerator:
         year = timedelta(seconds=31556952)  # definition of a Gregorian calendar date
 
         max_age = (
-            self.max_age * year
+                self.max_age * year
         )  # players should be a max of self.max_age years old
         min_age = (
-            self.min_age * year
+                self.min_age * year
         )  # players can't be less than self.min_age years old
         min_year = self.td - max_age  # minimum date for birthday
         max_year = self.td - min_age  # max date for birthday
@@ -339,9 +339,9 @@ class MobaPlayerGenerator:
             self.players.append(self.player_obj)
 
     def generate_file(
-        self,
-        folder: Union[str, Path] = ROOT_DIR,
-        res_folder: Union[str, Path] = DB_DIR,
+            self,
+            folder: Union[str, Path] = ROOT_DIR,
+            res_folder: Union[str, Path] = DB_DIR,
     ) -> None:
         """
         Generates the players.json file

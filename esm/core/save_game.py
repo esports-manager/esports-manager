@@ -13,7 +13,6 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from esm.core.utils import write_to_file
 
 
 class SaveGame:
@@ -22,7 +21,7 @@ class SaveGame:
         self.filename = filename
 
     def setup_data_file(self):
-        pass
+        return self.gamestate.get_data()
 
     def save_game(self):
         pass

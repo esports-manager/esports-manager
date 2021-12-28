@@ -14,7 +14,6 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import threading
-
 from queue import Queue
 
 from .controllerinterface import IController
@@ -153,9 +152,9 @@ class DebugMatchController(IController):
             # Check if the match is running to update values on the fly
             if self.is_match_running:
                 if (
-                    self.current_match is not None
-                    and self.current_match.is_match_over
-                    and not self.match_thread.is_alive()
+                        self.current_match is not None
+                        and self.current_match.is_match_over
+                        and not self.match_thread.is_alive()
                 ):
                     self.is_match_running = False
 

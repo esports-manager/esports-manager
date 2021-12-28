@@ -143,10 +143,10 @@ class Commentaries:
     ):
         if defended:
             self.commentary = (
-                def_team_name
-                + " has defended the "
-                + lane
-                + " inhibitor successfully"
+                    def_team_name
+                    + " has defended the "
+                    + lane
+                    + " inhibitor successfully"
             )
         else:
             self.commentary = (

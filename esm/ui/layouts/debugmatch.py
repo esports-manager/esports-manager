@@ -14,8 +14,8 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from ..gui_components import *
 from .layoutinterface import ILayout
+from ..gui_components import *
 
 
 class DebugMatchLayout(ILayout):
@@ -102,5 +102,5 @@ class DebugMatchLayout(ILayout):
             ],
         ]
 
-    def update(self, *args, **kwargs) -> None:  
+    def update(self, *args, **kwargs) -> None:
         self.controller.update(*args, **kwargs)

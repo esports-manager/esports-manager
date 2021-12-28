@@ -22,7 +22,7 @@ class MainScreenController(IController):
     def __init__(self, controller):
         super().__init__(controller)
         self.layout = MainScreenLayout(self)
-    
+
     def update(self, event, values, make_screen):
         if event == "main_debug_btn":
             make_screen("main_screen", "debug_game_mode_screen")

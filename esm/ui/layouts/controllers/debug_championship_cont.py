@@ -14,8 +14,8 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import gc
-import uuid
 import threading
+import uuid
 
 from esm.core.esports.moba.championship import Championship
 from .controllerinterface import IController
@@ -126,8 +126,8 @@ class DebugChampionshipController(IController):
                     self.controller.view.print_error(e)
 
             if (
-                self.championship_thread is not None
-                and not self.championship_thread.is_alive()
+                    self.championship_thread is not None
+                    and not self.championship_thread.is_alive()
             ):
                 self.controller.update_gui_element("debug_startchampionship_btn", disabled=False)
 

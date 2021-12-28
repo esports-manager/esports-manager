@@ -14,12 +14,13 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from datetime import date
+
 from esm.core.esports.moba.team import Team
 
 
 class MobaManager:
     def __init__(
-        self, name: str, birthday: date, team: Team, is_player: bool, quality: int
+            self, name: str, birthday: date, team: Team, is_player: bool, quality: int
     ):
         self.name = name
         self.birthday = birthday

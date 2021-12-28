@@ -15,7 +15,6 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import random
 import uuid
-import copy
 
 from esm.core.esports.moba.match import Match
 from esm.core.esports.moba.match_live import MatchLive

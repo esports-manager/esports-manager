@@ -14,8 +14,8 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .gui_components import sg
 from .gui import GUI
+from .gui_components import sg
 
 
 class View:
@@ -23,9 +23,10 @@ class View:
     The View class is an abstraction layer over the GUI. It should provide functions that interact
     with the GUI, but do not expose any details about the GUI itself.
     """
+
     def __init__(self, controller):
         self.gui = GUI(controller)
-    
+
     def print_error(self, e):
         self.gui.error_message(e)
 
@@ -61,7 +62,7 @@ class View:
 
             if event in [sg.WINDOW_CLOSED, "main_exit_btn"]:
                 break
-            
+
             # Goes through each layout and runs their update method (event handling)
             self.update(
                 event,

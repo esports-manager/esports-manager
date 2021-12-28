@@ -14,9 +14,14 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
+
 import cbor2
+
+from esm.core.esports.manager import Manager
+from esm.core.gamestate import GameState
 from esm.definitions import SAVE_FILE_DIR
-from esm.core.utils import load_list_from_file
+from esm.resources.generator.generate_champions import ChampionGenerator
+from esm.resources.generator.generate_teams import TeamGenerator
 
 
 class LoadGameError(Exception):
@@ -34,13 +39,55 @@ class LoadGame:
         Returns True if the file is okay, or False otherwise.
         """
         pass
-    
+
     def load_game_file(self, filename):
+        """
+        Load data from the game file.
+        """
         if self.check_game_file(filename):
             with open(filename, 'r') as fp:
                 return cbor2.load(fp)
         else:
             raise LoadGameError("The save file is corrupted!")
+
+    def __get_game_data(self, filename):
+        """
+        Deserialize data from the load file.
+        """
+        data = self.load_game_file(filename)
+        t = TeamGenerator()
+        t.teams_dict = data["teams"]
+        t.player_list = data["players"]
+        t.get_teams_objects()
+        teams = t.teams
+        players = t.player_list
+        c = ChampionGenerator()
+        c.champions_list = data["champions"]
+        c.get_champions()
+        champions = c.champions_obj
+        return data, teams, players, champions
+
+    def load_game_state(self, filename) -> GameState:
+        """
+        Turns load game data into GameState data.
+        """
+        data, teams, players, champions = self.__get_game_data(filename)
+        return GameState(
+            data["game_name"],
+            data["filename"],
+            Manager(
+                data["manager"]["name"],
+                data["manager"]["birthday"],
+                data["manager"]["team"],
+                True,
+                data["manager"]["quality"],
+            ),
+            data["season"],
+            data["esport"],
+            teams,
+            players,
+            champions
+        )
 
     def get_load_game_files(self) -> list:
         """

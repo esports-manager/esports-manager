@@ -206,3 +206,8 @@ class Team:
 
     def __repr__(self):
         return "{0} {1}".format(self.__class__.__name__, self.name)
+
+    def __eq__(self, other):
+        if isinstance(other, Team):
+            return self.team_id == other.team_id
+        return NotImplemented

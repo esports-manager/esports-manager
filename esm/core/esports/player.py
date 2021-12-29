@@ -65,3 +65,8 @@ class Player:
         """
         age = today - self.birthday
         return int(age.days * 0.0027379070)
+
+    def __eq__(self, other):
+        if isinstance(other, Player):
+            return self.player_id == other.player_id
+        return NotImplemented

@@ -20,8 +20,8 @@ import cbor2
 from esm.core.esports.manager import Manager
 from esm.core.gamestate import GameState
 from esm.definitions import SAVE_FILE_DIR
-from esm.core.generator import ChampionGenerator
-from esm.core.generator import TeamGenerator
+from esm.core.generator.generate_champions import ChampionGenerator
+from esm.core.generator.generate_teams import TeamGenerator
 
 
 class LoadGameError(Exception):

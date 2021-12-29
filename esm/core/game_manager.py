@@ -20,9 +20,9 @@ from esm.core.esports.manager import Manager
 from esm.core.gamestate import GameState
 from esm.core.load_game import LoadGame
 from esm.core.save_game import SaveGame
-from esm.core.generator import ChampionGenerator
-from esm.core.generator import MobaPlayerGenerator
-from esm.core.generator import TeamGenerator
+from esm.core.generator.generate_champions import ChampionGenerator
+from esm.core.generator.generate_players import MobaPlayerGenerator
+from esm.core.generator.generate_teams import TeamGenerator
 
 
 class GameManager:

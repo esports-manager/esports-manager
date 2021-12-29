@@ -20,9 +20,9 @@ import uuid
 from esm.core.esports.moba.match import Match
 from esm.core.esports.moba.match_live import MatchLive
 from esm.core.utils import find_file
-from esm.core.generator import ChampionGenerator
-from esm.core.generator import MobaPlayerGenerator
-from esm.core.generator import TeamGenerator
+from esm.core.generator.generate_champions import ChampionGenerator
+from esm.core.generator.generate_players import MobaPlayerGenerator
+from esm.core.generator.generate_teams import TeamGenerator
 
 
 class MobaModel:

@@ -22,7 +22,7 @@ from typing import Union
 from esm.core.esports.moba.team import Team
 from esm.core.utils import write_to_file, get_list_from_file, load_list_from_file
 from esm.definitions import ROOT_DIR, DB_DIR, TEAMS_FILE
-from esm.resources.db.default_team_names import get_default_team_names
+from esm.core.generator.default_team_names import get_default_team_names
 
 
 class TeamGeneratorError(Exception):
@@ -226,7 +226,7 @@ class TeamGenerator:
 
 
 if __name__ == "__main__":
-    from esm.resources.generator.generate_players import MobaPlayerGenerator
+    from esm.core.generator.generate_players import MobaPlayerGenerator
 
     amount = 100
     teams = int(amount / 5)

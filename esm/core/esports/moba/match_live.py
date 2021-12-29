@@ -22,7 +22,7 @@ import uuid
 from queue import Queue
 from typing import Union, Tuple
 
-from esm.resources.generator.generate_champions import ChampionGenerator
+from esm.core.generator import ChampionGenerator
 from .match import Match
 from .mobaevent import MobaEventHandler
 from .picksbans import PicksBans

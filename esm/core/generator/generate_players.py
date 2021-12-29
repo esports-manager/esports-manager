@@ -23,8 +23,8 @@ from typing import Union, Tuple
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.utils import load_list_from_file, write_to_file, get_list_from_file
 from esm.definitions import ROOT_DIR, DB_DIR, PLAYERS_FILE
-from esm.resources.db.default_player_nick_names import get_default_player_nick_names
-from esm.resources.generator.generate_champions import ChampionGenerator
+from esm.core.generator.default_player_nick_names import get_default_player_nick_names
+from esm.core.generator.generate_champions import ChampionGenerator
 
 
 class MobaPlayerGeneratorError(Exception):

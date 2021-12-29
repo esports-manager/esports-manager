@@ -16,7 +16,7 @@
 
 from .layoutinterface import ILayout
 from ..gui_components import *
-from ...resources.generator.generate_players import MobaPlayerGenerator
+from esm.core.generator.generate_players import MobaPlayerGenerator
 
 
 class NewGameLayout(ILayout):

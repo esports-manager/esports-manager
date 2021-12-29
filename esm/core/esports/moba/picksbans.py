@@ -19,7 +19,7 @@ from queue import Queue
 from esm.core.esports.moba.champion import Champion
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.esports.moba.team import Team
-from esm.resources.generator.generate_champions import ChampionGenerator
+from esm.core.generator import ChampionGenerator
 
 
 class PicksBans:

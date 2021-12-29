@@ -1,7 +1,7 @@
 import pytest
 
 from esm.core.utils import get_from_file
-from esm.resources.generator.generate_champions import ChampionGenerator
+from esm.core.generator import ChampionGenerator
 
 
 @pytest.fixture

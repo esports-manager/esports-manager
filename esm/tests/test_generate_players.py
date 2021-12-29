@@ -1,6 +1,6 @@
 import pytest
 
-from esm.resources.generator.generate_players import MobaPlayerGenerator
+from esm.core.generator import MobaPlayerGenerator
 
 
 @pytest.fixture

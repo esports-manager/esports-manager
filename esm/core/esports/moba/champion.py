@@ -30,3 +30,8 @@ class Champion:
 
     def __str__(self):
         return "{0}".format(self.name)
+
+    def __eq__(self, other):
+        if not isinstance(other, Champion):
+            return NotImplemented
+        return self.champion_id == other.champion_id

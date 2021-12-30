@@ -39,6 +39,14 @@ class ESMMobaController:
         self.view = View(self)
         self.game_manager = None
 
+    @property
+    def amount_players(self):
+        return self.core.amount_players
+
+    @amount_players.setter
+    def amount_players(self, value):
+        self.core.amount_players = value
+
     def initialize_controllers(self):
         loadgame_cont.LoadGameController(self)
         mainscreen_cont.MainScreenController(self)

@@ -201,6 +201,6 @@ class Team:
         return "{0} {1}".format(self.__class__.__name__, self.name)
 
     def __eq__(self, other):
-        if isinstance(other, Team):
+        if not isinstance(other, Team):
             return NotImplemented
         return self.team_id == other.team_id

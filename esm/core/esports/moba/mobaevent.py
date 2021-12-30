@@ -420,7 +420,7 @@ class MobaEvent:
             commentaries
         )
 
-        if self.show_commentary:
+        if self.show_commentary and self.queue:
             self.commentary = (str(timedelta(minutes=self.event_time)) + " - " + self.commentary.commentary + "\n")
             self.queue.put(self.commentary, block=False)
 

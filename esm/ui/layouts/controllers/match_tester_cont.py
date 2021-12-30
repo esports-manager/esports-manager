@@ -74,7 +74,7 @@ class MatchTesterController(IController):
         """
         Tells the GUI we are done with match testing, and we can enable the layout buttons again
         """
-        self.controller.write_event_value("MATCH TESTER", "MATCH TESTER DONE")
+        self.controller.write_event_values("MATCH TESTER", "MATCH TESTER DONE")
         self.controller.update_gui_element('match_tester_startmatch_btn', disabled=False)
         self.controller.update_gui_element('match_tester_newteams_btn', disabled=False)
 

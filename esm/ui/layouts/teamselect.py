@@ -46,16 +46,25 @@ class TeamSelectLayout(ILayout):
 
         value = [["                                ", "   "]]
 
+        team_table = [
+            [esm_form_text("Teams", size=16)],
+            [esm_table(values=value, display_row_numbers=True, num_rows=20, headings=headings_teams,
+                       key="teamselect_team_table", enable_events=True), ],
+        ]
+
+        player_table = [
+            [esm_form_text("Players", size=16)],
+            [esm_table(values=[["   ", "Select your team", "   "]], num_rows=20, headings=headings_players,
+                       key="teamselect_players_table", enable_events=True), ],
+        ]
+
         return [
             [esm_title_text("Select your team\n")],
+            [esm_form_text('')], # line break
             # TODO: IMPLEMENT REGIONS COMBO BOX
             # [esm_input_combo(values=regions, key="teamselect_regions_combo")],
-            [
-                esm_table(values=value, display_row_numbers=True, num_rows=20, headings=headings_teams,
-                          key="teamselect_team_table", enable_events=True),
-                esm_table(values=[["   ", "Select your team", "   "]], num_rows=20, headings=headings_players,
-                          key="teamselect_players_table", enable_events=True),
-            ],
+            [sg.Column(team_table, justification='center', element_justification='center'),
+             sg.Column(player_table, justification='center', element_justification='center')],
             [esm_button("Select", key="teamselect_select_btn"), esm_button("Cancel", key="teamselect_cancel_btn")],
         ]
 

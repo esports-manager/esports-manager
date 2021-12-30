@@ -112,5 +112,8 @@ class ESMMobaController:
         """
         return self.view.get_screen_element(element)
 
+    def get_gui_information_window(self, information, title):
+        self.view.information_window(information, title=title)
+
     def app(self) -> None:
         self.view.start()

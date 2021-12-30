@@ -30,7 +30,8 @@ class GameDashboardLayout(ILayout):
             self.lay,
             key="game_dashboard_screen",
             visible=False,
-            element_justification="center",
+            justification="left",
+            element_justification="left",
         )
 
     def layout(self) -> list:

@@ -46,6 +46,9 @@ class View:
     def update_progress_bar(self, key, value):
         self.gui.window[key].update_bar(value)
 
+    def information_window(self, *args, **kwargs):
+        self.gui.information_window(*args, **kwargs)
+
     def update(self, *args, **kwargs) -> None:
         """
         Event handling for each layout

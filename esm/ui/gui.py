@@ -87,6 +87,10 @@ class GUI:
         sg.Print("The following error happened:", e, tb)
         sg.popup_error('The following error occurred:', e, tb)
 
+    @staticmethod
+    def information_window(*args, **kwargs):
+        sg.popup_ok(*args, **kwargs)
+        
 
 def init_theme():
     create_look_and_feel()

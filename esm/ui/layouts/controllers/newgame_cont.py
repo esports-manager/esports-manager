@@ -38,4 +38,7 @@ class NewGameController(IController):
 
                 make_screen("new_game_screen", "team_select_screen")
             else:
-                print("This can't be empty!")
+                self.controller.get_gui_information_window(
+                    'You must fill all the fields before proceeding!',
+                    'Fill all the fields!'
+                )

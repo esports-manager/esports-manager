@@ -67,24 +67,30 @@ class TeamSelectController(IController):
                 make_screen("team_select_screen", "new_game_screen")
 
             if event == "teamselect_select_btn":
-                team_index = values["teamselect_team_table"][0]
-                manager = MobaManager(
-                    values["create_manager_name"],
-                    values["create_manager_display_calendar"],
-                    self.teams.teams[team_index],
-                    True,
-                    50
-                )
-                self.teams.teams[team_index].is_players_team = True
-                self.controller.manager = manager
-                # Probably here we should delete the old window and create a new one with new layouts
-                self.controller.create_game_manager(
-                    manager,
-                    values["ng_gamename_input"],
-                    values["new_game_esport"],
-                    values["new_game_season"],
-                    values["ng_gamename_input"],
-                )
-                make_screen("team_select_screen", "game_dashboard_screen")
+                if values["teamselect_team_table"]:
+                    team_index = values["teamselect_team_table"][0]
+                    manager = MobaManager(
+                        values["create_manager_name"],
+                        values["create_manager_display_calendar"],
+                        self.teams.teams[team_index],
+                        True,
+                        50
+                    )
+                    self.teams.teams[team_index].is_players_team = True
+                    self.controller.manager = manager
+                    # Probably here we should delete the old window and create a new one with new layouts
+                    self.controller.create_game_manager(
+                        manager,
+                        values["ng_gamename_input"],
+                        values["new_game_esport"],
+                        values["new_game_season"],
+                        values["ng_gamename_input"],
+                    )
+                    make_screen("team_select_screen", "game_dashboard_screen")
+                else:
+                    self.controller.get_gui_information_window(
+                        'You must select a team before proceeding!',
+                        title='Select a team!'
+                    )
         else:
             self.teams = None

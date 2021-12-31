@@ -46,10 +46,15 @@ class SettingsController(IController):
         elif event == "settings_generate_btn":
             try:
                 value = int(values["settings_amount_input"])
-            except ValueError:
-                self.amount_players = 400
-                self.update_amount(400)
+                self.controller.core.check_player_amount()
+            except ValueError as e:
+                self.controller.get_gui_information_window(
+                    e,
+                    'Error in number of players!'
+                )
+                self.amount_players = 50
+                self.update_amount(50)
             else:
                 self.controller.amount_players = value
-
-            self.controller.generate_all_data()
+            finally:
+                self.controller.generate_all_data()

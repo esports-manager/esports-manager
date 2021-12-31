@@ -83,7 +83,7 @@ class SettingsLayout(ILayout):
                 sg.FileBrowse(target="settings_t_file"),
             ],
             [
-                esm_input_text("400", key="settings_amount_input", size=size_elements),
+                esm_input_text("50", key="settings_amount_input", size=size_elements),
                 esm_button(
                     "Generate",
                     font=(default_font, default_font_size),

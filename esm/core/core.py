@@ -77,6 +77,10 @@ class MobaModel:
         self.champions.generate_file()
         self.players.generate_file()
 
+    def check_player_amount(self):
+        if self.amount_players > 300 or self.amount_players < 50:
+            raise ValueError('Number of players is not supported! Ranges from 50 to 300 players! Defaulting to 50.')
+
     def check_files(self) -> None:
         find_file(self.champions.file_name)
         find_file(self.players.file_name)

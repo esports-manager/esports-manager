@@ -78,7 +78,16 @@ class ESMMobaController:
         Resets generators and generates data in the background.
         """
         self.reset_generators()
-        self.core.generate_all()
+        try:
+            self.core.check_player_amount()
+        except ValueError as e:
+            self.get_gui_information_window(
+                e,
+                'Number of players not supported!'
+            )
+            self.core.amount_players = 50
+        finally:
+            self.core.generate_all()
 
     def check_files(self) -> None:
         """

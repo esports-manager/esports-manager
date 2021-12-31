@@ -58,3 +58,4 @@ class SettingsController(IController):
                 self.controller.amount_players = value
             finally:
                 self.controller.generate_all_data()
+                self.update_amount(self.amount_players)

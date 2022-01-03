@@ -16,6 +16,7 @@ doq = "*"
 docutils = "*"
 cbor = "*"
 cbor2 = "*"
+pyyaml = "*"
 
 [requires]
 python_version = "3"

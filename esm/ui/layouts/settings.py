@@ -40,14 +40,9 @@ class SettingsLayout(ILayout):
 
         languages = ["English", "Portuguese"]
 
-        try:
-            ch_file = find_file(CHAMPIONS_FILE)
-            pl_file = find_file(PLAYERS_FILE)
-            t_file = find_file(TEAMS_FILE)
-        except FileNotFoundError:
-            ch_file = os.path.join(DB_DIR, CHAMPIONS_FILE)
-            pl_file = os.path.join(DB_DIR, PLAYERS_FILE)
-            t_file = os.path.join(DB_DIR, TEAMS_FILE)
+        ch_file = os.path.join(DB_DIR, CHAMPIONS_FILE)
+        pl_file = os.path.join(DB_DIR, PLAYERS_FILE)
+        t_file = os.path.join(DB_DIR, TEAMS_FILE)
 
         label_pad = (0, 5)
         labels = [

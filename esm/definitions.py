@@ -25,4 +25,5 @@ SAVE_FILE_DIR = os.path.join(RES, "save")
 CHAMPIONS_FILE = "champions.json"
 PLAYERS_FILE = "players.json"
 TEAMS_FILE = "teams.json"
+CONFIG_FILE = os.path.join(ROOT_DIR, 'config', 'config.yaml')
 DEBUG = True

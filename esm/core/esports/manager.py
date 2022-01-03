@@ -28,8 +28,10 @@ class Manager:
         # This might be necessary if we are using JSON deserialization
         if isinstance(birthday, str):
             self.birthday = datetime.strptime(birthday, "%m/%d/%Y").date()
-        elif isinstance(birthday, (datetime, date)):
+        elif isinstance(birthday, date):
             self.birthday = birthday
+        elif isinstance(birthday, datetime):
+            self.birthday = birthday.date()
 
         self.team = team
         self.is_player = is_player

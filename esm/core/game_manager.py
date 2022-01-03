@@ -61,6 +61,9 @@ class GameManager:
     def save_game(self):
         self.save.save_game()
 
+    def auto_save(self):
+        self.save.save_autosave()
+
     def get_load_game_files(self):
         self.load.get_load_game_files()
 
@@ -70,5 +73,5 @@ class GameManager:
         self.save = SaveGame(self.gamestate, filename)
 
     def get_temporary_file(self):
-        self.gamestate.create_temporary_file()
-        return self.gamestate.temporary_file
+        self.save.save_temporary_file()
+        return self.save.temporary_file

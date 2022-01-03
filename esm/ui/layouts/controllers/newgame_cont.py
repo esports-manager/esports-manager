@@ -28,8 +28,24 @@ class NewGameController(IController):
             make_screen("new_game_screen", "main_screen")
 
         elif event == "ng_next_btn":
-            if (
-                    values["create_manager_name"] != ""
+            if len(values["ng_gamename_input"]) > 20:
+                self.controller.get_gui_information_window(
+                    'Game name not allowed! It must be a maximum of 20 characters long!',
+                    'Game name not allowed!'
+                )
+            elif len(values["create_manager_name"]) > 50:
+                self.controller.get_gui_information_window(
+                    'Manager name not allowed! Manager name must be a maximum of 50 characters long!',
+                    'Manager name not allowed!'
+                )
+            elif len(values["create_manager_nickname"]) > 20:
+                self.controller.get_gui_information_window(
+                    'Manager nickname not allowed! Manager nickname must be a maximum of 20 characters long!',
+                    'Manager nickname not allowed!'
+                )
+            elif (
+                    values["ng_gamename_input"] != ""
+                    and values["create_manager_name"] != ""
                     and values["create_manager_nickname"] != ""
                     and values["create_manager_display_calendar"] != ""
             ):

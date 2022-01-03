@@ -13,7 +13,8 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from datetime import date
+from typing import Union
+from datetime import date, datetime
 
 
 class Player:
@@ -28,7 +29,7 @@ class Player:
             nationality: str,
             first_name: str,
             last_name: str,
-            birthday: date,
+            birthday: Union[date, datetime, str],
             nick_name: str,
             skill: int,
     ):
@@ -38,7 +39,14 @@ class Player:
 
         self.first_name = first_name
         self.last_name = last_name
-        self.birthday = birthday
+
+        # This might be necessary if we are using JSON deserialization
+        if isinstance(birthday, str):
+            self.birthday = datetime.strptime(birthday, "%m/%d/%Y").date()
+        elif isinstance(birthday, date):
+            self.birthday = birthday
+        elif isinstance(birthday, datetime):
+            self.birthday = birthday.date()
 
         self.nick_name = nick_name
 

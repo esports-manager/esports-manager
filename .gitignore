@@ -144,5 +144,8 @@ node_modules/
 /esm/resources/db/players.cbor
 /esm/resources/db/champions.cbor
 
+# Ignore potential save files
+/esm/resources/save/*
+
 # Pipfile lock (causes a bit of problems in other OSes)
 Pipfile.lock

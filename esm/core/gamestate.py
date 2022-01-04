@@ -13,29 +13,16 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from datetime import datetime
+from dataclasses import dataclass
 
 
+@dataclass
 class GameState:
-    def __init__(self, gamename, filename, manager, season, esport, teams, players, champions):
-        self.gamename = gamename
-        self.filename = filename
-        self.manager = manager
-        self.season = season
-        self.esport = esport
-        self.teams = teams
-        self.players = players
-        self.champions = champions
-
-    def get_data(self) -> dict:
-        return {
-            "filename": self.filename,
-            "game_name": self.gamename,
-            "manager": self.manager.get_dict(),
-            "season": self.season,
-            "esport": self.esport,
-            "teams": self.teams.teams_dict,
-            "champions": self.champions.champions_list,
-            "players": self.players.players_dict,
-            "save_date": datetime.now(),
-        }
+    gamename: str
+    filename: str
+    manager: dict
+    season: str
+    esport: str
+    teams: list
+    players: list
+    champions: list

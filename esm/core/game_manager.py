@@ -39,29 +39,48 @@ class GameManager:
         self.teams = TeamGenerator()
         self.players = MobaPlayerGenerator()
         self.champions = ChampionGenerator()
+        self.gamestate = self.get_gamestate()
+        self.load = None
+        self.save = None
+
+    def get_gamestate(self):
         self.teams.get_teams_objects()
         self.players.get_players_objects()
         self.champions.get_champions()
-        self.gamestate = self.get_gamestate()
-        self.load = LoadGame()
-        self.save = SaveGame(self.gamestate, filename)
-
-    def get_gamestate(self):
-        return GameState(
+        gamestate = GameState(
             self.game_name,
             self.filename,
             self.manager,
             self.season,
             self.esport,
-            self.teams,
-            self.players,
-            self.champions
+            self.teams.teams_dict.copy(),
+            self.players.players_dict.copy(),
+            self.champions.champions_dict.copy()
         )
+        self.reset_generators()
+        return gamestate
+    
+    def reset_generators(self):
+        """
+        Resets generators to avoid keeping them in memory.
+        """
+        self.teams = TeamGenerator()
+        self.players = MobaPlayerGenerator()
+        self.champions = ChampionGenerator()
 
     def save_game(self):
+        """
+        Calls the SaveGame module to save the game file.
+        """
+        self.reset_generators()
+        self.save = SaveGame(self.get_gamestate(), self.filename)
         self.save.save_game()
 
     def auto_save(self):
+        """
+        Calls the SaveGame module to save an 
+        """
+        self.save = SaveGame(self.get_gamestate(), self.filename)
         self.save.save_autosave()
 
     def get_load_game_files(self):

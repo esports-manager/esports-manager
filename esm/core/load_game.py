@@ -20,8 +20,6 @@ import cbor2
 from esm.core.esports.manager import Manager
 from esm.core.gamestate import GameState
 from esm.definitions import SAVE_FILE_DIR
-from esm.core.generator.generate_champions import ChampionGenerator
-from esm.core.generator.generate_teams import TeamGenerator
 
 
 class LoadGameError(Exception):
@@ -32,15 +30,15 @@ class LoadGame:
     def __init__(self, folder=SAVE_FILE_DIR):
         self.folder = folder
 
-    def check_game_file(self, filename) -> bool:
+    def check_game_file(self, filename: str) -> bool:
         """
         Checks the integrity of the game file. If there are missing keywords, it's a corrupted savefile,
         and the game cannot be loaded.
         Returns True if the file is okay, or False otherwise.
         """
-        pass
+        # TODO: implement checks to the game file
 
-    def load_game_file(self, filename):
+    def load_game_file(self, filename: str):
         """
         Load data from the game file.
         """
@@ -50,24 +48,17 @@ class LoadGame:
         else:
             raise LoadGameError("The save file is corrupted!")
 
-    def __get_game_data(self, filename):
+    def __get_game_data(self, filename: str):
         """
         Deserialize data from the load file.
         """
         data = self.load_game_file(filename)
-        t = TeamGenerator()
-        t.teams_dict = data["teams"]
-        t.player_list = data["players"]
-        t.get_teams_objects()
-        teams = t.teams
-        players = t.player_list
-        c = ChampionGenerator()
-        c.champions_list = data["champions"]
-        c.get_champions()
-        champions = c.champions_obj
+        teams = data["teams"]
+        players = data["players"]
+        champions = data["champions"]
         return data, teams, players, champions
 
-    def load_game_state(self, filename) -> GameState:
+    def load_game_state(self, filename: str) -> GameState:
         """
         Turns load game data into GameState data.
         """
@@ -81,7 +72,7 @@ class LoadGame:
                 data["manager"]["team"],
                 True,
                 data["manager"]["quality"],
-            ),
+            ).get_dict(),
             data["season"],
             data["esport"],
             teams,

@@ -50,7 +50,7 @@ class GameManager:
         gamestate = GameState(
             self.game_name,
             self.filename,
-            self.manager,
+            self.manager.get_dict(),
             self.season,
             self.esport,
             self.teams.teams_dict.copy(),

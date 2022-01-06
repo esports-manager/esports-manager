@@ -4,12 +4,12 @@ Thank your for taking the time to read this, and for showing your interest in su
 
 There are several ways you can contribute with the project, whether you are a programmer or just a fan of this type of project, it means a lot if you can help us in any meaningful way. This game was born out of a dissatisfaction with alternatives in the market, and was built by an eSports fan, so I assume that if you're here, you want to be part of this and you're also an eSports fan.
 
-If you can't code, but you have other skills that you can help us, don't worry, you can still do it. And if you can't do either of the things we proposed, you can still help us by:
+If you can't code, but you have other skills that you can help us, don't worry, you can still do it. And if you can't do either of the things we proposed, you can still help us:
 
-- Giving us a star!
+- Give us a star!
 - Tweet about the project!
 - Refer this project in your project's readme!
-- Mention this project at local meetups and tell your friends or colleagues about it!
+- Tell your friends about us!
 - Share us on facebook!
 - Donate to the project *(not available yet)*
 - Make a video about it!
@@ -36,9 +36,9 @@ If you really want to help us directly, thank you very much! We have a few jobs 
 
 ## Submitting code
 
-The most traditional way to contribute is to submit new code. **eSports Manager** is a GPLv3 licensed project, read the [LICENSE.md](LICENSE.md) before submitting your code. Your code must be GPLv3 compliant, which means you understand that any code submitted here is 100% original and must not depend on patents or copyrighted third-party content. Your code is subject to a free and open source license that will be available to the entire open source community.
+The most traditional way to contribute is to submit new code. **eSports Manager** is a GPLv3 licensed project, read the [LICENSE.md](LICENSE.md) before submitting your code. Your code must be GPLv3 compliant, which means you understand that any code submitted here is original or also GPL-compliant, and must not depend on patents or copyrighted third-party content. Your code is subject to a free and open source license that will be available to the entire open source community.
 
-Once you understand that concept, you're welcome to write new code.
+Once you understand that concept, you're welcome to submit new code.
 
 ### Understanding the code
 
@@ -52,17 +52,15 @@ If you're working on a new feature that has no prior **Issue** related to it, pl
 
 ### Code conventions
 
-Follow [PEP 8](https://www.python.org/dev/peps/pep-0008/). It's a must.
-
-I'm still studying a way to make the entire code uniform, and I'm inclined to only accepting [Black](https://github.com/psf/black) formatted code.
-
-Make descriptive variable names, as best you can.
+- Follow [PEP 8](https://www.python.org/dev/peps/pep-0008/). It's a must.
+- I'm still studying a way to make the entire code uniform, and I'm inclined to only accepting [Black](https://github.com/psf/black) formatted code.
+- Make descriptive variable names, as best as you can.
 
 ### Python versions
 
 Python is rapidly changing, and I plan to adjust to Python's changes as we go. Currently supported Python version is 3.10.
 
-I'll soon implement tox to test out all features.
+I'll soon implement [tox](https://github.com/tox-dev/tox) to test all features.
 
 ### Tests
 
@@ -70,5 +68,4 @@ If you're writing new features, it is always a good idea to include tests with y
 
 We'll also soon be using CI/CD to make development go faster, and tests are an essential part of that.
 
-### 
 

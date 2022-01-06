@@ -55,7 +55,7 @@ class GameManager:
             self.esport,
             self.teams.teams_dict.copy(),
             self.players.players_dict.copy(),
-            self.champions.champions_dict.copy()
+            self.champions.champions_dict.copy(),
         )
         self.reset_generators()
         return gamestate
@@ -78,8 +78,9 @@ class GameManager:
 
     def auto_save(self):
         """
-        Calls the SaveGame module to save an 
+        Calls the SaveGame module to save an autosave file.
         """
+        self.reset_generators()
         self.save = SaveGame(self.get_gamestate(), self.filename)
         self.save.save_autosave()
 
@@ -92,5 +93,7 @@ class GameManager:
         self.save = SaveGame(self.gamestate, filename)
 
     def get_temporary_file(self):
+        self.reset_generators()
+        self.save = SaveGame(self.get_gamestate(), self.filename)
         self.save.save_temporary_file()
         return self.save.temporary_file

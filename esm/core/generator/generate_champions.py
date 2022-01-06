@@ -66,9 +66,9 @@ class ChampionGenerator:
 
     def generate_champion_skill(self) -> None:
         """
-        Generates Champion Skills. Perhaps it should also follow a Normal Distribution?
+        Generates Champion Skills.
 
-        Also, Teemo is never a good champion
+        Also, Teemo is never a good champion.
         """
         self.skill = 30 if self.name == "TEEMO" else random.gauss(55, 20)
         self.skill = min(self.skill, 90)
@@ -133,8 +133,8 @@ class ChampionGenerator:
         for champion in self.champions_obj:
             if champ_id == champion.champion_id:
                 return champion
-        else:
-            return None
+        
+        return None
 
     def generate_file(
             self,

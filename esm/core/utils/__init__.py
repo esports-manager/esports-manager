@@ -42,7 +42,7 @@ def write_to_file(
         filename = str(filename)
         if filename.endswith(".json"):
             with open(file, "w") as fp:
-                json.dump(contents, fp, sort_keys=True, indent=4)
+                json.dump(contents, fp, sort_keys=True)
         elif filename.endswith(".cbor"):
             with open(file, "wb") as fp:
                 cbor2.dump(contents, fp)

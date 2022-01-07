@@ -13,8 +13,11 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import re
+
 from pathlib import Path
 from typing import Union
+from unicodedata import normalize
 
 from esm.core.esports.manager import Manager
 from esm.core.gamestate import GameState
@@ -34,7 +37,7 @@ class GameManager:
         self.manager = manager
         self.esport = esport
         self.season = season
-        self.filename = filename
+        self.filename = self.normalize_filename(filename)
         self.game_name = game_name
         self.teams = TeamGenerator()
         self.players = MobaPlayerGenerator()
@@ -59,6 +62,23 @@ class GameManager:
         )
         self.reset_generators()
         return gamestate
+    
+    def normalize_filename(self, filename, delim=u'_'):
+        """
+        Normalizes the save game filename. This will prevent
+
+        Solution from: https://stackoverflow.com/questions/9042515/normalizing-unicode-text-to-filenames-etc-in-python
+        """
+        _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.:]+')
+        result = []
+        for word in _punct_re.split(filename.lower()):
+            word = normalize('NFWD', word).encode('ascii', 'ignore')
+            word = word.decode('utf-8')
+            if word:
+                result.append(word)
+        
+        filename = delim.join(result)
+        return filename.join('.cbor')
     
     def reset_generators(self):
         """

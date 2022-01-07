@@ -38,7 +38,7 @@ class SaveGame:
 
         self.temporary_file = None
         self.autosave = None
-
+    
     def setup_data_file(self):
         """
         Converts GameState to a dictionary, and adds the saved date to the key-value pair.
@@ -117,5 +117,5 @@ class SaveGame:
         """
         # TODO: add the protect file function and features
         data = self.setup_data_file()
-        with open(filename, 'w') as fp:
+        with open(filename, 'wb') as fp:
             cbor2.dump(data, fp)

@@ -43,7 +43,7 @@ class LoadGame:
         Load data from the game file.
         """
         if self.check_game_file(filename):
-            with open(filename, 'r') as fp:
+            with open(filename, 'rb') as fp:
                 return cbor2.load(fp)
         else:
             raise LoadGameError("The save file is corrupted!")

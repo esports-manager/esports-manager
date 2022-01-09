@@ -37,11 +37,13 @@ class LoadGame:
         Returns True if the file is okay, or False otherwise.
         """
         # TODO: implement checks to the game file
+        return True  # Just for tests
 
     def load_game_file(self, filename: str):
         """
         Load data from the game file.
         """
+        filename = os.path.join(self.folder, filename)
         if self.check_game_file(filename):
             with open(filename, 'rb') as fp:
                 return cbor2.load(fp)

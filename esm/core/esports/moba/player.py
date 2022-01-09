@@ -13,6 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from typing import Union
 from datetime import date
 
 from esm.core.esports.moba.champion import Champion
@@ -33,7 +34,7 @@ class MobaPlayer(Player):
             nationality: str,
             first_name: str,
             last_name: str,
-            birthday: date,
+            birthday: Union[date, str],
             nick_name: str,
             mult: list,
             skill: int,

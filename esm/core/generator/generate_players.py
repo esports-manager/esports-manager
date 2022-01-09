@@ -286,11 +286,14 @@ class MobaPlayerGenerator:
 
     def get_players_dict(self) -> None:
         """
-        Loads the players from the players.cbor file, storing on the player dictionary list
+        Loads the players from the players.json file, storing on the player dictionary list
         """
         if self.players_dict:
             self.players_dict.clear()
-        self.players_dict = load_list_from_file(PLAYERS_FILE)
+        try:
+            self.players_dict = load_list_from_file(self.file_name)
+        except FileNotFoundError:
+            self.generate_players()
 
     def get_data_from_dict(self, player=None) -> None:
         """

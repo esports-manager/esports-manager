@@ -25,6 +25,13 @@ class Champion:
         # TODO: implement attributes dictionary for skill
         self.skill = skill
 
+    @classmethod
+    def create_champion_from_dict(cls, dictionary: dict):
+        champion_id = dictionary['id']
+        name = dictionary['name']
+        skill = dictionary['skill']
+        return Champion(champion_id, name, skill)
+
     def __repr__(self):
         return "{0} {1}".format(self.__class__.__name__, self.name)
 

@@ -147,7 +147,8 @@ class MobaPlayerGenerator:
             ch = random.choice(champs)
             champs.remove(ch)
             mult = random.randrange(60, 100) / 100
-            champion_dict["id"] = ch.champion_id
+
+            champion_dict["id"] = ch["id"] if isinstance(ch, dict) else ch.champion_id
             champion_dict["mult"] = mult
             self.champions.append(champion_dict)
 

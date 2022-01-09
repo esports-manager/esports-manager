@@ -14,18 +14,27 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
-import cbor2
-from dataclasses import dataclass
-
-from tempfile import NamedTemporaryFile
+from dataclasses import asdict
 from datetime import datetime
+from pathlib import Path
+from tempfile import mkstemp
+from typing import Union
+from datetime import timezone
 
-from esm.definitions import SAVE_FILE_DIR
+import cbor2
+
 from esm.core.gamestate import GameState
+from esm.definitions import SAVE_FILE_DIR
 
 
 class SaveGame:
-    def __init__(self, gamestate: GameState, filename: str, save_directory: str = None, autosave_enabled: bool = True):
+    def __init__(
+            self,
+            gamestate: GameState,
+            filename: Union[str, Path],
+            save_directory: str = None,
+            autosave_enabled: bool = True
+    ):
         self.gamestate = gamestate
         self.filename = filename
         self.save_directory = save_directory
@@ -38,13 +47,13 @@ class SaveGame:
 
         self.temporary_file = None
         self.autosave = None
-    
+
     def setup_data_file(self):
         """
         Converts GameState to a dictionary, and adds the saved date to the key-value pair.
         """
-        data = dataclass.asdict(self.gamestate)
-        save_date = datetime.strptime(datetime.now(), "%Y/%m/%d %H:%M:%S:%f")
+        data = asdict(self.gamestate)
+        save_date = datetime.strftime(datetime.now(), "%Y/%m/%d %H:%M:%S:%f")
         data['save_date'] = save_date
         return data
 
@@ -59,7 +68,7 @@ class SaveGame:
         """
         # TODO: perhaps add more info to the temporary file to make it act like a cache for the game, if needed.
         if self.temporary_file is None:
-            self.temporary_file = NamedTemporaryFile()
+            _, self.temporary_file = mkstemp()
         self.write_save_file(self.temporary_file)
 
     def save_autosave(self):
@@ -84,7 +93,7 @@ class SaveGame:
         """
         self.save_temporary_file()
         save_file_path = os.path.join(self.save_directory, self.filename)
-        
+
         # Write save file and prevent tampering with data
         self.write_save_file(save_file_path, protect=True)
         self.delete_autosave()
@@ -105,7 +114,7 @@ class SaveGame:
         if not os.path.exists(self.save_directory):
             os.mkdir(self.save_directory)
 
-    def write_save_file(self, filename: str, protect: bool = False):
+    def write_save_file(self, filename: Union[str, Path], protect: bool = False):
         """
         Writes the desired save file.
 
@@ -118,4 +127,4 @@ class SaveGame:
         # TODO: add the protect file function and features
         data = self.setup_data_file()
         with open(filename, 'wb') as fp:
-            cbor2.dump(data, fp)
+            cbor2.dump(data, fp, timezone=timezone.utc)

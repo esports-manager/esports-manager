@@ -13,11 +13,14 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import os
+
+from dataclasses import dataclass
+from typing import Union
+
+from pathlib import Path
 import yaml
 
 from esm.definitions import *
-from dataclasses import dataclass
 
 
 @dataclass
@@ -29,7 +32,7 @@ class Settings:
     champions_file: str = CHAMPIONS_FILE
     players_file: str = PLAYERS_FILE
     teams_file: str = TEAMS_FILE
-    config_file: str = CONFIG_FILE
+    config_file: Union[str, Path] = CONFIG_FILE
 
     def load_config_file(self):
         if os.path.exists(self.config_file):
@@ -39,7 +42,13 @@ class Settings:
             self.create_config_file()
 
     def parse_config_file(self, data):
-        pass
+        self.font_scale = data['font_scale']
+        self.res_dir = data['res_dir']
+        self.db_dir = data['db_dir']
+        self.save_file_dir = data['save_file_dir']
+        self.champions_file = data['champions_file']
+        self.players_file = data['players_file']
+        self.teams_file = data['teams_file']
 
     def get_data(self):
         return {

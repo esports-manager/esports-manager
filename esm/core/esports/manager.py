@@ -27,7 +27,7 @@ class Manager:
 
         # This might be necessary if we are using JSON deserialization
         if isinstance(birthday, str):
-            self.birthday = datetime.strptime(birthday, "%m/%d/%Y").date()
+            self.birthday = datetime.strptime(birthday, "%Y/%m/%d").date()
         elif isinstance(birthday, date):
             self.birthday = birthday
         elif isinstance(birthday, datetime):
@@ -38,9 +38,10 @@ class Manager:
         self.quality = quality
 
     def get_dict(self):
+        team = self.team.team_id if isinstance(self.team, Team) else self.team
         return {
             "name": self.name,
-            "birthday": self.birthday,
-            "team": self.team.team_id,
+            "birthday": self.birthday.strftime("%Y/%m/%d"),
+            "team": team,
             "quality": self.quality
         }

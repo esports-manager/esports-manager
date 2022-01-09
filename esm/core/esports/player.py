@@ -42,7 +42,7 @@ class Player:
 
         # This might be necessary if we are using JSON deserialization
         if isinstance(birthday, str):
-            self.birthday = datetime.strptime(birthday, "%m/%d/%Y").date()
+            self.birthday = datetime.strptime(birthday, "%Y/%m/%d").date()
         elif isinstance(birthday, date):
             self.birthday = birthday
         elif isinstance(birthday, datetime):

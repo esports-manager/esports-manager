@@ -66,7 +66,7 @@ class LoadGame:
         """
         data, teams, players, champions = self.__get_game_data(filename)
         return GameState(
-            data["game_name"],
+            data["gamename"],
             data["filename"],
             Manager(
                 data["manager"]["name"],

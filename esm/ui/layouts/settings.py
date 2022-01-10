@@ -37,8 +37,8 @@ class SettingsLayout(ILayout):
 
         languages = ["English", "Portuguese"]
 
-        label_pad = (0, 6)
-        labels_file_pad = (0, 7)
+        label_pad = (0, 7)
+        labels_file_pad = (0, 9)
         controls_file_pad = (6, 8)
         labels_inputs = [
             [esm_form_text("Language:", pad=label_pad)],
@@ -50,7 +50,6 @@ class SettingsLayout(ILayout):
             [esm_form_text("Resources directory:", pad=labels_file_pad)],
             [esm_form_text("Database directory:", pad=labels_file_pad)],
             [esm_form_text("Saves directory:", pad=labels_file_pad)],
-            [esm_form_text("Config file:", pad=labels_file_pad)],
             [esm_form_text("Champions file:", pad=labels_file_pad)],
             [esm_form_text("Players file:", pad=labels_file_pad)],
             [esm_form_text("Teams file:", pad=labels_file_pad)],

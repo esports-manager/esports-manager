@@ -13,6 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import os
 import math
 import random
 import uuid
@@ -82,9 +83,8 @@ class MobaModel:
             raise ValueError('Number of players is not supported! Ranges from 50 to 300 players! Defaulting to 50.')
 
     def check_files(self) -> None:
-        find_file(self.champions.file_name)
-        find_file(self.players.file_name)
-        find_file(self.teams.file_name)
+        if not os.path.exists(self.champions.file_name) or not os.path.exists(self.players.file_name) or not os.path.exists(self.teams.file_name):
+            raise FileNotFoundError
 
     def get_players(self) -> list:
         self.players.get_players_objects()

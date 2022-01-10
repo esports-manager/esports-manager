@@ -14,6 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
 import base64
 import traceback
 
@@ -30,7 +31,7 @@ class GUI:
     """
 
     def __init__(self, controller):
-        self.icon = "esportsmanagertrophy.png"
+        self.icon = os.path.join(RES_DIR, "images", "logo", "esportsmanagertrophy.png")
         # Each layout is added to the list
         self.controller = controller
         self.layouts = self.get_layouts()
@@ -42,7 +43,7 @@ class GUI:
         Encodes the icon used for the window title. This is the default icon for the window and the
         game on the desktop.
         """
-        with open(find_file(self.icon, folder=RES_DIR), "rb") as fp:
+        with open(self.icon, "rb") as fp:
             encoded_icon = base64.b64encode(fp.read())
 
         return encoded_icon

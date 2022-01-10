@@ -24,6 +24,7 @@ class SettingsController(IController):
         self.layout = SettingsLayout(self)
         self._amount_players = 50
         self.settings = self.controller.settings
+        self.loaded_data = False
 
     @property
     def amount_players(self) -> int:
@@ -40,6 +41,15 @@ class SettingsController(IController):
     def update_amount(self, amount):
         self.controller.update_gui_element("settings_amount_input", value=amount)
 
+    def update_inputs(self):
+        self.controller.update_gui_element("settings_fontsize_input", value=self.settings.font_scale)
+        self.controller.update_gui_element("settings_res_dir", value=self.settings.res_dir)
+        self.controller.update_gui_element("settings_db_dir", value=self.settings.db_dir)
+        self.controller.update_gui_element("settings_saves_dir", value=self.settings.save_file_dir)
+        self.controller.update_gui_element("settings_ch_file", value=self.settings.champions_file)
+        self.controller.update_gui_element("settings_pl_file", value=self.settings.players_file)
+        self.controller.update_gui_element("settings_t_file", value=self.settings.teams_file)
+
     def update_settings_data(
             self,
             font_size: str,
@@ -50,43 +60,58 @@ class SettingsController(IController):
             players_file: str,
             teams_file: str,
     ):
-        self.settings.font_scale = font_size
-        self.settings.res_dir = res_dir
-        self.settings.db_dir = db_dir
-        self.settings.save_file_dir = save_file_dir
-        self.settings.champions_file = champions_file
-        self.settings.players_file = players_file
-        self.settings.teams_file = teams_file
+        if font_size != '':
+            self.settings.font_scale = font_size
+        if res_dir != '':
+            self.settings.res_dir = res_dir
+        if db_dir != '':
+            self.settings.db_dir = db_dir
+        if save_file_dir != '':
+            self.settings.save_file_dir = save_file_dir
+        if champions_file != '':
+            self.settings.champions_file = champions_file
+        if players_file != '':
+            self.settings.players_file = players_file
+        if teams_file != '':
+            self.settings.teams_file = teams_file
+        self.update_inputs()
 
     def update(self, event, values, make_screen):
-        if event == "settings_cancel_btn":
-            make_screen("settings_screen", "main_screen")
+        if not self.controller.get_gui_element("settings_screen").visible:
+            self.loaded_data = False
+        else:
+            if not self.loaded_data:
+                self.update_inputs()
+                self.loaded_data = True
 
-        if event == "settings_apply_btn":
-            self.update_settings_data(
-                values['settings_fontsize_input'],
-                values["settings_res_dir"],
-                values["settings_db_dir"],
-                values["settings_saves_dir"],
-                values["settings_ch_file"],
-                values["settings_pl_file"],
-                values["settings_t_file"],
-            )
-            self.settings.create_config_file()
+            if event == "settings_cancel_btn":
+                make_screen("settings_screen", "main_screen")
 
-        elif event == "settings_generate_btn":
-            try:
-                value = int(values["settings_amount_input"])
-                self.controller.core.check_player_amount()
-            except ValueError as e:
-                self.controller.get_gui_information_window(
-                    e,
-                    'Error in number of players!'
+            if event == "settings_apply_btn":
+                self.update_settings_data(
+                    values['settings_fontsize_input'],
+                    values["settings_res_dir"],
+                    values["settings_db_dir"],
+                    values["settings_saves_dir"],
+                    values["settings_ch_file"],
+                    values["settings_pl_file"],
+                    values["settings_t_file"],
                 )
-                self.amount_players = 50
-                self.update_amount(50)
-            else:
-                self.controller.amount_players = value
-            finally:
-                self.controller.generate_all_data()
-                self.update_amount(self.amount_players)
+                self.settings.create_config_file()
+
+            elif event == "settings_generate_btn":
+                try:
+                    value = int(values["settings_amount_input"])
+                    self.controller.core.check_player_amount()
+                except ValueError as e:
+                    self.controller.get_gui_information_window(
+                        e,
+                        'Error in number of players!'
+                    )
+                    self.amount_players = 50
+                    self.update_amount(50)
+                else:
+                    self.controller.amount_players = value
+                finally:
+                    self.controller.generate_all_data()
+                    self.update_amount(self.amount_players)

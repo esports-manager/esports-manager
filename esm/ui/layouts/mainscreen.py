@@ -14,8 +14,9 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from esm.core.utils import find_file
-from esm.definitions import DEBUG
+import os
+
+from esm.definitions import DEBUG, RES_DIR
 from .layoutinterface import ILayout
 from ..gui_components import *
 
@@ -34,7 +35,7 @@ class MainScreenLayout(ILayout):
         Defines the main screen. This screen shows the initial options to play a new game, load game,
         use the Database Editor, or exit the game.
         """
-        logo_path = find_file("esportsmanager.png")
+        logo_path = os.path.join(RES_DIR, "images", "logo", "esportsmanager.png")
 
         button_pad = (0, 10)
         button_size = (20, 2)

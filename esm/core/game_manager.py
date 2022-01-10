@@ -23,6 +23,7 @@ from esm.core.esports.manager import Manager
 from esm.core.gamestate import GameState
 from esm.core.load_game import LoadGame
 from esm.core.save_game import SaveGame
+from esm.core.settings import Settings
 from esm.core.generator.generate_champions import ChampionGenerator
 from esm.core.generator.generate_players import MobaPlayerGenerator
 from esm.core.generator.generate_teams import TeamGenerator
@@ -33,7 +34,16 @@ class GameManager:
     Manages the state of the current game session.
     """
 
-    def __init__(self, manager: Manager, filename: str, esport: str, season: str, game_name: str):
+    def __init__(
+            self,
+            manager: Manager,
+            filename: str,
+            esport: str,
+            season: str,
+            game_name: str,
+            settings: Settings,
+            auto_save_enabled: bool = True
+    ):
         self.manager = manager
         self.esport = esport
         self.season = season
@@ -43,6 +53,8 @@ class GameManager:
         self.players = MobaPlayerGenerator()
         self.champions = ChampionGenerator()
         self.gamestate = self.get_gamestate()
+        self.settings = settings
+        self.auto_save_enabled = auto_save_enabled
         self.load = None
         self.save = None
 
@@ -58,7 +70,7 @@ class GameManager:
             self.esport,
             self.teams.teams_dict.copy(),
             self.players.players_dict.copy(),
-            self.champions.champions_dict.copy(),
+            self.champions.champions_list.copy(),
         )
         self.reset_generators()
         return gamestate
@@ -88,12 +100,20 @@ class GameManager:
         self.players = MobaPlayerGenerator()
         self.champions = ChampionGenerator()
 
+    def create_save_game(self):
+        self.save = SaveGame(
+            self.get_gamestate(),
+            self.filename,
+            save_directory=self.settings.save_file_dir,
+            autosave_enabled=self.auto_save_enabled,
+        )
+
     def save_game(self):
         """
         Calls the SaveGame module to save the game file.
         """
         self.reset_generators()
-        self.save = SaveGame(self.get_gamestate(), self.filename)
+        self.create_save_game()
         self.save.save_game()
 
     def auto_save(self):
@@ -101,10 +121,11 @@ class GameManager:
         Calls the SaveGame module to save an autosave file.
         """
         self.reset_generators()
-        self.save = SaveGame(self.get_gamestate(), self.filename)
+        self.create_save_game()
         self.save.save_autosave()
 
     def get_load_game_files(self):
+        self.load = LoadGame()
         self.load.get_load_game_files()
 
     def load_game(self, filename: Union[Path, str]):
@@ -114,6 +135,6 @@ class GameManager:
 
     def get_temporary_file(self):
         self.reset_generators()
-        self.save = SaveGame(self.get_gamestate(), self.filename)
+        self.create_save_game()
         self.save.save_temporary_file()
         return self.save.temporary_file

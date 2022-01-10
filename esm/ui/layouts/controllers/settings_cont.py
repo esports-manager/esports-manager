@@ -23,6 +23,7 @@ class SettingsController(IController):
         super().__init__(controller)
         self.layout = SettingsLayout(self)
         self._amount_players = 50
+        self.settings = self.controller.settings
 
     @property
     def amount_players(self) -> int:
@@ -39,9 +40,39 @@ class SettingsController(IController):
     def update_amount(self, amount):
         self.controller.update_gui_element("settings_amount_input", value=amount)
 
+    def update_settings_data(
+            self,
+            font_size: str,
+            res_dir: str,
+            db_dir: str,
+            save_file_dir: str,
+            champions_file: str,
+            players_file: str,
+            teams_file: str,
+    ):
+        self.settings.font_scale = font_size
+        self.settings.res_dir = res_dir
+        self.settings.db_dir = db_dir
+        self.settings.save_file_dir = save_file_dir
+        self.settings.champions_file = champions_file
+        self.settings.players_file = players_file
+        self.settings.teams_file = teams_file
+
     def update(self, event, values, make_screen):
         if event == "settings_cancel_btn":
             make_screen("settings_screen", "main_screen")
+
+        if event == "settings_apply_btn":
+            self.update_settings_data(
+                values['settings_fontsize_input'],
+                values["settings_res_dir"],
+                values["settings_db_dir"],
+                values["settings_saves_dir"],
+                values["settings_ch_file"],
+                values["settings_pl_file"],
+                values["settings_t_file"],
+            )
+            self.settings.create_config_file()
 
         elif event == "settings_generate_btn":
             try:

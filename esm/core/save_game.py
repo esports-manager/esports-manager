@@ -114,6 +114,11 @@ class SaveGame:
         if not os.path.exists(self.save_directory):
             os.mkdir(self.save_directory)
 
+    def hash_save_file(self):
+        """
+        Creates a SHA256 hash of the savegame file.
+        """
+
     def write_save_file(self, filename: Union[str, Path], protect: bool = False):
         """
         Writes the desired save file.

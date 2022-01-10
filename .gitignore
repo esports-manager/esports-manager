@@ -147,5 +147,8 @@ node_modules/
 # Ignore potential save files
 /esm/resources/save/*
 
+# ignore config file
+/esm/config/config.yaml
+
 # Pipfile lock (causes a bit of problems in other OSes)
 Pipfile.lock

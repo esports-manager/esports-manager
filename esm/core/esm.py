@@ -17,6 +17,7 @@
 from esm.core.core import MobaModel
 from esm.core.esports.moba.match_live import MatchLive
 from esm.core.game_manager import GameManager
+from esm.core.settings import Settings
 from esm.definitions import DEBUG
 from esm.ui.gui import init_theme
 from esm.ui.layouts.controllers import *
@@ -34,6 +35,8 @@ class ESMMobaController:
     def __init__(self):
         init_theme()
         self.controllers = None
+        self.settings = Settings()
+        self.settings.load_config_file()
         self.initialize_controllers()
         self.core = MobaModel()
         self.view = View(self)
@@ -68,7 +71,7 @@ class ESMMobaController:
         self.view.write_event_value(first_message, second_message)
 
     def create_game_manager(self, manager, filename, esport, season, game_name):
-        self.game_manager = GameManager(manager, filename, esport, season, game_name)
+        self.game_manager = GameManager(manager, filename, esport, season, game_name, self.settings)
 
     def print_error(self, e):
         self.view.print_error(e)

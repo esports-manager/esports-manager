@@ -13,7 +13,8 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+import errno
+import os.path
 from dataclasses import dataclass
 from typing import Union
 
@@ -62,5 +63,6 @@ class Settings:
         }
 
     def create_config_file(self):
+        os.makedirs(os.path.dirname(self.config_file), exist_ok=True)
         with open(self.config_file, 'w') as fp:
             yaml.safe_dump(self.get_data(), fp)

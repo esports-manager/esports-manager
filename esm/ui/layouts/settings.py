@@ -13,10 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import os
 
-from esm.core.utils import find_file
-from esm.definitions import DB_DIR, CHAMPIONS_FILE, PLAYERS_FILE, TEAMS_FILE
 from .layoutinterface import ILayout
 from ..gui_components import *
 
@@ -40,18 +37,23 @@ class SettingsLayout(ILayout):
 
         languages = ["English", "Portuguese"]
 
-        ch_file = os.path.join(DB_DIR, CHAMPIONS_FILE)
-        pl_file = os.path.join(DB_DIR, PLAYERS_FILE)
-        t_file = os.path.join(DB_DIR, TEAMS_FILE)
-
-        label_pad = (0, 5)
-        labels = [
+        label_pad = (0, 6)
+        labels_file_pad = (0, 7)
+        controls_file_pad = (6, 8)
+        labels_inputs = [
             [esm_form_text("Language:", pad=label_pad)],
             [esm_form_text("Font scale:", pad=label_pad)],
-            [esm_form_text("Champions file:", pad=label_pad)],
-            [esm_form_text("Players file:", pad=label_pad)],
-            [esm_form_text("Teams file:", pad=label_pad)],
             [esm_form_text("Amount of players to generate:", pad=label_pad)],
+        ]
+
+        labels_files = [
+            [esm_form_text("Resources directory:", pad=labels_file_pad)],
+            [esm_form_text("Database directory:", pad=labels_file_pad)],
+            [esm_form_text("Saves directory:", pad=labels_file_pad)],
+            [esm_form_text("Config file:", pad=labels_file_pad)],
+            [esm_form_text("Champions file:", pad=labels_file_pad)],
+            [esm_form_text("Players file:", pad=labels_file_pad)],
+            [esm_form_text("Teams file:", pad=labels_file_pad)],
         ]
 
         controls = [
@@ -64,19 +66,7 @@ class SettingsLayout(ILayout):
                     key="settings_languages_inpcombo",
                 )
             ],
-            [esm_input_text("1", size=size_elements, key="settings_fontsize_input")],
-            [
-                esm_input_text(ch_file, size=size_elements, key="settings_ch_file"),
-                sg.FileBrowse(target="settings_ch_file"),
-            ],
-            [
-                esm_input_text(pl_file, size=size_elements, key="settings_pl_file"),
-                sg.FileBrowse(target="settings_pl_file"),
-            ],
-            [
-                esm_input_text(t_file, size=size_elements, key="settings_t_file"),
-                sg.FileBrowse(target="settings_t_file"),
-            ],
+            [esm_input_text("1", size=size_elements, key="settings_fontsize_input", pad=(3, 5))],
             [
                 esm_input_text("50", key="settings_amount_input", size=size_elements),
                 esm_button(
@@ -87,14 +77,45 @@ class SettingsLayout(ILayout):
             ],
         ]
 
+        controls_files = [
+            [
+                esm_input_text('', size=size_elements, key="settings_res_dir", pad=controls_file_pad),
+                sg.FileBrowse(target="settings_res_dir", font=(default_font, default_font_size)),
+            ],
+            [
+                esm_input_text('', size=size_elements, key="settings_db_dir", pad=controls_file_pad),
+                sg.FileBrowse(target="settings_db_dir", font=(default_font, default_font_size)),
+            ],
+            [
+                esm_input_text('', size=size_elements, key="settings_saves_dir", pad=controls_file_pad),
+                sg.FileBrowse(target="settings_saves_dir", font=(default_font, default_font_size)),
+            ],
+            [
+                esm_input_text('', size=size_elements, key="settings_ch_file", pad=controls_file_pad),
+                sg.FileBrowse(target="settings_ch_file", font=(default_font, default_font_size)),
+            ],
+            [
+                esm_input_text('', size=size_elements, key="settings_pl_file", pad=controls_file_pad),
+                sg.FileBrowse(target="settings_pl_file", font=(default_font, default_font_size)),
+            ],
+            [
+                esm_input_text('', size=size_elements, key="settings_t_file", pad=controls_file_pad),
+                sg.FileBrowse(target="settings_t_file", font=(default_font, default_font_size)),
+            ],
+        ]
+
         return [
             [esm_title_text("Settings")],
             [
-                sg.Column(labels, element_justification="right"),
+                sg.Column(labels_inputs, element_justification="right"),
                 sg.Column(controls, element_justification="left"),
             ],
-            [esm_form_text("Generating players will replace the current champions, players and teams file!")],
-            [esm_form_text("", pad=(0, 175))],
+            [esm_form_text("Warning: Generating players will replace the current champions, players and teams file!")],
+            [
+                sg.Column(labels_files, element_justification="right"),
+                sg.Column(controls_files, element_justification="left"),
+            ],
+            [esm_form_text("", pad=(0, 80))],
             [
                 esm_button("Apply", key="settings_apply_btn"),
                 esm_button("Cancel", key="settings_cancel_btn"),

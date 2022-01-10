@@ -14,15 +14,17 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
+import hashlib
+import cbor2
+
 from dataclasses import asdict
 from datetime import datetime
+from datetime import timezone
 from pathlib import Path
 from tempfile import mkstemp
 from typing import Union
-from datetime import timezone
 
-import cbor2
-
+from esm.core.hashfile import HashFile
 from esm.core.gamestate import GameState
 from esm.definitions import SAVE_FILE_DIR
 
@@ -45,6 +47,7 @@ class SaveGame:
 
         self.autosave_enabled = autosave_enabled
 
+        self.hash_file = HashFile()
         self.temporary_file = None
         self.autosave = None
 
@@ -95,7 +98,7 @@ class SaveGame:
         save_file_path = os.path.join(self.save_directory, self.filename)
 
         # Write save file and prevent tampering with data
-        self.write_save_file(save_file_path, protect=True)
+        self.write_save_file(save_file_path)
         self.delete_autosave()
 
     def delete_autosave(self):
@@ -114,22 +117,18 @@ class SaveGame:
         if not os.path.exists(self.save_directory):
             os.mkdir(self.save_directory)
 
-    def hash_save_file(self):
-        """
-        Creates a SHA256 hash of the savegame file.
-        """
-
-    def write_save_file(self, filename: Union[str, Path], protect: bool = False):
+    def write_save_file(self, filename: Union[str, Path]):
         """
         Writes the desired save file.
 
         It can write the temporary_file, the auto_save or even the save_file.
 
-        The "protect" argument will be used to prevent tampering with the save file.
-
         This will be used by the LoadGame module to check for corrupted save files.
         """
-        # TODO: add the protect file function and features
         data = self.setup_data_file()
         with open(filename, 'wb') as fp:
             cbor2.dump(data, fp, timezone=timezone.utc)
+
+        # Only writes to hashfile if the file is an actual save file
+        # if filename == self.filename:
+        #     self.hash_file.write_to_hash_file(filename)

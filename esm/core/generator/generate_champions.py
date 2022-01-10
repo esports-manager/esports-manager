@@ -20,7 +20,8 @@ from pathlib import Path
 from typing import Union
 
 from esm.core.esports.moba.champion import Champion
-from esm.core.utils import write_to_file, get_list_from_file, load_list_from_file
+from esm.core.generator.default_champion_names import get_default_champion_names
+from esm.core.utils import write_to_file, load_list_from_file
 from esm.definitions import ROOT_DIR, DB_DIR, CHAMPIONS_FILE
 
 
@@ -59,7 +60,7 @@ class ChampionGenerator:
         TODO: limit the number of champion names to generate
         TODO: This should also be used to generate champions in different patches
         """
-        self.champion_names = get_list_from_file("champions.txt")
+        self.champion_names = get_default_champion_names()
 
     def generate_champion_lanes(self) -> None:
         pass
@@ -108,13 +109,13 @@ class ChampionGenerator:
             self.champions_list.append(self.champion_dict)
             self.champions_obj.append(self.champion_obj)
 
-    def get_champions(self, folder: Union[str, Path] = ROOT_DIR) -> None:
+    def get_champions(self) -> None:
         """
         Retrieves champions from the list of champions. Perhaps at the point when we implement
         a database this can replace the load_list_from_json function.
         """
         if not self.champions_list:
-            self.champions_list = load_list_from_file(self.file_name, folder)
+            self.champions_list = load_list_from_file(self.file_name)
         self.champions_obj = []
         for champion in self.champions_list:
             self.name = champion["name"]

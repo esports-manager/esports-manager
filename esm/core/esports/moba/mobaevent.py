@@ -24,7 +24,7 @@ from typing import Union
 from esm.core.esports.moba.commentaries import Commentaries
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.esports.moba.team import Team
-from esm.core.utils import load_list_from_file
+from esm.core.esports.moba.moba_events_details import get_moba_events
 
 logger = logging.getLogger(__name__)
 
@@ -430,7 +430,7 @@ class MobaEventHandler:
         """
         Initializes the event handler.
         """
-        self.events = load_list_from_file("mobaevents.json")
+        self.events = get_moba_events()
         self.commentaries = None
         self.event = MobaEvent()
         self.enabled_events = []

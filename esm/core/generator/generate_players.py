@@ -21,8 +21,8 @@ from pathlib import Path
 from typing import Union, Tuple
 
 from esm.core.esports.moba.player import MobaPlayer
-from esm.core.utils import load_list_from_file, write_to_file, get_list_from_file
-from esm.definitions import ROOT_DIR, DB_DIR, PLAYERS_FILE
+from esm.core.utils import load_list_from_file, write_to_file
+from esm.definitions import ROOT_DIR, DB_DIR, PLAYERS_FILE, NAMES_FILE
 from esm.core.generator.default_player_nick_names import get_default_player_nick_names
 from esm.core.generator.generate_champions import ChampionGenerator
 
@@ -78,20 +78,17 @@ class MobaPlayerGenerator:
         self.nick_names = None
 
     def get_names(self) -> None:
-        self.names = load_list_from_file("names.json")
+        self.names = load_list_from_file(NAMES_FILE)
 
     def get_nick_names(self) -> None:
-        try:
-            self.nick_names = get_list_from_file("nicknames.txt")
-        except:
-            self.nick_names = get_default_player_nick_names()
+        self.nick_names = get_default_player_nick_names()
 
     def generate_id(self) -> None:
         self.player_id = uuid.uuid4().int
 
     def get_nationalities(self) -> None:
         if self.names is None:
-            nationalities = load_list_from_file("names.json")
+            nationalities = load_list_from_file(NAMES_FILE)
         else:
             nationalities = self.names.copy()
 

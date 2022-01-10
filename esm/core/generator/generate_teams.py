@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Union
 
 from esm.core.esports.moba.team import Team
-from esm.core.utils import write_to_file, get_list_from_file, load_list_from_file
+from esm.core.utils import write_to_file, load_list_from_file
 from esm.definitions import ROOT_DIR, DB_DIR, TEAMS_FILE
 from esm.core.generator.default_team_names import get_default_team_names
 from esm.core.generator.generate_players import MobaPlayerGenerator
@@ -58,10 +58,7 @@ class TeamGenerator:
         """
         Gets all available names from the team_names file
         """
-        try:
-            self.names = get_list_from_file("team_names.txt")
-        except FileNotFoundError:
-            self.names = get_default_team_names()
+        self.names = get_default_team_names()
 
     def generate_id(self) -> None:
         """
@@ -184,7 +181,7 @@ class TeamGenerator:
         if self.teams_dict:
             self.teams_dict.clear()
         self.get_players_list()
-        self.teams_dict = load_list_from_file(TEAMS_FILE)
+        self.teams_dict = load_list_from_file(self.file_name)
 
     def get_roster(self, team) -> list:
         """

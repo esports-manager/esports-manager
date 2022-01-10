@@ -19,6 +19,7 @@ import cbor2
 
 from esm.core.esports.manager import Manager
 from esm.core.gamestate import GameState
+from esm.core.hashfile import HashFile
 from esm.definitions import SAVE_FILE_DIR
 
 
@@ -29,6 +30,7 @@ class LoadGameError(Exception):
 class LoadGame:
     def __init__(self, folder=SAVE_FILE_DIR):
         self.folder = folder
+        self.hash_file = HashFile()
 
     def check_game_file(self, filename: str) -> bool:
         """
@@ -36,8 +38,12 @@ class LoadGame:
         and the game cannot be loaded.
         Returns True if the file is okay, or False otherwise.
         """
-        # TODO: implement checks to the game file
-        return True  # Just for tests
+        self.hash_file.read_hash_file()
+        hash_data = self.hash_file.hash_file(filename)
+        try:
+            return self.hash_file.hash_data[filename] == hash_data
+        except KeyError:
+            raise LoadGameError("File is not registered in the hash file!")
 
     def load_game_file(self, filename: str):
         """

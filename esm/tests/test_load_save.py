@@ -1,6 +1,7 @@
 import pytest
 
 from esm.core.gamestate import GameState
+from esm.core.hashfile import HashFile
 from esm.core.generator.generate_champions import ChampionGenerator
 from esm.core.generator.generate_players import MobaPlayerGenerator
 from esm.core.generator.generate_teams import TeamGenerator
@@ -9,13 +10,22 @@ from esm.core.save_game import SaveGame
 
 
 @pytest.fixture()
+def hash_file(tmpdir):
+    hash_file = HashFile()
+    hash_file.filename = tmpdir.mkdir("hashes").join("hash_file.cbor")
+    return hash_file
+
+
+@pytest.fixture()
 def load_game_dir(tmpdir):
     return tmpdir.mkdir('save')
 
 
 @pytest.fixture()
-def load_game(load_game_dir):
-    return LoadGame(load_game_dir)
+def load_game(load_game_dir, hash_file):
+    load_game = LoadGame(load_game_dir)
+    load_game.hash_file = hash_file
+    return load_game
 
 
 @pytest.fixture()
@@ -24,9 +34,10 @@ def save_game_file(load_game_dir):
 
 
 @pytest.fixture()
-def save_game(save_game_file, gamestate, load_game_dir):
-    return SaveGame(gamestate, save_game_file, save_directory=load_game_dir, autosave_enabled=False)
-
+def save_game(save_game_file, gamestate, load_game_dir, hash_file):
+    save_game = SaveGame(gamestate, save_game_file, save_directory=load_game_dir, autosave_enabled=False)
+    save_game.hash_file = hash_file
+    return save_game
 
 @pytest.fixture()
 def champions_list():
@@ -71,3 +82,8 @@ def gamestate(teams_list, players, champions_list):
 def test_save_load_game(save_game, load_game, save_game_file):
     save_game.save_game()
     assert save_game.gamestate == load_game.load_game_state(save_game_file)
+
+
+def test_hash_file(save_game, load_game, save_game_file):
+    save_game.save_game()
+    load_game.check_game_file(save_game_file)

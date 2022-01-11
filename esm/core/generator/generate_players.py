@@ -196,7 +196,7 @@ class MobaPlayerGenerator:
             "id": self.player_id,
             "first_name": self.first_name,
             "last_name": self.last_name,
-            "birthday": "{:%m/%d/%Y}".format(self.dob),
+            "birthday": "{:%Y/%m/%d}".format(self.dob),
             "nick_name": self.nick_name,
             "nationality": self.nationality,
             "skill": self.skill,
@@ -341,10 +341,9 @@ class MobaPlayerGenerator:
 
     def generate_file(
             self,
-            folder: Union[str, Path] = ROOT_DIR,
             res_folder: Union[str, Path] = DB_DIR,
     ) -> None:
         """
         Generates the players.json file
         """
-        write_to_file(self.players_dict, self.file_name, folder, res_folder)
+        write_to_file(self.players_dict, self.file_name, res_folder)

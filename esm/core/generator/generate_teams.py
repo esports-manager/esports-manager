@@ -214,13 +214,12 @@ class TeamGenerator:
 
     def generate_file(
             self,
-            folder: Union[str, Path] = ROOT_DIR,
             res_folder: Union[str, Path] = DB_DIR,
     ) -> None:
         """
         Generates the teams file
         """
-        write_to_file(self.teams_dict, self.file_name, folder, res_folder)
+        write_to_file(self.teams_dict, self.file_name, res_folder)
 
 
 if __name__ == "__main__":

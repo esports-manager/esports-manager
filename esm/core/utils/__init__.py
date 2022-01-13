@@ -21,7 +21,7 @@ from typing import Union
 
 import cbor2
 
-from esm.definitions import ROOT_DIR, DB_DIR, TEAMS_FILE
+from esm.definitions import TEAMS_FILE
 
 
 def write_to_file(

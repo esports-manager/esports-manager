@@ -22,7 +22,7 @@ from typing import Union
 from esm.core.esports.moba.champion import Champion
 from esm.core.generator.default_champion_names import get_default_champion_names
 from esm.core.utils import write_to_file, load_list_from_file
-from esm.definitions import ROOT_DIR, DB_DIR, CHAMPIONS_FILE
+from esm.definitions import CHAMPIONS_FILE
 
 
 class ChampionGenerator:
@@ -134,7 +134,7 @@ class ChampionGenerator:
         for champion in self.champions_obj:
             if champ_id == champion.champion_id:
                 return champion
-        
+
         return None
 
     def generate_file(

@@ -16,14 +16,12 @@
 
 import random
 import uuid
-from pathlib import Path
-from typing import Union
 
 from esm.core.esports.moba.team import Team
-from esm.core.utils import write_to_file, load_list_from_file
-from esm.definitions import ROOT_DIR, DB_DIR, TEAMS_FILE
 from esm.core.generator.default_team_names import get_default_team_names
 from esm.core.generator.generate_players import MobaPlayerGenerator
+from esm.core.utils import write_to_file, load_list_from_file
+from esm.definitions import TEAMS_FILE
 
 
 class TeamGeneratorError(Exception):

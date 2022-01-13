@@ -41,7 +41,7 @@ class LoadGame:
         self.hash_file.read_hash_file()
         hash_data = self.hash_file.hash_file(filename)
         try:
-            return self.hash_file.hash_data[filename] == hash_data
+            return self.hash_file.hash_data[os.path.normpath(filename)] == hash_data
         except KeyError:
             raise LoadGameError("File is not registered in the hash file!")
 

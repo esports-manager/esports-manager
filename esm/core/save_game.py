@@ -14,7 +14,6 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
-import hashlib
 import cbor2
 
 from dataclasses import asdict
@@ -84,7 +83,7 @@ class SaveGame:
         """
         self.save_temporary_file()
         # TODO: We perhaps can have a list of autosave files and we might identify a list of autosaves, if needed.
-        autosave = self.filename + '.bkp'
+        autosave = str(self.filename.split('.')[0]) + '_autosave.cbor'
         self.autosave = os.path.join(self.save_directory, autosave)
         self.write_save_file(self.autosave)
 
@@ -129,6 +128,6 @@ class SaveGame:
         with open(filename, 'wb') as fp:
             cbor2.dump(data, fp, timezone=timezone.utc)
 
-        # Only writes to hashfile if the file is an actual save file
-        # if filename == self.filename:
-        #     self.hash_file.write_to_hash_file(filename)
+        # Only writes to hashfile if it's not a temporary file
+        if filename in [self.filename, self.autosave]:
+            self.hash_file.write_to_hash_file(filename)

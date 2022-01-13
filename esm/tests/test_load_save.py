@@ -1,4 +1,5 @@
 import pytest
+import cbor2
 
 from esm.core.gamestate import GameState
 from esm.core.hashfile import HashFile
@@ -10,9 +11,14 @@ from esm.core.save_game import SaveGame
 
 
 @pytest.fixture()
-def hash_file(tmpdir):
+def hash_file(tmp_path):
     hash_file = HashFile()
-    hash_file.filename = tmpdir.mkdir("hashes").join("hash_file.cbor")
+    d = tmp_path / "hashes"
+    d.mkdir()
+    p = d / "hash_file.cbor"
+    with open(p, "wb") as fp:
+        cbor2.dump({}, fp)
+    hash_file.filename = p
     return hash_file
 
 
@@ -30,7 +36,7 @@ def load_game(load_game_dir, hash_file):
 
 @pytest.fixture()
 def save_game_file(load_game_dir):
-    return load_game_dir.join('testgame1')
+    return load_game_dir.join('testgame1.cbor')
 
 
 @pytest.fixture()
@@ -38,6 +44,7 @@ def save_game(save_game_file, gamestate, load_game_dir, hash_file):
     save_game = SaveGame(gamestate, save_game_file, save_directory=load_game_dir, autosave_enabled=False)
     save_game.hash_file = hash_file
     return save_game
+
 
 @pytest.fixture()
 def champions_list():
@@ -64,7 +71,7 @@ def teams_list(players):
 def gamestate(teams_list, players, champions_list):
     return GameState(
         'TestGame1',
-        'testgame1',
+        'testgame1.cbor',
         {
             'name': 'TestManager',
             'birthday': '1995/02/01',
@@ -86,4 +93,6 @@ def test_save_load_game(save_game, load_game, save_game_file):
 
 def test_hash_file(save_game, load_game, save_game_file):
     save_game.save_game()
-    load_game.check_game_file(save_game_file)
+    assert save_game.hash_file == load_game.hash_file
+    assert save_game.hash_file.hash_data == load_game.hash_file.hash_data
+    assert load_game.check_game_file(save_game_file) is True

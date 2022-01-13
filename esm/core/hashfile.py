@@ -27,13 +27,14 @@ class HashFile:
 
     def write_hash_file(self):
         if not os.path.exists(self.filename):
-            os.makedirs(self.filename, exist_ok=True)
+            os.makedirs(os.path.dirname(self.filename), exist_ok=True)
         with open(self.filename, 'wb') as fp:
             cbor2.dump(self.hash_data, fp)
 
     def read_hash_file(self):
         if not os.path.exists(self.filename):
-            os.makedirs(self.filename, exist_ok=True)
+            os.makedirs(os.path.dirname(self.filename), exist_ok=True)
+
         with open(self.filename, 'rb') as fp:
             self.hash_data = cbor2.load(fp)
 

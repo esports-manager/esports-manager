@@ -139,9 +139,8 @@ class ChampionGenerator:
 
     def generate_file(
             self,
-            res_folder: Union[str, Path] = DB_DIR,
     ) -> None:
         """
         Generates the champion file
         """
-        write_to_file(self.champions_list, self.file_name, res_folder)
+        write_to_file(self.champions_list, self.file_name)

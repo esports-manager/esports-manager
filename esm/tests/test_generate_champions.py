@@ -5,8 +5,9 @@ from esm.core.generator.generate_champions import ChampionGenerator
 
 
 @pytest.fixture
-def champion_generator():
-    return ChampionGenerator()
+def champion_generator(tmpdir):
+    temporary = tmpdir.mkdir('db').join('champions.json')
+    return ChampionGenerator(file_name=temporary.strpath)
 
 
 def test_get_champion_lanes(champion_generator):
@@ -26,32 +27,28 @@ def test_generate_champion_obj(champion_generator):
 
 
 def test_create_champions_list(champion_generator, tmpdir):
-    temporary = tmpdir.mkdir('db')
     champion_generator.create_champions_list()
-    champion_generator.generate_file(temporary.strpath, temporary.strpath)
+    champion_generator.generate_file()
     champion_generator.champions_list = []
-    champion_generator.get_champions(temporary.strpath)
-    file_contents = get_from_file(str(temporary.join(champion_generator.file_name)))
+    champion_generator.get_champions()
+    file_contents = get_from_file(champion_generator.file_name)
     assert file_contents == champion_generator.champions_list
 
 
 def test_get_champions(champion_generator, tmpdir):
-    temporary = tmpdir.mkdir('db')
     champion_generator.create_champions_list()
-    champion_generator.generate_file(temporary.strpath, temporary.strpath)
+    champion_generator.generate_file()
     champion_generator.champions_list = []
-    champion_generator.get_champions(temporary.strpath)
-    file_contents = get_from_file(str(temporary.join(champion_generator.file_name)))
+    champion_generator.get_champions()
+    file_contents = get_from_file(champion_generator.file_name)
     assert len(file_contents) == len(champion_generator.champions_obj)
 
 
 def test_generate_file(champion_generator, tmpdir):
-    temporary = tmpdir.mkdir('db')
-    champion_generator.file_name = temporary.join('champions.json')
     champion_generator.champions_list = []
     champion_generator.create_champions_list()
-    champion_generator.generate_file(temporary.strpath, temporary.strpath)
-    file_contents = get_from_file(str(champion_generator.file_name))
+    champion_generator.generate_file()
+    file_contents = get_from_file(champion_generator.file_name)
     assert file_contents == champion_generator.champions_list
 
 # import unittest

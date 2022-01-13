@@ -214,23 +214,8 @@ class TeamGenerator:
 
     def generate_file(
             self,
-            res_folder: Union[str, Path] = DB_DIR,
     ) -> None:
         """
         Generates the teams file
         """
-        write_to_file(self.teams_dict, self.file_name, res_folder)
-
-
-if __name__ == "__main__":
-    from esm.core.generator.generate_players import MobaPlayerGenerator
-
-    amount = 100
-    teams = int(amount / 5)
-    player = MobaPlayerGenerator(lane=0)
-    player.generate_players(amount=amount)
-    team = TeamGenerator(amount=teams, players=player.players, organized=True)
-    team.generate_teams()
-    for team_ in team.teams:
-        for player in team_.list_players:
-            print(player.get_lane())
+        write_to_file(self.teams_dict, self.file_name)

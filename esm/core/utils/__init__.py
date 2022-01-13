@@ -27,11 +27,10 @@ from esm.definitions import ROOT_DIR, DB_DIR, TEAMS_FILE
 def write_to_file(
         contents: list,
         filename: Union[str, Path],
-        res_folder: Union[str, Path] = DB_DIR,
 ) -> None:
     file = filename
-    if not os.path.exists(res_folder):
-        os.makedirs(res_folder)
+    if not os.path.exists(filename):
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
     filename = str(filename)
     if filename.endswith(".json"):
         with open(file, "w") as fp:

@@ -10,22 +10,6 @@ def champion_generator(tmpdir):
     return ChampionGenerator(file_name=temporary.strpath)
 
 
-def test_get_champion_lanes(champion_generator):
-    pass
-
-
-def test_generate_champion_skill(champion_generator):
-    pass
-
-
-def test_generate_champion_dict(champion_generator):
-    pass
-
-
-def test_generate_champion_obj(champion_generator):
-    pass
-
-
 def test_create_champions_list(champion_generator, tmpdir):
     champion_generator.create_champions_list()
     champion_generator.generate_file()

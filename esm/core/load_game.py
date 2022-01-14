@@ -56,15 +56,33 @@ class LoadGame:
         else:
             raise LoadGameError("The save file is corrupted!")
 
+    def __check_key_integrity(self, data: dict):
+        expected_keys = [
+            "gamename",
+            "filename",
+            "manager",
+            "season",
+            "esport",
+            "teams",
+            "players",
+            "champions",
+            "save_date"
+        ]
+        obtained_keys = [k for k in data]
+        return expected_keys == obtained_keys
+
     def __get_game_data(self, filename: str):
         """
         Deserialize data from the load file.
         """
         data = self.load_game_file(filename)
-        teams = data["teams"]
-        players = data["players"]
-        champions = data["champions"]
-        return data, teams, players, champions
+        if self.__check_key_integrity(data):
+            teams = data["teams"]
+            players = data["players"]
+            champions = data["champions"]
+            return data, teams, players, champions
+        else:
+            raise LoadGameError("The save file does not contain the expected keys")
 
     def load_game_state(self, filename: str) -> GameState:
         """

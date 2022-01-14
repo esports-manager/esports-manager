@@ -6,7 +6,7 @@ from esm.core.hashfile import HashFile
 from esm.core.generator.generate_champions import ChampionGenerator
 from esm.core.generator.generate_players import MobaPlayerGenerator
 from esm.core.generator.generate_teams import TeamGenerator
-from esm.core.load_game import LoadGame
+from esm.core.load_game import LoadGame, LoadGameError
 from esm.core.save_game import SaveGame
 
 
@@ -96,3 +96,15 @@ def test_hash_file(save_game, load_game, save_game_file):
     assert save_game.hash_file == load_game.hash_file
     assert save_game.hash_file.hash_data == load_game.hash_file.hash_data
     assert load_game.check_game_file(save_game_file) is True
+
+
+def test_key_integrity(save_game, load_game, save_game_file):
+    save_game.save_game()
+    # Write this to raise the error
+    with open(save_game_file, 'rb+') as fp:
+        data = cbor2.load(fp)
+        data["unknown_attr"] = 'fail_test'
+        cbor2.dump(data, fp)
+
+    with pytest.raises(LoadGameError):
+        load_game.load_game_state(save_game_file)

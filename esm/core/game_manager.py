@@ -77,7 +77,7 @@ class GameManager:
     
     def normalize_filename(self, filename, delim=u'_'):
         """
-        Normalizes the save game filename. This will prevent
+        Normalizes the save game filename. This will prevent unsupported filenames from being saved.
 
         Solution from: https://stackoverflow.com/questions/9042515/normalizing-unicode-text-to-filenames-etc-in-python
         """
@@ -126,7 +126,11 @@ class GameManager:
 
     def get_load_game_files(self):
         self.load = LoadGame()
-        self.load.get_load_game_files()
+        self.load.get_load_game_files('.cbor')
+
+    def get_autosave_files(self):
+        self.load = LoadGame()
+        self.load.get_load_game_files('.autosav')
 
     def load_game(self, filename: Union[Path, str]):
         self.filename = filename

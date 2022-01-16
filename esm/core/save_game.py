@@ -83,7 +83,7 @@ class SaveGame:
         """
         self.save_temporary_file()
         # TODO: We perhaps can have a list of autosave files and we might identify a list of autosaves, if needed.
-        autosave = str(self.filename.split('.')[0]) + '_autosave.cbor'
+        autosave = str(self.filename.split('.')[0]) + '.autosav'
         self.autosave = os.path.join(self.save_directory, autosave)
         self.write_save_file(self.autosave)
 

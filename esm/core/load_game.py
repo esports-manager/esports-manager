@@ -45,6 +45,15 @@ class LoadGame:
         except KeyError:
             raise LoadGameError("File is not registered in the hash file!")
 
+    @staticmethod
+    def check_for_autosaves(filename: str, list_files: list):
+        """
+        Checks if a file contains autosaves. This will prompt the user that an autosave file has been identified
+        and will ask them if they want to load the autosave file instead of the save file.
+        """
+        autosave = str(filename.split('.')[0]) + '.autosav'
+        return autosave in list_files
+
     def load_game_file(self, filename: str):
         """
         Load data from the game file.
@@ -106,7 +115,7 @@ class LoadGame:
             champions
         )
 
-    def get_load_game_files(self) -> list:
+    def get_load_game_files(self, extension: str) -> list:
         """
         Returns a list of available load game files
         """
@@ -116,7 +125,7 @@ class LoadGame:
         load_game_files = []
         for root, _, files in os.walk(self.folder):
             for file in files:
-                if file.endswith(".cbor") and self.check_game_file(file):
+                if file.endswith(extension) and self.check_game_file(file):
                     load_game_files.append(file)
 
         return load_game_files

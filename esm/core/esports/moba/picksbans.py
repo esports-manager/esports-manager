@@ -56,13 +56,11 @@ class PicksBans:
     def pick(self, player: MobaPlayer, champion: Champion) -> None:
         player.champion = champion
         champion.status = "Picked"
-        # self.champion_list.remove(champion)
         self.picked_champions.append(champion)
 
     def ban(self, team: Team, champion: Champion) -> None:
         team.bans = champion
         champion.status = "Banned"
-        # self.champion_list.remove(champion)
         self.banned_champions.append(champion)
 
     def set_up_player_picks(self):
@@ -86,6 +84,7 @@ class PicksBans:
         Ban turn 1 corresponds to the team2 turn to ban.
         """
         champion = None
+        team = None
         if self.bans_turn == 0:
             champion = self.get_input(self.team1, self.team2, pick=False)
             team = self.team1
@@ -95,7 +94,7 @@ class PicksBans:
             team = self.team2
             self.bans_turn = 0
 
-        if champion is not None:
+        if champion is not None and team is not None:
             self.num_bans += 1
             self.ban(team, champion)
 

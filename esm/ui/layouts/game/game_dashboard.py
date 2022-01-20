@@ -41,6 +41,7 @@ class GameDashboardLayout(ILayout):
         tab1_layout = [
             [esm_title_text("TEAMNAME123456\n")],
             [esm_title_text("Testing screen")],
+            [esm_button("Save game", key="game_dashboard_save")],
         ]
 
         tab2_layout = [

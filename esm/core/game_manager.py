@@ -84,13 +84,15 @@ class GameManager:
         _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.:]+')
         result = []
         for word in _punct_re.split(filename.lower()):
-            word = normalize('NFWD', word).encode('ascii', 'ignore')
+            word = normalize('NFKD', word).encode('ascii', 'ignore')
             word = word.decode('utf-8')
             if word:
                 result.append(word)
         
         filename = delim.join(result)
-        return filename.join('.cbor')
+        filename = ''.join(filename)
+        filename = filename + '.cbor'
+        return filename
     
     def reset_generators(self):
         """

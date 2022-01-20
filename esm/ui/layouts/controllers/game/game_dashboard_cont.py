@@ -16,13 +16,21 @@
 
 from esm.ui.layouts.controllers.controllerinterface import IController
 from esm.ui.layouts.game.game_dashboard import GameDashboardLayout
+from esm.core.game_manager import GameManager
 
 
 class GameDashboardController(IController):
     def __init__(self, controller):
         super().__init__(controller)
         self.layout = GameDashboardLayout(self)
+        self.game_manager: GameManager = self.controller.game_manager
 
     def update(self, event, values, make_screen):
-        if event == "dashboard_cancel_btn":
-            make_screen("game_dashboard_screen", "main_screen")
+        if self.controller.get_gui_element("game_dashboard_screen").visible:
+            if self.game_manager is None:
+                self.game_manager = self.controller.game_manager
+            if event == "dashboard_cancel_btn":
+                make_screen("game_dashboard_screen", "main_screen")
+
+            if event == "game_dashboard_save":
+                self.game_manager.save_game()

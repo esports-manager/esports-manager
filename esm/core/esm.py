@@ -35,12 +35,12 @@ class ESMMobaController:
     def __init__(self):
         init_theme()
         self.controllers = None
+        self.game_manager = None
         self.settings = Settings()
         self.settings.load_config_file()
         self.initialize_controllers()
         self.core = MobaModel()
         self.view = View(self)
-        self.game_manager = None
 
     @property
     def amount_players(self):

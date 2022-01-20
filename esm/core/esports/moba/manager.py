@@ -16,14 +16,11 @@
 from datetime import date
 
 from esm.core.esports.moba.team import Team
+from esm.core.esports.manager import Manager
 
 
-class MobaManager:
+class MobaManager(Manager):
     def __init__(
             self, name: str, birthday: date, team: Team, is_player: bool, quality: int
     ):
-        self.name = name
-        self.birthday = birthday
-        self.team = team
-        self.is_player = is_player
-        self.quality = quality
+        super().__init__(name, birthday, team, is_player, quality)

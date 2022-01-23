@@ -37,11 +37,13 @@ class SaveGame:
             autosave_enabled: bool = True
     ):
         self.gamestate = gamestate
-        self.filename = filename
         self.save_directory = save_directory
 
         if self.save_directory is None:
             self.save_directory = SAVE_FILE_DIR
+
+        self.filename = os.path.join(self.save_directory, filename)
+        self.gamestate.filename = self.filename
         self.check_if_savedir_exists()
 
         self.autosave_enabled = autosave_enabled

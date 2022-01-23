@@ -125,7 +125,7 @@ class LoadGame:
         load_game_files = []
         for root, _, files in os.walk(self.folder):
             for file in files:
-                if file.endswith(extension) and self.check_game_file(file):
+                if file.endswith(extension) and self.check_game_file(os.path.join(root, file)):
                     load_game_files.append(file)
 
         return load_game_files

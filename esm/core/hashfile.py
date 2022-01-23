@@ -53,6 +53,9 @@ class HashFile:
         return h.hexdigest()
 
     def write_to_hash_file(self, filename):
-        self.read_hash_file()
+        try:
+            self.read_hash_file()
+        except FileNotFoundError:
+            pass
         self.hash_data[filename] = self.hash_file(filename)
         self.write_hash_file()

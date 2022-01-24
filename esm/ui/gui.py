@@ -88,6 +88,10 @@ class GUI:
         sg.popup_error('The following error occurred:', e, tb)
 
     @staticmethod
+    def confirmation_window(*args, **kwargs):
+        return sg.popup_ok_cancel(*args, **kwargs)
+
+    @staticmethod
     def information_window(*args, **kwargs):
         sg.popup_ok(*args, **kwargs)
         

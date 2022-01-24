@@ -49,6 +49,9 @@ class View:
     def information_window(self, *args, **kwargs):
         self.gui.information_window(*args, **kwargs)
 
+    def confirmation_window(self, *args, **kwargs):
+        return self.gui.confirmation_window(*args, **kwargs)
+
     def update(self, *args, **kwargs) -> None:
         """
         Event handling for each layout

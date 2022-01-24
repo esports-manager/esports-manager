@@ -14,6 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import re
+import os
 
 from pathlib import Path
 from typing import Union
@@ -129,6 +130,9 @@ class GameManager:
     def get_load_game_files(self):
         self.load = LoadGame()
         self.load.get_load_game_files('.cbor')
+
+    def check_if_save_file_exists(self, filename: Union[str, Path]):
+        return os.path.exists(filename)
 
     def get_autosave_files(self):
         self.load = LoadGame()

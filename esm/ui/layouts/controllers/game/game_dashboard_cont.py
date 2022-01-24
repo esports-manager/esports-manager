@@ -26,11 +26,24 @@ class GameDashboardController(IController):
         self.game_manager: GameManager = self.controller.game_manager
 
     def update(self, event, values, make_screen):
-        if self.controller.get_gui_element("game_dashboard_screen").visible:
-            if self.game_manager is None:
-                self.game_manager = self.controller.game_manager
-            if event == "dashboard_cancel_btn":
-                make_screen("game_dashboard_screen", "main_screen")
+        if not self.controller.get_gui_element("game_dashboard_screen").visible:
+            return
+        if self.game_manager is None:
+            self.game_manager = self.controller.game_manager
 
-            if event == "game_dashboard_save":
+        if event == "dashboard_cancel_btn":
+            make_screen("game_dashboard_screen", "main_screen")
+
+        if event == "game_dashboard_save":
+            if self.game_manager.save is None:
+                self.game_manager.create_save_game()
+
+            if self.game_manager.check_if_save_file_exists(self.game_manager.save.filename):
+                ovrw = self.controller.get_gui_confirmation_window(
+                    "There is an existing file with the same name, do you want to overwrite it?",
+                    title="Overwrite Save File",
+                )
+                if ovrw == "OK":
+                    self.game_manager.save_game()
+            else:
                 self.game_manager.save_game()

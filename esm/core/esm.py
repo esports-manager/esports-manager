@@ -135,5 +135,8 @@ class ESMMobaController:
     def get_gui_information_window(self, information, title):
         self.view.information_window(information, title=title)
 
+    def get_gui_confirmation_window(self, *args, **kwargs):
+        return self.view.confirmation_window(*args, **kwargs)
+
     def app(self) -> None:
         self.view.start()

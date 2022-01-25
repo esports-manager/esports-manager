@@ -59,7 +59,6 @@ class GUI:
             "eSports Manager",
             element_justification="center",
             layout=self._get_cols(),
-            size=(1280, 720),
             icon=encoded_icon,
             resizable=True,
             finalize=True,

@@ -38,10 +38,6 @@ class SettingsController(IController):
     def generate_all_data(self) -> None:
         self.controller.generate_all_data()
 
-    def update_font_size(self):
-        for element in self.controller.view.gui.window:
-            print(element)
-
     def update_amount(self, amount):
         self.controller.update_gui_element("settings_amount_input", value=amount)
 
@@ -102,7 +98,6 @@ class SettingsController(IController):
                     values["settings_t_file"],
                 )
                 self.settings.create_config_file()
-                self.update_font_size()
 
             elif event == "settings_generate_btn":
                 try:

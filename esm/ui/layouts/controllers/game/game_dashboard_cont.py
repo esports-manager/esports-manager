@@ -45,5 +45,6 @@ class GameDashboardController(IController):
                 )
                 if ovrw == "OK":
                     self.game_manager.save_game()
+                    self.controller.get_gui_information_window("Game was successfully saved!", "Saved!")
             else:
                 self.game_manager.save_game()

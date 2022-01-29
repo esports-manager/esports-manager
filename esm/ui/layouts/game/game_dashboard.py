@@ -51,6 +51,7 @@ class GameDashboardLayout(ILayout):
 
         return [
             [esm_button("Next match", size=(15, 2), )],
+            [esm_button("Cancel", key="dashboard_cancel_btn")],
             [sg.TabGroup([
                 [sg.Tab('Main', tab1_layout),
                  sg.Tab('Roster', tab2_layout)]
@@ -58,7 +59,6 @@ class GameDashboardLayout(ILayout):
                 border_width=0,
                 font=(default_font, increased_font_size),
             )],
-            [esm_button("Cancel", key="dashboard_cancel_btn")],
         ]
 
     def update(self, *args, **kwargs) -> None:

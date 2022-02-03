@@ -16,6 +16,7 @@
 from .controllerinterface import IController
 from ..loadgame import LoadGameLayout
 from esm.core.load_game import LoadGame
+from esm.core.game_manager import GameManager
 
 
 class LoadGameController(IController):
@@ -44,7 +45,10 @@ class LoadGameController(IController):
 
             if event == "load_game_btn":
                 if values["load_game_listbox"] not in [[], self.default_value]:
-                    self.load_game.load_game_file(values["load_game_listbox"])
+                    gamestate = self.load_game.load_game_state(values["load_game_listbox"])
+                    self.controller.game_manager = GameManager.get_game_manager(gamestate, self.controller.settings)
+                    self.controller.manager = self.controller.game_manager.manager
+                    make_screen("load_game_screen", "game_dashboard_screen")
                 else:
                     self.controller.get_gui_information_window(
                         "Select a file",

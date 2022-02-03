@@ -59,6 +59,24 @@ class GameManager:
         self.load = None
         self.save = None
 
+    @classmethod
+    def get_game_manager(cls, gamestate: GameState, settings, auto_save_enabled=True):
+        return cls(
+            Manager(
+                gamestate.manager["manager"]["name"],
+                gamestate.manager["manager"]["birthday"],
+                gamestate.manager["manager"]["team"],
+                True,
+                gamestate.manager["manager"]["quality"],
+            ),
+            gamestate.filename,
+            gamestate.esport,
+            gamestate.season,
+            gamestate.gamename,
+            settings,
+            auto_save_enabled,
+        )
+
     def get_gamestate(self):
         self.teams.get_teams_objects()
         self.players.get_players_objects()

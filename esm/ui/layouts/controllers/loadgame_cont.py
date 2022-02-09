@@ -13,6 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import os
 from .controllerinterface import IController
 from ..loadgame import LoadGameLayout
 from esm.core.load_game import LoadGame
@@ -25,6 +26,7 @@ class LoadGameController(IController):
         self.layout = LoadGameLayout(self)
         self.load_game: LoadGame = LoadGame()
         self.load_files = None
+        self.filename = None
         self.default_value = ["No save games encountered"]
 
     def load_save_files(self):
@@ -43,9 +45,14 @@ class LoadGameController(IController):
             else:
                 self.controller.update_gui_element("load_game_listbox", values=self.default_value)
 
+            if event == "load_game_listbox":
+                self.filename = values["load_game_listbox"][0]
+                print(self.filename)
+
             if event == "load_game_btn":
-                if values["load_game_listbox"] not in [[], self.default_value]:
-                    gamestate = self.load_game.load_game_state(values["load_game_listbox"])
+                if self.filename not in [[], self.default_value, None]:
+                    filename = os.path.join(self.controller.settings.save_file_dir, self.filename)
+                    gamestate = self.load_game.load_game_state(filename)
                     self.controller.game_manager = GameManager.get_game_manager(gamestate, self.controller.settings)
                     self.controller.manager = self.controller.game_manager.manager
                     make_screen("load_game_screen", "game_dashboard_screen")
@@ -56,3 +63,4 @@ class LoadGameController(IController):
                     )
         else:
             self.load_files = None
+            self.filename = None

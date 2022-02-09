@@ -63,11 +63,11 @@ class GameManager:
     def get_game_manager(cls, gamestate: GameState, settings, auto_save_enabled=True):
         return cls(
             Manager(
-                gamestate.manager["manager"]["name"],
-                gamestate.manager["manager"]["birthday"],
-                gamestate.manager["manager"]["team"],
+                gamestate.manager["name"],
+                gamestate.manager["birthday"],
+                gamestate.manager["team"],
                 True,
-                gamestate.manager["manager"]["quality"],
+                gamestate.manager["quality"],
             ),
             gamestate.filename,
             gamestate.esport,

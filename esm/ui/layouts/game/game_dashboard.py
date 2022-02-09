@@ -38,23 +38,28 @@ class GameDashboardLayout(ILayout):
         """
         Defines the main game dashboard screen.
         """
-        tab1_layout = [
-            [esm_title_text("TEAMNAME123456\n")],
-            [esm_title_text("Testing screen")],
+        tab_home = [
+            [esm_title_text("TEAMNAME123456\n", key="game_dashboard_teamname")],
             [esm_button("Save game", key="game_dashboard_save")],
         ]
 
-        tab2_layout = [
+        tab_roster = [
             [esm_title_text("ROSTER\n")],
-            [esm_title_text("Testing tabs")],
+            [esm_table(values=[], headings=["Lane", "Nickname", "Skill"], key="game_dashboard_roster")],
+        ]
+
+        tab_championship = [
+            [esm_title_text("CHAMPIONSHIP")],
+            [esm_form_text("Championship data")],
         ]
 
         return [
             [esm_button("Next match", size=(15, 2), )],
             [esm_button("Cancel", key="dashboard_cancel_btn")],
             [sg.TabGroup([
-                [sg.Tab('Main', tab1_layout),
-                 sg.Tab('Roster', tab2_layout)]
+                [sg.Tab('Home', tab_home),
+                 sg.Tab('Roster', tab_roster),
+                 sg.Tab('Championship', tab_championship)]
             ],
                 border_width=0,
                 font=(default_font, increased_font_size),

@@ -72,6 +72,9 @@ class ESMMobaController:
 
     def create_game_manager(self, manager, filename, esport, season, game_name):
         self.game_manager = GameManager(manager, filename, esport, season, game_name, self.settings)
+    
+    def create_game_manager_from_gamestate(self, gamestate):
+        self.game_manager = GameManager.get_game_manager(gamestate, self.settings, auto_save_enabled=True)
 
     def print_error(self, e):
         self.view.print_error(e)

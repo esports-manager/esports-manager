@@ -51,6 +51,7 @@ class SaveGame:
         self.hash_file = HashFile()
         self.temporary_file = None
         self.autosave = None
+        self.fd = None
 
     def setup_data_file(self):
         """
@@ -71,8 +72,8 @@ class SaveGame:
         We might add additional info to the tempfile, to make it act like a sort of a cache for anything that the game needs.
         """
         # TODO: perhaps add more info to the temporary file to make it act like a cache for the game, if needed.
-        if self.temporary_file is None:
-            _, self.temporary_file = mkstemp()
+        if self.temporary_file is None or self.fd is None:
+            self.fd, self.temporary_file = mkstemp()
         self.write_save_file(self.temporary_file)
 
     def save_autosave(self):
@@ -133,3 +134,16 @@ class SaveGame:
         # Only writes to hashfile if it's not a temporary file
         if filename in [self.filename, self.autosave]:
             self.hash_file.write_to_hash_file(filename)
+
+    def delete_temporary_file(self):
+        """
+        Deletes the temporary file.
+
+        This avoids problems with file descriptors.
+        """
+        if not self.temporary_file.closed:
+            self.temporary_file.close()
+        
+        os.close(self.fd)
+        os.remove(self.temporary_file)
+        

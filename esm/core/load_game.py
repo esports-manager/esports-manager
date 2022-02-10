@@ -42,8 +42,8 @@ class LoadGame:
         hash_data = self.hash_file.hash_file(filename)
         try:
             return self.hash_file.hash_data[os.path.normpath(filename)] == hash_data
-        except KeyError:
-            raise LoadGameError("File is not registered in the hash file!")
+        except KeyError as e:
+            raise LoadGameError("File is not registered in the hash file!") from e
 
     @staticmethod
     def check_for_autosaves(filename: str, list_files: list):

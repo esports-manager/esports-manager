@@ -60,7 +60,7 @@ class GameManager:
         self.save = None
 
     @classmethod
-    def get_game_manager(cls, gamestate: GameState, settings, auto_save_enabled=True):
+    def get_game_manager(cls, gamestate: GameState, settings: Settings, auto_save_enabled: bool = True):
         return cls(
             Manager(
                 gamestate.manager["name"],
@@ -166,3 +166,6 @@ class GameManager:
         self.create_save_game()
         self.save.save_temporary_file()
         return self.save.temporary_file
+
+    def delete_temporary_file(self):
+        self.save.delete_temporary_file()

@@ -13,6 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import uuid
 
 from esm.ui.layouts.controllers.controllerinterface import IController
 from esm.ui.layouts.game.game_dashboard import GameDashboardLayout
@@ -34,7 +35,10 @@ class GameDashboardController(IController):
 
     def get_team_name(self):
         self.game_manager.get_gamestate_for_generators()
-        self.team_name = self.game_manager.teams.get_team_from_id(self.game_manager.manager.team)
+        if isinstance(self.game_manager.manager.team, Team):
+            self.team_name = self.game_manager.manager.team
+        if isinstance(self.game_manager.manager.team, (int, uuid.UUID)):
+            self.team_name = self.game_manager.teams.get_team_from_id(self.game_manager.manager.team)
         
     def update(self, event, values, make_screen):
         if not self.controller.get_gui_element("game_dashboard_screen").visible:

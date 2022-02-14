@@ -16,7 +16,9 @@
 
 from esm.ui.layouts.controllers.controllerinterface import IController
 from esm.ui.layouts.game.game_dashboard import GameDashboardLayout
+from esm.core.esports.moba.team import Team
 from esm.core.game_manager import GameManager
+from esm.core.esports.manager import Manager
 
 
 class GameDashboardController(IController):
@@ -24,12 +26,33 @@ class GameDashboardController(IController):
         super().__init__(controller)
         self.layout = GameDashboardLayout(self)
         self.game_manager: GameManager = self.controller.game_manager
+        self.current_manager: Manager = None
+        self.team_name: Team = None
 
+    def get_manager_details(self):
+        self.current_manager = self.game_manager.manager
+
+    def get_team_name(self):
+        self.game_manager.get_gamestate_for_generators()
+        self.team_name = self.game_manager.teams.get_team_from_id(self.game_manager.manager.team)
+        
     def update(self, event, values, make_screen):
         if not self.controller.get_gui_element("game_dashboard_screen").visible:
-            return
+            self.game_manager = None
+            self.team_name = None
+            self.current_manager = None
+        
         if self.game_manager is None:
             self.game_manager = self.controller.game_manager
+        
+        if self.current_manager is None and self.game_manager is not None:
+            self.get_manager_details()
+        
+        if self.team_name is None and self.game_manager is not None:
+            self.get_team_name()
+            team_name = self.controller.get_gui_element("game_dashboard_teamname")
+            team_name.set_size((len(self.team_name.name)*2, None))
+            self.controller.update_gui_element("game_dashboard_teamname", value=self.team_name.name)
 
         if event == "dashboard_cancel_btn":
             make_screen("game_dashboard_screen", "main_screen")

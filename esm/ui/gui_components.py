@@ -153,6 +153,8 @@ def esm_listbox(
         pad=None,
         size=(30, 10),
         enable_events=False,
+        highlight_background_color="#4FC3F7",
+        highlight_text_color="white",
 ):
     if default_values is None:
         default_values = []
@@ -166,6 +168,8 @@ def esm_listbox(
         key=key,
         pad=pad,
         size=size,
+        highlight_background_color=highlight_background_color,
+        highlight_text_color=highlight_text_color,
     )
 
 

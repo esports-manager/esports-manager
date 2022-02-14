@@ -16,6 +16,7 @@
 
 import random
 import uuid
+from typing import Union
 
 from esm.core.esports.moba.team import Team
 from esm.core.generator.default_team_names import get_default_team_names
@@ -215,6 +216,13 @@ class TeamGenerator:
         if not only_dict:
             self.teams = [Team.get_from_dict(team) for team in self.teams_dict]
 
+    def get_team_from_id(self, team_id: Union[int, uuid.UUID]):
+        for team in self.teams:
+            if team.team_id == team_id:
+                return team
+        
+        raise ValueError("Team ID not found!")
+    
     def generate_file(
             self,
     ) -> None:

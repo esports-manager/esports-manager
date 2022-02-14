@@ -210,6 +210,11 @@ class TeamGenerator:
             self.get_object()
             self.teams.append(self.team_obj)
 
+    def get_from_data_file(self, data: list, only_dict: bool = False):
+        self.teams_dict = data.copy()
+        if not only_dict:
+            self.teams = [Team.get_from_dict(team) for team in self.teams_dict]
+
     def generate_file(
             self,
     ) -> None:

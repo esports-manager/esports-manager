@@ -338,6 +338,11 @@ class MobaPlayerGenerator:
             self.get_object()
             self.players.append(self.player_obj)
 
+    def get_from_data_file(self, data: list, only_dict: bool = False):
+        self.players_dict = data.copy()
+        if not only_dict:
+            self.players = [MobaPlayer.get_from_dict(player) for player in self.players_dict]
+
     def generate_file(
             self,
     ) -> None:

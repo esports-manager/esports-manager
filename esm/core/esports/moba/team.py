@@ -194,6 +194,14 @@ class Team:
 
         return int(self._total_skill)
 
+    @classmethod
+    def get_from_dict(cls, team: dict):
+        return cls(
+            team["id"],
+            team["name"],
+            team["roster"],
+        )
+
     def __str__(self):
         return "{0}".format(self.name)
 

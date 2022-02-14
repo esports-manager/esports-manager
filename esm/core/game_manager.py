@@ -137,6 +137,16 @@ class GameManager:
         self.create_save_game()
         self.save.save_game()
 
+    def get_gamestate_for_generators(self):
+        self.teams.get_from_data_file(self.gamestate.teams)
+        self.players.get_from_data_file(self.gamestate.players)
+        self.champions.get_from_data_file(self.gamestate.champions)
+
+    def write_generator_files(self):
+        self.teams.generate_file()
+        self.players.generate_file()
+        self.champions.generate_file()
+
     def auto_save(self):
         """
         Calls the SaveGame module to save an autosave file.
@@ -144,6 +154,8 @@ class GameManager:
         self.reset_generators()
         self.create_save_game()
         self.save.save_autosave()
+        self.get_gamestate_for_generators()
+        self.write_generator_files()
 
     def get_load_game_files(self):
         self.load = LoadGame()
@@ -160,11 +172,15 @@ class GameManager:
         self.filename = filename
         self.gamestate = self.load.load_game_state(filename)
         self.save = SaveGame(self.gamestate, filename)
+        self.get_gamestate_for_generators()
+        self.write_generator_files()
 
     def get_temporary_file(self):
         self.reset_generators()
         self.create_save_game()
         self.save.save_temporary_file()
+        self.get_gamestate_for_generators()
+        self.write_generator_files()
         return self.save.temporary_file
 
     def delete_temporary_file(self):

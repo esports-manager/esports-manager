@@ -194,6 +194,20 @@ class MobaPlayer(Player):
         """
         return self.consecutive_kills >= 9
 
+    @classmethod
+    def get_from_dict(cls, player: dict):
+        return cls(
+            player["id"],
+            player["nationality"],
+            player["first_name"],
+            player["last_name"],
+            player["birthday"],
+            player["nick_name"],
+            player["multipliers"],
+            player["skill"],
+            player["champions"]
+        )
+
     def __repr__(self):
         return "{0} {1}".format(self.__class__.__name__, self.nick_name)
 

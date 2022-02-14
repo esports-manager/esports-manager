@@ -26,7 +26,7 @@ class Champion:
         self.skill = skill
 
     @classmethod
-    def create_champion_from_dict(cls, dictionary: dict):
+    def get_from_dict(cls, dictionary: dict):
         champion_id = dictionary['id']
         name = dictionary['name']
         skill = dictionary['skill']

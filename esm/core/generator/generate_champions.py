@@ -137,6 +137,11 @@ class ChampionGenerator:
 
         return None
 
+    def get_from_data_file(self, data: list, only_dict: bool = False):
+        self.champions_list = data.copy()
+        if only_dict:
+            self.champions_obj = [Champion.get_from_dict(champion) for champion in self.champions_list]
+
     def generate_file(
             self,
     ) -> None:

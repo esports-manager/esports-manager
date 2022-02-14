@@ -54,9 +54,6 @@ class GameDashboardController(IController):
             team_name.set_size((len(self.team_name.name)*2, None))
             self.controller.update_gui_element("game_dashboard_teamname", value=self.team_name.name)
 
-        if event == "dashboard_cancel_btn":
-            make_screen("game_dashboard_screen", "main_screen")
-
         if event == "game_dashboard_save":
             if self.game_manager.save is None:
                 self.game_manager.create_save_game()

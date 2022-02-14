@@ -104,13 +104,12 @@ class GameManager:
         result = []
         for word in _punct_re.split(filename.lower()):
             word = normalize('NFKD', word).encode('ascii', 'ignore')
-            word = word.decode('utf-8')
-            if word:
+            if word := word.decode('utf-8'):
                 result.append(word)
-        
+
         filename = delim.join(result)
         filename = ''.join(filename)
-        filename = filename + '.cbor'
+        filename = f'{filename}.cbor'
         return filename
     
     def reset_generators(self):

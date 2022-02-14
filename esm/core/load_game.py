@@ -98,9 +98,10 @@ class LoadGame:
         Turns load game data into GameState data.
         """
         data, teams, players, champions = self.__get_game_data(filename)
+        filename = os.path.split(filename)[1]
         return GameState(
             data["gamename"],
-            data["filename"],
+            filename,
             Manager(
                 data["manager"]["name"],
                 data["manager"]["birthday"],

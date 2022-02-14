@@ -31,6 +31,8 @@ class LoadGameController(IController):
 
     def load_save_files(self):
         self.load_files = self.load_game.get_load_game_files(".cbor")
+        if not self.load_files:
+            self.load_files = self.default_value
 
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("load_game_screen").visible:

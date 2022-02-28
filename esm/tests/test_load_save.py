@@ -49,7 +49,7 @@ def save_game(save_game_file, gamestate, load_game_dir, hash_file):
 @pytest.fixture()
 def champions_list():
     champions = ChampionGenerator()
-    champions.create_champions_list()
+    champions.generate_champions()
     return champions.champions_list
 
 

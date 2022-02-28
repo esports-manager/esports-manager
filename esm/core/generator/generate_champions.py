@@ -93,7 +93,7 @@ class ChampionGenerator:
         """
         self.champion_obj = Champion(self.champion_id, self.name, self.skill)
 
-    def create_champions_list(self) -> None:
+    def generate_champions(self) -> None:
         """
         Creates the list of champions according to the names.
         Essentially this is the champion generation method.

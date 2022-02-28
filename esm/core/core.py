@@ -63,7 +63,7 @@ class MobaModel:
         self.teams = TeamGenerator()
 
     def generate_all(self) -> None:
-        self.champions.create_champions_list()
+        self.champions.generate_champions()
         self.players.champions_list = self.champions.champions_obj
 
         self.players.lane = 0

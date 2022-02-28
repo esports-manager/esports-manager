@@ -157,18 +157,19 @@ class GameManager:
         self.write_generator_files()
 
     def get_load_game_files(self):
-        self.load = LoadGame()
+        self.load = LoadGame(folder=self.settings.save_file_dir)
         self.load.get_load_game_files('.cbor')
 
     def check_if_save_file_exists(self, filename: Union[str, Path]):
         return os.path.exists(filename)
 
     def get_autosave_files(self):
-        self.load = LoadGame()
+        self.load = LoadGame(folder=self.settings.save_file_dir)
         self.load.get_load_game_files('.autosav')
 
     def load_game(self, filename: Union[Path, str]):
         self.filename = filename
+        self.load = LoadGame(folder=self.settings.save_file_dir)
         self.gamestate = self.load.load_game_state(filename)
         self.save = SaveGame(self.gamestate, filename)
         self.get_gamestate_for_generators()

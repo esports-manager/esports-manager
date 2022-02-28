@@ -49,7 +49,6 @@ class LoadGameController(IController):
 
             if event == "load_game_listbox":
                 self.filename = values["load_game_listbox"][0]
-                print(self.filename)
 
             if event == "load_game_btn":
                 if self.filename not in [[], self.default_value, None]:
@@ -57,6 +56,7 @@ class LoadGameController(IController):
                     gamestate = self.load_game.load_game_state(filename)
                     self.controller.game_manager = GameManager.get_game_manager(gamestate, self.controller.settings)
                     self.controller.manager = self.controller.game_manager.manager
+                    self.controller.game_manager.load_game(self.filename)
                     make_screen("load_game_screen", "game_dashboard_screen")
                 else:
                     self.controller.get_gui_information_window(

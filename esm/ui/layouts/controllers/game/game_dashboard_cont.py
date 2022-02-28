@@ -26,7 +26,7 @@ class GameDashboardController(IController):
     def __init__(self, controller):
         super().__init__(controller)
         self.layout = GameDashboardLayout(self)
-        self.game_manager: GameManager = self.controller.game_manager
+        self.game_manager: GameManager = None
         self.current_manager: Manager = None
         self.team_name: Team = None
 
@@ -45,30 +45,31 @@ class GameDashboardController(IController):
             self.game_manager = None
             self.team_name = None
             self.current_manager = None
-        
-        if self.game_manager is None:
-            self.game_manager = self.controller.game_manager
-        
-        if self.current_manager is None and self.game_manager is not None:
-            self.get_manager_details()
-        
-        if self.team_name is None and self.game_manager is not None:
-            self.get_team_name()
-            team_name = self.controller.get_gui_element("game_dashboard_teamname")
-            team_name.set_size((len(self.team_name.name)*2, None))
-            self.controller.update_gui_element("game_dashboard_teamname", value=self.team_name.name)
+        else:
+            if self.game_manager is None:
+                self.game_manager = self.controller.game_manager
 
-        if event == "game_dashboard_save":
-            if self.game_manager.save is None:
-                self.game_manager.create_save_game()
+            if self.current_manager is None and self.game_manager is not None:
+                self.get_manager_details()
 
-            if self.game_manager.check_if_save_file_exists(self.game_manager.save.filename):
-                ovrw = self.controller.get_gui_confirmation_window(
-                    "There is an existing file with the same name, do you want to overwrite it?",
-                    title="Overwrite Save File",
-                )
-                if ovrw == "OK":
+            if self.team_name is None and self.game_manager is not None:
+                self.get_team_name()
+                team_name = self.controller.get_gui_element("game_dashboard_teamname")
+                team_name.set_size((len(self.team_name.name)*2, None))
+                self.controller.update_gui_element("game_dashboard_teamname", value=self.team_name.name)
+
+            if event == "game_dashboard_save":
+                if self.game_manager.save is None:
+                    self.game_manager.create_save_game()
+
+                if self.game_manager.check_if_save_file_exists(self.game_manager.save.filename):
+                    ovrw = self.controller.get_gui_confirmation_window(
+                        "There is an existing file with the same name, do you want to overwrite it?",
+                        title="Overwrite Save File",
+                    )
+                    if ovrw == "OK":
+                        self.game_manager.save_game()
+                        self.controller.get_gui_information_window("Game was successfully saved!", "Saved!")
+                else:
                     self.game_manager.save_game()
                     self.controller.get_gui_information_window("Game was successfully saved!", "Saved!")
-            else:
-                self.game_manager.save_game()

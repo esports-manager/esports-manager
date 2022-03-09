@@ -24,24 +24,24 @@ def get_moba_events():
         {
             "name": "KILL",
             "priority": 10,
-            "points": 10
+            "points": 1
         },
         {
             "name": "TOWER ASSAULT",
             "priority": 30,
-            "points": 15,
+            "points": 2,
             "start_assault": 15.0
         },
         {
             "name": "INHIB ASSAULT",
             "priority": 50,
-            "points": 20
+            "points": 5
         },
         {
             "name": "JUNGLE",
             "jg_name": "HERALD",
             "priority": 25,
-            "points": 50,
+            "points": 5,
             "spawn_time": 8.0,
             "cooldown": 6.0,
             "end_time": 19.5
@@ -50,7 +50,7 @@ def get_moba_events():
             "name": "JUNGLE",
             "jg_name": "BARON",
             "priority": 50,
-            "points": 200,
+            "points": 20,
             "spawn_time": 20.0,
             "cooldown": 6.0,
             "end_time": 0.0
@@ -59,7 +59,7 @@ def get_moba_events():
             "name": "JUNGLE",
             "jg_name": "DRAGON",
             "priority": 25,
-            "points": 20,
+            "points": 10,
             "spawn_time": 5.0,
             "cooldown": 5.0,
             "end_time": 0.0

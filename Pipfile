@@ -17,6 +17,7 @@ docutils = "*"
 cbor = "*"
 cbor2 = "*"
 pyyaml = "*"
+pyinstaller = "*"
 
 [requires]
 python_version = "3"

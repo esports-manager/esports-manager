@@ -160,19 +160,19 @@ class MobaEvent:
 
             # Player gets more points for killing more players consecutively
             if player1.is_player_on_killing_spree():
-                self.points += 5
+                self.points += 2
             if player1.is_player_godlike():
-                self.points += 10
+                self.points += 4
             if player1.is_player_legendary():
-                self.points += 20
+                self.points += 6
 
             # Shutdown gives more gold to enemy team and ends the player streak
             if player2.is_player_on_killing_spree():
-                self.points += 10
+                self.points += 4
             if player2.is_player_godlike():
-                self.points += 20
+                self.points += 6
             if player2.is_player_legendary():
-                self.points += 50
+                self.points += 8
 
             # Awards points to the player that killed
             player1.points += self.points

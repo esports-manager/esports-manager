@@ -22,6 +22,20 @@ from dataclasses import dataclass, field
 
 @dataclass
 class HashFile:
+    """
+    The Hash file is a file that stores data related to load and save games.
+
+    It is used to make it more difficult to tamper with Save game files.
+    Every time a game is saved, the filename is stored to the HashFile, which
+    also stores the save file hash.
+
+    When the game is loaded, the LoadGame module compares the loaded save file with
+    the hash stored in the Hash file. If the hash is different, then the file might
+    be corrupted or has been tampered with.
+
+    The HashFile is a binary file, just like the save game files. It's an additional
+    method to protect save game files, but may not be enough for that.
+    """
     filename: str = HASH_FILE
     hash_data: dict = field(default_factory=dict)
 

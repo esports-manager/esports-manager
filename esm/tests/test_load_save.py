@@ -40,8 +40,8 @@ def save_game_file(load_game_dir):
 
 
 @pytest.fixture()
-def save_game(save_game_file, gamestate, load_game_dir, hash_file):
-    save_game = SaveGame(gamestate, save_game_file, save_directory=load_game_dir, autosave_enabled=False)
+def save_game(gamestate, load_game_dir, hash_file):
+    save_game = SaveGame(gamestate, "testgame1.cbor", save_directory=load_game_dir, autosave_enabled=False)
     save_game.hash_file = hash_file
     return save_game
 
@@ -86,9 +86,9 @@ def gamestate(teams_list, players, champions_list):
     )
 
 
-def test_save_load_game(save_game, load_game, save_game_file):
+def test_save_load_game(save_game, load_game):
     save_game.save_game()
-    assert save_game.gamestate == load_game.load_game_state(save_game_file)
+    assert save_game.gamestate == load_game.load_game_state("testgame1.cbor")
 
 
 def test_hash_file(save_game, load_game, save_game_file):

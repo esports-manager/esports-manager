@@ -28,6 +28,20 @@ class LoadGameError(Exception):
 
 
 class LoadGame:
+    """
+    The LoadGame module deals with loading game files and turning them into GameState data.
+
+    The LoadGame module depends on the HashFile module, which stores the hashes of save files.
+    When loading a save file, the module checks the integrity of the save file by looking at the keys contained
+    in a GameState module and comparing to the save file. If a key is missing or does not correspond to what
+    is in the save game file, the module throws an error that the file is corrupted.
+
+    It also looks for the HashFile to see if any info about that saved game is in the HashFile. If it can't find
+    the game listed in the hash file, it considers it an invalid save game.
+
+    If it finds the save game, it calculates the save file hash, and compares to the one stored in the HashFile.
+    If they do not match, the module throws an error message. Otherwise, it loads the game normally.
+    """
     def __init__(self, folder=SAVE_FILE_DIR):
         self.folder = folder
         self.hash_file = HashFile()

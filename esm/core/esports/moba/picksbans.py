@@ -163,8 +163,7 @@ class PicksBans:
 
     def get_player_input(self) -> Champion:
         champion = self.queue.get()
-        if champion is not isinstance(champion,
-                                      Champion) and champion in self.banned_champions and self.picked_champions:
+        if not isinstance(champion, Champion) and champion in self.banned_champions and champion in self.picked_champions:
             champion = None
 
         return champion

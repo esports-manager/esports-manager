@@ -225,6 +225,8 @@ class MatchSeries:
 
         # How many wins a team must have to be declared winner
         self.required_wins = math.ceil(self.best_of / 2)
+
+        # If there is a chance to draw the match, this is how you get the winning team
         if self.drawable:
             self.required_wins = self.required_wins + 1
 
@@ -251,7 +253,7 @@ class MatchSeries:
         elif self.team_wins[1] > self.team_wins[0]:
             return self.team2
         else:
-            return self.team1, self.team2
+            return None
 
     def get_matches(self):
         if not self.is_series_over():

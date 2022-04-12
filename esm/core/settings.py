@@ -14,10 +14,10 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os.path
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
+from pathlib import Path
 from typing import Union
 
-from pathlib import Path
 import yaml
 
 from esm.definitions import *

@@ -13,21 +13,20 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import re
 import os
-
+import re
 from pathlib import Path
 from typing import Union
 from unicodedata import normalize
 
 from esm.core.esports.manager import Manager
 from esm.core.gamestate import GameState
-from esm.core.load_game import LoadGame
-from esm.core.save_game import SaveGame
-from esm.core.settings import Settings
 from esm.core.generator.generate_champions import ChampionGenerator
 from esm.core.generator.generate_players import MobaPlayerGenerator
 from esm.core.generator.generate_teams import TeamGenerator
+from esm.core.load_game import LoadGame
+from esm.core.save_game import SaveGame
+from esm.core.settings import Settings
 
 
 class GameManager:
@@ -93,7 +92,7 @@ class GameManager:
         )
         self.reset_generators()
         return gamestate
-    
+
     def normalize_filename(self, filename, delim=u'_'):
         """
         Normalizes the save game filename. This will prevent unsupported filenames from being saved.
@@ -111,7 +110,7 @@ class GameManager:
         filename = ''.join(filename)
         filename = f'{filename}.cbor'
         return filename
-    
+
     def reset_generators(self):
         """
         Resets generators to avoid keeping them in memory.

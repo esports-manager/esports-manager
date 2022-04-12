@@ -13,11 +13,11 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from esm.core.esports.manager import Manager
 from esm.core.esports.moba.team import Team
+from esm.core.generator.generate_champions import ChampionGenerator
 from esm.core.generator.generate_players import MobaPlayerGenerator
 from esm.core.generator.generate_teams import TeamGenerator
-from esm.core.generator.generate_champions import ChampionGenerator
-from esm.core.esports.manager import Manager
 
 
 class CreateGameSession:
@@ -33,15 +33,15 @@ class CreateGameSession:
         self.teams = TeamGenerator()
         self.players = MobaPlayerGenerator()
         self.champions = ChampionGenerator()
-    
+
     def get_names(
-        self,
-        filename: str,
-        game_name: str,
-        manager_name: str,
-        date_of_birth: str,
-        season: str,
-        esport: str,
+            self,
+            filename: str,
+            game_name: str,
+            manager_name: str,
+            date_of_birth: str,
+            season: str,
+            esport: str,
     ):
         self.filename = filename
         self.game_name = game_name
@@ -58,7 +58,7 @@ class CreateGameSession:
             True,
             50
         )
-    
+
     def generate_new_database(self):
         self.teams.generate_teams()
         self.players.generate_players()
@@ -69,7 +69,6 @@ class CreateGameSession:
         self.teams.generate_file()
         self.players.generate_file()
         self.champions.generate_file()
-    
+
     def get_team(self, team: Team):
         self.team = team
-

@@ -13,8 +13,8 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from typing import Union
 from datetime import date
+from typing import Union
 
 from esm.core.esports.moba.champion import Champion
 from esm.core.esports.moba.moba_enums_def import Lanes, LaneError

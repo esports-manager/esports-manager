@@ -15,11 +15,11 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import uuid
 
-from esm.ui.layouts.controllers.controllerinterface import IController
-from esm.ui.layouts.game.game_dashboard import GameDashboardLayout
+from esm.core.esports.manager import Manager
 from esm.core.esports.moba.team import Team
 from esm.core.game_manager import GameManager
-from esm.core.esports.manager import Manager
+from esm.ui.layouts.controllers.controllerinterface import IController
+from esm.ui.layouts.game.game_dashboard import GameDashboardLayout
 
 
 class GameDashboardController(IController):
@@ -39,7 +39,7 @@ class GameDashboardController(IController):
             self.team_name = self.game_manager.manager.team
         if isinstance(self.game_manager.manager.team, (int, uuid.UUID)):
             self.team_name = self.game_manager.teams.get_team_from_id(self.game_manager.manager.team)
-        
+
     def update(self, event, values, make_screen):
         if not self.controller.get_gui_element("game_dashboard_screen").visible:
             self.game_manager = None
@@ -55,7 +55,7 @@ class GameDashboardController(IController):
             if self.team_name is None and self.game_manager is not None:
                 self.get_team_name()
                 team_name = self.controller.get_gui_element("game_dashboard_teamname")
-                team_name.set_size((len(self.team_name.name)*2, None))
+                team_name.set_size((len(self.team_name.name) * 2, None))
                 self.controller.update_gui_element("game_dashboard_teamname", value=self.team_name.name)
 
             if event == "game_dashboard_save":

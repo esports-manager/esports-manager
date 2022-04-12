@@ -14,10 +14,11 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
+
+from esm.core.game_manager import GameManager
+from esm.core.load_game import LoadGame
 from .controllerinterface import IController
 from ..loadgame import LoadGameLayout
-from esm.core.load_game import LoadGame
-from esm.core.game_manager import GameManager
 
 
 class LoadGameController(IController):

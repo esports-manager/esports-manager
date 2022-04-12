@@ -42,6 +42,7 @@ class LoadGame:
     If it finds the save game, it calculates the save file hash, and compares to the one stored in the HashFile.
     If they do not match, the module throws an error message. Otherwise, it loads the game normally.
     """
+
     def __init__(self, folder=SAVE_FILE_DIR):
         self.folder = folder
         self.hash_file = HashFile()

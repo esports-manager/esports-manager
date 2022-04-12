@@ -60,7 +60,7 @@ class TeamSelectLayout(ILayout):
 
         return [
             [esm_title_text("Select your team\n")],
-            [esm_form_text('')], # line break
+            [esm_form_text('')],  # line break
             # TODO: IMPLEMENT REGIONS COMBO BOX
             # [esm_input_combo(values=regions, key="teamselect_regions_combo")],
             [sg.Column(team_table, justification='center', element_justification='center'),

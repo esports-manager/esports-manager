@@ -220,9 +220,9 @@ class TeamGenerator:
         for team in self.teams:
             if team.team_id == team_id:
                 return team
-        
+
         raise ValueError("Team ID not found!")
-    
+
     def generate_file(
             self,
     ) -> None:

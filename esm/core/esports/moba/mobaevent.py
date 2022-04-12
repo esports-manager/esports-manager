@@ -22,9 +22,9 @@ from queue import Queue
 from typing import Union
 
 from esm.core.esports.moba.commentaries import Commentaries
+from esm.core.esports.moba.moba_events_details import get_moba_events
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.esports.moba.team import Team
-from esm.core.esports.moba.moba_events_details import get_moba_events
 
 logger = logging.getLogger(__name__)
 

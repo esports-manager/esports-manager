@@ -14,8 +14,6 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
-import cbor2
-
 from dataclasses import asdict
 from datetime import datetime
 from datetime import timezone
@@ -23,8 +21,10 @@ from pathlib import Path
 from tempfile import mkstemp
 from typing import Union
 
-from esm.core.hashfile import HashFile
+import cbor2
+
 from esm.core.gamestate import GameState
+from esm.core.hashfile import HashFile
 from esm.definitions import SAVE_FILE_DIR
 
 
@@ -143,7 +143,6 @@ class SaveGame:
         """
         if not self.temporary_file.closed:
             self.temporary_file.close()
-        
+
         os.close(self.fd)
         os.remove(self.temporary_file)
-        

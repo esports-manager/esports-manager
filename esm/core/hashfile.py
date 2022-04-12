@@ -13,11 +13,13 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import cbor2
-import os
 import hashlib
-from esm.definitions import HASH_FILE
+import os
 from dataclasses import dataclass, field
+
+import cbor2
+
+from esm.definitions import HASH_FILE
 
 
 @dataclass

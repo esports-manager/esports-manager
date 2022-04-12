@@ -15,8 +15,8 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from datetime import date
 
-from esm.core.esports.moba.team import Team
 from esm.core.esports.manager import Manager
+from esm.core.esports.moba.team import Team
 
 
 class MobaManager(Manager):

@@ -38,8 +38,7 @@ def get_moba_events():
             "points": 15
         },
         {
-            "name": "JUNGLE",
-            "jg_name": "HERALD",
+            "name": "HERALD",
             "priority": 25,
             "points": 8,
             "spawn_time": 8.0,
@@ -47,8 +46,7 @@ def get_moba_events():
             "end_time": 19.5
         },
         {
-            "name": "JUNGLE",
-            "jg_name": "BARON",
+            "name": "BARON",
             "priority": 50,
             "points": 25,
             "spawn_time": 20.0,
@@ -56,8 +54,7 @@ def get_moba_events():
             "end_time": 0.0
         },
         {
-            "name": "JUNGLE",
-            "jg_name": "DRAGON",
+            "name": "DRAGON",
             "priority": 25,
             "points": 10,
             "spawn_time": 5.0,

@@ -45,7 +45,7 @@ class Commentaries:
         if self.event_name == "KILL" and self.kill_dict_event is not None:
             self._get_kill_commentaries(self.kill_dict_event)
 
-        if self.event_name == "JUNGLE":
+        if self.event_name in ["BARON", "DRAGON", "HERALD"]:
             self._get_jg_commentary(
                 self.stole,
                 self.def_team_name,

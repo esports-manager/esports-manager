@@ -2328,7 +2328,7 @@
       "\u822a",
       "\u5f18"
     ],
-    "sigma": 17,
+    "sigma": 15,
     "region": "China",
     "mu": 80,
     "surnames": [
@@ -6977,7 +6977,7 @@
       "\ud604\uc6b0",
       "\ud604\uc900"
     ],
-    "sigma": 25,
+    "sigma": 10,
     "region": "Korea",
     "mu": 80,
     "surnames": [
@@ -7636,7 +7636,7 @@
     ],
     "sigma": 26,
     "region": "Mexico",
-    "mu": 64,
+    "mu": 55,
     "surnames": [
       "Hern\u00e1ndez",
       "Garc\u00eda",
@@ -13610,9 +13610,9 @@
       "\u042e\u0440\u0456\u0439",
       "\u0404\u0433\u043e\u0440"
     ],
-    "sigma": 10,
+    "sigma": 15,
     "region": "Ukraine",
-    "mu": 73,
+    "mu": 65,
     "surnames": [
       "\u0410\u0432\u0440\u0430\u043c\u0435\u043d\u043a\u043e",
       "\u0411\u0430\u0431\u0456\u0430\u043a",
@@ -13833,9 +13833,9 @@
       "Willie",
       "Zachary"
     ],
-    "sigma": 28,
+    "sigma": 15,
     "region": "United States",
-    "mu": 65,
+    "mu": 70,
     "surnames": [
       "Adams",
       "Aguilar",

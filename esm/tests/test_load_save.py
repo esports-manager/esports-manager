@@ -1,3 +1,18 @@
+#      eSports Manager - free and open source eSports Management game
+#      Copyright (C) 2020-2022  Pedrenrique G. Guimarães
+#
+#      This program is free software: you can redistribute it and/or modify
+#      it under the terms of the GNU General Public License as published by
+#      the Free Software Foundation, either version 3 of the License, or
+#      (at your option) any later version.
+#
+#      This program is distributed in the hope that it will be useful,
+#      but WITHOUT ANY WARRANTY; without even the implied warranty of
+#      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#      GNU General Public License for more details.
+#
+#      You should have received a copy of the GNU General Public License
+#      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import pytest
 import cbor2
 
@@ -40,8 +55,8 @@ def save_game_file(load_game_dir):
 
 
 @pytest.fixture()
-def save_game(gamestate, load_game_dir, hash_file):
-    save_game = SaveGame(gamestate, "testgame1.cbor", save_directory=load_game_dir, autosave_enabled=False)
+def save_game(gamestate, load_game_dir, hash_file, save_game_file):
+    save_game = SaveGame(gamestate, save_game_file, save_directory=load_game_dir, autosave_enabled=False)
     save_game.hash_file = hash_file
     return save_game
 
@@ -68,10 +83,10 @@ def teams_list(players):
 
 
 @pytest.fixture()
-def gamestate(teams_list, players, champions_list):
+def gamestate(teams_list, players, champions_list, save_game_file):
     return GameState(
         'TestGame1',
-        'testgame1.cbor',
+        save_game_file,
         {
             'name': 'TestManager',
             'birthday': '1995/02/01',
@@ -86,9 +101,9 @@ def gamestate(teams_list, players, champions_list):
     )
 
 
-def test_save_load_game(save_game, load_game):
+def test_save_load_game(save_game, load_game, save_game_file):
     save_game.save_game()
-    assert save_game.gamestate == load_game.load_game_state("testgame1.cbor")
+    assert save_game.gamestate == load_game.load_game_state(save_game_file)
 
 
 def test_hash_file(save_game, load_game, save_game_file):

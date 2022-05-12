@@ -44,7 +44,7 @@ class Championship:
                     MatchLive(
                         Match(uuid.uuid4(), self.championship_id, team, opp_team),
                         show_commentary=False,
-                        simulate=False,
+                        simulation_delay=False,
                     )
                 )
 

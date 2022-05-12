@@ -33,7 +33,7 @@ class MatchTester:
         self.avg_team_deaths = [0, 0]
         self.avg_team_assists = [0, 0]
         self.game_times = []
-        self.match.simulate = False
+        self.match.simulation_delay = False
         self.match.show_commentary = False
         self.running_test = False
 
@@ -46,7 +46,7 @@ class MatchTester:
         self.avg_team_deaths = [0, 0]
         self.avg_team_assists = [0, 0]
         self.game_times = []
-        self.match.simulate = False
+        self.match.simulation_delay = False
         self.match.show_commentary = False
         self.running_test = False
 

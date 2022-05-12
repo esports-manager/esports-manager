@@ -110,7 +110,7 @@ class MobaModel:
             match,
             show_commentary=show_commentary,
             match_speed=match_speed,
-            simulate=simulate,
+            simulation_delay=simulate,
             queue=queue,
             picks_bans_queue=picks_bans_queue
         )

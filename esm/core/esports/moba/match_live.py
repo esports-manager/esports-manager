@@ -44,7 +44,7 @@ class MatchLive:
             self, match: Match,
             show_commentary: bool = True,
             match_speed: int = 1,
-            simulate: bool = True,
+            simulation_delay: bool = True,
             ban_per_team: int = 5,
             difficulty_level: int = 1,
             is_player_match: bool = False,
@@ -58,7 +58,7 @@ class MatchLive:
         self.match_speed = match_speed
         self.is_match_over = False
         self.bans = []
-        self.simulate = simulate
+        self.simulation_delay = simulation_delay
         self.event_handler = MobaEventHandler(self.show_commentary, queue)
         self.champions = ChampionGenerator()
         self.champions.get_champions()
@@ -126,7 +126,7 @@ class MatchLive:
         """
         return sum(sum(team.towers.values()) for team in self.match.teams)
 
-    def which_team_nexus_exposed(self) -> Union[Tuple[Team, Team], Team, None]:
+    def get_team_exposed_nexus(self) -> Union[Tuple[Team, Team], Team, None]:
         """
         Gets the exposed nexus from one or both of the teams.
         """
@@ -147,7 +147,7 @@ class MatchLive:
             if team.nexus == 0:
                 self.is_match_over = True
 
-    def winning_team(self) -> None:
+    def assign_winning_team(self) -> None:
         """
         Assigns the winner to the team that still has the nexus up
         """
@@ -175,7 +175,7 @@ class MatchLive:
 
         while not self.is_match_over:
             self._run_match()
-        self.winning_team()
+        self.assign_winning_team()
 
     def _run_match(self):
         """
@@ -184,20 +184,20 @@ class MatchLive:
         self.calculate_both_teams_win_prob()
         self.event_handler.get_game_state(
             self.game_time,
-            self.which_team_nexus_exposed(),
+            self.get_team_exposed_nexus(),
             self.is_any_inhib_open(),
             self.get_tower_number(),
         )
         self.event_handler.generate_event(self.game_time)
         self.event_handler.event.calculate_event(
-            self.match.team1, self.match.team2, self.which_team_nexus_exposed()
+            self.match.team1, self.match.team2, self.get_team_exposed_nexus()
         )
         self.check_match_over()
 
         if not self.is_match_over:
             self.increment_game_time(0.5)
 
-        if self.simulate:
+        if self.simulation_delay:
             time.sleep(self.match_speed)
 
 
@@ -210,7 +210,7 @@ class MatchSeries:
             best_of=3,
             show_commentary: bool = True,
             match_speed: int = 1,
-            simulate: bool = True,
+            simulation_delay: bool = True,
             ban_per_team: int = 5,
             difficulty_level: int = 1,
             is_player_match: bool = False
@@ -236,7 +236,7 @@ class MatchSeries:
         # MatchLive related
         self.show_commentary = show_commentary
         self.match_speed = match_speed
-        self.simulate = simulate
+        self.simulation_delay = simulation_delay
         self.is_player_match = is_player_match
         self.ban_per_team = ban_per_team
         self.difficulty_level = difficulty_level
@@ -266,7 +266,7 @@ class MatchSeries:
                     Match(uuid.uuid4(), self.championship_id, teams[0], teams[1]),
                     self.show_commentary,
                     self.match_speed,
-                    self.simulate,
+                    self.simulation_delay,
                     self.ban_per_team,
                     self.difficulty_level,
                     self.is_player_match,

@@ -24,16 +24,14 @@ class Skill:
         self.current_skill = skill
         self.exp = exp
         self._exp_to_next_level = self.exp_to_next_level
-        self.max_exp = 200000
 
     @property
     def exp_to_next_level(self):
-        if self.skill > 1:
-            self._exp_to_next_level = (6/5 * self.skill**3) - (15 * self.skill**2) + (100 * self.skill) - 140
-        elif self.skill == 1:
-            self._exp_to_next_level = 9
-        else:
+        if self.skill <= 0:
             raise SkillError("Skill level must not be zero or negative!")
+        # Testing this formula
+        # self._exp_to_next_level = (3 * self.skill**2) + (2.9964 * self.skill) + 1.0909
+        self._exp_to_next_level = (300 * self.skill**2) + (420 * self.skill) + 161
         return self._exp_to_next_level
 
     def calculate_current_skill(self, mult: float):
@@ -55,14 +53,6 @@ class Skill:
             if diff_exp <= 0:
                 self.skill += 1
                 self.exp = abs(diff_exp)
-
-    def get_exp_points(self, team1_skill_lvl: int, team2_skill_lvl: int, boost: float = 1.0):
-        # TODO: move this to another module
-        exp = ((team1_skill_lvl/5) * ((2 * team1_skill_lvl + 10) / (team1_skill_lvl + team2_skill_lvl + 10))**2.5) * (team1_skill_lvl + 150) * boost
-
-        if exp > self.max_exp:
-            exp = self.max_exp
-        return exp
 
     def __str__(self):
         return self.skill

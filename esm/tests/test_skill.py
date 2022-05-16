@@ -13,26 +13,38 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-import logging
-
-from esm.definitions import DEBUG
-from esm.core.esm import ESMMobaController
+import pytest
+from esm.core.esports.moba.skill import Skill, SkillError
 
 
-logging.basicConfig(
-    filename="esm.log",
-    encoding="utf-8",
-    format="%(levelname)s %(asctime)s: %(message)s",
-    datefmt="%m/%d/%Y %I:%M:%S %p ",
-)
-logger = logging.getLogger(__name__)
-
-if DEBUG:
-    logging.basicConfig(level=logging.DEBUG)
-else:
-    logging.basicConfig(level=logging.ERROR)
+def test_lvl_up_once():
+    skill = Skill(50, exp=0.0)
+    exp_necessary = skill.exp_to_next_level
+    skill.add_exp_points(exp_necessary)
+    assert exp_necessary > 0
+    assert skill.skill == 51
 
 
-esm = ESMMobaController()
-esm.app()
+def test_lvl1_exp_necessary():
+    skill = Skill(1, exp=0.0)
+    exp_necessary = skill.exp_to_next_level
+    skill.add_exp_points(exp_necessary)
+    assert exp_necessary > 0
+
+
+def test_max_lvl_up():
+    skill = Skill(99, exp=0.0)
+    exp_necessary = skill.exp_to_next_level
+    skill.add_exp_points(exp_necessary)
+    assert exp_necessary > 0
+    assert skill.skill == 99
+
+
+def test_negative_skill_level():
+    with pytest.raises(SkillError):
+        Skill(-1)
+
+
+def test_zero_skill_level():
+    with pytest.raises(SkillError):
+        Skill(0)

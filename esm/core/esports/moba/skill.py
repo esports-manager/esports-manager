@@ -54,11 +54,13 @@ class Skill:
 
     def get_total_exp(self):
         if self.skill_gain == SkillGain.FAST:
-            return (133.33 * self.skill**3) + (24.909 * self.skill**2) + (7.3154 * self.skill) + 174.16
+            total_exp = (133.33 * self.skill**3) + (24.909 * self.skill**2) + (7.3154 * self.skill) + 174.16
         elif self.skill_gain == SkillGain.MEDIUM:
-            return (100.0 * self.skill**3) + (60.0 * self.skill**2) + self.skill + 161.0
+            total_exp = (100.0 * self.skill**3) + (60.0 * self.skill**2) + self.skill + 161.0
         else:
-            return (66.667 * self.skill**3) + (9.9819 * self.skill**2) + (85.254 * self.skill) + 94.64
+            total_exp = (66.667 * self.skill**3) + (9.9819 * self.skill**2) + (85.254 * self.skill) + 94.64
+
+        return total_exp + self.exp
 
     @property
     def exp_to_next_level(self):

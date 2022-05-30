@@ -55,7 +55,7 @@ class GUI:
         """
         encoded_icon = self._encode_icon()
 
-        return sg.Window(
+        self.window = sg.Window(
             "eSports Manager",
             element_justification="center",
             layout=self._get_cols(),
@@ -63,6 +63,8 @@ class GUI:
             resizable=True,
             finalize=True,
         )
+        sg.set_options(dpi_awareness=True)
+        return self.window
 
     def get_layouts(self):
         """

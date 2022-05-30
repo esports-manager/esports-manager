@@ -35,7 +35,7 @@ class Skill:
         self.current_skill = skill
         self.exp = exp
         self.total_exp = self.get_total_exp()
-        self._exp_to_next_level = self.exp_to_next_level
+        self._exp_to_next_level = self.exp_to_next_level()
 
     def is_max_lvl(self) -> bool:
         return self.skill == 99
@@ -62,7 +62,6 @@ class Skill:
 
         return total_exp + self.exp
 
-    @property
     def exp_to_next_level(self):
         if self.skill <= 0:
             raise SkillError("Skill level must not be zero or negative!")
@@ -75,6 +74,8 @@ class Skill:
             self._exp_to_next_level = (300.0 * self.skill**2) + (420.0 * self.skill) + 161.0
         else:
             self._exp_to_next_level = (400.0 * self.skill ** 2) + (450.0 * self.skill) + 161.0
+
+        self._exp_to_next_level -= self.exp
 
         return self._exp_to_next_level
 
@@ -89,13 +90,13 @@ class Skill:
 
         Players get more exp points if they beat a harder team.
         """
-        self.exp += exp_points
-        self.total_exp += exp_points
-
-        while self.exp >= self.exp_to_next_level and not self.is_max_lvl():
-            exp_to_next_lvl = self.exp_to_next_level
-            self.exp -= exp_to_next_lvl
+        while exp_points >= self.exp_to_next_level() and not self.is_max_lvl():
+            exp_to_next_lvl = self.exp_to_next_level()
+            exp_points -= exp_to_next_lvl
             self.skill += 1
+
+        self.exp = exp_points
+        self.total_exp += exp_points
 
         if self.is_max_lvl():
             self.exp = 0

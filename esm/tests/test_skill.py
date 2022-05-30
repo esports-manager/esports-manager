@@ -42,6 +42,17 @@ def test_preexisting_exp_lvl_up():
     assert diff_exp == 500.0
 
 
+def test_add_arbitrary_exp():
+    skill_zero_exp = Skill(50, exp=0.0)
+    skill_zero_exp.get_total_exp()
+    skill = Skill(50, exp=500.0)
+    skill.add_exp_points(300.0)
+    total_exp = skill_zero_exp.total_exp + 500.0 + 300.0
+    assert skill.skill == 50
+    assert skill.exp == 800.0
+    assert skill.total_exp == total_exp
+
+
 def test_lvlup_more_than_once():
     skill = Skill(50, exp=0.0)
     skill2 = Skill(51, exp=0.0)

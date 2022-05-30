@@ -97,7 +97,7 @@ class Skill:
             points -= exp_to_next_lvl
             self.skill += 1
 
-        self.exp = points
+        self.exp += points
         self.total_exp += exp_points
 
         if self.is_max_lvl():
@@ -106,3 +106,11 @@ class Skill:
 
     def __str__(self):
         return self.skill
+
+    def __eq__(self, other):
+        if isinstance(other, Skill):
+            return self.skill == other.skill
+        elif isinstance(other, int):
+            return self.skill == other
+        else:
+            return NotImplemented

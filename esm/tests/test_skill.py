@@ -30,13 +30,32 @@ def test_lvl1_exp_necessary():
     exp_necessary = skill.exp_to_next_level
     skill.add_exp_points(exp_necessary)
     assert exp_necessary > 0
+    assert skill.skill == 2
+
+
+def test_lvlup_more_than_once():
+    skill = Skill(50, exp=0.0)
+    skill2 = Skill(51, exp=0.0)
+    exp_necessary = skill.exp_to_next_level
+    exp_necessary += skill2.exp_to_next_level
+    skill.add_exp_points(exp_necessary)
+    assert skill.skill == 52
 
 
 def test_max_lvl_up():
     skill = Skill(99, exp=0.0)
     exp_necessary = skill.exp_to_next_level
     skill.add_exp_points(exp_necessary)
-    assert exp_necessary > 0
+    assert exp_necessary == 0
+    assert skill.skill == 99
+
+
+def test_lvlup_till_max():
+    skill = Skill(97)
+    skill2 = Skill(98)
+    exp_necessary = skill.exp_to_next_level
+    exp_necessary += skill2.exp_to_next_level
+    skill.add_exp_points(exp_necessary)
     assert skill.skill == 99
 
 

@@ -90,12 +90,14 @@ class Skill:
 
         Players get more exp points if they beat a harder team.
         """
-        while exp_points >= self.exp_to_next_level() and not self.is_max_lvl():
+        points = exp_points
+
+        while points >= self.exp_to_next_level() and not self.is_max_lvl():
             exp_to_next_lvl = self.exp_to_next_level()
-            exp_points -= exp_to_next_lvl
+            points -= exp_to_next_lvl
             self.skill += 1
 
-        self.exp = exp_points
+        self.exp = points
         self.total_exp += exp_points
 
         if self.is_max_lvl():

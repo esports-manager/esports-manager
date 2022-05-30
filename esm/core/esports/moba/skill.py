@@ -13,25 +13,67 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from enum import Enum, auto
+from typing import Union
+
 
 class SkillError(Exception):
     pass
 
 
+class SkillGain(Enum):
+    FAST = auto()
+    MEDIUM = auto()
+    SLOW = auto()
+
+
 class Skill:
-    def __init__(self, skill: int, exp: float = 0.0):
+    def __init__(self, skill: int, exp: float = 0.0, skill_gain: Union[SkillGain, str] = SkillGain.MEDIUM):
         self.skill = skill
+        self.skill_gain = None
+        self.get_skill_gain_value(skill_gain)
         self.current_skill = skill
         self.exp = exp
+        self.total_exp = self.get_total_exp()
         self._exp_to_next_level = self.exp_to_next_level
+
+    def is_max_lvl(self) -> bool:
+        return self.skill == 99
+
+    def get_skill_gain_value(self, skill_gain: Union[SkillGain, str]):
+        if isinstance(skill_gain, SkillGain):
+            self.skill_gain = skill_gain
+        elif isinstance(skill_gain, str):
+            sk_g = list(SkillGain)
+            for i in sk_g:
+                if i.name == skill_gain:
+                    self.skill_gain = i
+                    break
+        else:
+            raise SkillError("Skill gain value is invalid!")
+
+    def get_total_exp(self):
+        if self.skill_gain == SkillGain.FAST:
+            return (133.33 * self.skill**3) + (24.909 * self.skill**2) + (7.3154 * self.skill) + 174.16
+        elif self.skill_gain == SkillGain.MEDIUM:
+            return (100.0 * self.skill**3) + (60.0 * self.skill**2) + self.skill + 161.0
+        else:
+            return (66.667 * self.skill**3) + (9.9819 * self.skill**2) + (85.254 * self.skill) + 94.64
 
     @property
     def exp_to_next_level(self):
         if self.skill <= 0:
             raise SkillError("Skill level must not be zero or negative!")
-        # Testing this formula
-        # self._exp_to_next_level = (3 * self.skill**2) + (2.9964 * self.skill) + 1.0909
-        self._exp_to_next_level = (300 * self.skill**2) + (420 * self.skill) + 161
+
+        if self.is_max_lvl():
+            self._exp_to_next_level = 0
+        elif self.skill_gain == SkillGain.FAST:
+            self._exp_to_next_level = (200.0 * self.skill**2) + (220.0 * self.skill) + 161.0
+        elif self.skill_gain == SkillGain.MEDIUM:
+            self._exp_to_next_level = (300.0 * self.skill**2) + (420.0 * self.skill) + 161.0
+        else:
+            self._exp_to_next_level = (400.0 * self.skill ** 2) + (450.0 * self.skill) + 161.0
+
         return self._exp_to_next_level
 
     def calculate_current_skill(self, mult: float):
@@ -46,13 +88,16 @@ class Skill:
         Players get more exp points if they beat a harder team.
         """
         self.exp += exp_points
+        self.total_exp += exp_points
 
-        # Max skill level
-        if self.skill != 99:
-            diff_exp = self.exp_to_next_level - self.exp
-            if diff_exp <= 0:
-                self.skill += 1
-                self.exp = abs(diff_exp)
+        while self.exp >= self.exp_to_next_level and not self.is_max_lvl():
+            exp_to_next_lvl = self.exp_to_next_level
+            self.exp -= exp_to_next_lvl
+            self.skill += 1
+
+        if self.is_max_lvl():
+            self.exp = 0
+            self.total_exp = self.get_total_exp()
 
     def __str__(self):
         return self.skill

@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-pysimplegui = "*"
+pysimplegui = "==4.60.1"
 pylint = "*"
 autopep8 = "*"
 setuptools = "*"

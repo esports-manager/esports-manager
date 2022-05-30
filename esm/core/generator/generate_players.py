@@ -21,6 +21,7 @@ from typing import Tuple
 
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.generator.default_player_nick_names import get_default_player_nick_names
+from esm.core.esports.moba.skill import SkillGain
 from esm.core.generator.generate_champions import ChampionGenerator
 from esm.core.utils import load_list_from_file, write_to_file
 from esm.definitions import PLAYERS_FILE, NAMES_FILE
@@ -52,18 +53,19 @@ class MobaPlayerGenerator:
         self.nick_name = None
         self.dob = None
         self.skill = None
+        self.skill_gain = None
+        self.exp = None
         self.nationalities = None
         self.nationality = None
         self.player_obj = None
 
-        if min_age <= max_age:
-            self.min_age = min_age
-            self.max_age = max_age
-        else:
+        if min_age > max_age:
             raise MobaPlayerGeneratorError(
                 "Minimum age cannot be higher than maximum age!"
             )
 
+        self.min_age = min_age
+        self.max_age = max_age
         self.lane = lane
         self.td = today  # used to calculate the date of birth. Varies according to the current season calendar
         self.multipliers = []
@@ -139,13 +141,15 @@ class MobaPlayerGenerator:
             amount = random.randrange(3, 15)
 
         for _ in range(amount):
-            champion_dict = {}
             ch = random.choice(champs)
             champs.remove(ch)
             mult = random.randrange(60, 100) / 100
 
-            champion_dict["id"] = ch["id"] if isinstance(ch, dict) else ch.champion_id
-            champion_dict["mult"] = mult
+            champion_dict = {
+                "id": ch["id"] if isinstance(ch, dict) else ch.champion_id,
+                "mult": mult,
+            }
+
             self.champions.append(champion_dict)
 
     def get_nationality_skill(self) -> Tuple[int, int]:
@@ -168,6 +172,10 @@ class MobaPlayerGenerator:
             self.skill = 90
         elif self.skill < 30:
             self.skill = 30
+
+        sk_g = list(SkillGain)
+        self.skill_gain = random.choice(sk_g)
+        self.exp = 0.0
 
     def generate_name(self) -> None:
         """
@@ -199,6 +207,8 @@ class MobaPlayerGenerator:
             "nick_name": self.nick_name,
             "nationality": self.nationality,
             "skill": self.skill,
+            "skill_gain": self.skill_gain.name,
+            "exp": self.exp,
             "multipliers": self.multipliers,
             "champions": self.champions.copy(),
         }
@@ -216,7 +226,9 @@ class MobaPlayerGenerator:
             self.nick_name,
             self.multipliers,
             self.skill,
+            self.skill_gain,
             self.champions,
+            self.exp,
         )
 
     def generate_multipliers(self) -> None:
@@ -277,7 +289,7 @@ class MobaPlayerGenerator:
         else:
             self.lane = 0
             for _ in range(5):
-                for __ in range(int(amount / 5)):
+                for __ in range(amount // 5):
                     self.generate_player()
                 self.lane += 1
 
@@ -306,6 +318,8 @@ class MobaPlayerGenerator:
         self.nationality = player["nationality"]
         self.nick_name = player["nick_name"]
         self.skill = player["skill"]
+        self.skill_gain = player["skill_gain"]
+        self.exp = player["exp"]
         self.multipliers = player["multipliers"]
         self.champions = player["champions"]
 
@@ -323,6 +337,8 @@ class MobaPlayerGenerator:
         self.nationality = player.nationality
         self.nick_name = player.nick_name
         self.skill = player.skill
+        self.skill = player.skill_lvl.skill_gain
+        self.exp = player.skill_lvl.exp
         self.multipliers = player.mult
         self.champions = player.champions
 

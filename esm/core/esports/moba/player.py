@@ -16,9 +16,10 @@
 from datetime import date
 from typing import Union
 
-from esm.core.esports.moba.champion import Champion
-from esm.core.esports.moba.moba_enums_def import Lanes, LaneError
-from esm.core.esports.player import Player
+from .champion import Champion
+from .moba_enums_def import Lanes, LaneError
+from ..player import Player
+from .skill import Skill, SkillGain
 
 
 class MobaPlayer(Player):
@@ -38,10 +39,13 @@ class MobaPlayer(Player):
             nick_name: str,
             mult: list,
             skill: int,
+            skill_gain: str,
             champions: list,
+            exp: float = 0.0,
     ):
         self._champion = None
         self.mult = mult
+        self.skill_lvl = Skill(skill, exp=exp, skill_gain=skill_gain)
         self._lane = None
         self._kills = 0
         self._deaths = 0
@@ -50,8 +54,16 @@ class MobaPlayer(Player):
         self.consecutive_kills = 0
         self.champions = champions
         super().__init__(
-            player_id, nationality, first_name, last_name, birthday, nick_name, skill
+            player_id, nationality, first_name, last_name, birthday, nick_name,
         )
+
+    @property
+    def skill(self):
+        return self.skill_lvl.skill
+
+    @skill.setter
+    def skill(self, value):
+        self.skill_lvl.skill = value
 
     @property
     def champion(self) -> Champion:
@@ -153,11 +165,15 @@ class MobaPlayer(Player):
         """
         if champion is None:
             return 0
-        mult = 0.5  # default champion multiplier
-        for ch in self.champions:
-            if ch["id"] == champion.champion_id:
-                mult = ch["mult"]
-                break
+        mult = next(
+            (
+                ch["mult"]
+                for ch in self.champions
+                if ch["id"] == champion.champion_id
+            ),
+            0.5,
+        )
+
         return (0.5 * champion.skill) * (1 + mult)
 
     def get_champion_skill(self) -> float:

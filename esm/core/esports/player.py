@@ -31,7 +31,6 @@ class Player:
             last_name: str,
             birthday: Union[date, datetime, str],
             nick_name: str,
-            skill: int,
     ):
         self.player_id = player_id
 
@@ -52,19 +51,8 @@ class Player:
 
         self.nationality = nationality
 
-        # TODO: replace skill by attribute dictionary
-        self._skill = skill
-
         # TODO: players should have a "potential" value too. This value tells the game that the player
         # can improve his overall skill to a certain level
-
-    @property
-    def skill(self) -> int:
-        return self._skill
-
-    @skill.setter
-    def skill(self, skill) -> None:
-        self._skill = skill
 
     def get_age(self, today: date = date.today()) -> int:
         """

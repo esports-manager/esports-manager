@@ -18,6 +18,7 @@ cbor = "*"
 cbor2 = "*"
 pyyaml = "*"
 pyinstaller = "*"
+pillow = "*"
 
 [requires]
 python_version = "3"

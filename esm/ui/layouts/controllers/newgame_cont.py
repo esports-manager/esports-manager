@@ -31,6 +31,8 @@ class NewGameController(IController):
             nationalities.get_nationalities()
             self.nationalities = nationalities.nationalities
 
+            self.controller.get_gui_element("create_manager_nationality").update(values=self.nationalities)
+
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("new_game_screen").visible:
             self.load_nationalities()

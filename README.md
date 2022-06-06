@@ -1,6 +1,6 @@
 **NOTE:** *THIS PROJECT IS STILL UNDER DEVELOPMENT, AND IS NOT READY FOR GAMEPLAY YET.*
 
-![eSports Manager Logo](esm/resources/images/logo/esportsmanager.png)
+![eSports Manager Logo](esm/res/images/logo/esportsmanager.png)
 
 # eSports Manager
 

@@ -57,9 +57,9 @@ def test_generate_file(champion_generator, tmpdir):
 # import random
 
 # from esm.core.esports.moba.player import Player
-# from esm.resources.utils import load_list_from_json
-# from esm.resources.generator.generate_players import MobaPlayerGenerator
-# from esm.resources.utils import write_to_json
+# from esm.res.utils import load_list_from_json
+# from esm.res.generator.generate_players import MobaPlayerGenerator
+# from esm.res.utils import write_to_json
 
 
 # def get_player_dict_test() -> dict:

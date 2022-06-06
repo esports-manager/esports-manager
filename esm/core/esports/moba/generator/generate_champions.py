@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Union
 
 from esm.core.esports.moba.champion import Champion
-from esm.core.generator.default_champion_names import get_default_champion_names
+from core.esports.moba.generator.default_champion_names import get_default_champion_names
 from esm.core.utils import write_to_file, load_list_from_file
 from esm.definitions import CHAMPIONS_FILE
 

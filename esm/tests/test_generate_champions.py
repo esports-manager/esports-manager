@@ -17,7 +17,7 @@
 import pytest
 
 from esm.core.utils import get_from_file
-from esm.core.generator.generate_champions import ChampionGenerator
+from core.esports.moba.generator import ChampionGenerator
 
 
 @pytest.fixture

@@ -13,27 +13,6 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-import logging
-
-from esm.definitions import DEBUG, ROOT_DIR
-from esm.core.esm import ESMMobaController
-
-
-logging.basicConfig(
-    filename="esm.log",
-    encoding="utf-8",
-    format="%(levelname)s %(asctime)s: %(message)s",
-    datefmt="%m/%d/%Y %I:%M:%S %p ",
-)
-logger = logging.getLogger(__name__)
-
-if DEBUG:
-    logging.basicConfig(level=logging.DEBUG)
-else:
-    logging.basicConfig(level=logging.ERROR)
-
-
-logging.debug(ROOT_DIR)
-esm = ESMMobaController()
-esm.app()
+from .generate_champions import ChampionGenerator
+from .generate_players import MobaPlayerGenerator
+from .generate_teams import TeamGenerator

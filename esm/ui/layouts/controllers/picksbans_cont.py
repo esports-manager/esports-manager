@@ -111,6 +111,7 @@ class PicksBansController(IController):
             return
 
         if self.current_match is None:
+            self.controller.check_files()
             self.current_match = self.controller.initialize_random_debug_match(False, picks_bans_queue=self.queue)
             self.current_match.match.team1.is_players_team = True
             try:

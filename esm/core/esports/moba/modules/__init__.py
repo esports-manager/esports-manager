@@ -1,5 +1,5 @@
 #      eSports Manager - free and open source eSports Management game
-#      Copyright (C) 2020-2023  Pedrenrique G. Guimarães
+#      Copyright (C) 2020-2022  Pedrenrique G. Guimarães
 #
 #      This program is free software: you can redistribute it and/or modify
 #      it under the terms of the GNU General Public License as published by
@@ -13,26 +13,3 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-import logging
-
-from esm.core.esm import ESMController
-from esm.definitions import DEBUG, ROOT_DIR
-
-logging.basicConfig(
-    filename="esm.log",
-    encoding="utf-8",
-    format="%(levelname)s %(asctime)s: %(message)s",
-    datefmt="%m/%d/%Y %I:%M:%S %p ",
-)
-logger = logging.getLogger(__name__)
-
-if DEBUG:
-    logging.basicConfig(level=logging.DEBUG)
-else:
-    logging.basicConfig(level=logging.ERROR)
-
-
-logger.debug(ROOT_DIR)
-esm = ESMController()
-esm.app()

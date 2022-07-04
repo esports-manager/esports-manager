@@ -25,7 +25,7 @@ from esm.ui.layouts.controllers.game import *
 from esm.ui.view import View
 
 
-class ESMMobaController:
+class ESMController:
     """
     This class is a general class for MOBA-related control activities. It initializes all controllers
     and layouts, and also communicates with the View and MobaModel modules. It is the bread and butter

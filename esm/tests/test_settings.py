@@ -30,6 +30,7 @@ def settings(tmpdir):
 def test_get_data(settings):
     expected_data = {
         "font_scale": 1,
+        "amount_players": 50,
         "res_dir": RES_DIR,
         "db_dir": DB_DIR,
         "save_file_dir": SAVE_FILE_DIR,
@@ -40,5 +41,3 @@ def test_get_data(settings):
     data = settings.load_config_file()
     settings.parse_config_file(data)
     assert settings.get_data() == expected_data
-
-

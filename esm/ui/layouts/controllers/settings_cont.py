@@ -22,18 +22,17 @@ class SettingsController(IController):
     def __init__(self, controller):
         super().__init__(controller)
         self.layout = SettingsLayout(self)
-        self._amount_players = 50
         self.settings = self.controller.settings
         self.loaded_data = False
 
     @property
     def amount_players(self) -> int:
-        return self._amount_players
+        return self.controller.settings.amount_players
 
     @amount_players.setter
     def amount_players(self, amount):
         self.controller.core.amount_players = amount
-        self._amount_players = amount
+        self.controller.settings.amount_players = amount
 
     def generate_all_data(self) -> None:
         self.controller.generate_all_data()

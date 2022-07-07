@@ -16,15 +16,15 @@ The game is still not ready to be played. Many features are yet to be implemente
 
 ## SCREENSHOTS
 
-<img src="esm/resources/images/main_screen.PNG" width="65%" alt="">
+<img src="esm/res/images/main_screen.PNG" width="65%" alt="">
 
-<img src="esm/resources/images/debug_match_screen.PNG" width="65%" alt="">
+<img src="esm/res/images/debug_match_screen.PNG" width="65%" alt="">
 
-<img src="esm/resources/images/match_tester.PNG" width="65%" alt="">
+<img src="esm/res/images/match_tester.PNG" width="65%" alt="">
 
-<img src="esm/resources/images/debug_championship_screen.PNG" width="65%" alt="">
+<img src="esm/res/images/debug_championship_screen.PNG" width="65%" alt="">
 
-<img src="esm/resources/images/team_select_screen.PNG" width="65%" alt="">
+<img src="esm/res/images/team_select_screen.PNG" width="65%" alt="">
 
 ## HOW TO RUN THE DEBUG VERSION
 

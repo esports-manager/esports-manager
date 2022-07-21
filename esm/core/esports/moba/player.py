@@ -221,7 +221,8 @@ class MobaPlayer(Player):
             player["nick_name"],
             player["multipliers"],
             player["skill"],
-            player["champions"]
+            player["skill_gain"],
+            player["champions"],
         )
 
     def __repr__(self):

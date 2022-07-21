@@ -39,7 +39,6 @@ class GameDashboardLayout(ILayout):
         Defines the main game dashboard screen.
         """
         tab_home = [
-            [esm_title_text("TEAMNAME1234567891011121314151617181920\n", key="game_dashboard_teamname")],
             [esm_form_text("Next match details:", font=(bold_font, default_font_size))],
             [esm_form_text("Team"), esm_form_text("TEAMNAME123456789101112131415", key="game_dashboard_oppteamname")],
             [esm_table(values=[['LANE', 'PLAYERNAME1234567891011121314151617', '1515']],
@@ -91,6 +90,7 @@ class GameDashboardLayout(ILayout):
         ]
 
         return [
+            [esm_title_text("TEAMNAME1234567891011121314151617181920\n", key="game_dashboard_teamname")],
             [esm_form_text("Manager: ", font=(bold_font, default_font_size)),
              esm_form_text("Managername12345678", key="game_dashboard_managername")],
             [esm_form_text("Current day: ", font=(bold_font, default_font_size)),

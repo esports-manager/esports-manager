@@ -19,12 +19,14 @@ from typing import Union
 from esm.core.esports.moba.match_tester import MatchTester
 from esm.ui.layouts.controllers.controllerinterface import IController
 from esm.ui.layouts.match_tester import MatchTesterLayout
+from esm.core.esports.moba.modules.init_game import GameInitializer
 
 
 class MatchTesterController(IController):
     def __init__(self, controller):
         super().__init__(controller)
         self.layout = MatchTesterLayout(self)
+        self.game_initializer = GameInitializer()
         self._amount_test_matches = 1000
         self.current_match = None
         self.match_tester = None
@@ -39,7 +41,7 @@ class MatchTesterController(IController):
         self._amount_test_matches = amount
 
     def initialize_random_debug_match(self, picksbans=True):
-        self.current_match = self.controller.initialize_random_debug_match(picksbans)
+        self.current_match = self.game_initializer.initialize_random_debug_game(picksbans=picksbans)
 
     def start_match_tester_thread(self):
         """

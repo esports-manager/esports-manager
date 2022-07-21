@@ -25,3 +25,4 @@ from .picksbans_cont import PicksBansController
 from .pickteam_cont import PickTeamController
 from .settings_cont import SettingsController
 from .teamselect_cont import TeamSelectController
+from .game.game_dashboard_cont import GameDashboardController

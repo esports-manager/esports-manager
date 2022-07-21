@@ -14,18 +14,40 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .gui import GUI
+from .gui import GUI, init_theme
 from .gui_components import sg
+from .layouts.controllers import *
+from ..definitions import DEBUG
 
 
-class View:
+class GUIController:
     """
-    The View class is an abstraction layer over the GUI. It should provide functions that interact
+    This class is an abstraction layer over the GUI. It should provide functions that interact
     with the GUI, but do not expose any details about the GUI itself.
     """
 
-    def __init__(self, controller):
-        self.gui = GUI(controller)
+    def __init__(self):
+        init_theme()
+        self.initialize_controllers()
+        self.gui = GUI(self)
+        self.controllers = None
+
+    def initialize_controllers(self):
+        LoadGameController(self)
+        MainScreenController(self)
+        NewGameController(self)
+        SettingsController(self)
+        GameDashboardController(self)
+
+        # Debug controllers
+        if DEBUG:
+            DebugController(self)
+            DebugMatchController(self)
+            DebugChampionshipController(self)
+            TeamSelectController(self)
+            PicksBansController(self)
+            PickTeamController(self)
+            MatchTesterController(self)
 
     def print_error(self, e):
         self.gui.error_message(e)

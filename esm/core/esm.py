@@ -25,7 +25,6 @@ class ESMController:
     """
 
     def __init__(self):
-        self.game_manager = None
         self.core = Core()
         self.view = GUIController()
 

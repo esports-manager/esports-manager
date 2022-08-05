@@ -36,6 +36,7 @@ class Core:
         self.settings.load_config_file()
         self.db = DB(self.settings)
         self.game_manager = GameManager(self.settings)
+        self.initialize_logging()
 
     def initialize_logging(self):
         logging.basicConfig(

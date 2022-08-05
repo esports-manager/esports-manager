@@ -37,6 +37,7 @@ class GameManager:
     ):
         self.settings = settings
         self.auto_save_enabled = auto_save_enabled
+        self.db = db
         self.gamestate = None
         self.current_matches = None
         self.load = None

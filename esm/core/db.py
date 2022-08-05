@@ -58,6 +58,6 @@ class DB:
         players_gen.generate_file()
 
     def load_moba_teams(self):
-        players_gen, teams_gen, champions_gen = self.get_moba_generators()
-
-
+        _, teams_gen, __ = self.get_moba_generators()
+        teams_gen.get_teams_objects()
+        return teams_gen.teams

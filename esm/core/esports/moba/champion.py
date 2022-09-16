@@ -39,6 +39,4 @@ class Champion:
         return "{0}".format(self.name)
 
     def __eq__(self, other):
-        if not isinstance(other, Champion):
-            return NotImplemented
-        return self.champion_id == other.champion_id
+        return self.champion_id == other.champion_id if isinstance(other, Champion) else NotImplemented

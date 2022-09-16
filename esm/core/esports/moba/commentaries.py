@@ -103,7 +103,7 @@ class Commentaries:
         if amount_kills != 0:
             if self.commentary is not None:
                 self.commentary = (
-                        f"{self.commentary}\n{killer.nick_name} has slain: {names}"
+                    f"{self.commentary}\n{killer.nick_name} has slain: {names}"
                 )
             else:
                 self.commentary = f"{killer.nick_name} has slain {names}"
@@ -137,10 +137,10 @@ class Commentaries:
     ):
         if defended:
             self.commentary = (
-                    def_team_name
-                    + " has defended the "
-                    + lane
-                    + " inhibitor successfully"
+                def_team_name
+                + " has defended the "
+                + lane
+                + " inhibitor successfully"
             )
         else:
             self.commentary = f"{atk_team_name} has destroyed the {lane} inhibitor"

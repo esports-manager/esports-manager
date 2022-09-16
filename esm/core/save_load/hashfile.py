@@ -13,6 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import contextlib
 import hashlib
 import os
 from dataclasses import dataclass, field
@@ -69,9 +70,7 @@ class HashFile:
         return h.hexdigest()
 
     def write_to_hash_file(self, filename):
-        try:
+        with contextlib.suppress(FileNotFoundError):
             self.read_hash_file()
-        except FileNotFoundError:
-            pass
         self.hash_data[filename] = self.hash_file(filename)
         self.write_hash_file()

@@ -123,9 +123,9 @@ class PicksBans:
             self.num_picks += 1
             self.picks_order.remove(player)
 
-            if self.num_picks in [1, 5, 9]:
+            if self.num_picks in {1, 5, 9}:
                 self.picks_turn = 1
-            elif self.num_picks in [3, 7]:
+            elif self.num_picks in {3, 7}:
                 self.picks_turn = 0
             elif self.num_picks == 6:
                 self.picks_turn = -1
@@ -213,10 +213,7 @@ class PickBanAI:
         self.get_opponents_best_champions()
 
     def get_input(self, pick=True, player=None):
-        if pick:
-            return self.get_ai_pick_input(player)
-        else:
-            return self.get_ai_ban_input()
+        return self.get_ai_pick_input(player) if pick else self.get_ai_ban_input()
 
     def get_best_champions(self, player) -> None:
         self.check_champion(player.champions, self.best_champions)

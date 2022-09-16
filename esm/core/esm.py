@@ -13,7 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from .core import Core
+from .esmcore import ESMCore
 from ..ui.guicontroller import GUIController
 
 
@@ -25,8 +25,13 @@ class ESMController:
     """
 
     def __init__(self):
-        self.core = Core()
+        self.core = ESMCore()
         self.view = GUIController()
+
+        try:
+            self.core.check_files()
+        except FileNotFoundError:
+            self.core.db.generate_all()
 
     @property
     def amount_players(self):

@@ -27,32 +27,16 @@ class AmountPlayersError(Exception):
     pass
 
 
-class Core:
+class ESMCore:
     """
     Core module deals with core functions of the game
     """
     def __init__(self):
         self.settings = Settings()
         self.settings.load_config_file()
+        self.logger = initialize_logging()
         self.db = DB(self.settings)
-        self.game_manager = GameManager(self.settings)
-        self.initialize_logging()
-
-    def initialize_logging(self):
-        logging.basicConfig(
-            filename=LOG_FILE,
-            encoding="utf-8",
-            format="%(levelname)s %(asctime)s: %(message)s",
-            datefmt="%m/%d/%Y %I:%M:%S %p ",
-        )
-        logger = logging.getLogger(__name__)
-
-        if DEBUG:
-            logging.basicConfig(level=logging.DEBUG)
-            logger.debug()
-        else:
-            logging.basicConfig(level=logging.ERROR)
-
+        self.game_manager = GameManager(self.settings, self.db, self.settings.enable_auto_save)
 
     @property
     def amount_players(self):
@@ -84,3 +68,19 @@ class Core:
         if not os.path.exists(self.settings.champions_file) or not os.path.exists(
                 self.settings.players_file) or not os.path.exists(self.settings.teams_file):
             raise FileNotFoundError
+
+
+def initialize_logging():
+    logging.basicConfig(
+        filename=LOG_FILE,
+        encoding="utf-8",
+        format="%(levelname)s %(asctime)s: %(message)s",
+        datefmt="%m/%d/%Y %I:%M:%S %p ",
+    )
+
+    if DEBUG:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.ERROR)
+
+    return logging.getLogger(__name__)

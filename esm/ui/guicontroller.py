@@ -48,7 +48,7 @@ class GUIController:
             PicksBansController(self)
             PickTeamController(self)
             MatchTesterController(self)
-
+    
     def print_error(self, e):
         self.gui.error_message(e)
 

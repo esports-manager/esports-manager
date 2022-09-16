@@ -13,11 +13,11 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import threading
 from queue import Queue
 
 from .controllerinterface import IController
 from ..debugmatch import DebugMatchLayout
+from ....core.esports.moba.modules.game_simulation import GameSimulation
 
 
 class DebugMatchController(IController):
@@ -25,9 +25,8 @@ class DebugMatchController(IController):
         super().__init__(controller)
         self.layout = DebugMatchLayout(self)
         self.queue = Queue()
-        self.current_match = None
-        self.match_thread = None
-        self.is_match_running = False
+        self.game_simulation = GameSimulation()
+        self.buttons_disabled = False
 
     def get_queue_messages_and_update(self):
         if not self.queue.empty():
@@ -37,9 +36,7 @@ class DebugMatchController(IController):
     def get_team_data(self):
         if self.current_match is None:
             return None
-        players = [
-            [player for player in team.list_players] for team in self.current_match.match.teams
-        ]
+        players = [list(team.list_players) for team in self.current_match.match.teams]
 
         data = []
         for team in players:
@@ -60,8 +57,8 @@ class DebugMatchController(IController):
         return data
 
     def reset_match(self):
-        self.current_match.reset_teams()
-        self.current_match.reset_match(self.queue)
+        self.game_simulation.reset_game(self.queue)
+        self.game_simulation.reset_team_values()
 
     def update_debug_match_info(self, data):
         win_prob = self.current_match.match.team1.win_prob * 100
@@ -81,42 +78,40 @@ class DebugMatchController(IController):
         self.controller.update_gui_element("debug_team2name", value=self.current_match.match.team2.name)
 
     def enable_debug_buttons(self):
-        self.controller.write_event_values("MATCH SIMULATED", "DONE")
-        self.controller.update_gui_element("debug_startmatch_btn", disabled=False)
-        self.controller.update_gui_element("debug_newteams_btn", disabled=False)
-        self.controller.update_gui_element("debug_resetmatch_btn", disabled=False)
+        self._change_button_status(False)
 
     def disable_debug_buttons(self):
-        self.controller.update_gui_element("debug_startmatch_btn", disabled=True)
-        self.controller.update_gui_element("debug_newteams_btn", disabled=True)
-        self.controller.update_gui_element("debug_resetmatch_btn", disabled=True)
+        self._change_button_status(True)
+        self.buttons_disabled = True
 
-    def start_match_sim(self) -> None:
-        self.current_match.simulation()
-        self.enable_debug_buttons()
+    def _change_button_status(self, disabled):
+        self.controller.update_gui_element("debug_startmatch_btn", disabled=disabled)
+        self.controller.update_gui_element("debug_newteams_btn", disabled=disabled)
+        self.controller.update_gui_element("debug_resetmatch_btn", disabled=disabled)
 
     def start_match_sim_thread(self) -> None:
-        try:
-            self.match_thread = threading.Thread(
-                target=self.start_match_sim, daemon=True
-            )
-            self.match_thread.start()
-            self.disable_debug_buttons()
-        except RuntimeError as e:
+        if e := self.game_simulation.run_game():
             self.controller.print_error(e)
 
     def update(self, event, values, make_screen):
         if not self.controller.get_gui_element("debug_match_screen").visible:
-            self.current_match = None
-            self.match_thread = None
-            self.is_match_running = False
+            self.game_simulation.current_live_game = None
+            self.game_simulation.game_thread = None
+            self.game_simulation.is_game_running = False
         else:
+
             get_team_data = self.get_team_data
             update_debug_match_info = self.update_debug_match_info
 
-            if self.current_match is None:
-                self.controller.check_files()
-                self.current_match = self.controller.initialize_random_debug_match()
+            if self.game_simulation.is_game_running and not self.buttons_disabled:
+                self.disable_debug_buttons()
+            else:
+                self.enable_debug_buttons()
+
+            self.game_simulation.check_game_running_thread()
+
+            if self.game_simulation.current_game is None:
+                self.current_match = self.game_simulation.initialize_random_debug_game()
                 update_debug_match_info(get_team_data())
 
             self.get_queue_messages_and_update()
@@ -139,7 +134,7 @@ class DebugMatchController(IController):
             # Click the New Teams button
             elif event == "debug_newteams_btn":
                 self.controller.check_files()
-                self.current_match = self.controller.initialize_random_debug_match()
+                self.current_match = self.game_simulation.initialize_random_debug_match()
                 data = get_team_data()
                 update_debug_match_info(data)
 

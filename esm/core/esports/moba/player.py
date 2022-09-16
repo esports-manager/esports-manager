@@ -58,7 +58,7 @@ class MobaPlayer(Player):
         self.champions = champions
 
     @property
-    def skill(self):
+    def skill(self) -> int:
         return self.skill_lvl.skill
 
     @skill.setter
@@ -189,8 +189,8 @@ class MobaPlayer(Player):
         This will define how strong or how weak a certain player is on the current match.
         """
         return (
-                       self.get_curr_player_skill() + self.get_champion_skill()
-               ) / 2 + self.points
+            self.get_curr_player_skill() + self.get_champion_skill()
+        ) / 2 + self.points
 
     def is_player_on_killing_spree(self) -> bool:
         """

@@ -17,7 +17,7 @@ from queue import Queue
 
 from .controllerinterface import IController
 from ..debugmatch import DebugMatchLayout
-from ....core.esports.moba.modules.game_simulation import GameSimulation
+from ....core.esports.moba.modules.match_factory import MatchFactory
 
 
 class DebugMatchController(IController):
@@ -25,8 +25,15 @@ class DebugMatchController(IController):
         super().__init__(controller)
         self.layout = DebugMatchLayout(self)
         self.queue = Queue()
-        self.game_simulation = GameSimulation()
+        self.match_sim = MatchFactory()
         self.buttons_disabled = False
+    
+    def start_match(self):
+        self.controller.update_gui_element("debug_match_output", value="", append=False)
+        self.match_sim.is_game_running = True
+        self.reset_match()
+        self.match_sim.current_game.is_match_over = False
+        self.start_match_sim_thread()
 
     def get_queue_messages_and_update(self):
         if not self.queue.empty():
@@ -57,8 +64,10 @@ class DebugMatchController(IController):
         return data
 
     def reset_match(self):
-        self.game_simulation.reset_game(self.queue)
-        self.game_simulation.reset_team_values()
+        self.match_sim.reset_game(self.queue)
+        self.match_sim.reset_team_values()
+        data = self.get_team_data()
+        self.update_debug_match_info(data)
 
     def update_debug_match_info(self, data):
         win_prob = self.current_match.match.team1.win_prob * 100
@@ -90,72 +99,72 @@ class DebugMatchController(IController):
         self.controller.update_gui_element("debug_resetmatch_btn", disabled=disabled)
 
     def start_match_sim_thread(self) -> None:
-        if e := self.game_simulation.run_game():
+        if e := self.match_sim.run_game():
             self.controller.print_error(e)
 
     def update(self, event, values, make_screen):
         if not self.controller.get_gui_element("debug_match_screen").visible:
-            self.game_simulation.current_live_game = None
-            self.game_simulation.game_thread = None
-            self.game_simulation.is_game_running = False
+            self.match_sim.current_live_game = None
+            self.match_sim.game_thread = None
+            self.match_sim.is_game_running = False
         else:
+            self.check_disabled_buttons()
 
-            get_team_data = self.get_team_data
-            update_debug_match_info = self.update_debug_match_info
+            self.match_sim.check_game_running_thread()
 
-            if self.game_simulation.is_game_running and not self.buttons_disabled:
-                self.disable_debug_buttons()
-            else:
-                self.enable_debug_buttons()
-
-            self.game_simulation.check_game_running_thread()
-
-            if self.game_simulation.current_game is None:
-                self.current_match = self.game_simulation.initialize_random_debug_game()
-                update_debug_match_info(get_team_data())
+            if self.match_sim.current_game is None:
+                self.match_sim.initialize_random_debug_game()
+                self.update_debug_match_info(self.get_team_data())
 
             self.get_queue_messages_and_update()
 
             # Click the Start Match button
             if event == "debug_startmatch_btn":
-                self.controller.update_gui_element("debug_match_output", value="", append=False)
-                self.is_match_running = True
-                self.reset_match()
-                self.current_match.is_match_over = False
-                self.start_match_sim_thread()
+                self.start_match()
 
             # Click the Cancel button
             if event == "debug_cancel_btn":
-                if self.is_match_running:
-                    self.current_match.is_match_over = True
-                self.current_match = None
-                make_screen("debug_match_screen", "main_screen")
+                self.cancel_match(make_screen)
 
             # Click the New Teams button
             elif event == "debug_newteams_btn":
-                self.controller.check_files()
-                self.current_match = self.game_simulation.initialize_random_debug_match()
-                data = get_team_data()
-                update_debug_match_info(data)
+                self.get_new_teams()
 
             # Click the Reset Match button
             elif event == "debug_resetmatch_btn":
                 self.reset_match()
-                data = get_team_data()
-                update_debug_match_info(data)
 
             # Check if the match is running to update values on the fly
-            if self.is_match_running:
-                if (
-                        self.current_match is not None
-                        and self.current_match.is_match_over
-                        and not self.match_thread.is_alive()
-                ):
-                    self.is_match_running = False
+            if self.match_sim.is_game_running:
+                self.update_match_sim_values(values)
 
-                if self.current_match is not None:
-                    self.current_match.simulate = bool(
+    def update_match_sim_values(self, values):
+        if (
+                self.match_sim.current_live_game is not None
+                        and self.match_sim.current_live_game.is_match_over
+                        and not self.match_sim.game_thread.is_alive()
+        ):
+            self.match_sim.is_game_running = False
+
+        if self.match_sim.current_live_game is not None:
+            self.match_sim.current_live_game.simulate = bool(
                         values["debug_simulate_checkbox"]
                     )
-                    data = get_team_data()
-                    update_debug_match_info(data)
+            self.update_debug_match_info(self.get_team_data())
+
+    def check_disabled_buttons(self):
+        if self.match_sim.is_game_running and not self.buttons_disabled:
+            self.disable_debug_buttons()
+        else:
+            self.enable_debug_buttons()
+
+    def get_new_teams(self):
+        self.controller.core.check_files()
+        self.match_sim.initialize_random_debug_match()
+        self.update_debug_match_info(self.get_team_data())
+
+    def cancel_match(self, make_screen):
+        if self.match_sim.is_game_running:
+            self.match_sim.current_live_game.is_match_over = True
+        self.match_sim = MatchFactory()
+        make_screen("debug_match_screen", "main_screen")

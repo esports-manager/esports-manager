@@ -23,7 +23,7 @@ from ..match import Match
 from typing import Optional
 
 
-class GameSimulation:
+class MatchFactory:
     def __init__(self):
         self.current_game: Optional[Match] = None
         self.current_live_game: Optional[MatchLive] = None

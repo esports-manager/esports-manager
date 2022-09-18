@@ -26,7 +26,7 @@ class ESMController:
 
     def __init__(self):
         self.core = ESMCore()
-        self.view = GUIController()
+        self.view = GUIController(self.core)
 
         try:
             self.core.check_files()

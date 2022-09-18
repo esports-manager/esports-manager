@@ -18,6 +18,7 @@ from .gui import GUI, init_theme
 from .gui_components import sg
 from .layouts.controllers import *
 from ..definitions import DEBUG
+from ...esm.core.esmcore import ESMCore
 
 
 class GUIController:
@@ -26,11 +27,12 @@ class GUIController:
     with the GUI, but do not expose any details about the GUI itself.
     """
 
-    def __init__(self):
+    def __init__(self, core: ESMCore):
         init_theme()
         self.initialize_controllers()
         self.gui = GUI(self)
         self.controllers = None
+        self.core = core
 
     def initialize_controllers(self):
         LoadGameController(self)

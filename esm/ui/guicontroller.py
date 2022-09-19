@@ -18,7 +18,7 @@ from .gui import GUI, init_theme
 from .gui_components import sg
 from .layouts.controllers import *
 from ..definitions import DEBUG
-from ...esm.core.esmcore import ESMCore
+from ..core.esmcore import ESMCore
 
 
 class GUIController:

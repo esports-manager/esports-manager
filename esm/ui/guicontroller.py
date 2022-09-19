@@ -29,10 +29,10 @@ class GUIController:
 
     def __init__(self, core: ESMCore):
         init_theme()
-        self.initialize_controllers()
-        self.gui = GUI(self)
         self.controllers = None
         self.core = core
+        self.initialize_controllers()
+        self.gui = GUI(self)
 
     def initialize_controllers(self):
         LoadGameController(self)

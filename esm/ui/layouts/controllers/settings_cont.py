@@ -22,7 +22,7 @@ class SettingsController(IController):
     def __init__(self, controller):
         super().__init__(controller)
         self.layout = SettingsLayout(self)
-        self.settings = self.controller.settings
+        self.settings = self.controller.core.settings
         self.loaded_data = False
 
     @property

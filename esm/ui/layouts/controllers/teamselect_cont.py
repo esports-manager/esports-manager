@@ -27,7 +27,7 @@ class TeamSelectController(IController):
     def __init__(self, controller):
         super().__init__(controller)
         self.layout = TeamSelectLayout(self)
-        self.db = DB()
+        self.db = DB(self.controller.core.settings)
         self.teams = None
 
     def get_teams(self):

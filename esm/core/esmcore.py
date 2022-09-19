@@ -71,6 +71,9 @@ class ESMCore:
 
 
 def initialize_logging():
+    logs_dir = os.path.dirname(LOG_FILE)
+    if not os.path.exists(logs_dir):
+        os.makedirs(logs_dir, exist_ok=True)
     logging.basicConfig(
         filename=LOG_FILE,
         encoding="utf-8",

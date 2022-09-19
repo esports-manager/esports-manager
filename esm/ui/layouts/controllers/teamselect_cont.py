@@ -16,7 +16,8 @@
 
 from .controllerinterface import IController
 from ..teamselect import TeamSelectLayout
-
+from ....core.esports.manager import Manager
+from ....core.db import DB
 
 class TeamSelectControllerError(Exception):
     pass
@@ -26,13 +27,14 @@ class TeamSelectController(IController):
     def __init__(self, controller):
         super().__init__(controller)
         self.layout = TeamSelectLayout(self)
+        self.db = DB()
         self.teams = None
 
     def get_teams(self):
-        self.controller.reset_generators()
-        self.controller.check_files()
-        self.teams = self.controller.core.teams
-        self.controller.core.get_teams()
+        try:
+            self.controller.core.check_files()
+        except FileNotFoundError:
+            self.teams = self.db.load_moba_teams()
 
     def get_team_list(self):
         return [
@@ -50,50 +52,56 @@ class TeamSelectController(IController):
 
         return data
 
+    def select_team(self, values, make_screen):
+        if values["teamselect_team_table"]:
+            team_index = values["teamselect_team_table"][0]
+            manager = Manager(
+                        values["create_manager_name"],
+                        values["create_manager_display_calendar"],
+                        self.teams.teams[team_index],
+                        True,
+                        50
+                    )
+            self.teams.teams[team_index].is_players_team = True
+            # Probably here we should delete the old window and create a new one with new layouts
+            self.controller.create_game_manager(
+                        manager,
+                        values["ng_gamename_input"],
+                        values["new_game_esport"],
+                        values["new_game_season"],
+                        values["ng_gamename_input"],
+                    )
+            make_screen("team_select_screen", "game_dashboard_screen")
+        else:
+            self.controller.get_gui_information_window(
+                        'You must select a team before proceeding!',
+                        title='Select a team!'
+                    )
+
+    def cancel_teamselect(self, make_screen):
+        self.teams = None
+        make_screen("team_select_screen", "new_game_screen")
+
+    def update_teams(self, values):
+        if self.teams is None:
+            self.get_teams()
+            self.controller.update_gui_element("teamselect_team_table", values=self.get_team_list())
+            
+        if values["teamselect_team_table"]:
+            self.controller.update_gui_element(
+                    "teamselect_players_table",
+                    values=self.get_player_list(values["teamselect_team_table"])
+                )
+    
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("team_select_screen").visible:
-            pass
-            # if self.teams is None:
-            #     self.get_teams()
-            #     self.controller.update_gui_element("teamselect_team_table", values=self.get_team_list())
-            #
-            # if values["teamselect_team_table"]:
-            #     self.controller.update_gui_element(
-            #         "teamselect_players_table",
-            #         values=self.get_player_list(values["teamselect_team_table"])
-            #     )
-            #
-            # # Click the Cancel button
-            # if event == "teamselect_cancel_btn":
-            #     self.teams = None
-            #     self.controller.reset_generators()
-            #     make_screen("team_select_screen", "new_game_screen")
-            #
-            # if event == "teamselect_select_btn":
-            #     if values["teamselect_team_table"]:
-            #         team_index = values["teamselect_team_table"][0]
-            #         manager = MobaManager(
-            #             values["create_manager_name"],
-            #             values["create_manager_display_calendar"],
-            #             self.teams.teams[team_index],
-            #             True,
-            #             50
-            #         )
-            #         self.teams.teams[team_index].is_players_team = True
-            #         self.controller.manager = manager
-            #         # Probably here we should delete the old window and create a new one with new layouts
-            #         self.controller.create_game_manager(
-            #             manager,
-            #             values["ng_gamename_input"],
-            #             values["new_game_esport"],
-            #             values["new_game_season"],
-            #             values["ng_gamename_input"],
-            #         )
-            #         make_screen("team_select_screen", "game_dashboard_screen")
-            #     else:
-            #         self.controller.get_gui_information_window(
-            #             'You must select a team before proceeding!',
-            #             title='Select a team!'
-            #         )
+            self.update_teams(values)
+            
+            # Click the Cancel button
+            if event == "teamselect_cancel_btn":
+                self.cancel_teamselect(make_screen)
+            
+            if event == "teamselect_select_btn":
+                self.select_team(values, make_screen)
         else:
             self.teams = None

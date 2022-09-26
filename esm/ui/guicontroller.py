@@ -61,7 +61,7 @@ class GUIController:
     def update_element_on_screen(self, element, **kwargs):
         self.gui.window[element].update(**kwargs)
 
-    def get_screen_element(self, element):
+    def get_gui_element(self, element):
         return self.gui.window[element]
 
     def write_event_value(self, first_message, second_message):
@@ -70,10 +70,10 @@ class GUIController:
     def update_progress_bar(self, key, value):
         self.gui.window[key].update_bar(value)
 
-    def information_window(self, *args, **kwargs):
+    def get_gui_information_window(self, *args, **kwargs):
         self.gui.information_window(*args, **kwargs)
 
-    def confirmation_window(self, *args, **kwargs):
+    def get_gui_confirmation_window(self, *args, **kwargs):
         return self.gui.confirmation_window(*args, **kwargs)
 
     def update(self, *args, **kwargs) -> None:

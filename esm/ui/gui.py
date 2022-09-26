@@ -32,8 +32,8 @@ class GUI:
     def __init__(self, view):
         self.icon = os.path.join(RES_DIR, "images", "logo", "esportsmanagertrophy.png")
         # Each layout is added to the list
-        self.layouts = self.get_layouts()
         self.view = view
+        self.layouts = self.get_layouts()
         self.window = self._create_window()
 
     def _encode_icon(self) -> bytes:
@@ -54,7 +54,7 @@ class GUI:
         """
         encoded_icon = self._encode_icon()
 
-        self.window = sg.Window(
+        window = sg.Window(
             "eSports Manager",
             element_justification="center",
             layout=self._get_cols(),
@@ -63,14 +63,15 @@ class GUI:
             finalize=True,
         )
         sg.set_options(dpi_awareness=True)
-        return self.window
+
+        return window
 
     def get_layouts(self):
         """
         Gets GUI layouts from the controller classes.
         """
         return [controller.layout for controller in self.view.controllers]
-
+    
     def _get_cols(self) -> list:
         """
         Gets all the layouts and makes them all invisible, except for the main screen one.

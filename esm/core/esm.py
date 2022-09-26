@@ -26,12 +26,12 @@ class ESMController:
 
     def __init__(self):
         self.core = ESMCore()
-        self.view = GUIController(self.core)
-
         try:
             self.core.check_files()
         except FileNotFoundError:
             self.core.db.generate_all()
+        
+        self.view = GUIController(self.core)
 
     @property
     def amount_players(self):

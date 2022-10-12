@@ -20,9 +20,9 @@ from datetime import date, timedelta
 from typing import Tuple
 
 from esm.core.esports.moba.player import MobaPlayer
-from core.esports.moba.generator.default_player_nick_names import get_default_player_nick_names
+from esm.core.esports.moba.generator.default_player_nick_names import get_default_player_nick_names
 from esm.core.esports.moba.skill import SkillGain
-from core.esports.moba.generator.generate_champions import ChampionGenerator
+from esm.core.esports.moba.generator.generate_champions import ChampionGenerator
 from esm.core.utils import load_list_from_file, write_to_file
 from esm.definitions import PLAYERS_FILE, NAMES_FILE
 

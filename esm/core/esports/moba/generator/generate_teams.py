@@ -19,8 +19,8 @@ import uuid
 from typing import Union
 
 from esm.core.esports.moba.team import Team
-from core.esports.moba.generator.default_team_names import get_default_team_names
-from core.esports.moba.generator.generate_players import MobaPlayerGenerator
+from esm.core.esports.moba.generator.default_team_names import get_default_team_names
+from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator
 from esm.core.utils import write_to_file, load_list_from_file
 from esm.definitions import TEAMS_FILE
 

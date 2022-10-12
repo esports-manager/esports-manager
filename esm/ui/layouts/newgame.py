@@ -14,7 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from core.esports.moba.generator import MobaPlayerGenerator
+from esm.core.esports.moba.generator import MobaPlayerGenerator
 from .layoutinterface import ILayout
 from ..gui_components import *
 

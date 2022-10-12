@@ -22,7 +22,7 @@ import uuid
 from queue import Queue
 from typing import Union, Tuple
 
-from core.esports.moba.generator import ChampionGenerator
+from .generator import ChampionGenerator
 from .match import Match
 from .mobaevent import MobaEventHandler
 from .picksbans import PicksBans

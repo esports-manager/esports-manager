@@ -19,7 +19,7 @@ import cbor2
 
 from esm.core.esports.manager import Manager
 from esm.core.gamestate import GameState
-from core.save_load.hashfile import HashFile
+from esm.core.save_load.hashfile import HashFile
 from esm.definitions import SAVE_FILE_DIR
 
 

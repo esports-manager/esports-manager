@@ -33,11 +33,12 @@ class DebugChampionshipController(IController):
         self.championship_thread = None
 
     def initialize_random_championship(self):
-        self.controller.reset_generators()
-        self.teams = self.controller.core.get_teams()
         if self.teams is None:
-            self.controller.generate_all_data()
-            self.teams = self.controller.core.get_teams()
+            try:
+                self.controller.core.check_files()
+            except FileNotFoundError:
+                self.controller.core.db.generate_all()
+        self.teams = self.controller.core.db.load_moba_teams()
         self.championship = Championship("Debug", uuid.uuid4(), "Debug", self.teams)
         self.championship.schedule_matches()
         self.get_default_championship_details()

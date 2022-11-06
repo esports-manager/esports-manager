@@ -41,15 +41,10 @@ class GameManager:
         self.gamestate = None
         self.current_matches = None
 
-    def get_gamestate(self):
-        return GameState(
-            self.game_name,
-            self.filename,
-            self.manager.get_dict(),
-            self.season,
-            self.esport,
-            self.teams.teams_dict.copy(),
-            self.players.players_dict.copy(),
-            self.champions.champions_list.copy(),
-        )
+    def load_game(self, filename: Union[str, os.PathLike]):
+        load = LoadGame(self.settings.save_file_dir)
+        self.gamestate = load.load_game_state(filename)
 
+    def save_game(self, filename: Union[str, os.PathLike]):
+        save = SaveGame(self.gamestate, filename, self.settings.save_file_dir, self.auto_save_enabled)
+        save.save_game()

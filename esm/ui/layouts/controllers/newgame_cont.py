@@ -16,7 +16,9 @@
 
 from .controllerinterface import IController
 from ..newgame import NewGameLayout
+from esm.core.utils import get_nations
 from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator
+
 
 
 class NewGameController(IController):
@@ -27,10 +29,7 @@ class NewGameController(IController):
 
     def load_nationalities(self):
         if self.nationalities is None:
-            nationalities = MobaPlayerGenerator()
-            nationalities.get_nationalities()
-            self.nationalities = nationalities.nationalities
-
+            self.nationalities = get_nations()
             self.controller.get_gui_element("create_manager_nationality").update(values=self.nationalities)
 
     def update(self, event, values, make_screen):
@@ -63,7 +62,7 @@ class NewGameController(IController):
                         and values["create_manager_display_calendar"] != ""
                 ):
                     if values["new_game_checkbox"]:
-                        self.controller.generate_all_data()
+                        self.controller.core.db.generate_all()
 
                     make_screen("new_game_screen", "team_select_screen")
                 else:

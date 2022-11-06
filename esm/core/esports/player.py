@@ -13,6 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import uuid
 from datetime import date, datetime
 from typing import Union
 
@@ -25,15 +26,17 @@ class Player:
 
     def __init__(
             self,
-            player_id: int,
+            player_id: Union[int, uuid.UUID],
             nationality: str,
             first_name: str,
             last_name: str,
             birthday: Union[date, datetime, str],
             nick_name: str,
     ):
-        self.player_id = player_id
-
+        if isinstance(player_id, int):
+            self.player_id = uuid.UUID(int=player_id)
+        elif isinstance(player_id, uuid.UUID):
+            self.player_id = player_id
         # TODO: players should include team's id as well
 
         self.first_name = first_name

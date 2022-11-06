@@ -30,7 +30,7 @@ class LoadGameController(IController):
         self.filename = None
         self.default_value = ["No save games encountered"]
 
-    def load_save_files(self):
+    def get_save_files(self):
         self.load_files = self.load_game.get_load_game_files(".cbor")
         if not self.load_files:
             self.load_files = self.default_value
@@ -38,26 +38,23 @@ class LoadGameController(IController):
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("load_game_screen").visible:
             if self.load_files is None:
-                self.load_save_files()
+                self.get_save_files()
 
             if event == "load_game_cancel_btn":
                 make_screen("load_game_screen", "main_screen")
 
             if self.load_files:
-                self.controller.update_gui_element("load_game_listbox", values=self.load_files)
+                self.controller.update_element_on_screen("load_game_listbox", values=self.load_files)
             else:
-                self.controller.update_gui_element("load_game_listbox", values=self.default_value)
+                self.controller.update_element_on_screen("load_game_listbox", values=self.default_value)
 
             if event == "load_game_listbox":
                 self.filename = values["load_game_listbox"][0]
 
             if event == "load_game_btn":
                 if self.filename not in [[], self.default_value, None]:
-                    filename = os.path.join(self.controller.settings.save_file_dir, self.filename)
-                    gamestate = self.load_game.load_game_state(filename)
-                    self.controller.game_manager = GameManager.get_game_manager(gamestate, self.controller.settings)
-                    self.controller.manager = self.controller.game_manager.manager
-                    self.controller.game_manager.load_game(self.filename)
+                    filename = os.path.join(self.controller.core.settings.save_file_dir, self.filename)
+                    self.controller.core.game_manager.load_game(filename)
                     make_screen("load_game_screen", "game_dashboard_screen")
                 else:
                     self.controller.get_gui_information_window(

@@ -19,11 +19,18 @@ That way I can make the GUI elements uniform and work like GUI components.
 """
 
 import PySimpleGUI as sg
+import ctypes
+import platform
 
 default_font = "Arial"
 bold_font = f"{default_font} Bold"
 default_font_size = "10"
 increased_font_size = "14"
+
+
+def make_dpi_aware():
+    if int(platform.release()) >= 8:
+        ctypes.windll.shcore.SetProcessDpiAwareness(True)
 
 
 def create_look_and_feel():

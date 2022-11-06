@@ -23,7 +23,7 @@ from esm.core.esports.moba.generator.default_player_nick_names import get_defaul
 from esm.core.esports.moba.generator.generate_champions import ChampionGenerator
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.esports.moba.mobaskill import MobaSkillGain
-from esm.core.utils import load_list_from_file, write_to_file
+from esm.core.utils import load_list_from_file, write_to_file, get_nations
 from esm.definitions import PLAYERS_FILE, NAMES_FILE
 
 
@@ -88,15 +88,7 @@ class MobaPlayerGenerator:
         self.player_id = uuid.uuid4().int
 
     def get_nationalities(self) -> None:
-        if self.names is None:
-            nationalities = load_list_from_file(NAMES_FILE)
-        else:
-            nationalities = self.names.copy()
-
-        self.nationalities = []
-        for nat in nationalities:
-            nationalities = nat["region"]
-            self.nationalities.append(nationalities)
+        self.nationalities = get_nations()
 
     def get_nationality(self) -> None:
         """

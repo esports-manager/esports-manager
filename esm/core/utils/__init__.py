@@ -18,12 +18,12 @@ import json
 import os
 import re
 from pathlib import Path
-from typing import Union
+from typing import Union, List
 from unicodedata import normalize
 
 import cbor2
 
-from esm.definitions import TEAMS_FILE
+from esm.definitions import TEAMS_FILE, NAMES_FILE
 
 
 def write_to_file(
@@ -42,7 +42,7 @@ def write_to_file(
             cbor2.dump(contents, fp)
 
 
-def get_from_file(file_name: Union[str, Path]) -> list:
+def get_from_file(file_name: Union[str, Path]) -> List[dict]:
     """
     General function used to read a JSON/CBOR file, extracting its data to a dictionary/list
     :param file_name:
@@ -58,7 +58,7 @@ def get_from_file(file_name: Union[str, Path]) -> list:
     return dictionary
 
 
-def load_list_from_file(filepath: Union[str, Path]) -> list:
+def load_list_from_file(filepath: Union[str, Path]) -> List[dict]:
     """
     Reads a specified file (champions, player or team json) and
     returns the list from that file
@@ -71,9 +71,9 @@ def load_list_from_file(filepath: Union[str, Path]) -> list:
         raise FileNotFoundError('File was not found')
 
 
-def get_key_from_json(key: str = "name", file: Union[str, Path] = TEAMS_FILE) -> list:
+def get_key_from_json(key: str = "name", file: Union[str, Path] = TEAMS_FILE) -> List[str]:
     """
-    Gets a key from a json file. By default it is used by the GUI to get
+    Gets a key from a json file. By default, it is used by the GUI to get
     names from the file teams.json, but we can repurpose that for other
     files too, such as get player names, champion names, etc...
     :param key:
@@ -83,7 +83,7 @@ def get_key_from_json(key: str = "name", file: Union[str, Path] = TEAMS_FILE) ->
     return [obj[key] for obj in load_list_from_file(file)]
 
 
-def normalize_filename(filename, delim=u'_'):
+def normalize_filename(filename, delim=u'_') -> str:
     """
     Normalizes the save game filename. This will prevent unsupported filenames from being saved.
 
@@ -100,3 +100,8 @@ def normalize_filename(filename, delim=u'_'):
     filename = ''.join(filename)
     filename = f'{filename}.cbor'
     return filename
+
+
+def get_nations(file: Union[str, os.PathLike] = NAMES_FILE) -> List[dict]:
+    names = load_list_from_file(file)
+    return [nat["region"] for nat in names]

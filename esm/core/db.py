@@ -16,6 +16,7 @@
 import os
 from .settings import Settings
 from .esports.moba.generator import TeamGenerator, ChampionGenerator, MobaPlayerGenerator
+from typing import Tuple
 
 
 class DB:
@@ -34,7 +35,7 @@ class DB:
     def champions_file(self):
         return self.settings.champions_file
 
-    def get_moba_generators(self):
+    def get_moba_generators(self) -> Tuple[MobaPlayerGenerator, TeamGenerator, ChampionGenerator]:
         players = MobaPlayerGenerator(file_name=self.players_file)
         teams = TeamGenerator(file_name=self.teams_file)
         champions = ChampionGenerator(file_name=self.champions_file)
@@ -48,7 +49,7 @@ class DB:
         players_gen.lane = 0
         players_gen.generate_players(amount=self.settings.amount_players)
 
-        amount_teams = self.settings.amount_players / 5
+        amount_teams = int(self.settings.amount_players / 5)
 
         teams_gen.amount = amount_teams
         teams_gen.player_list = players_gen.players
@@ -59,6 +60,12 @@ class DB:
         players_gen.generate_file()
 
     def load_moba_teams(self):
-        _, teams_gen, __ = self.get_moba_generators()
+        players_gen, teams_gen, champions_gen = self.get_moba_generators()
+
+        champions_gen.get_champions()
+        players_gen.champions_list = champions_gen.champions_obj
+        players_gen.get_players_objects()
+        teams_gen.player_list = players_gen.players
         teams_gen.get_teams_objects()
+
         return teams_gen.teams

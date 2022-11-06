@@ -63,7 +63,7 @@ class TeamGenerator:
         """
         Generates teams UUID
         """
-        self.team_id = uuid.uuid4().int
+        self.team_id = uuid.uuid4()
 
     def generate_name(self) -> None:
         """
@@ -129,7 +129,7 @@ class TeamGenerator:
         Generates the team dictionary
         """
         self.team_dict = {
-            "id": self.team_id,
+            "id": self.team_id.int,
             "name": self.name,
             "roster": self.get_roster_ids(),
         }

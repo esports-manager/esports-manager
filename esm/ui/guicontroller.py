@@ -13,21 +13,22 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+from .igamecontroller import IGameController
 from .gui import GUI, init_theme
-from .gui_components import sg
+from .gui_components import sg, make_dpi_aware
 from .layouts.controllers import *
 from ..definitions import DEBUG
 from ..core.esmcore import ESMCore
 
 
-class GUIController:
+class GUIController(IGameController):
     """
     This class is an abstraction layer over the GUI. It should provide functions that interact
     with the GUI, but do not expose any details about the GUI itself.
     """
 
     def __init__(self, core: ESMCore):
+        make_dpi_aware()
         init_theme()
         self.controllers = None
         self.core = core

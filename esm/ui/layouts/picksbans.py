@@ -19,8 +19,7 @@ from ..gui_components import *
 
 
 class PicksBansLayout(ILayout):
-    def __init__(self, controller):
-        super().__init__(controller)
+    def __init__(self):
         self.lay = self.layout()
         self.col = self.column()
 
@@ -97,6 +96,3 @@ class PicksBansLayout(ILayout):
                 esm_button("Cancel", key="pickban_cancel_btn"),
             ],
         ]
-
-    def update(self, *args, **kwargs) -> None:
-        self.controller.update(*args, **kwargs)

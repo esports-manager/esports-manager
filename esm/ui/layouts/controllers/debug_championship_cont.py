@@ -18,14 +18,17 @@ import threading
 import uuid
 
 from esm.core.esports.moba.championship import Championship
+from ...igamecontroller import IGameController
+from ....core.esmcore import ESMCore
 from .controllerinterface import IController
 from ..debug_championship import DebugChampionshipLayout
 
 
 class DebugChampionshipController(IController):
-    def __init__(self, controller):
-        super().__init__(controller)
-        self.layout = DebugChampionshipLayout(self)
+    def __init__(self, controller: IGameController, core: ESMCore):
+        self.core = core
+        self.controller = controller
+        self.layout = DebugChampionshipLayout()
         self.championship = None
         self.teams = None
         self.match_details = []
@@ -35,10 +38,10 @@ class DebugChampionshipController(IController):
     def initialize_random_championship(self):
         if self.teams is None:
             try:
-                self.controller.core.check_files()
+                self.core.check_files()
             except FileNotFoundError:
-                self.controller.core.db.generate_all()
-        self.teams = self.controller.core.db.load_moba_teams()
+                self.core.db.generate_all()
+        self.teams = self.core.db.load_moba_teams()
         self.championship = Championship("Debug", uuid.uuid4(), "Debug", self.teams)
         self.championship.schedule_matches()
         self.get_default_championship_details()
@@ -48,10 +51,10 @@ class DebugChampionshipController(IController):
 
     def reset_details(self):
         self.championship_details = [
-            ["TEAM1NAME123456789", "000", "00", "00", "000"]
+            ["TEAM1NAME12345678901213154879", "000", "00", "00", "000"]
         ]
         self.match_details = [
-            ["TEAM1NAME123456789", "TEAMNAME123456789", "None"]
+            ["TEAM1NAME12345678901213154879", "TEAM1NAME12345678901213154879", "None"]
         ]
 
     def get_default_championship_details(self):
@@ -104,10 +107,10 @@ class DebugChampionshipController(IController):
 
     def update_data_in_championship_table(self):
         self.championship_details.sort(key=lambda x: x[4], reverse=True)
-        self.controller.update_gui_element("debug_championship_table", values=self.championship_details)
+        self.controller.update_element_on_screen("debug_championship_table", values=self.championship_details)
 
     def update_data_in_matches_table(self):
-        self.controller.update_gui_element("debug_matches_table", values=self.match_details)
+        self.controller.update_element_on_screen("debug_matches_table", values=self.match_details)
 
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("debug_championship_screen").visible is True:
@@ -122,21 +125,19 @@ class DebugChampionshipController(IController):
                 try:
                     self.championship_thread = threading.Thread(target=self.play_championship, daemon=True)
                     self.championship_thread.start()
-                    self.controller.update_gui_element("debug_startchampionship_btn", disabled=True)
+                    self.controller.update_element_on_screen("debug_startchampionship_btn", disabled=True)
                 except RuntimeError as e:
-                    self.controller.view.print_error(e)
+                    self.controller.print_error(e)
 
             if (
                     self.championship_thread is not None
                     and not self.championship_thread.is_alive()
             ):
-                self.controller.update_gui_element("debug_startchampionship_btn", disabled=False)
+                self.controller.update_element_on_screen("debug_startchampionship_btn", disabled=False)
 
             # Click the Cancel button
             if event == "debug_championshipcancel_btn":
-                self.controller.reset_generators()
                 self.reset_details()
-                gc.collect()
                 make_screen("debug_championship_screen", "main_screen")
         else:
             self.championship = None

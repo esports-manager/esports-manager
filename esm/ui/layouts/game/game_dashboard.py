@@ -20,8 +20,7 @@ from esm.ui.layouts.layoutinterface import ILayout
 
 
 class GameDashboardLayout(ILayout):
-    def __init__(self, controller):
-        super().__init__(controller)
+    def __init__(self):
         self.lay = self.layout()
         self.col = self.column()
 
@@ -109,5 +108,3 @@ class GameDashboardLayout(ILayout):
              esm_button("Save game", key="game_dashboard_save"), ],
         ]
 
-    def update(self, *args, **kwargs) -> None:
-        self.controller.update(*args, **kwargs)

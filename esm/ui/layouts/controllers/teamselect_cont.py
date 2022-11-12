@@ -16,25 +16,27 @@
 
 from .controllerinterface import IController
 from ..teamselect import TeamSelectLayout
+from ...igamecontroller import IGameController
 from ....core.esports.manager import Manager
-from ....core.db import DB
+from ....core.esmcore import ESMCore
+
 
 class TeamSelectControllerError(Exception):
     pass
 
 
 class TeamSelectController(IController):
-    def __init__(self, controller):
-        super().__init__(controller)
-        self.layout = TeamSelectLayout(self)
-        self.db = DB(self.controller.core.settings)
+    def __init__(self, controller: IGameController, core: ESMCore):
+        self.controller = controller
+        self.core = core
+        self.layout = TeamSelectLayout()
         self.teams = None
 
     def get_teams(self):
         try:
-            self.controller.core.check_files()
+            self.core.check_files()
         except FileNotFoundError:
-            self.teams = self.db.load_moba_teams()
+            self.teams = self.core.db.load_moba_teams()
 
     def get_team_list(self):
         return [
@@ -64,13 +66,13 @@ class TeamSelectController(IController):
                     )
             self.teams.teams[team_index].is_players_team = True
             # Probably here we should delete the old window and create a new one with new layouts
-            self.controller.create_game_manager(
-                        manager,
-                        values["ng_gamename_input"],
-                        values["new_game_esport"],
-                        values["new_game_season"],
-                        values["ng_gamename_input"],
-                    )
+            # self.create_game_manager(
+            #             manager,
+            #             values["ng_gamename_input"],
+            #             values["new_game_esport"],
+            #             values["new_game_season"],
+            #             values["ng_gamename_input"],
+            #         )
             make_screen("team_select_screen", "game_dashboard_screen")
         else:
             self.controller.get_gui_information_window(
@@ -85,10 +87,10 @@ class TeamSelectController(IController):
     def update_teams(self, values):
         if self.teams is None:
             self.get_teams()
-            self.controller.update_gui_element("teamselect_team_table", values=self.get_team_list())
+            self.controller.update_element_on_screen("teamselect_team_table", values=self.get_team_list())
             
         if values["teamselect_team_table"]:
-            self.controller.update_gui_element(
+            self.controller.update_element_on_screen(
                     "teamselect_players_table",
                     values=self.get_player_list(values["teamselect_team_table"])
                 )

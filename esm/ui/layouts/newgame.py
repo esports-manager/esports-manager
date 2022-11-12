@@ -19,8 +19,7 @@ from ..gui_components import *
 
 
 class NewGameLayout(ILayout):
-    def __init__(self, controller):
-        super().__init__(controller)
+    def __init__(self):
         self.lay = self.layout()
         self.col = self.column()
 
@@ -79,6 +78,3 @@ class NewGameLayout(ILayout):
                 esm_button("Cancel", key="ng_cancel_btn"),
             ],
         ]
-
-    def update(self, *args, **kwargs) -> None:
-        self.controller.update(*args, **kwargs)

@@ -17,14 +17,19 @@ import gc
 import threading
 from queue import Queue
 
+from esm.core.esmcore import ESMCore
+from esm.core.esports.moba.modules.match_factory import MatchFactory
 from .controllerinterface import IController
 from ..picksbans import PicksBansLayout
+from ...igamecontroller import IGameController
 
 
 class PicksBansController(IController):
-    def __init__(self, controller):
-        super().__init__(controller)
-        self.layout = PicksBansLayout(self)
+    def __init__(self, controller: IGameController, core: ESMCore):
+        self.controller = controller
+        self.core = core
+        self.game_initializer = MatchFactory()
+        self.layout = PicksBansLayout()
         self.queue = Queue()
         self.current_match = None
         self.pick_ban_thread = None
@@ -87,17 +92,17 @@ class PicksBansController(IController):
 
     def update_elements(self):
         pick_ban = self.current_match.picks_bans
-        self.controller.update_gui_element("pickban_team1_label", value=self.team1.name)
-        self.controller.update_gui_element("pickban_team2_label", value=self.team2.name)
-        self.controller.update_gui_element("pickban_team1_table", values=self.get_players(self.team1.list_players))
-        self.controller.update_gui_element("pickban_team2_table", values=self.get_players(self.team2.list_players))
-        self.controller.update_gui_element("pickban_team1_bans", value=self.get_bans(self.team1_bans))
-        self.controller.update_gui_element("pickban_team2_bans", value=self.get_bans(self.team2_bans))
-        self.controller.update_gui_element("pickban_champion_table", values=self.get_champions())
+        self.controller.update_element_on_screen("pickban_team1_label", value=self.team1.name)
+        self.controller.update_element_on_screen("pickban_team2_label", value=self.team2.name)
+        self.controller.update_element_on_screen("pickban_team1_table", values=self.get_players(self.team1.list_players))
+        self.controller.update_element_on_screen("pickban_team2_table", values=self.get_players(self.team2.list_players))
+        self.controller.update_element_on_screen("pickban_team1_bans", value=self.get_bans(self.team1_bans))
+        self.controller.update_element_on_screen("pickban_team2_bans", value=self.get_bans(self.team2_bans))
+        self.controller.update_element_on_screen("pickban_champion_table", values=self.get_champions())
         if pick_ban.bans_turn != -1:
-            self.controller.update_gui_element("pickban_pick_btn", text="Ban")
+            self.controller.update_element_on_screen("pickban_pick_btn", text="Ban")
         else:
-            self.controller.update_gui_element("pickban_pick_btn", text="Pick")
+            self.controller.update_element_on_screen("pickban_pick_btn", text="Pick")
 
     def get_elements(self):
         self.team1 = self.current_match.match.team1
@@ -111,8 +116,9 @@ class PicksBansController(IController):
             return
 
         if self.current_match is None:
-            self.controller.check_files()
-            self.current_match = self.controller.initialize_random_debug_match(False, picks_bans_queue=self.queue)
+            self.core.check_files()
+            teams = self.core.db.load_moba_teams()
+            self.current_match = self.game_initializer.initialize_random_debug_game(teams, picks_bans_queue=self.queue)
             self.current_match.match.team1.is_players_team = True
             try:
                 self.pick_ban_thread = threading.Thread(target=self.current_match.picks_and_bans, daemon=True)

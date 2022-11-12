@@ -16,37 +16,39 @@
 
 from .controllerinterface import IController
 from ..settings import SettingsLayout
+from ...igamecontroller import IGameController
+from ....core.esmcore import ESMCore
 
 
 class SettingsController(IController):
-    def __init__(self, controller):
-        super().__init__(controller)
-        self.layout = SettingsLayout(self)
-        self.settings = self.controller.core.settings
+    def __init__(self, controller: IGameController, core: ESMCore):
+        self.controller = controller
+        self.layout = SettingsLayout()
+        self.core = core
         self.loaded_data = False
 
     @property
     def amount_players(self) -> int:
-        return self.settings.amount_players
+        return self.core.settings.amount_players
 
     @amount_players.setter
     def amount_players(self, amount):
-        self.settings.amount_players = amount
+        self.core.settings.amount_players = amount
 
     def generate_all_data(self) -> None:
-        self.controller.generate_all_data()
+        self.core.db.generate_all()
 
     def update_inputs(self):
-        self.controller.update_gui_element("settings_root_dir", value=self.settings.root_dir)
-        self.controller.update_gui_element("settings_fontsize_input", value=self.settings.font_scale)
-        self.controller.update_gui_element("settings_amount_input", value=self.settings.amount_players)
-        self.controller.update_gui_element("settings_enable_autosave", value=self.settings.enable_auto_save)
-        self.controller.update_gui_element("settings_res_dir", value=self.settings.res_dir)
-        self.controller.update_gui_element("settings_db_dir", value=self.settings.db_dir)
-        self.controller.update_gui_element("settings_saves_dir", value=self.settings.save_file_dir)
-        self.controller.update_gui_element("settings_ch_file", value=self.settings.champions_file)
-        self.controller.update_gui_element("settings_pl_file", value=self.settings.players_file)
-        self.controller.update_gui_element("settings_t_file", value=self.settings.teams_file)
+        self.controller.update_element_on_screen("settings_root_dir", value=self.core.settings.root_dir)
+        self.controller.update_element_on_screen("settings_fontsize_input", value=self.core.settings.font_scale)
+        self.controller.update_element_on_screen("settings_amount_input", value=self.core.settings.amount_players)
+        self.controller.update_element_on_screen("settings_enable_autosave", value=self.core.settings.enable_auto_save)
+        self.controller.update_element_on_screen("settings_res_dir", value=self.core.settings.res_dir)
+        self.controller.update_element_on_screen("settings_db_dir", value=self.core.settings.db_dir)
+        self.controller.update_element_on_screen("settings_saves_dir", value=self.core.settings.save_file_dir)
+        self.controller.update_element_on_screen("settings_ch_file", value=self.core.settings.champions_file)
+        self.controller.update_element_on_screen("settings_pl_file", value=self.core.settings.players_file)
+        self.controller.update_element_on_screen("settings_t_file", value=self.core.settings.teams_file)
 
     def update_settings_data(
             self,
@@ -60,21 +62,21 @@ class SettingsController(IController):
             teams_file: str,
     ):
         if font_size != '':
-            self.settings.font_scale = font_size
+            self.core.settings.font_scale = font_size
         if root_dir != '':
-            self.settings.root_dir = root_dir
+            self.core.settings.root_dir = root_dir
         if res_dir != '':
-            self.settings.res_dir = res_dir
+            self.core.settings.res_dir = res_dir
         if db_dir != '':
-            self.settings.db_dir = db_dir
+            self.core.settings.db_dir = db_dir
         if save_file_dir != '':
-            self.settings.save_file_dir = save_file_dir
+            self.core.settings.save_file_dir = save_file_dir
         if champions_file != '':
-            self.settings.champions_file = champions_file
+            self.core.settings.champions_file = champions_file
         if players_file != '':
-            self.settings.players_file = players_file
+            self.core.settings.players_file = players_file
         if teams_file != '':
-            self.settings.teams_file = teams_file
+            self.core.settings.teams_file = teams_file
         self.update_inputs()
 
     def update(self, event, values, make_screen):
@@ -89,7 +91,7 @@ class SettingsController(IController):
                 make_screen("settings_screen", "main_screen")
 
             if event == "settings_enable_autosave":
-                self.settings.enable_auto_save = True
+                self.core.settings.enable_auto_save = True
                 self.update_inputs()
 
             if event == "settings_apply_btn":
@@ -103,13 +105,13 @@ class SettingsController(IController):
                     values["settings_pl_file"],
                     values["settings_t_file"],
                 )
-                self.settings.create_config_file()
+                self.core.settings.create_config_file()
                 self.update_inputs()
 
             elif event == "settings_generate_btn":
                 try:
                     value = int(values["settings_amount_input"])
-                    self.controller.core.check_player_amount()
+                    self.core.check_player_amount()
                 except ValueError as e:
                     self.controller.get_gui_information_window(
                         e,
@@ -119,5 +121,5 @@ class SettingsController(IController):
                 else:
                     self.controller.amount_players = value
                 finally:
-                    self.controller.generate_all_data()
+                    self.core.db.generate_all()
                     self.update_inputs()

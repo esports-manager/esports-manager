@@ -15,19 +15,9 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from abc import ABC, abstractmethod
-from ...igamecontroller import IGameController
 
 
 class IController(ABC):
-    def __init__(self, controller: IGameController):
-        self.controller = controller
-
-        if self.controller.controllers is None:
-            self.controller.controllers = []
-
-        self.controller.controllers.append(self)
-        super().__init__()
-
     @abstractmethod
     def update(self, *args, **kwargs):
         pass

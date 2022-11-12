@@ -19,8 +19,7 @@ from ..gui_components import *
 
 
 class TeamSelectLayout(ILayout):
-    def __init__(self, controller):
-        super().__init__(controller)
+    def __init__(self):
         self.lay = self.layout()
         self.col = self.column()
 
@@ -67,6 +66,3 @@ class TeamSelectLayout(ILayout):
              sg.Column(player_table, justification='center', element_justification='center')],
             [esm_button("Select", key="teamselect_select_btn"), esm_button("Cancel", key="teamselect_cancel_btn")],
         ]
-
-    def update(self, *args, **kwargs) -> None:
-        self.controller.update(*args, **kwargs)

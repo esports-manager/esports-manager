@@ -15,16 +15,18 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
 
-from esm.core.game_manager import GameManager
+from esm.core.esmcore import ESMCore
 from esm.core.save_load.load_game import LoadGame
 from .controllerinterface import IController
 from ..loadgame import LoadGameLayout
+from ...igamecontroller import IGameController
 
 
 class LoadGameController(IController):
-    def __init__(self, controller):
-        super().__init__(controller)
-        self.layout = LoadGameLayout(self)
+    def __init__(self, controller: IGameController, core: ESMCore):
+        self.controller = controller
+        self.core = core
+        self.layout = LoadGameLayout()
         self.load_game: LoadGame = LoadGame()
         self.load_files = None
         self.filename = None
@@ -53,8 +55,8 @@ class LoadGameController(IController):
 
             if event == "load_game_btn":
                 if self.filename not in [[], self.default_value, None]:
-                    filename = os.path.join(self.controller.core.settings.save_file_dir, self.filename)
-                    self.controller.core.game_manager.load_game(filename)
+                    filename = os.path.join(self.core.settings.save_file_dir, self.filename)
+                    self.core.game_manager.load_game(filename)
                     make_screen("load_game_screen", "game_dashboard_screen")
                 else:
                     self.controller.get_gui_information_window(

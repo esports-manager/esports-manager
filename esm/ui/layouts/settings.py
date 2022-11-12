@@ -19,8 +19,7 @@ from ..gui_components import *
 
 
 class SettingsLayout(ILayout):
-    def __init__(self, controller):
-        super().__init__(controller)
+    def __init__(self):
         self.lay = self.layout()
         self.col = self.column()
 
@@ -126,6 +125,3 @@ class SettingsLayout(ILayout):
                 esm_button("Cancel", key="settings_cancel_btn"),
             ],
         ]
-
-    def update(self, *args, **kwargs) -> None:
-        self.controller.update(*args, **kwargs)

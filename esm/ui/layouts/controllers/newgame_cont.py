@@ -13,18 +13,18 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+from esm.core.esmcore import ESMCore
 from .controllerinterface import IController
 from ..newgame import NewGameLayout
 from esm.core.utils import get_nations
-from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator
-
+from ...igamecontroller import IGameController
 
 
 class NewGameController(IController):
-    def __init__(self, controller):
-        super().__init__(controller)
-        self.layout = NewGameLayout(self)
+    def __init__(self, controller: IGameController, core: ESMCore):
+        self.core = core
+        self.controller = controller
+        self.layout = NewGameLayout()
         self.nationalities = None
 
     def load_nationalities(self):
@@ -62,7 +62,7 @@ class NewGameController(IController):
                         and values["create_manager_display_calendar"] != ""
                 ):
                     if values["new_game_checkbox"]:
-                        self.controller.core.db.generate_all()
+                        self.core.db.generate_all()
 
                     make_screen("new_game_screen", "team_select_screen")
                 else:

@@ -15,15 +15,18 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from queue import Queue
 
-from .controllerinterface import IController, IGameController
+from .controllerinterface import IController
 from ..debugmatch import DebugMatchLayout
+from ...igamecontroller import IGameController
+from ....core.esmcore import ESMCore
 from ....core.esports.moba.modules.match_factory import MatchFactory
 
 
 class DebugMatchController(IController):
-    def __init__(self, controller: IGameController):
-        super().__init__(controller)
-        self.layout = DebugMatchLayout(self)
+    def __init__(self, controller: IGameController, core: ESMCore):
+        self.controller = controller
+        self.core = core
+        self.layout = DebugMatchLayout()
         self.queue = Queue()
         self.match_sim = MatchFactory()
         self.buttons_disabled = False
@@ -124,11 +127,8 @@ class DebugMatchController(IController):
             self.enable_debug_buttons()
 
     def get_new_teams(self):
-        try:
-            self.controller.core.check_files()
-        except FileNotFoundError:
-            self.controller.core.db.generate_all()
-        teams = self.controller.core.db.load_moba_teams()
+        self.core.check_files()
+        teams = self.core.db.load_moba_teams()
         self.match_sim.initialize_random_debug_game(teams)
         self.update_debug_match_info(self.get_team_data())
 

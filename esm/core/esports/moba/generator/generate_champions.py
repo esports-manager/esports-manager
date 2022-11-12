@@ -51,7 +51,7 @@ class ChampionGenerator:
         """
         Generates champion UUID
         """
-        self.champion_id = uuid.uuid4().int
+        self.champion_id = uuid.uuid4()
 
     def get_champion_names(self) -> None:
         """
@@ -83,7 +83,7 @@ class ChampionGenerator:
         """
         self.champion_dict = {
             "name": self.name,
-            "id": self.champion_id,
+            "id": self.champion_id.int,
             "skill": self.skill,
         }
 
@@ -119,7 +119,7 @@ class ChampionGenerator:
         self.champions_obj = []
         for champion in self.champions_list:
             self.name = champion["name"]
-            self.champion_id = champion["id"]
+            self.champion_id = uuid.UUID(champion["id"])
             self.skill = champion["skill"]
             self.generate_champion_obj()
             self.champions_obj.append(self.champion_obj)
@@ -131,11 +131,7 @@ class ChampionGenerator:
         if ch_list:
             self.champions_obj = ch_list
 
-        for champion in self.champions_obj:
-            if champ_id == champion.champion_id:
-                return champion
-
-        return None
+        return next((champion for champion in self.champions_obj if champ_id == champion.champion_id), None)
 
     def get_from_data_file(self, data: list, only_dict: bool = False):
         self.champions_list = data.copy()

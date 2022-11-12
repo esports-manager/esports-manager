@@ -26,7 +26,7 @@ def champion_generator(tmpdir):
     return ChampionGenerator(file_name=temporary.strpath)
 
 
-def test_create_champions_list(champion_generator, tmpdir):
+def test_create_champions_list(champion_generator):
     champion_generator.generate_champions()
     champion_generator.generate_file()
     champion_generator.champions_list = []
@@ -35,7 +35,7 @@ def test_create_champions_list(champion_generator, tmpdir):
     assert file_contents == champion_generator.champions_list
 
 
-def test_get_champions(champion_generator, tmpdir):
+def test_get_champions(champion_generator):
     champion_generator.generate_champions()
     champion_generator.generate_file()
     champion_generator.champions_list = []
@@ -44,7 +44,7 @@ def test_get_champions(champion_generator, tmpdir):
     assert len(file_contents) == len(champion_generator.champions_obj)
 
 
-def test_generate_file(champion_generator, tmpdir):
+def test_generate_file(champion_generator):
     champion_generator.champions_list = []
     champion_generator.generate_champions()
     champion_generator.generate_file()

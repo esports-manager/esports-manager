@@ -25,8 +25,25 @@ from esm.core.esports.moba.player import MobaPlayer
 
 @pytest.fixture
 def settings(tmp_path):
-    settings = Settings()
-    settings.config_file = tmp_path / 'config.yaml'
+    root_dir = tmp_path / "root"
+    root_dir.mkdir()
+    db_dir = tmp_path / "dir"
+    db_dir.mkdir()
+    save_file_dir = root_dir / "save"
+    save_file_dir.mkdir()
+    champions_file = db_dir / "champions.json"
+    players_file = db_dir / "players.json"
+    teams_file = db_dir / "teams.json"
+    config_file = root_dir / 'config.yaml'
+    settings = Settings(
+        root_dir=root_dir,
+        db_dir=db_dir,
+        save_file_dir=save_file_dir,
+        champions_file=champions_file,
+        players_file=players_file,
+        teams_file=teams_file,
+        config_file=config_file
+    )
     settings.create_config_file()
     return settings
 
@@ -37,6 +54,7 @@ def db(settings) -> DB:
 
 
 def test_db_load_moba_teams(db):
+    db.generate_all()
     teams = db.load_moba_teams()
     for team in teams:
         assert isinstance(team, Team)

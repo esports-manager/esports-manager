@@ -28,13 +28,13 @@ class Settings:
     font_scale: int = 1
     amount_players: int = 50
     enable_auto_save = True
-    root_dir: str = ROOT_DIR
-    res_dir: str = RES_DIR
-    db_dir: str = DB_DIR
-    save_file_dir: str = SAVE_FILE_DIR
-    champions_file: str = CHAMPIONS_FILE
-    players_file: str = PLAYERS_FILE
-    teams_file: str = TEAMS_FILE
+    root_dir: Union[str, Path] = ROOT_DIR
+    res_dir: Union[str, Path] = RES_DIR
+    db_dir: Union[str, Path] = DB_DIR
+    save_file_dir: Union[str, Path] = SAVE_FILE_DIR
+    champions_file: Union[str, Path] = CHAMPIONS_FILE
+    players_file: Union[str, Path] = PLAYERS_FILE
+    teams_file: Union[str, Path] = TEAMS_FILE
     config_file: Union[str, Path] = CONFIG_FILE
 
     def load_config_file(self):
@@ -60,14 +60,14 @@ class Settings:
         return {
             "font_scale": self.font_scale,
             "amount_players": self.amount_players,
-            "root_dir": self.root_dir,
-            "enable_auto_save": self.enable_auto_save,
-            "res_dir": self.res_dir,
-            "db_dir": self.db_dir,
-            "save_file_dir": self.save_file_dir,
-            "champions_file": self.champions_file,
-            "players_file": self.players_file,
-            "teams_file": self.teams_file,
+            "root_dir": str(self.root_dir),
+            "enable_auto_save": str(self.enable_auto_save),
+            "res_dir": str(self.res_dir),
+            "db_dir": str(self.db_dir),
+            "save_file_dir": str(self.save_file_dir),
+            "champions_file": str(self.champions_file),
+            "players_file": str(self.players_file),
+            "teams_file": str(self.teams_file),
         }
 
     def create_config_file(self):

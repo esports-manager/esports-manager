@@ -17,6 +17,7 @@ import os
 import logging
 from textwrap import dedent
 
+from .esports.moba.modules.match_factory import MatchFactory
 from .settings import Settings
 from .db import DB
 from ..definitions import DEBUG, LOG_FILE
@@ -64,10 +65,16 @@ class ESMCore:
             """)
             raise AmountPlayersError(error_message)
 
-    def check_files(self) -> None:
+    def check_if_files_exist(self) -> None:
         if not os.path.exists(self.settings.champions_file) or not os.path.exists(
                 self.settings.players_file) or not os.path.exists(self.settings.teams_file):
             raise FileNotFoundError
+
+    def check_files(self) -> None:
+        try:
+            self.check_if_files_exist()
+        except FileNotFoundError:
+            self.db.generate_all()
 
 
 def initialize_logging():

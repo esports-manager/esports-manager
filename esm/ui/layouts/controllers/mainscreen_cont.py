@@ -19,9 +19,8 @@ from ..mainscreen import MainScreenLayout
 
 
 class MainScreenController(IController):
-    def __init__(self, controller):
-        super().__init__(controller)
-        self.layout = MainScreenLayout(self)
+    def __init__(self):
+        self.layout = MainScreenLayout()
 
     def update(self, event, values, make_screen):
         if event == "main_debug_btn":

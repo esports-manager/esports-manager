@@ -15,7 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from .igamecontroller import IGameController
 from .gui import GUI, init_theme
-from .gui_components import sg, make_dpi_aware
+from .gui_components import sg
 from .layouts.controllers import *
 from ..definitions import DEBUG
 from ..core.esmcore import ESMCore
@@ -28,29 +28,29 @@ class GUIController(IGameController):
     """
 
     def __init__(self, core: ESMCore):
-        make_dpi_aware()
         init_theme()
-        self.controllers = None
-        self.core = core
-        self.initialize_controllers()
-        self.gui = GUI(self)
+        self.controllers = []
+        self.__initialize_controllers(core)
+        self.gui = GUI(self.controllers)
 
-    def initialize_controllers(self):
-        LoadGameController(self)
-        MainScreenController(self)
-        NewGameController(self)
-        SettingsController(self)
-        GameDashboardController(self)
+    def __initialize_controllers(self, core: ESMCore):
+        self.controllers = [
+            LoadGameController(self, core),
+            MainScreenController(),
+            NewGameController(self, core),
+            SettingsController(self, core),
+            GameDashboardController(self, core),
+        ]
 
         # Debug controllers
         if DEBUG:
-            DebugController(self)
-            DebugMatchController(self)
-            DebugChampionshipController(self)
-            TeamSelectController(self)
-            PicksBansController(self)
-            PickTeamController(self)
-            MatchTesterController(self)
+            self.controllers.append(DebugController())
+            self.controllers.append(DebugMatchController(self, core))
+            self.controllers.append(DebugChampionshipController(self, core))
+            self.controllers.append(TeamSelectController(self, core))
+            self.controllers.append(PicksBansController(self, core))
+            self.controllers.append(PickTeamController())
+            self.controllers.append(MatchTesterController(self, core))
     
     def print_error(self, e):
         self.gui.error_message(e)
@@ -81,8 +81,8 @@ class GUIController(IGameController):
         """
         Event handling for each layout
         """
-        for layout in self.gui.layouts:
-            layout.update(*args, **kwargs)
+        for controller in self.controllers:
+            controller.update(*args, **kwargs)
 
     def start(self):
         """

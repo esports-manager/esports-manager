@@ -29,11 +29,10 @@ class GUI:
     specific to the GUI we are currently using.
     """
 
-    def __init__(self, view):
+    def __init__(self, controllers):
         self.icon = os.path.join(RES_DIR, "images", "logo", "esportsmanagertrophy.png")
-        # Each layout is added to the list
-        self.view = view
-        self.layouts = self.get_layouts()
+        self.layouts = []
+        self.get_layouts(controllers)
         self.window = self._create_window()
 
     def _encode_icon(self) -> bytes:
@@ -66,11 +65,11 @@ class GUI:
 
         return window
 
-    def get_layouts(self):
+    def get_layouts(self, controllers):
         """
         Gets GUI layouts from the controller classes.
         """
-        return [controller.layout for controller in self.view.controllers]
+        self.layouts = [controller.layout for controller in controllers]
     
     def _get_cols(self) -> list:
         """

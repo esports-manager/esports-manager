@@ -13,30 +13,40 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from dataclasses import dataclass
+from .moba_enums_def import Lanes, get_lanes_from_dict
 import uuid
 
-class Champion:
-    def __init__(self, champion_id: int, name: str, skill: int):
-        self.champion_id = champion_id
-        self.name = name
-        self.status = "Not picked"
 
-        # TODO: champions should belong to different classes such as mages, carries, etc
-        # TODO: implement attributes dictionary for skill
-        self.skill = skill
+@dataclass
+class Champion:
+    champion_id: uuid.UUID
+    name: str
+    skill: int
+    lanes: dict[Lanes, float]
 
     @classmethod
     def get_from_dict(cls, dictionary: dict):
-        champion_id = uuid.UUID(int=dictionary['id'])
+        champion_id = uuid.UUID(hex=dictionary['id'])
         name = dictionary['name']
         skill = dictionary['skill']
-        return Champion(champion_id, name, skill)
+        lanes = dictionary['lanes']
+        return cls(champion_id, name, skill, get_lanes_from_dict(lanes))
 
-    def __repr__(self):
-        return "{0} {1}".format(self.__class__.__name__, self.name)
+    def serialize_lanes(self) -> dict[int, float]:
+        _lanes = {}
+        for lane, mult in self.lanes.items():
+            _lanes.update({lane.value: mult})
+
+        return _lanes
+
+    def serialize(self) -> dict:
+        return {
+            "id": self.champion_id.hex,
+            "name": self.name,
+            "skill": self.skill,
+            "lanes": self.serialize_lanes()
+        }
 
     def __str__(self):
-        return "{0}".format(self.name)
-
-    def __eq__(self, other):
-        return self.champion_id == other.champion_id if isinstance(other, Champion) else NotImplemented
+        return f"{self.name}"

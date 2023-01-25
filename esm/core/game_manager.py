@@ -20,10 +20,10 @@ from typing import Union
 from unicodedata import normalize
 
 from esm.core.esports.manager import Manager
-from esm.core.gamestate import GameState
 from esm.core.esports.moba.generator import ChampionGenerator
 from esm.core.esports.moba.generator import MobaPlayerGenerator
 from esm.core.esports.moba.generator import TeamGenerator
+from esm.core.gamestate import GameState
 from esm.core.save_load.load_game import LoadGame
 from esm.core.save_load.save_game import SaveGame
 from esm.core.settings import Settings

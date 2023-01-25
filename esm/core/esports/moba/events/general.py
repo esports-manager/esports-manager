@@ -16,10 +16,10 @@
 import logging
 import random
 import uuid
+from abc import ABC, abstractmethod
 from datetime import timedelta
 from queue import Queue
 from typing import Union
-from abc import ABC, abstractmethod
 
 from esm.core.esports.moba.commentaries import Commentaries
 from esm.core.esports.moba.team import Team

@@ -13,11 +13,6 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import pytest
-
-
-from esm.core.esports.moba.events import *
-from esm.core.esports.moba.mobaevent import MobaEventHandler
 
 
 def test_events():

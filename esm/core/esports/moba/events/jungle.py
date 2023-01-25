@@ -17,6 +17,7 @@ import logging
 import random
 from queue import Queue
 from typing import Union
+
 from esm.core.esports.moba.team import Team
 from .general import MobaEvent, Creator
 

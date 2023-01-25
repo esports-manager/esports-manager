@@ -18,8 +18,8 @@ from typing import Union
 
 from .champion import Champion
 from .moba_enums_def import Lanes, LaneError
+from .skill import Skill
 from ..player import Player
-from .skill import Skill, SkillGain
 
 
 class MobaPlayer(Player):

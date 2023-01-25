@@ -13,16 +13,16 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import pytest
 import cbor2
+import pytest
 
-from esm.core.gamestate import GameState
-from core.save_load.hashfile import HashFile
 from core.esports.moba.generator import ChampionGenerator
 from core.esports.moba.generator import MobaPlayerGenerator
 from core.esports.moba.generator import TeamGenerator
+from core.save_load.hashfile import HashFile
 from core.save_load.load_game import LoadGame, LoadGameError
 from core.save_load.save_game import SaveGame
+from esm.core.gamestate import GameState
 
 
 @pytest.fixture()

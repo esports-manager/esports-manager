@@ -13,11 +13,12 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from uuid import UUID
-from typing import Union
 from abc import ABC, abstractmethod
-from .team import Team
+from typing import Union
+from uuid import UUID
+
 from .player import MobaPlayer
+from .team import Team
 
 
 class Progression(ABC):

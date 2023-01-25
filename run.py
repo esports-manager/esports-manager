@@ -16,9 +16,8 @@
 
 import logging
 
-from esm.definitions import DEBUG, ROOT_DIR
 from esm.core.esm import ESMMobaController
-
+from esm.definitions import DEBUG, ROOT_DIR
 
 logging.basicConfig(
     filename="esm.log",
@@ -34,6 +33,6 @@ else:
     logging.basicConfig(level=logging.ERROR)
 
 
-logging.debug(ROOT_DIR)
+logger.debug(ROOT_DIR)
 esm = ESMMobaController()
 esm.app()

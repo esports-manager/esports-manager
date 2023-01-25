@@ -18,9 +18,8 @@ import logging
 import random
 from queue import Queue
 
-from esm.core.esports.moba.moba_events_details import get_moba_events
 from esm.core.esports.moba.events import *
-
+from esm.core.esports.moba.moba_events_details import get_moba_events
 
 logger = logging.getLogger(__name__)
 

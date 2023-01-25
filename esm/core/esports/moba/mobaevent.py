@@ -24,21 +24,20 @@ from esm.core.esports.moba.moba_events_details import get_moba_events
 logger = logging.getLogger(__name__)
 
 
-class EventFactory:
-    def generate_event(self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue) -> MobaEvent:
-        name = event_chosen["name"]
-        if name == "NOTHING":
-            return NothingEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
-        elif name in ["BARON", "DRAGON", "HERALD"]:
-            return JungleEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
-        elif name == "INHIB ASSAULT":
-            return InhibEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
-        elif name == "TOWER ASSAULT":
-            return TowerEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
-        elif name == "KILL":
-            return KillEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
-        elif name == "NEXUS ASSAULT":
-            return NexusEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
+def generate_event(event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue) -> MobaEvent:
+    name = event_chosen["name"]
+    if name == "NOTHING":
+        return NothingEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
+    elif name in ["BARON", "DRAGON", "HERALD"]:
+        return JungleEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
+    elif name == "INHIB ASSAULT":
+        return InhibEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
+    elif name == "TOWER ASSAULT":
+        return TowerEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
+    elif name == "KILL":
+        return KillEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
+    elif name == "NEXUS ASSAULT":
+        return NexusEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
 
 
 class MobaEventHandler:
@@ -49,7 +48,6 @@ class MobaEventHandler:
         self.events = get_moba_events()
         self.commentaries = None
         self.event = None
-        self.event_factory = EventFactory()
         self.enabled_events = []
         self.event_history = []
         self.show_commentary = show_commentary
@@ -115,12 +113,6 @@ class MobaEventHandler:
                 if event["name"] == name and event not in self.enabled_events:
                     self.enabled_events.append(event)
 
-    def load_commentaries_file(self):
-        """
-        Load commentaries file
-        """
-        pass
-
     def get_event_priorities(self):
         """
         Gets the priority of events
@@ -133,5 +125,5 @@ class MobaEventHandler:
         """
         priorities = self.get_event_priorities()
         ev_chosen = random.choices(self.enabled_events, priorities)[0]
-        self.event = self.event_factory.generate_event(ev_chosen, game_time, self.show_commentary, self.queue)
+        self.event = generate_event(ev_chosen, game_time, self.show_commentary, self.queue)
         self.event_history.append(self.event)

@@ -19,12 +19,12 @@ from queue import Queue
 from typing import Union
 
 from esm.core.esports.moba.team import Team
-from .general import MobaEvent, Creator
+from .general import MobaEvent, EventCreator
 
 logger = logging.getLogger(__name__)
 
 
-class JungleEventCreator(Creator):
+class JungleEventEventCreator(EventCreator):
     def factory_method(
             self,
             event_chosen: dict,

@@ -16,12 +16,10 @@
 import cbor2
 import pytest
 
-from core.esports.moba.generator import ChampionGenerator
-from core.esports.moba.generator import MobaPlayerGenerator
-from core.esports.moba.generator import TeamGenerator
-from core.save_load.hashfile import HashFile
-from core.save_load.load_game import LoadGame, LoadGameError
-from core.save_load.save_game import SaveGame
+from esm.core.esports.moba.generator import ChampionGenerator
+from esm.core.esports.moba.generator import MobaPlayerGenerator
+from esm.core.esports.moba.generator import TeamGenerator
+from esm.core.save_load import SaveGame, LoadGame, LoadGameError, HashFile
 from esm.core.gamestate import GameState
 
 

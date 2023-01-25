@@ -21,7 +21,7 @@ That way I can make the GUI elements uniform and work like GUI components.
 import PySimpleGUI as sg
 
 default_font = "Arial"
-bold_font = default_font + " Bold"
+bold_font = f"{default_font} Bold"
 default_font_size = "10"
 increased_font_size = "14"
 

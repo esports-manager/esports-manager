@@ -16,7 +16,7 @@
 
 import pytest
 
-from core.esports.moba.generator import ChampionGenerator
+from esm.core.esports.moba.generator import ChampionGenerator
 from esm.core.utils import get_from_file
 
 

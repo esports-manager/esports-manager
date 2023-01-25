@@ -27,6 +27,8 @@ from esm.definitions import *
 class Settings:
     font_scale: int = 1
     amount_players: int = 50
+    enable_auto_save = True
+    root_dir: str = ROOT_DIR
     res_dir: str = RES_DIR
     db_dir: str = DB_DIR
     save_file_dir: str = SAVE_FILE_DIR
@@ -45,6 +47,8 @@ class Settings:
     def parse_config_file(self, data):
         self.font_scale = data['font_scale']
         self.amount_players = data['amount_players']
+        self.enable_auto_save = data['enable_auto_save']
+        self.root_dir = data['root_dir']
         self.res_dir = data['res_dir']
         self.db_dir = data['db_dir']
         self.save_file_dir = data['save_file_dir']
@@ -56,6 +60,8 @@ class Settings:
         return {
             "font_scale": self.font_scale,
             "amount_players": self.amount_players,
+            "root_dir": self.root_dir,
+            "enable_auto_save": self.enable_auto_save,
             "res_dir": self.res_dir,
             "db_dir": self.db_dir,
             "save_file_dir": self.save_file_dir,

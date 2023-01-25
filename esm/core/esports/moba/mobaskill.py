@@ -21,14 +21,14 @@ class SkillError(Exception):
     pass
 
 
-class SkillGain(Enum):
+class MobaSkillGain(Enum):
     FAST = auto()
     MEDIUM = auto()
     SLOW = auto()
 
 
-class Skill:
-    def __init__(self, skill: int, exp: float = 0.0, skill_gain: Union[SkillGain, str] = SkillGain.MEDIUM):
+class MobaSkill:
+    def __init__(self, skill: int, exp: float = 0.0, skill_gain: Union[MobaSkillGain, str] = MobaSkillGain.MEDIUM):
         self.skill = skill
         self.skill_gain = None
         self.get_skill_gain_value(skill_gain)
@@ -40,11 +40,11 @@ class Skill:
     def is_max_lvl(self) -> bool:
         return self.skill == 99
 
-    def get_skill_gain_value(self, skill_gain: Union[SkillGain, str]):
-        if isinstance(skill_gain, SkillGain):
+    def get_skill_gain_value(self, skill_gain: Union[MobaSkillGain, str]):
+        if isinstance(skill_gain, MobaSkillGain):
             self.skill_gain = skill_gain
         elif isinstance(skill_gain, str):
-            sk_g = list(SkillGain)
+            sk_g = list(MobaSkillGain)
             for i in sk_g:
                 if i.name == skill_gain:
                     self.skill_gain = i
@@ -53,9 +53,9 @@ class Skill:
             raise SkillError("Skill gain value is invalid!")
 
     def get_total_exp(self):
-        if self.skill_gain == SkillGain.FAST:
+        if self.skill_gain == MobaSkillGain.FAST:
             total_exp = (133.33 * self.skill**3) + (24.909 * self.skill**2) + (7.3154 * self.skill) + 174.16
-        elif self.skill_gain == SkillGain.MEDIUM:
+        elif self.skill_gain == MobaSkillGain.MEDIUM:
             total_exp = (100.0 * self.skill**3) + (60.0 * self.skill**2) + self.skill + 161.0
         else:
             total_exp = (66.667 * self.skill**3) + (9.9819 * self.skill**2) + (85.254 * self.skill) + 94.64
@@ -68,9 +68,9 @@ class Skill:
 
         if self.is_max_lvl():
             self._exp_to_next_level = 0
-        elif self.skill_gain == SkillGain.FAST:
+        elif self.skill_gain == MobaSkillGain.FAST:
             self._exp_to_next_level = (200.0 * self.skill**2) + (220.0 * self.skill) + 161.0
-        elif self.skill_gain == SkillGain.MEDIUM:
+        elif self.skill_gain == MobaSkillGain.MEDIUM:
             self._exp_to_next_level = (300.0 * self.skill**2) + (420.0 * self.skill) + 161.0
         else:
             self._exp_to_next_level = (400.0 * self.skill ** 2) + (450.0 * self.skill) + 161.0
@@ -108,7 +108,7 @@ class Skill:
         return self.skill
 
     def __eq__(self, other):
-        if isinstance(other, Skill):
+        if isinstance(other, MobaSkill):
             return self.skill == other.skill
         elif isinstance(other, int):
             return self.skill == other

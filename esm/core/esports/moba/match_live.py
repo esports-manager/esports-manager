@@ -160,19 +160,12 @@ class MatchLive:
         """
         Checks for open inhibitors, to decide whether a base tower or nexus can be attacked
         """
-        for team in self.match.teams:
-            open_inhibs = team.get_exposed_inhibs()
-            if open_inhibs:
-                return True
-        return False
+        return any(team.get_exposed_inhibs() for team in self.match.teams)
 
     def simulation(self) -> None:
         """
         Match simulation method. Starts the while loop.
         """
-        # if self.show_commentary:
-        #     self.event_handler.load_commentaries_file()
-
         while not self.is_match_over:
             self._run_match()
         self.assign_winning_team()
@@ -274,21 +267,7 @@ class MatchSeries:
             )
 
     def assign_match_winner(self, match):
-        if match.victorious_team.name == self.team1.name:
+        if match.victorious_team == self.team1:
             self.team_wins[0] += 1
         else:
             self.team_wins[1] += 1
-
-
-def initialize_match(team1, team2, ch_id) -> MatchLive:
-    """
-    Instantiate each object that is going to be used by the match, returning
-    the match object.
-    :param team1:
-    :param team2:
-    :param ch_id:
-    :return:
-    """
-
-    match = Match(uuid.uuid4().int, ch_id, team1, team2)
-    return MatchLive(match, True, 1)

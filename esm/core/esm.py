@@ -13,10 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 from .core import Core
-from .game_manager import GameManager
-from .settings import Settings
 from ..ui.guicontroller import GUIController
 
 
@@ -40,11 +37,9 @@ class ESMController:
     def amount_players(self, value):
         self.core.amount_players = value
 
-    def create_game_manager(self, manager, filename, esport, season, game_name):
-        self.game_manager = GameManager(manager, filename, esport, season, game_name, self.settings)
-
-    def create_game_manager_from_gamestate(self, gamestate):
-        self.game_manager = GameManager.get_game_manager(gamestate, self.settings, auto_save_enabled=True)
+    @property
+    def settings(self):
+        return self.core.settings
 
     def app(self) -> None:
         self.view.start()

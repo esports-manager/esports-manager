@@ -47,6 +47,7 @@ class SettingsLayout(ILayout):
         ]
 
         labels_files = [
+            [esm_form_text("Root directory:", pad=labels_file_pad)],
             [esm_form_text("Resources directory:", pad=labels_file_pad)],
             [esm_form_text("Database directory:", pad=labels_file_pad)],
             [esm_form_text("Saves directory:", pad=labels_file_pad)],
@@ -74,9 +75,14 @@ class SettingsLayout(ILayout):
                     key="settings_generate_btn",
                 ),
             ],
+            [esm_checkbox("Enable autosave: ", default=True, key="settings_enable_autosave")],
         ]
 
         controls_files = [
+            [
+                esm_input_text('', size=size_elements, key="settings_root_dir", pad=controls_file_pad),
+                sg.FileBrowse(target="settings_root_dir", font=(default_font, default_font_size)),
+            ],
             [
                 esm_input_text('', size=size_elements, key="settings_res_dir", pad=controls_file_pad),
                 sg.FileBrowse(target="settings_res_dir", font=(default_font, default_font_size)),

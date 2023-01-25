@@ -16,8 +16,10 @@
 
 import json
 import os
+import re
 from pathlib import Path
 from typing import Union
+from unicodedata import normalize
 
 import cbor2
 
@@ -79,3 +81,22 @@ def get_key_from_json(key: str = "name", file: Union[str, Path] = TEAMS_FILE) ->
     :return:
     """
     return [obj[key] for obj in load_list_from_file(file)]
+
+
+def normalize_filename(filename, delim=u'_'):
+    """
+    Normalizes the save game filename. This will prevent unsupported filenames from being saved.
+
+    Solution from: https://stackoverflow.com/questions/9042515/normalizing-unicode-text-to-filenames-etc-in-python
+    """
+    _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.:]+')
+    result = []
+    for word in _punct_re.split(filename.lower()):
+        word = normalize('NFKD', word).encode('ascii', 'ignore')
+        if word := word.decode('utf-8'):
+            result.append(word)
+
+    filename = delim.join(result)
+    filename = ''.join(filename)
+    filename = f'{filename}.cbor'
+    return filename

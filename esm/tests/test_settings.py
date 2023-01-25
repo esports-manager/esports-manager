@@ -20,9 +20,9 @@ from esm.definitions import *
 
 
 @pytest.fixture
-def settings(tmpdir):
+def settings(tmp_path):
     settings = Settings()
-    settings.config_file = tmpdir.join('config.yaml')
+    settings.config_file = tmp_path / 'config.yaml'
     settings.create_config_file()
     return settings
 
@@ -31,6 +31,8 @@ def test_get_data(settings):
     expected_data = {
         "font_scale": 1,
         "amount_players": 50,
+        "enable_auto_save": True,
+        "root_dir": ROOT_DIR,
         "res_dir": RES_DIR,
         "db_dir": DB_DIR,
         "save_file_dir": SAVE_FILE_DIR,

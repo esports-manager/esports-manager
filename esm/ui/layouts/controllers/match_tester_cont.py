@@ -91,9 +91,7 @@ class MatchTesterController(IController):
         if self.current_match is None:
             return None
 
-        players = [
-            [player for player in team.list_players] for team in self.current_match.match.teams
-        ]
+        players = [list(team.list_players) for team in self.current_match.match.teams]
 
         data = []
         for team in players:

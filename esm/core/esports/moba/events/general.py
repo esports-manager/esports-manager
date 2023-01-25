@@ -27,7 +27,7 @@ from esm.core.esports.moba.team import Team
 logger = logging.getLogger(__name__)
 
 
-class Creator(ABC):
+class EventCreator(ABC):
     @abstractmethod
     def factory_method(
             self,
@@ -115,7 +115,7 @@ class MobaEvent(ABC):
 
         if self.show_commentary and self.queue:
             logger.debug(self.event_name + str(self.event_time))
-            self.commentary = (str(timedelta(minutes=self.event_time)) + " - " + self.commentary.commentary + "\n")
+            self.commentary = f"{str(timedelta(minutes=self.event_time))} - {self.commentary.commentary}" + "\n"
             self.queue.put(self.commentary, block=False)
 
     @abstractmethod

@@ -15,11 +15,11 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import pytest
 
-from esm.core.esports.moba.skill import Skill, SkillError
+from esm.core.esports.moba.mobaskill import MobaSkill, SkillError
 
 
 def test_lvl_up_once():
-    skill = Skill(50, exp=0.0)
+    skill = MobaSkill(50, exp=0.0)
     exp_necessary = skill.exp_to_next_level()
     skill.add_exp_points(exp_necessary)
     assert exp_necessary > 0
@@ -27,7 +27,7 @@ def test_lvl_up_once():
 
 
 def test_lvl1_exp_necessary():
-    skill = Skill(1, exp=0.0)
+    skill = MobaSkill(1, exp=0.0)
     exp_necessary = skill.exp_to_next_level()
     skill.add_exp_points(exp_necessary)
     assert exp_necessary > 0
@@ -35,8 +35,8 @@ def test_lvl1_exp_necessary():
 
 
 def test_preexisting_exp_lvl_up():
-    skill = Skill(50, exp=0.0)
-    skill2 = Skill(50, exp=500.0)
+    skill = MobaSkill(50, exp=0.0)
+    skill2 = MobaSkill(50, exp=500.0)
     exp_necessary = skill.exp_to_next_level()
     exp_necessary2 = skill2.exp_to_next_level()
     diff_exp = exp_necessary - exp_necessary2
@@ -44,9 +44,9 @@ def test_preexisting_exp_lvl_up():
 
 
 def test_add_arbitrary_exp():
-    skill_zero_exp = Skill(50, exp=0.0)
+    skill_zero_exp = MobaSkill(50, exp=0.0)
     skill_zero_exp.get_total_exp()
-    skill = Skill(50, exp=500.0)
+    skill = MobaSkill(50, exp=500.0)
     skill.add_exp_points(300.0)
     total_exp = skill_zero_exp.total_exp + 500.0 + 300.0
     assert skill.skill == 50
@@ -55,8 +55,8 @@ def test_add_arbitrary_exp():
 
 
 def test_lvlup_more_than_once():
-    skill = Skill(50, exp=0.0)
-    skill2 = Skill(51, exp=0.0)
+    skill = MobaSkill(50, exp=0.0)
+    skill2 = MobaSkill(51, exp=0.0)
     exp_necessary = skill.exp_to_next_level()
     exp_necessary += skill2.exp_to_next_level()
     skill.add_exp_points(exp_necessary)
@@ -64,7 +64,7 @@ def test_lvlup_more_than_once():
 
 
 def test_max_lvl_up():
-    skill = Skill(99, exp=0.0)
+    skill = MobaSkill(99, exp=0.0)
     exp_necessary = skill.exp_to_next_level()
     skill.add_exp_points(exp_necessary)
     assert exp_necessary == 0
@@ -72,8 +72,8 @@ def test_max_lvl_up():
 
 
 def test_lvlup_till_max():
-    skill = Skill(97)
-    skill2 = Skill(98)
+    skill = MobaSkill(97)
+    skill2 = MobaSkill(98)
     exp_necessary = skill.exp_to_next_level()
     exp_necessary += skill2.exp_to_next_level()
     skill.add_exp_points(exp_necessary)
@@ -82,9 +82,9 @@ def test_lvlup_till_max():
 
 def test_negative_skill_level():
     with pytest.raises(SkillError):
-        Skill(-1)
+        MobaSkill(-1)
 
 
 def test_zero_skill_level():
     with pytest.raises(SkillError):
-        Skill(0)
+        MobaSkill(0)

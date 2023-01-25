@@ -14,8 +14,13 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
+import logging
+from textwrap import dedent
 
 from .settings import Settings
+from .db import DB
+from ..definitions import DEBUG, LOG_FILE
+from .game_manager import GameManager
 
 
 class AmountPlayersError(Exception):
@@ -29,6 +34,24 @@ class Core:
     def __init__(self):
         self.settings = Settings()
         self.settings.load_config_file()
+        self.db = DB(self.settings)
+        self.game_manager = GameManager(self.settings)
+
+    def initialize_logging(self):
+        logging.basicConfig(
+            filename=LOG_FILE,
+            encoding="utf-8",
+            format="%(levelname)s %(asctime)s: %(message)s",
+            datefmt="%m/%d/%Y %I:%M:%S %p ",
+        )
+        logger = logging.getLogger(__name__)
+
+        if DEBUG:
+            logging.basicConfig(level=logging.DEBUG)
+            logger.debug()
+        else:
+            logging.basicConfig(level=logging.ERROR)
+
 
     @property
     def amount_players(self):
@@ -45,7 +68,16 @@ class Core:
 
     def check_player_amount(self):
         if self.amount_players > 300 or self.amount_players < 50:
-            raise AmountPlayersError('Number of splayers is not supported! Ranges from 50 to 300 players! Defaulting to 50.')
+            error_message = dedent("""
+            Number of players is not supported! Ranges from 50 to 300 players! Defaulting to 50.
+            """).strip()
+            raise AmountPlayersError(error_message)
+
+        if self.amount_players % 5 != 0:
+            error_message = dedent("""
+            Number of players is not supported! Number should be a multiple of 5!
+            """)
+            raise AmountPlayersError(error_message)
 
     def check_files(self) -> None:
         if not os.path.exists(self.settings.champions_file) or not os.path.exists(

@@ -47,20 +47,17 @@ class DB:
         players_gen.lane = 0
         players_gen.generate_players(amount=self.settings.amount_players)
 
-        # self.champions.generate_champions()
-        # self.players.champions_list = self.champions.champions_obj
-        #
-        # self.players.lane = 0
-        # self.players.generate_players(amount=self.amount_players)
-        #
-        # self.teams.amount = self.amount_teams
-        # self.teams.player_list = self.players.players
-        # self.teams.generate_teams()
-        #
-        # self.teams.generate_file()
-        # self.champions.generate_file()
-        # self.players.generate_file()
+        amount_teams = self.settings.amount_players / 5
+
+        teams_gen.amount = amount_teams
+        teams_gen.player_list = players_gen.players
+        teams_gen.generate_teams()
+
+        teams_gen.generate_file()
+        champions_gen.generate_file()
+        players_gen.generate_file()
 
     def load_moba_teams(self):
         players_gen, teams_gen, champions_gen = self.get_moba_generators()
+
 

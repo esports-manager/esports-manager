@@ -22,7 +22,7 @@ from typing import Tuple
 from esm.core.esports.moba.generator.default_player_nick_names import get_default_player_nick_names
 from esm.core.esports.moba.generator.generate_champions import ChampionGenerator
 from esm.core.esports.moba.player import MobaPlayer
-from esm.core.esports.moba.skill import SkillGain
+from esm.core.esports.moba.mobaskill import MobaSkillGain
 from esm.core.utils import load_list_from_file, write_to_file
 from esm.definitions import PLAYERS_FILE, NAMES_FILE
 
@@ -173,7 +173,7 @@ class MobaPlayerGenerator:
         elif self.skill < 30:
             self.skill = 30
 
-        sk_g = list(SkillGain)
+        sk_g = list(MobaSkillGain)
         self.skill_gain = random.choice(sk_g)
         self.exp = 0.0
 

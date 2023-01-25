@@ -80,7 +80,8 @@ class LoadGame:
         else:
             raise LoadGameError("The save file is corrupted!")
 
-    def __check_key_integrity(self, data: dict):
+    @staticmethod
+    def __check_key_integrity(data: dict):
         expected_keys = [
             "gamename",
             "filename",
@@ -92,7 +93,7 @@ class LoadGame:
             "champions",
             "save_date"
         ]
-        obtained_keys = [k for k in data]
+        obtained_keys = list(data)
         return expected_keys == obtained_keys
 
     def __get_game_data(self, filename: str):
@@ -139,8 +140,8 @@ class LoadGame:
 
         load_game_files = []
         for root, _, files in os.walk(self.folder):
-            for file in files:
-                if file.endswith(extension) and self.check_game_file(os.path.join(root, file)):
-                    load_game_files.append(file)
+            load_game_files.extend(
+                file for file in files if file.endswith(extension) and self.check_game_file(os.path.join(root, file))
+            )
 
         return load_game_files

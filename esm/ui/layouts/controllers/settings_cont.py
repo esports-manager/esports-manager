@@ -27,21 +27,20 @@ class SettingsController(IController):
 
     @property
     def amount_players(self) -> int:
-        return self.controller.settings.amount_players
+        return self.settings.amount_players
 
     @amount_players.setter
     def amount_players(self, amount):
-        self.controller.core.amount_players = amount
-        self.controller.settings.amount_players = amount
+        self.settings.amount_players = amount
 
     def generate_all_data(self) -> None:
         self.controller.generate_all_data()
 
-    def update_amount(self, amount):
-        self.controller.update_gui_element("settings_amount_input", value=amount)
-
     def update_inputs(self):
+        self.controller.update_gui_element("settings_root_dir", value=self.settings.root_dir)
         self.controller.update_gui_element("settings_fontsize_input", value=self.settings.font_scale)
+        self.controller.update_gui_element("settings_amount_input", value=self.settings.amount_players)
+        self.controller.update_gui_element("settings_enable_autosave", value=self.settings.enable_auto_save)
         self.controller.update_gui_element("settings_res_dir", value=self.settings.res_dir)
         self.controller.update_gui_element("settings_db_dir", value=self.settings.db_dir)
         self.controller.update_gui_element("settings_saves_dir", value=self.settings.save_file_dir)
@@ -52,6 +51,7 @@ class SettingsController(IController):
     def update_settings_data(
             self,
             font_size: str,
+            root_dir: str,
             res_dir: str,
             db_dir: str,
             save_file_dir: str,
@@ -61,6 +61,8 @@ class SettingsController(IController):
     ):
         if font_size != '':
             self.settings.font_scale = font_size
+        if root_dir != '':
+            self.settings.root_dir = root_dir
         if res_dir != '':
             self.settings.res_dir = res_dir
         if db_dir != '':
@@ -86,9 +88,14 @@ class SettingsController(IController):
             if event == "settings_cancel_btn":
                 make_screen("settings_screen", "main_screen")
 
+            if event == "settings_enable_autosave":
+                self.settings.enable_auto_save = True
+                self.update_inputs()
+
             if event == "settings_apply_btn":
                 self.update_settings_data(
                     values['settings_fontsize_input'],
+                    values['settings_root_dir'],
                     values["settings_res_dir"],
                     values["settings_db_dir"],
                     values["settings_saves_dir"],
@@ -97,6 +104,7 @@ class SettingsController(IController):
                     values["settings_t_file"],
                 )
                 self.settings.create_config_file()
+                self.update_inputs()
 
             elif event == "settings_generate_btn":
                 try:
@@ -108,9 +116,8 @@ class SettingsController(IController):
                         'Error in number of players!'
                     )
                     self.amount_players = 50
-                    self.update_amount(50)
                 else:
                     self.controller.amount_players = value
                 finally:
                     self.controller.generate_all_data()
-                    self.update_amount(self.amount_players)
+                    self.update_inputs()

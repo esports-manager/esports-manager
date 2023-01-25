@@ -19,7 +19,6 @@ from typing import Union
 
 from .champion import Champion
 from .moba_enums_def import Lanes, LaneError
-from .mobaskill import MobaSkill
 from ..player import Player
 
 
@@ -40,16 +39,14 @@ class MobaPlayer(Player):
             nick_name: str,
             mult: list,
             skill: int,
-            skill_gain: str,
             champions: list,
-            exp: float = 0.0,
     ):
         super().__init__(
             player_id, nationality, first_name, last_name, birthday, nick_name,
         )
         self._champion = None
         self.mult = mult
-        self.skill_lvl = MobaSkill(skill, exp=exp, skill_gain=skill_gain)
+        self._skill = skill
         self._lane = None
         self._kills = 0
         self._deaths = 0
@@ -60,11 +57,11 @@ class MobaPlayer(Player):
 
     @property
     def skill(self) -> int:
-        return self.skill_lvl.skill
+        return self.skill
 
     @skill.setter
-    def skill(self, value):
-        self.skill_lvl.skill = value
+    def skill(self, value: int):
+        self.skill = value
 
     @property
     def champion(self) -> Champion:
@@ -222,7 +219,6 @@ class MobaPlayer(Player):
             player["nick_name"],
             player["multipliers"],
             player["skill"],
-            player["skill_gain"],
             player["champions"]
         )
 
@@ -235,8 +231,6 @@ class MobaPlayer(Player):
             "nick_name": self.nick_name,
             "nationality": self.nationality,
             "skill": self.skill,
-            "skill_gain": self.skill_lvl.skill_gain.name,
-            "exp": self.skill_lvl.exp,
             "multipliers": self.mult,
             "champions": self.champions.copy(),
         }

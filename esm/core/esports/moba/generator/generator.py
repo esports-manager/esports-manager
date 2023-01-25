@@ -17,41 +17,6 @@ from abc import ABC, abstractmethod
 
 
 class GeneratorInterface(ABC):
-    def __init__(self):
-        pass
-
     @abstractmethod
-    def get_name(self):
-        pass
-
-    @abstractmethod
-    def get_obj_list(self):
-        pass
-
-    @abstractmethod
-    def get_dict_list(self):
-        pass
-
-    @abstractmethod
-    def generate_id(self):
-        pass
-
-    @abstractmethod
-    def generate_name(self):
-        pass
-
-    @abstractmethod
-    def generate_obj(self):
-        pass
-
-    @abstractmethod
-    def generate_dict(self):
-        pass
-
-    @abstractmethod
-    def generate(self):
-        pass
-
-    @abstractmethod
-    def generate_file(self):
+    def generate(self, *args, **kwargs):
         pass

@@ -12,16 +12,30 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import pytest
 import uuid
 
-from esm.core.esports.moba.champion import Champion
+from esm.core.esports.moba.champion import Champion, ChampionLoadError
 from esm.core.esports.moba.moba_enums_def import Lanes
 
 
-def test_serialize_champion():
-    expected_champion = {
+@pytest.fixture
+def champion():
+    lanes = {
+        Lanes.TOP: 1.0,
+        Lanes.JNG: 1.0,
+        Lanes.MID: 0.45,
+        Lanes.ADC: 0.3,
+        Lanes.SUP: 0.0,
+    }
+    return Champion(uuid.UUID(int=1), "MyChampion", 87, lanes)
+
+
+@pytest.fixture
+def champion_dict():
+    return {
         "id": '00000000000000000000000000000001',
-        "name": "Champion",
+        "name": "MyChampion",
         "lanes": {
             0: 1.0,
             1: 1.0,
@@ -31,29 +45,30 @@ def test_serialize_champion():
         },
         "skill": 87
     }
-    lanes = {
-        Lanes.TOP: 1.0,
-        Lanes.JNG: 1.0,
-        Lanes.MID: 0.45,
-        Lanes.ADC: 0.3,
-        Lanes.SUP: 0.0,
-    }
-    champion = Champion(uuid.UUID(int=1), "Champion", 87, lanes)
-    assert expected_champion == champion.serialize()
 
 
-def test_get_from_dict():
-    lanes = {
-        Lanes.TOP: 1.0,
-        Lanes.JNG: 1.0,
-        Lanes.MID: 0.45,
-        Lanes.ADC: 0.3,
-        Lanes.SUP: 0.0,
-    }
-    expected_champion = Champion(uuid.UUID(int=1), "Champion", 87, lanes)
+def test_serialize_champion(champion: Champion, champion_dict: dict):
+    assert champion_dict == champion.serialize()
+
+
+def test_get_from_dict(champion: Champion, champion_dict: dict):
+    assert Champion.get_from_dict(champion_dict) == champion
+
+
+def test_champion_name_str(champion: Champion):
+    assert "MyChampion" == champion.__str__()
+
+
+def test_get_current_skill(champion: Champion):
+    expected_output = [mult for _, mult in champion.lanes.items()]
+    champion_lanes = [champion.get_current_skill(lane) for lane in Lanes]
+    assert expected_output == champion_lanes
+
+
+def test_get_champion_with_negative_skill():
     champion_dict = {
         "id": '00000000000000000000000000000001',
-        "name": "Champion",
+        "name": "MyChampion",
         "lanes": {
             0: 1.0,
             1: 1.0,
@@ -61,18 +76,58 @@ def test_get_from_dict():
             3: 0.3,
             4: 0.0,
         },
-        "skill": 87
+        "skill": -1
     }
-    assert Champion.get_from_dict(champion_dict) == expected_champion
+    with pytest.raises(ChampionLoadError):
+        Champion.get_from_dict(champion_dict)
 
 
-def test_champion_name_str():
-    lanes = {
-        Lanes.TOP: 1.0,
-        Lanes.JNG: 1.0,
-        Lanes.MID: 0.45,
-        Lanes.ADC: 0.3,
-        Lanes.SUP: 0.0,
+def test_get_champion_with_more_than_max_skill():
+    champion_dict = {
+        "id": '00000000000000000000000000000001',
+        "name": "MyChampion",
+        "lanes": {
+            0: 1.0,
+            1: 1.0,
+            2: 0.45,
+            3: 0.3,
+            4: 0.0,
+        },
+        "skill": 100
     }
-    champion = Champion(uuid.UUID(int=1), "MyChampion", 87, lanes)
-    assert "MyChampion" == champion.__str__()
+    with pytest.raises(ChampionLoadError):
+        Champion.get_from_dict(champion_dict)
+
+
+def test_get_champion_with_negative_multipliers():
+    champion_dict = {
+        "id": '00000000000000000000000000000001',
+        "name": "MyChampion",
+        "lanes": {
+            0: -1.0,
+            1: 1.0,
+            2: 0.45,
+            3: 0.3,
+            4: 0.0,
+        },
+        "skill": 87,
+    }
+    with pytest.raises(ChampionLoadError):
+        Champion.get_from_dict(champion_dict)
+
+
+def test_get_champion_with_big_multipliers():
+    champion_dict = {
+        "id": '00000000000000000000000000000001',
+        "name": "MyChampion",
+        "lanes": {
+            0: 1.0,
+            1: 1.0,
+            2: 1.1,
+            3: 0.3,
+            4: 0.0,
+        },
+        "skill": 100
+    }
+    with pytest.raises(ChampionLoadError):
+        Champion.get_from_dict(champion_dict)

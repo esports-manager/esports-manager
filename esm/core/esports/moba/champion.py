@@ -13,12 +13,17 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Any
 from .moba_enums_def import Lanes, get_lanes_from_dict
 import uuid
 
 
-@dataclass
+class ChampionLoadError(Exception):
+    pass
+
+
+@dataclass(eq=False)
 class Champion:
     champion_id: uuid.UUID
     name: str
@@ -30,7 +35,16 @@ class Champion:
         champion_id = uuid.UUID(hex=dictionary['id'])
         name = dictionary['name']
         skill = dictionary['skill']
+
+        if skill > 99 or skill < 0:
+            raise ChampionLoadError(f"Skill value is not supported for champion with ID {champion_id.hex}!")
+
         lanes = dictionary['lanes']
+
+        for _, lane in lanes.items():
+            if lane > 1.0 or lane < 0.0:
+                raise ChampionLoadError(f"Lane value {lane} is not supported for champion with ID {champion_id.hex}!")
+
         return cls(champion_id, name, skill, get_lanes_from_dict(lanes))
 
     def serialize_lanes(self) -> dict[int, float]:
@@ -48,5 +62,13 @@ class Champion:
             "lanes": self.serialize_lanes()
         }
 
+    def get_current_skill(self, lane: Lanes):
+        return self.lanes[lane]
+
     def __str__(self):
         return f"{self.name}"
+
+    def __eq__(self, other: Any):
+        if isinstance(other, Champion):
+            return self.champion_id == other.champion_id
+        return NotImplemented

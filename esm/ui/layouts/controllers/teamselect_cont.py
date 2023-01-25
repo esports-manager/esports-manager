@@ -14,7 +14,6 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from esm.core.esports.moba.manager import MobaManager
 from .controllerinterface import IController
 from ..teamselect import TeamSelectLayout
 
@@ -53,47 +52,48 @@ class TeamSelectController(IController):
 
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("team_select_screen").visible:
-            if self.teams is None:
-                self.get_teams()
-                self.controller.update_gui_element("teamselect_team_table", values=self.get_team_list())
-
-            if values["teamselect_team_table"]:
-                self.controller.update_gui_element(
-                    "teamselect_players_table",
-                    values=self.get_player_list(values["teamselect_team_table"])
-                )
-
-            # Click the Cancel button
-            if event == "teamselect_cancel_btn":
-                self.teams = None
-                self.controller.reset_generators()
-                make_screen("team_select_screen", "new_game_screen")
-
-            if event == "teamselect_select_btn":
-                if values["teamselect_team_table"]:
-                    team_index = values["teamselect_team_table"][0]
-                    manager = MobaManager(
-                        values["create_manager_name"],
-                        values["create_manager_display_calendar"],
-                        self.teams.teams[team_index],
-                        True,
-                        50
-                    )
-                    self.teams.teams[team_index].is_players_team = True
-                    self.controller.manager = manager
-                    # Probably here we should delete the old window and create a new one with new layouts
-                    self.controller.create_game_manager(
-                        manager,
-                        values["ng_gamename_input"],
-                        values["new_game_esport"],
-                        values["new_game_season"],
-                        values["ng_gamename_input"],
-                    )
-                    make_screen("team_select_screen", "game_dashboard_screen")
-                else:
-                    self.controller.get_gui_information_window(
-                        'You must select a team before proceeding!',
-                        title='Select a team!'
-                    )
+            pass
+            # if self.teams is None:
+            #     self.get_teams()
+            #     self.controller.update_gui_element("teamselect_team_table", values=self.get_team_list())
+            #
+            # if values["teamselect_team_table"]:
+            #     self.controller.update_gui_element(
+            #         "teamselect_players_table",
+            #         values=self.get_player_list(values["teamselect_team_table"])
+            #     )
+            #
+            # # Click the Cancel button
+            # if event == "teamselect_cancel_btn":
+            #     self.teams = None
+            #     self.controller.reset_generators()
+            #     make_screen("team_select_screen", "new_game_screen")
+            #
+            # if event == "teamselect_select_btn":
+            #     if values["teamselect_team_table"]:
+            #         team_index = values["teamselect_team_table"][0]
+            #         manager = MobaManager(
+            #             values["create_manager_name"],
+            #             values["create_manager_display_calendar"],
+            #             self.teams.teams[team_index],
+            #             True,
+            #             50
+            #         )
+            #         self.teams.teams[team_index].is_players_team = True
+            #         self.controller.manager = manager
+            #         # Probably here we should delete the old window and create a new one with new layouts
+            #         self.controller.create_game_manager(
+            #             manager,
+            #             values["ng_gamename_input"],
+            #             values["new_game_esport"],
+            #             values["new_game_season"],
+            #             values["ng_gamename_input"],
+            #         )
+            #         make_screen("team_select_screen", "game_dashboard_screen")
+            #     else:
+            #         self.controller.get_gui_information_window(
+            #             'You must select a team before proceeding!',
+            #             title='Select a team!'
+            #         )
         else:
             self.teams = None

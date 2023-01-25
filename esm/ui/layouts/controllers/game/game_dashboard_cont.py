@@ -15,6 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import uuid
 
+from typing import Optional
 from esm.core.esports.manager import Manager
 from esm.core.esports.moba.team import Team
 from esm.core.game_manager import GameManager
@@ -26,9 +27,9 @@ class GameDashboardController(IController):
     def __init__(self, controller):
         super().__init__(controller)
         self.layout = GameDashboardLayout(self)
-        self.game_manager: GameManager = None
-        self.current_manager: Manager = None
-        self.team_name: Team = None
+        self.game_manager: Optional[GameManager] = None
+        self.current_manager: Optional[Manager] = None
+        self.team_name: Optional[Team] = None
 
     def get_manager_details(self):
         self.current_manager = self.game_manager.manager

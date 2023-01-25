@@ -16,23 +16,31 @@
 from datetime import datetime, date
 from typing import Union
 
+from .player import Player
 from esm.core.esports.moba.team import Team
 
 
-class Manager:
+class Manager(Player):
     def __init__(
-            self, name: str, birthday: Union[date, datetime, str], team: Union[int, Team], is_player: bool, quality: int
+            self,
+            player_id: int,
+            nationality: str,
+            first_name: str,
+            last_name: str,
+            birthday: Union[date, datetime, str],
+            nick_name: str,
+            team: Union[int, Team],
+            is_player: bool,
+            quality: int
     ):
-        self.name = name
-
-        # This might be necessary if we are using JSON deserialization
-        if isinstance(birthday, str):
-            self.birthday = datetime.strptime(birthday, "%Y/%m/%d").date()
-        elif isinstance(birthday, date):
-            self.birthday = birthday
-        elif isinstance(birthday, datetime):
-            self.birthday = birthday.date()
-
+        super().__init__(
+            player_id,
+            nationality,
+            first_name,
+            last_name,
+            birthday,
+            nick_name
+        )
         self.team = team
         self.is_player = is_player
         self.quality = quality
@@ -40,8 +48,11 @@ class Manager:
     def get_dict(self):
         team = self.team.team_id if isinstance(self.team, Team) else self.team
         return {
-            "name": self.name,
+            "id": self.player_id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
             "birthday": self.birthday.strftime("%Y/%m/%d"),
             "team": team,
+            "is_player": self.is_player,
             "quality": self.quality
         }

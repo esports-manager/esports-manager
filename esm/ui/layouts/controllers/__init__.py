@@ -14,16 +14,15 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-__all__ = [
-    "debug_cont",
-    "debugmatch_cont",
-    "debug_championship_cont",
-    "newgame_cont",
-    "loadgame_cont",
-    "pickteam_cont",
-    "picksbans_cont",
-    "mainscreen_cont",
-    "settings_cont",
-    "match_tester_cont",
-    "teamselect_cont",
-]
+from .debug_championship_cont import DebugChampionshipController
+from .debug_cont import DebugController
+from .debugmatch_cont import DebugMatchController
+from .loadgame_cont import LoadGameController
+from .mainscreen_cont import MainScreenController
+from .match_tester_cont import MatchTesterController
+from .newgame_cont import NewGameController
+from .picksbans_cont import PicksBansController
+from .pickteam_cont import PickTeamController
+from .settings_cont import SettingsController
+from .teamselect_cont import TeamSelectController
+from .game.game_dashboard_cont import GameDashboardController

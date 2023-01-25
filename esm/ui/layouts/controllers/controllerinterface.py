@@ -18,15 +18,6 @@ from abc import ABC, abstractmethod
 
 
 class IController(ABC):
-    def __init__(self, controller):
-        self.controller = controller
-
-        if self.controller.controllers is None:
-            self.controller.controllers = []
-
-        self.controller.controllers.append(self)
-        super().__init__()
-
     @abstractmethod
     def update(self, *args, **kwargs):
         pass

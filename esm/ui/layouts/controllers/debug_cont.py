@@ -19,9 +19,8 @@ from ..debug import DebugLayout
 
 
 class DebugController(IController):
-    def __init__(self, controller):
-        super().__init__(controller)
-        self.layout = DebugLayout(self)
+    def __init__(self):
+        self.layout = DebugLayout()
 
     def update(self, event, values, make_screen):
         if event == "debug_pickteam_btn":

@@ -19,8 +19,7 @@ from ..gui_components import *
 
 
 class DebugChampionshipLayout(ILayout):
-    def __init__(self, controller):
-        super().__init__(controller)
+    def __init__(self):
         self.lay = self.layout()
         self.col = self.column()
 
@@ -82,6 +81,3 @@ class DebugChampionshipLayout(ILayout):
                 esm_button("Cancel", key="debug_championshipcancel_btn"),
             ],
         ]
-
-    def update(self, *args, **kwargs) -> None:
-        self.controller.update(*args, **kwargs)

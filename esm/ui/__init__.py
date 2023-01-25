@@ -15,4 +15,4 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from .gui import GUI
 from .gui_components import *
-from .view import View
+from .guicontroller import GUIController

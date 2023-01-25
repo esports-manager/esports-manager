@@ -19,11 +19,11 @@ import uuid
 from datetime import date, timedelta
 from typing import Tuple
 
-from esm.core.esports.moba.player import MobaPlayer
 from esm.core.esports.moba.generator.default_player_nick_names import get_default_player_nick_names
-from esm.core.esports.moba.skill import SkillGain
 from esm.core.esports.moba.generator.generate_champions import ChampionGenerator
-from esm.core.utils import load_list_from_file, write_to_file
+from esm.core.esports.moba.player import MobaPlayer
+from esm.core.esports.moba.mobaskill import MobaSkillGain
+from esm.core.utils import load_list_from_file, write_to_file, get_nations
 from esm.definitions import PLAYERS_FILE, NAMES_FILE
 
 
@@ -72,8 +72,6 @@ class MobaPlayerGenerator:
         self.champions = []
         self.champions_list = champions_list
         self.players = []
-        self.players_dict = []
-        self.player_dict = None
         self.file_name = file_name
         self.names = None
         self.nick_names = None
@@ -85,18 +83,10 @@ class MobaPlayerGenerator:
         self.nick_names = get_default_player_nick_names()
 
     def generate_id(self) -> None:
-        self.player_id = uuid.uuid4().int
+        self.player_id = uuid.uuid4()
 
     def get_nationalities(self) -> None:
-        if self.names is None:
-            nationalities = load_list_from_file(NAMES_FILE)
-        else:
-            nationalities = self.names.copy()
-
-        self.nationalities = []
-        for nat in nationalities:
-            nationalities = nat["region"]
-            self.nationalities.append(nationalities)
+        self.nationalities = get_nations()
 
     def get_nationality(self) -> None:
         """
@@ -134,7 +124,7 @@ class MobaPlayerGenerator:
         if not self.champions_list:
             self.champions_list = ChampionGenerator()
             self.champions_list.get_champions()
-            self.champions_list = self.champions_list.champions_list
+            self.champions_list = self.champions_list.champions
 
         champs = self.champions_list.copy()
         if amount == 0:
@@ -146,7 +136,7 @@ class MobaPlayerGenerator:
             mult = random.randrange(60, 100) / 100
 
             champion_dict = {
-                "id": ch["id"] if isinstance(ch, dict) else ch.champion_id,
+                "id": ch.champion_id.int,
                 "mult": mult,
             }
 
@@ -173,7 +163,7 @@ class MobaPlayerGenerator:
         elif self.skill < 30:
             self.skill = 30
 
-        sk_g = list(SkillGain)
+        sk_g = list(MobaSkillGain)
         self.skill_gain = random.choice(sk_g)
         self.exp = 0.0
 
@@ -199,19 +189,7 @@ class MobaPlayerGenerator:
         """
         Generates the dictionary based on the class' attributes
         """
-        self.player_dict = {
-            "id": self.player_id,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "birthday": "{:%Y/%m/%d}".format(self.dob),
-            "nick_name": self.nick_name,
-            "nationality": self.nationality,
-            "skill": self.skill,
-            "skill_gain": self.skill_gain.name,
-            "exp": self.exp,
-            "multipliers": self.multipliers,
-            "champions": self.champions.copy(),
-        }
+        return self.player_obj.get_dict()
 
     def get_object(self) -> None:
         """
@@ -275,7 +253,6 @@ class MobaPlayerGenerator:
         self.get_dictionary()
         self.get_object()
         self.players.append(self.player_obj)
-        self.players_dict.append(self.player_dict)
 
     def generate_players(self, amount: int = 5) -> None:
         """
@@ -292,36 +269,6 @@ class MobaPlayerGenerator:
                 for __ in range(amount // 5):
                     self.generate_player()
                 self.lane += 1
-
-    def get_players_dict(self) -> None:
-        """
-        Loads the players from the players.json file, storing on the player dictionary list
-        """
-        if self.players_dict:
-            self.players_dict.clear()
-        try:
-            self.players_dict = load_list_from_file(self.file_name)
-        except FileNotFoundError:
-            self.generate_players()
-
-    def get_data_from_dict(self, player=None) -> None:
-        """
-        Gets a dictionary and enters data to MobaPlayerGenerator attributes
-        """
-        if player is None:
-            player = self.player_dict
-
-        self.player_id = player["id"]
-        self.first_name = player["first_name"]
-        self.last_name = player["last_name"]
-        self.dob = player["birthday"]
-        self.nationality = player["nationality"]
-        self.nick_name = player["nick_name"]
-        self.skill = player["skill"]
-        self.skill_gain = player["skill_gain"]
-        self.exp = player["exp"]
-        self.multipliers = player["multipliers"]
-        self.champions = player["champions"]
 
     def get_data_from_obj(self, player=None) -> None:
         """
@@ -349,20 +296,8 @@ class MobaPlayerGenerator:
         self.players = []
         if not self.players_dict:
             self.get_players_dict()
-        for player in self.players_dict:
-            self.get_data_from_dict(player)
-            self.get_object()
-            self.players.append(self.player_obj)
+        self.players = [MobaPlayer.get_from_dict(player) for player in self.players_dict]
 
-    def get_from_data_file(self, data: list, only_dict: bool = False):
-        self.players_dict = data.copy()
-        if not only_dict:
-            self.players = [MobaPlayer.get_from_dict(player) for player in self.players_dict]
-
-    def generate_file(
-            self,
-    ) -> None:
-        """
-        Generates the players.json file
-        """
-        write_to_file(self.players_dict, self.file_name)
+    def get_from_data_file(self, data: list):
+        players_dict = data.copy()
+        self.players = [MobaPlayer.get_from_dict(player) for player in players_dict]

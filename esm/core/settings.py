@@ -26,12 +26,15 @@ from esm.definitions import *
 @dataclass
 class Settings:
     font_scale: int = 1
-    res_dir: str = RES_DIR
-    db_dir: str = DB_DIR
-    save_file_dir: str = SAVE_FILE_DIR
-    champions_file: str = CHAMPIONS_FILE
-    players_file: str = PLAYERS_FILE
-    teams_file: str = TEAMS_FILE
+    amount_players: int = 50
+    enable_auto_save = True
+    root_dir: Union[str, Path] = ROOT_DIR
+    res_dir: Union[str, Path] = RES_DIR
+    db_dir: Union[str, Path] = DB_DIR
+    save_file_dir: Union[str, Path] = SAVE_FILE_DIR
+    champions_file: Union[str, Path] = CHAMPIONS_FILE
+    players_file: Union[str, Path] = PLAYERS_FILE
+    teams_file: Union[str, Path] = TEAMS_FILE
     config_file: Union[str, Path] = CONFIG_FILE
 
     def load_config_file(self):
@@ -43,6 +46,9 @@ class Settings:
 
     def parse_config_file(self, data):
         self.font_scale = data['font_scale']
+        self.amount_players = data['amount_players']
+        self.enable_auto_save = data['enable_auto_save']
+        self.root_dir = data['root_dir']
         self.res_dir = data['res_dir']
         self.db_dir = data['db_dir']
         self.save_file_dir = data['save_file_dir']
@@ -53,12 +59,15 @@ class Settings:
     def get_data(self):
         return {
             "font_scale": self.font_scale,
-            "res_dir": self.res_dir,
-            "db_dir": self.db_dir,
-            "save_file_dir": self.save_file_dir,
-            "champions_file": self.champions_file,
-            "players_file": self.players_file,
-            "teams_file": self.teams_file,
+            "amount_players": self.amount_players,
+            "root_dir": str(self.root_dir),
+            "enable_auto_save": str(self.enable_auto_save),
+            "res_dir": str(self.res_dir),
+            "db_dir": str(self.db_dir),
+            "save_file_dir": str(self.save_file_dir),
+            "champions_file": str(self.champions_file),
+            "players_file": str(self.players_file),
+            "teams_file": str(self.teams_file),
         }
 
     def create_config_file(self):

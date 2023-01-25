@@ -19,7 +19,6 @@ import cbor2
 
 from esm.core.esports.manager import Manager
 from esm.core.gamestate import GameState
-from esm.core.save_load.hashfile import HashFile
 from esm.definitions import SAVE_FILE_DIR
 
 
@@ -31,34 +30,13 @@ class LoadGame:
     """
     The LoadGame module deals with loading game files and turning them into GameState data.
 
-    The LoadGame module depends on the HashFile module, which stores the hashes of save files.
     When loading a save file, the module checks the integrity of the save file by looking at the keys contained
     in a GameState module and comparing to the save file. If a key is missing or does not correspond to what
     is in the save game file, the module throws an error that the file is corrupted.
-
-    It also looks for the HashFile to see if any info about that saved game is in the HashFile. If it can't find
-    the game listed in the hash file, it considers it an invalid save game.
-
-    If it finds the save game, it calculates the save file hash, and compares to the one stored in the HashFile.
-    If they do not match, the module throws an error message. Otherwise, it loads the game normally.
     """
 
     def __init__(self, folder=SAVE_FILE_DIR):
         self.folder = folder
-        self.hash_file = HashFile()
-
-    def check_game_file(self, filename: str) -> bool:
-        """
-        Checks the integrity of the game file. If there are missing keywords, it's a corrupted savefile,
-        and the game cannot be loaded.
-        Returns True if the file is okay, or False otherwise.
-        """
-        self.hash_file.read_hash_file()
-        hash_data = self.hash_file.hash_file(filename)
-        try:
-            return self.hash_file.hash_data[os.path.normpath(filename)] == hash_data
-        except KeyError as e:
-            raise LoadGameError("File is not registered in the hash file!") from e
 
     @staticmethod
     def check_for_autosaves(filename: str, list_files: list):
@@ -80,7 +58,8 @@ class LoadGame:
         else:
             raise LoadGameError("The save file is corrupted!")
 
-    def __check_key_integrity(self, data: dict):
+    @staticmethod
+    def __check_key_integrity(data: dict):
         expected_keys = [
             "gamename",
             "filename",
@@ -92,7 +71,7 @@ class LoadGame:
             "champions",
             "save_date"
         ]
-        obtained_keys = [k for k in data]
+        obtained_keys = list(data)
         return expected_keys == obtained_keys
 
     def __get_game_data(self, filename: str):
@@ -116,13 +95,7 @@ class LoadGame:
         return GameState(
             data["gamename"],
             filename,
-            Manager(
-                data["manager"]["name"],
-                data["manager"]["birthday"],
-                data["manager"]["team"],
-                True,
-                data["manager"]["quality"],
-            ).get_dict(),
+            data["manager"],
             data["season"],
             data["esport"],
             teams,
@@ -139,8 +112,6 @@ class LoadGame:
 
         load_game_files = []
         for root, _, files in os.walk(self.folder):
-            for file in files:
-                if file.endswith(extension) and self.check_game_file(os.path.join(root, file)):
-                    load_game_files.append(file)
+            load_game_files.extend(file for file in files if file.endswith(extension))
 
         return load_game_files

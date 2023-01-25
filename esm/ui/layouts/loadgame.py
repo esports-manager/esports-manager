@@ -19,8 +19,7 @@ from ..gui_components import *
 
 
 class LoadGameLayout(ILayout):
-    def __init__(self, controller):
-        super().__init__(controller)
+    def __init__(self):
         self.lay = self.layout()
         self.col = self.column()
 
@@ -55,6 +54,3 @@ class LoadGameLayout(ILayout):
                 esm_button("Cancel", key="load_game_cancel_btn", size=size_btn),
             ],
         ]
-
-    def update(self, *args, **kwargs):
-        self.controller.update(*args, **kwargs)

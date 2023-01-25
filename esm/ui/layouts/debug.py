@@ -19,8 +19,7 @@ from ..gui_components import *
 
 
 class DebugLayout(ILayout):
-    def __init__(self, controller):
-        super().__init__(controller)
+    def __init__(self):
         self.lay = self.layout()
         self.col = self.column()
 
@@ -91,6 +90,3 @@ class DebugLayout(ILayout):
                 )
             ],
         ]
-
-    def update(self, *args, **kwargs) -> None:
-        self.controller.update(*args, **kwargs)

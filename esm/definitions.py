@@ -16,16 +16,14 @@
 
 import os
 
-from esm.resources import RES
-
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-RES_DIR = RES
-DB_DIR = os.path.join(RES, "db")
-SAVE_FILE_DIR = os.path.join(RES, "save")
+RES_DIR = os.path.join(ROOT_DIR, "res")
+DB_DIR = os.path.join(RES_DIR, "db")
+SAVE_FILE_DIR = os.path.join(RES_DIR, "save")
 CHAMPIONS_FILE = os.path.join(DB_DIR, "champions.json")
 PLAYERS_FILE = os.path.join(DB_DIR, "players.json")
 TEAMS_FILE = os.path.join(DB_DIR, "teams.json")
 NAMES_FILE = os.path.join(DB_DIR, "names.json")
-CONFIG_FILE = os.path.join(ROOT_DIR, "config", "config.yaml")
-HASH_FILE = os.path.join(SAVE_FILE_DIR, "hash", "hash.hash")
+CONFIG_FILE = os.path.join(ROOT_DIR, "config.yaml")
+LOG_FILE = os.path.join(ROOT_DIR, "logs", "esm.log")
 DEBUG = True

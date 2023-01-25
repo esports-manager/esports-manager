@@ -14,24 +14,45 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from abc import ABC, abstractmethod
-from typing import Union
-from uuid import UUID
-
-from .player import MobaPlayer
-from .team import Team
 
 
-class Progression(ABC):
+class IGameController(ABC):
     @abstractmethod
-    def progress(self, *args, **kwargs):
+    def get_gui_element(self, element):
         pass
 
-
-class PlayerProgression(Progression):
-    def progress(self, opp_team: Team, player: MobaPlayer):
+    @abstractmethod
+    def make_screen_visible(self, inv_screen, vis_screen):
         pass
 
+    @abstractmethod
+    def update_element_on_screen(self, element, **kwargs):
+        pass
 
-class ChampionProgression(Progression):
-    def progress(self, player: MobaPlayer, champion_id: Union[UUID, int]):
+    @abstractmethod
+    def write_event_value(self, firs_message, second_message):
+        pass
+
+    @abstractmethod
+    def update_progress_bar(self, key, value):
+        pass
+
+    @abstractmethod
+    def get_gui_information_window(self, *args, **kwargs):
+        pass
+
+    @abstractmethod
+    def get_gui_confirmation_window(self, *args, **kwargs):
+        pass
+
+    @abstractmethod
+    def print_error(self, e):
+        pass
+
+    @abstractmethod
+    def start(self):
+        pass
+
+    @abstractmethod
+    def update(self):
         pass

@@ -14,14 +14,12 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from esm.core.esports.moba.generator import MobaPlayerGenerator
 from .layoutinterface import ILayout
 from ..gui_components import *
 
 
 class NewGameLayout(ILayout):
-    def __init__(self, controller):
-        super().__init__(controller)
+    def __init__(self):
         self.lay = self.layout()
         self.col = self.column()
 
@@ -41,9 +39,7 @@ class NewGameLayout(ILayout):
         label_pad = (0, 5)
         esports = ["MOBA"]
         seasons = ["2020"]
-        mp = MobaPlayerGenerator()
-        mp.get_nationalities()
-        nationalities = mp.nationalities
+        nationalities = ["Placeholder"]
 
         labels = [
             [esm_form_text("Save game name: ", pad=label_pad)],
@@ -65,7 +61,7 @@ class NewGameLayout(ILayout):
                                  size=(10, 1),
                                  key="create_manager_calendar",
                                  format_calendar="%Y/%m/%d")],
-            [esm_input_combo(nationalities, default_value=nationalities[9], key="create_manager_nationality")],
+            [esm_input_combo(nationalities, default_value=nationalities[0], key="create_manager_nationality")],
             [esm_input_combo(seasons, default_value=seasons[0], key="new_game_season")],
             [esm_input_combo(esports, default_value=esports[0], key="new_game_esport")],
             [esm_checkbox("Generate new database", key="new_game_checkbox")],
@@ -82,6 +78,3 @@ class NewGameLayout(ILayout):
                 esm_button("Cancel", key="ng_cancel_btn"),
             ],
         ]
-
-    def update(self, *args, **kwargs) -> None:
-        self.controller.update(*args, **kwargs)

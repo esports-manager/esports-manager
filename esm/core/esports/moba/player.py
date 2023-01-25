@@ -13,13 +13,13 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import uuid
 from datetime import date
 from typing import Union
 
 from .champion import Champion
 from .moba_enums_def import Lanes, LaneError
 from ..player import Player
-from .skill import Skill, SkillGain
 
 
 class MobaPlayer(Player):
@@ -31,7 +31,7 @@ class MobaPlayer(Player):
 
     def __init__(
             self,
-            player_id: int,
+            player_id: Union[int, uuid.UUID],
             nationality: str,
             first_name: str,
             last_name: str,
@@ -39,13 +39,14 @@ class MobaPlayer(Player):
             nick_name: str,
             mult: list,
             skill: int,
-            skill_gain: str,
             champions: list,
-            exp: float = 0.0,
     ):
+        super().__init__(
+            player_id, nationality, first_name, last_name, birthday, nick_name,
+        )
         self._champion = None
         self.mult = mult
-        self.skill_lvl = Skill(skill, exp=exp, skill_gain=skill_gain)
+        self._skill = skill
         self._lane = None
         self._kills = 0
         self._deaths = 0
@@ -53,17 +54,14 @@ class MobaPlayer(Player):
         self._points = 0
         self.consecutive_kills = 0
         self.champions = champions
-        super().__init__(
-            player_id, nationality, first_name, last_name, birthday, nick_name,
-        )
 
     @property
-    def skill(self):
-        return self.skill_lvl.skill
+    def skill(self) -> int:
+        return self.skill
 
     @skill.setter
-    def skill(self, value):
-        self.skill_lvl.skill = value
+    def skill(self, value: int):
+        self.skill = value
 
     @property
     def champion(self) -> Champion:
@@ -169,7 +167,7 @@ class MobaPlayer(Player):
             (
                 ch["mult"]
                 for ch in self.champions
-                if ch["id"] == champion.champion_id
+                if ch["id"] == champion.champion_id.int
             ),
             0.5,
         )
@@ -189,8 +187,8 @@ class MobaPlayer(Player):
         This will define how strong or how weak a certain player is on the current match.
         """
         return (
-                       self.get_curr_player_skill() + self.get_champion_skill()
-               ) / 2 + self.points
+            self.get_curr_player_skill() + self.get_champion_skill()
+        ) / 2 + self.points
 
     def is_player_on_killing_spree(self) -> bool:
         """
@@ -213,7 +211,7 @@ class MobaPlayer(Player):
     @classmethod
     def get_from_dict(cls, player: dict):
         return cls(
-            player["id"],
+            uuid.UUID(int=player["id"]),
             player["nationality"],
             player["first_name"],
             player["last_name"],
@@ -221,9 +219,21 @@ class MobaPlayer(Player):
             player["nick_name"],
             player["multipliers"],
             player["skill"],
-            player["skill_gain"],
-            player["champions"],
+            player["champions"]
         )
+
+    def get_dict(self) -> dict:
+        return {
+            "id": self.player_id.int,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "birthday": "{:%Y/%m/%d}".format(self.birthday),
+            "nick_name": self.nick_name,
+            "nationality": self.nationality,
+            "skill": self.skill,
+            "multipliers": self.mult,
+            "champions": self.champions.copy(),
+        }
 
     def __repr__(self):
         return "{0} {1}".format(self.__class__.__name__, self.nick_name)

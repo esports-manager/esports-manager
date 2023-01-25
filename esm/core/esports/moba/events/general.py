@@ -16,10 +16,10 @@
 import logging
 import random
 import uuid
+from abc import ABC, abstractmethod
 from datetime import timedelta
 from queue import Queue
 from typing import Union
-from abc import ABC, abstractmethod
 
 from esm.core.esports.moba.commentaries import Commentaries
 from esm.core.esports.moba.team import Team
@@ -27,7 +27,7 @@ from esm.core.esports.moba.team import Team
 logger = logging.getLogger(__name__)
 
 
-class Creator(ABC):
+class EventCreator(ABC):
     @abstractmethod
     def factory_method(
             self,
@@ -115,7 +115,7 @@ class MobaEvent(ABC):
 
         if self.show_commentary and self.queue:
             logger.debug(self.event_name + str(self.event_time))
-            self.commentary = (str(timedelta(minutes=self.event_time)) + " - " + self.commentary.commentary + "\n")
+            self.commentary = f"{str(timedelta(minutes=self.event_time))} - {self.commentary.commentary}" + "\n"
             self.queue.put(self.commentary, block=False)
 
     @abstractmethod

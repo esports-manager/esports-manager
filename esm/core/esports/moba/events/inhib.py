@@ -19,12 +19,12 @@ from queue import Queue
 from typing import Union
 
 from esm.core.esports.moba.team import Team
-from .general import MobaEvent, Creator
+from .general import MobaEvent, EventCreator
 
 logger = logging.getLogger(__name__)
 
 
-class InhibEventCreator(Creator):
+class InhibEventEventCreator(EventCreator):
     def factory_method(
             self,
             event_chosen: dict,
@@ -69,3 +69,5 @@ class InhibEvent(MobaEvent):
             self.get_commentary(
                 def_team_name=prevailing.name, defended=True, lane=exposed
             )
+
+        logger.debug("Inhib event calculated")

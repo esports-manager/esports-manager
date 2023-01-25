@@ -20,12 +20,12 @@ from typing import Union
 
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.esports.moba.team import Team
-from .general import MobaEvent, Creator
+from .general import MobaEvent, EventCreator
 
 logger = logging.getLogger(__name__)
 
 
-class KillEventCreator(Creator):
+class KillEventEventCreator(EventCreator):
     def factory_method(
             self,
             event_chosen: dict,

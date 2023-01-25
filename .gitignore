@@ -136,19 +136,19 @@ dmypy.json
 node_modules/
 .vscode/settings.json
 
-# ESM resources
-/esm/resources/db/teams.json
-/esm/resources/db/players.json
-/esm/resources/db/champions.json
-/esm/resources/db/teams.cbor
-/esm/resources/db/players.cbor
-/esm/resources/db/champions.cbor
+# ESM res
+/esm/res/db/teams.json
+/esm/res/db/players.json
+/esm/res/db/champions.json
+/esm/res/db/teams.cbor
+/esm/res/db/players.cbor
+/esm/res/db/champions.cbor
 
 # Ignore potential save files
-/esm/resources/save/*
+/esm/res/save/*
 
 # ignore config file
-/esm/config/config.yaml
+/esm/config.yaml
 
 # Pipfile lock (causes a bit of problems in other OSes)
 Pipfile.lock

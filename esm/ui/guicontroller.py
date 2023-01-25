@@ -13,20 +13,45 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-from .gui import GUI
+from .igamecontroller import IGameController
+from .gui import GUI, init_theme
 from .gui_components import sg
+from .layouts.controllers import *
+from ..definitions import DEBUG
+from ..core.esmcore import ESMCore
 
 
-class View:
+class GUIController(IGameController):
     """
-    The View class is an abstraction layer over the GUI. It should provide functions that interact
+    This class is an abstraction layer over the GUI. It should provide functions that interact
     with the GUI, but do not expose any details about the GUI itself.
     """
 
-    def __init__(self, controller):
-        self.gui = GUI(controller)
+    def __init__(self, core: ESMCore):
+        init_theme()
+        self.controllers = []
+        self.__initialize_controllers(core)
+        self.gui = GUI(self.controllers)
 
+    def __initialize_controllers(self, core: ESMCore):
+        self.controllers = [
+            LoadGameController(self, core),
+            MainScreenController(),
+            NewGameController(self, core),
+            SettingsController(self, core),
+            GameDashboardController(self, core),
+        ]
+
+        # Debug controllers
+        if DEBUG:
+            self.controllers.append(DebugController())
+            self.controllers.append(DebugMatchController(self, core))
+            self.controllers.append(DebugChampionshipController(self, core))
+            self.controllers.append(TeamSelectController(self, core))
+            self.controllers.append(PicksBansController(self, core))
+            self.controllers.append(PickTeamController())
+            self.controllers.append(MatchTesterController(self, core))
+    
     def print_error(self, e):
         self.gui.error_message(e)
 
@@ -37,7 +62,7 @@ class View:
     def update_element_on_screen(self, element, **kwargs):
         self.gui.window[element].update(**kwargs)
 
-    def get_screen_element(self, element):
+    def get_gui_element(self, element):
         return self.gui.window[element]
 
     def write_event_value(self, first_message, second_message):
@@ -46,18 +71,18 @@ class View:
     def update_progress_bar(self, key, value):
         self.gui.window[key].update_bar(value)
 
-    def information_window(self, *args, **kwargs):
+    def get_gui_information_window(self, *args, **kwargs):
         self.gui.information_window(*args, **kwargs)
 
-    def confirmation_window(self, *args, **kwargs):
+    def get_gui_confirmation_window(self, *args, **kwargs):
         return self.gui.confirmation_window(*args, **kwargs)
 
     def update(self, *args, **kwargs) -> None:
         """
         Event handling for each layout
         """
-        for layout in self.gui.layouts:
-            layout.update(*args, **kwargs)
+        for controller in self.controllers:
+            controller.update(*args, **kwargs)
 
     def start(self):
         """

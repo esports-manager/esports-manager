@@ -13,48 +13,60 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+from esm.core.esmcore import ESMCore
 from .controllerinterface import IController
 from ..newgame import NewGameLayout
+from esm.core.utils import get_nations
+from ...igamecontroller import IGameController
 
 
 class NewGameController(IController):
-    def __init__(self, controller):
-        super().__init__(controller)
-        self.layout = NewGameLayout(self)
+    def __init__(self, controller: IGameController, core: ESMCore):
+        self.core = core
+        self.controller = controller
+        self.layout = NewGameLayout()
+        self.nationalities = None
+
+    def load_nationalities(self):
+        if self.nationalities is None:
+            self.nationalities = get_nations()
+            self.controller.get_gui_element("create_manager_nationality").update(values=self.nationalities)
 
     def update(self, event, values, make_screen):
-        if event == "ng_cancel_btn":
-            make_screen("new_game_screen", "main_screen")
+        if self.controller.get_gui_element("new_game_screen").visible:
+            self.load_nationalities()
 
-        elif event == "ng_next_btn":
-            if len(values["ng_gamename_input"]) > 20:
-                self.controller.get_gui_information_window(
-                    'Game name not allowed! It must be a maximum of 20 characters long!',
-                    'Game name not allowed!'
-                )
-            elif len(values["create_manager_name"]) > 50:
-                self.controller.get_gui_information_window(
-                    'Manager name not allowed! Manager name must be a maximum of 50 characters long!',
-                    'Manager name not allowed!'
-                )
-            elif len(values["create_manager_nickname"]) > 20:
-                self.controller.get_gui_information_window(
-                    'Manager nickname not allowed! Manager nickname must be a maximum of 20 characters long!',
-                    'Manager nickname not allowed!'
-                )
-            elif (
-                    values["ng_gamename_input"] != ""
-                    and values["create_manager_name"] != ""
-                    and values["create_manager_nickname"] != ""
-                    and values["create_manager_display_calendar"] != ""
-            ):
-                if values["new_game_checkbox"]:
-                    self.controller.generate_all_data()
+            if event == "ng_cancel_btn":
+                make_screen("new_game_screen", "main_screen")
 
-                make_screen("new_game_screen", "team_select_screen")
-            else:
-                self.controller.get_gui_information_window(
-                    'You must fill all the fields before proceeding!',
-                    'Fill all the fields!'
-                )
+            elif event == "ng_next_btn":
+                if len(values["ng_gamename_input"]) > 20:
+                    self.controller.get_gui_information_window(
+                        'Game name not allowed! It must be a maximum of 20 characters long!',
+                        'Game name not allowed!'
+                    )
+                elif len(values["create_manager_name"]) > 50:
+                    self.controller.get_gui_information_window(
+                        'Manager name not allowed! Manager name must be a maximum of 50 characters long!',
+                        'Manager name not allowed!'
+                    )
+                elif len(values["create_manager_nickname"]) > 20:
+                    self.controller.get_gui_information_window(
+                        'Manager nickname not allowed! Manager nickname must be a maximum of 20 characters long!',
+                        'Manager nickname not allowed!'
+                    )
+                elif (
+                        values["ng_gamename_input"] != ""
+                        and values["create_manager_name"] != ""
+                        and values["create_manager_nickname"] != ""
+                        and values["create_manager_display_calendar"] != ""
+                ):
+                    if values["new_game_checkbox"]:
+                        self.core.db.generate_moba_files()
+
+                    make_screen("new_game_screen", "team_select_screen")
+                else:
+                    self.controller.get_gui_information_window(
+                        'You must fill all the fields before proceeding!',
+                        'Fill all the fields!'
+                    )

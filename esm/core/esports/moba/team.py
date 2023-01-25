@@ -13,15 +13,26 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import uuid
+from typing import Union
 
 
 class Team:
-    def __init__(self, team_id, name, list_players, is_players_team=False):
+    def __init__(
+            self,
+            team_id: Union[int, uuid.UUID],
+            name: str,
+            list_players,
+            is_players_team=False
+    ):
         """
         Initiates the team object.
         """
         self._points = 0
-        self.team_id = team_id
+        if isinstance(team_id, int):
+            self.team_id = uuid.UUID(int=team_id)
+        elif isinstance(team_id, uuid.UUID):
+            self.team_id = team_id
         self.name = name
 
         # MATCH RELATED
@@ -197,7 +208,7 @@ class Team:
     @classmethod
     def get_from_dict(cls, team: dict):
         return cls(
-            team["id"],
+            uuid.UUID(int=team["id"]),
             team["name"],
             team["roster"],
         )
@@ -209,6 +220,4 @@ class Team:
         return "{0} {1}".format(self.__class__.__name__, self.name)
 
     def __eq__(self, other):
-        if not isinstance(other, Team):
-            return NotImplemented
-        return self.team_id == other.team_id
+        return self.team_id == other.team_id if isinstance(other, Team) else NotImplemented

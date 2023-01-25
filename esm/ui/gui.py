@@ -14,8 +14,8 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import os
 import base64
+import os
 import traceback
 
 from esm.definitions import RES_DIR
@@ -29,12 +29,10 @@ class GUI:
     specific to the GUI we are currently using.
     """
 
-    def __init__(self, controller):
+    def __init__(self, controllers):
         self.icon = os.path.join(RES_DIR, "images", "logo", "esportsmanagertrophy.png")
-        # Each layout is added to the list
-        self.controller = controller
-        self.layouts = self.get_layouts()
-
+        self.layouts = []
+        self.get_layouts(controllers)
         self.window = self._create_window()
 
     def _encode_icon(self) -> bytes:
@@ -55,7 +53,7 @@ class GUI:
         """
         encoded_icon = self._encode_icon()
 
-        self.window = sg.Window(
+        window = sg.Window(
             "eSports Manager",
             element_justification="center",
             layout=self._get_cols(),
@@ -64,14 +62,15 @@ class GUI:
             finalize=True,
         )
         sg.set_options(dpi_awareness=True)
-        return self.window
 
-    def get_layouts(self):
+        return window
+
+    def get_layouts(self, controllers):
         """
         Gets GUI layouts from the controller classes.
         """
-        return [controller.layout for controller in self.controller.controllers]
-
+        self.layouts = [controller.layout for controller in controllers]
+    
     def _get_cols(self) -> list:
         """
         Gets all the layouts and makes them all invisible, except for the main screen one.

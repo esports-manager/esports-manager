@@ -13,32 +13,62 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from dataclasses import dataclass, field
+from typing import Any
+from .moba_enums_def import Lanes, get_lanes_from_dict
+import uuid
 
 
+class ChampionLoadError(Exception):
+    pass
+
+
+@dataclass(eq=False)
 class Champion:
-    def __init__(self, champion_id: int, name: str, skill: int):
-        self.champion_id = champion_id
-        self.name = name
-        self.status = "Not picked"
-
-        # TODO: champions should belong to different classes such as mages, carries, etc
-        # TODO: implement attributes dictionary for skill
-        self.skill = skill
+    champion_id: uuid.UUID
+    name: str
+    skill: int
+    lanes: dict[Lanes, float]
 
     @classmethod
     def get_from_dict(cls, dictionary: dict):
-        champion_id = dictionary['id']
+        champion_id = uuid.UUID(hex=dictionary['id'])
         name = dictionary['name']
         skill = dictionary['skill']
-        return Champion(champion_id, name, skill)
 
-    def __repr__(self):
-        return "{0} {1}".format(self.__class__.__name__, self.name)
+        if skill > 99 or skill < 0:
+            raise ChampionLoadError(f"Skill value is not supported for champion with ID {champion_id.hex}!")
+
+        lanes = dictionary['lanes']
+
+        for _, lane in lanes.items():
+            if lane > 1.0 or lane < 0.0:
+                raise ChampionLoadError(f"Lane value {lane} is not supported for champion with ID {champion_id.hex}!")
+
+        return cls(champion_id, name, skill, get_lanes_from_dict(lanes))
+
+    def serialize_lanes(self) -> dict[int, float]:
+        _lanes = {}
+        for lane, mult in self.lanes.items():
+            _lanes.update({lane.value: mult})
+
+        return _lanes
+
+    def serialize(self) -> dict:
+        return {
+            "id": self.champion_id.hex,
+            "name": self.name,
+            "skill": self.skill,
+            "lanes": self.serialize_lanes()
+        }
+
+    def get_current_skill(self, lane: Lanes):
+        return self.lanes[lane]
 
     def __str__(self):
-        return "{0}".format(self.name)
+        return f"{self.name}"
 
-    def __eq__(self, other):
-        if not isinstance(other, Champion):
-            return NotImplemented
-        return self.champion_id == other.champion_id
+    def __eq__(self, other: Any):
+        if isinstance(other, Champion):
+            return self.champion_id == other.champion_id
+        return NotImplemented

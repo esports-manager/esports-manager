@@ -13,6 +13,13 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+def get_default_champion_defs():
+    return [
+        {
+            "name": "Aatrox",
+        },
+    ]
+
 
 def get_default_champion_names():
     return [

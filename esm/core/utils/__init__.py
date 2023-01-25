@@ -16,12 +16,14 @@
 
 import json
 import os
+import re
 from pathlib import Path
 from typing import Union
+from unicodedata import normalize
 
 import cbor2
 
-from esm.definitions import TEAMS_FILE
+from esm.definitions import NAMES_FILE
 
 
 def write_to_file(
@@ -40,7 +42,7 @@ def write_to_file(
             cbor2.dump(contents, fp)
 
 
-def get_from_file(file_name: Union[str, Path]) -> list:
+def get_from_file(file_name: Union[str, Path]) -> list[dict]:
     """
     General function used to read a JSON/CBOR file, extracting its data to a dictionary/list
     :param file_name:
@@ -56,7 +58,7 @@ def get_from_file(file_name: Union[str, Path]) -> list:
     return dictionary
 
 
-def load_list_from_file(filepath: Union[str, Path]) -> list:
+def load_list_from_file(filepath: Union[str, Path]) -> list[dict]:
     """
     Reads a specified file (champions, player or team json) and
     returns the list from that file
@@ -69,13 +71,25 @@ def load_list_from_file(filepath: Union[str, Path]) -> list:
         raise FileNotFoundError('File was not found')
 
 
-def get_key_from_json(key: str = "name", file: Union[str, Path] = TEAMS_FILE) -> list:
+def normalize_filename(filename, delim=u'_') -> str:
     """
-    Gets a key from a json file. By default it is used by the GUI to get
-    names from the file teams.json, but we can repurpose that for other
-    files too, such as get player names, champion names, etc...
-    :param key:
-    :param file:
-    :return:
+    Normalizes the save game filename. This will prevent unsupported filenames from being saved.
+
+    Solution from: https://stackoverflow.com/questions/9042515/normalizing-unicode-text-to-filenames-etc-in-python
     """
-    return [obj[key] for obj in load_list_from_file(file)]
+    _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.:]+')
+    result = []
+    for word in _punct_re.split(filename.lower()):
+        word = normalize('NFKD', word).encode('ascii', 'ignore')
+        if word := word.decode('utf-8'):
+            result.append(word)
+
+    filename = delim.join(result)
+    filename = ''.join(filename)
+    filename = f'{filename}.cbor'
+    return filename
+
+
+def get_nations(file: Union[str, os.PathLike] = NAMES_FILE) -> list[dict]:
+    names = load_list_from_file(file)
+    return [nat["region"] for nat in names]

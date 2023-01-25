@@ -111,16 +111,3 @@ class MatchTester:
         print('Max gametime was', self.get_max_game_time())
         self.running_test = False
 
-
-if __name__ == '__main__':
-    from esm.core.core import MobaModel
-
-    core = MobaModel(50)
-    core.check_files()
-    core.get_champions()
-    core.get_players()
-    core.get_teams()
-    core.initialize_random_debug_match()
-    core.match_live.picks_and_bans()
-    match_tester = MatchTester(500, core.match_live)
-    match_tester.run_match_test()

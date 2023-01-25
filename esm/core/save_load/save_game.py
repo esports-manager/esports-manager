@@ -24,7 +24,6 @@ from typing import Union
 import cbor2
 
 from esm.core.gamestate import GameState
-from esm.core.save_load.hashfile import HashFile
 from esm.definitions import SAVE_FILE_DIR
 
 
@@ -48,7 +47,6 @@ class SaveGame:
 
         self.autosave_enabled = autosave_enabled
 
-        self.hash_file = HashFile()
         self.temporary_file = None
         self.autosave = None
         self.fd = None
@@ -130,10 +128,6 @@ class SaveGame:
         data = self.setup_data_file()
         with open(filename, 'wb') as fp:
             cbor2.dump(data, fp, timezone=timezone.utc)
-
-        # Only writes to hashfile if it's not a temporary file
-        if filename in [self.filename, self.autosave]:
-            self.hash_file.write_to_hash_file(filename)
 
     def delete_temporary_file(self):
         """

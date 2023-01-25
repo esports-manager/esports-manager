@@ -15,22 +15,24 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
 
-from esm.core.game_manager import GameManager
+from esm.core.esmcore import ESMCore
 from esm.core.save_load.load_game import LoadGame
 from .controllerinterface import IController
 from ..loadgame import LoadGameLayout
+from ...igamecontroller import IGameController
 
 
 class LoadGameController(IController):
-    def __init__(self, controller):
-        super().__init__(controller)
-        self.layout = LoadGameLayout(self)
+    def __init__(self, controller: IGameController, core: ESMCore):
+        self.controller = controller
+        self.core = core
+        self.layout = LoadGameLayout()
         self.load_game: LoadGame = LoadGame()
         self.load_files = None
         self.filename = None
         self.default_value = ["No save games encountered"]
 
-    def load_save_files(self):
+    def get_save_files(self):
         self.load_files = self.load_game.get_load_game_files(".cbor")
         if not self.load_files:
             self.load_files = self.default_value
@@ -38,26 +40,23 @@ class LoadGameController(IController):
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("load_game_screen").visible:
             if self.load_files is None:
-                self.load_save_files()
+                self.get_save_files()
 
             if event == "load_game_cancel_btn":
                 make_screen("load_game_screen", "main_screen")
 
             if self.load_files:
-                self.controller.update_gui_element("load_game_listbox", values=self.load_files)
+                self.controller.update_element_on_screen("load_game_listbox", values=self.load_files)
             else:
-                self.controller.update_gui_element("load_game_listbox", values=self.default_value)
+                self.controller.update_element_on_screen("load_game_listbox", values=self.default_value)
 
             if event == "load_game_listbox":
                 self.filename = values["load_game_listbox"][0]
 
             if event == "load_game_btn":
                 if self.filename not in [[], self.default_value, None]:
-                    filename = os.path.join(self.controller.settings.save_file_dir, self.filename)
-                    gamestate = self.load_game.load_game_state(filename)
-                    self.controller.game_manager = GameManager.get_game_manager(gamestate, self.controller.settings)
-                    self.controller.manager = self.controller.game_manager.manager
-                    self.controller.game_manager.load_game(self.filename)
+                    filename = os.path.join(self.core.settings.save_file_dir, self.filename)
+                    self.core.game_session.load_game(filename)
                     make_screen("load_game_screen", "game_dashboard_screen")
                 else:
                     self.controller.get_gui_information_window(

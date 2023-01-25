@@ -62,7 +62,7 @@ class Commentaries:
             )
 
         elif self.event_name == "NEXUS ASSAULT":
-            self.commentary = self.atk_team_name + " won the match!"
+            self.commentary = f"{self.atk_team_name} won the match!"
 
         elif self.event_name == "TOWER ASSAULT":
             self._get_tower_commentary(
@@ -92,35 +92,29 @@ class Commentaries:
         amount_kills = len(kill_dict_event)
 
         if amount_kills == 2:
-            self.commentary = killer.nick_name + " got a Double Kill!"
+            self.commentary = f"{killer.nick_name} got a Double Kill!"
         elif amount_kills == 3:
-            self.commentary = killer.nick_name + " got a Triple Kill!"
+            self.commentary = f"{killer.nick_name} got a Triple Kill!"
         elif amount_kills == 4:
-            self.commentary = killer.nick_name + " got a QUADRA KILL!"
+            self.commentary = f"{killer.nick_name} got a QUADRA KILL!"
         elif amount_kills == 5:
-            self.commentary = killer.nick_name + " got a PENTAKILL!"
+            self.commentary = f"{killer.nick_name} got a PENTAKILL!"
 
         if amount_kills != 0:
             if self.commentary is not None:
                 self.commentary = (
-                        self.commentary + "\n" + killer.nick_name + " has slain: " + names
+                    f"{self.commentary}\n{killer.nick_name} has slain: {names}"
                 )
             else:
-                self.commentary = killer.nick_name + " has slain " + names
+                self.commentary = f"{killer.nick_name} has slain {names}"
 
         if self.commentary is not None:
             if killer.is_player_godlike():
-                self.commentary = (
-                        self.commentary + "\n" + killer.nick_name + " is GODLIKE!"
-                )
+                self.commentary = f"{self.commentary}\n{killer.nick_name} is GODLIKE!"
             if killer.is_player_on_killing_spree():
-                self.commentary = (
-                        self.commentary + "\n" + killer.nick_name + " is on a KILLING SPREE!"
-                )
+                self.commentary = f"{self.commentary}\n{killer.nick_name} is on a KILLING SPREE!"
             if killer.is_player_legendary():
-                self.commentary = (
-                        self.commentary + "\n" + killer.nick_name + " is LEGENDARY!!"
-                )
+                self.commentary = f"{self.commentary}\n{killer.nick_name} is LEGENDARY!!"
 
     def _get_jg_commentary(
             self,
@@ -130,9 +124,9 @@ class Commentaries:
             jg_name,
     ):
         if stole:
-            self.commentary = def_team_name + " stole the " + jg_name
+            self.commentary = f"{def_team_name} stole the {jg_name}"
         else:
-            self.commentary = atk_team_name + " has slain the " + jg_name
+            self.commentary = f"{atk_team_name} has slain the {jg_name}"
 
     def _get_inhib_commentary(
             self,
@@ -143,15 +137,13 @@ class Commentaries:
     ):
         if defended:
             self.commentary = (
-                    def_team_name
-                    + " has defended the "
-                    + lane
-                    + " inhibitor successfully"
+                def_team_name
+                + " has defended the "
+                + lane
+                + " inhibitor successfully"
             )
         else:
-            self.commentary = (
-                    atk_team_name + " has destroyed the " + lane + " inhibitor"
-            )
+            self.commentary = f"{atk_team_name} has destroyed the {lane} inhibitor"
 
     def _get_tower_commentary(
             self,
@@ -161,10 +153,6 @@ class Commentaries:
             lane
     ):
         if defended:
-            self.commentary = (
-                    def_team_name + " has defended the " + lane + " tower successfully"
-            )
+            self.commentary = f"{def_team_name} has defended the {lane} tower successfully"
         else:
-            self.commentary = (
-                    atk_team_name + " has destroyed the " + lane + " tower"
-            )
+            self.commentary = f"{atk_team_name} has destroyed the {lane} tower"

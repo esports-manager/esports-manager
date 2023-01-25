@@ -18,6 +18,9 @@ cbor = "*"
 cbor2 = "*"
 pyyaml = "*"
 pyinstaller = "*"
+pillow = "*"
+ttkbootstrap = "*"
+hypothesis = "*"
 
 [requires]
 python_version = "3"

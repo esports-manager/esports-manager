@@ -19,9 +19,8 @@ from ..pickteam import PickTeamLayout
 
 
 class PickTeamController(IController):
-    def __init__(self, controller):
-        super().__init__(controller)
-        self.layout = PickTeamLayout(self)
+    def __init__(self):
+        self.layout = PickTeamLayout()
 
     def update(self, event, values, make_screen):
         if event == "debug_cancelteam_btn":

@@ -16,7 +16,7 @@
 import os
 
 from pathlib import Path
-from typing import Union
+from typing import Union, Optional
 
 from .gamestate import GameState
 from .db import DB
@@ -24,7 +24,7 @@ from .save_load import LoadGame, SaveGame
 from .settings import Settings
 
 
-class GameManager:
+class GameSession:
     """
     Manages the state of the current game session.
     """
@@ -38,8 +38,7 @@ class GameManager:
         self.settings = settings
         self.auto_save_enabled = auto_save_enabled
         self.db = db
-        self.gamestate = None
-        self.current_matches = None
+        self.gamestate: Optional[GameState] = None
 
     def load_game(self, filename: Union[str, os.PathLike]):
         load = LoadGame(self.settings.save_file_dir)

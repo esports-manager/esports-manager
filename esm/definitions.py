@@ -25,6 +25,5 @@ PLAYERS_FILE = os.path.join(DB_DIR, "players.json")
 TEAMS_FILE = os.path.join(DB_DIR, "teams.json")
 NAMES_FILE = os.path.join(DB_DIR, "names.json")
 CONFIG_FILE = os.path.join(ROOT_DIR, "config.yaml")
-HASH_FILE = os.path.join(SAVE_FILE_DIR, "hash.hash")
 LOG_FILE = os.path.join(ROOT_DIR, "logs", "esm.log")
 DEBUG = True

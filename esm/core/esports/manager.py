@@ -48,7 +48,7 @@ class Manager(Player):
     def get_dict(self):
         team = self.team.team_id if isinstance(self.team, Team) else self.team
         return {
-            "id": self.player_id,
+            "id": self.player_id.int,
             "first_name": self.first_name,
             "last_name": self.last_name,
             "birthday": self.birthday.strftime("%Y/%m/%d"),

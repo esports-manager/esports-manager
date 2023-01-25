@@ -29,7 +29,7 @@ class ESMController:
         try:
             self.core.check_files()
         except FileNotFoundError:
-            self.core.db.generate_all()
+            self.core.db.generate_moba_files()
         
         self.view = GUIController(self.core)
 

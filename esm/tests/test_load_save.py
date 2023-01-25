@@ -19,20 +19,8 @@ import pytest
 from esm.core.esports.moba.generator import ChampionGenerator
 from esm.core.esports.moba.generator import MobaPlayerGenerator
 from esm.core.esports.moba.generator import TeamGenerator
-from esm.core.save_load import SaveGame, LoadGame, LoadGameError, HashFile
+from esm.core.save_load import SaveGame, LoadGame, LoadGameError
 from esm.core.gamestate import GameState
-
-
-@pytest.fixture()
-def hash_file(tmp_path):
-    hash_file = HashFile()
-    d = tmp_path / "hashes"
-    d.mkdir()
-    p = d / "hash_file.cbor"
-    with open(p, "wb") as fp:
-        cbor2.dump({}, fp)
-    hash_file.filename = p
-    return hash_file
 
 
 @pytest.fixture()
@@ -41,9 +29,8 @@ def load_game_dir(tmpdir):
 
 
 @pytest.fixture()
-def load_game(load_game_dir, hash_file):
+def load_game(load_game_dir):
     load_game = LoadGame(load_game_dir)
-    load_game.hash_file = hash_file
     return load_game
 
 
@@ -53,9 +40,8 @@ def save_game_file(load_game_dir):
 
 
 @pytest.fixture()
-def save_game(gamestate, load_game_dir, hash_file, save_game_file):
+def save_game(gamestate, load_game_dir, save_game_file):
     save_game = SaveGame(gamestate, save_game_file, save_directory=load_game_dir, autosave_enabled=False)
-    save_game.hash_file = hash_file
     return save_game
 
 
@@ -102,13 +88,6 @@ def gamestate(teams_list, players, champions_list, save_game_file):
 def test_save_load_game(save_game, load_game, save_game_file):
     save_game.save_game()
     assert save_game.gamestate == load_game.load_game_state(save_game_file)
-
-
-def test_hash_file(save_game, load_game, save_game_file):
-    save_game.save_game()
-    assert save_game.hash_file == load_game.hash_file
-    assert save_game.hash_file.hash_data == load_game.hash_file.hash_data
-    assert load_game.check_game_file(save_game_file) is True
 
 
 def test_key_integrity(save_game, load_game, save_game_file):

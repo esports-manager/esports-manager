@@ -37,10 +37,7 @@ class DebugChampionshipController(IController):
 
     def initialize_random_championship(self):
         if self.teams is None:
-            try:
-                self.core.check_files()
-            except FileNotFoundError:
-                self.core.db.generate_all()
+            self.core.check_files()
         self.teams = self.core.db.load_moba_teams()
         self.championship = Championship("Debug", uuid.uuid4(), "Debug", self.teams)
         self.championship.schedule_matches()
@@ -78,26 +75,26 @@ class DebugChampionshipController(IController):
                 else:
                     detail[3] += 1
 
-    def get_winning_team(self, match):
+    def get_winning_team(self, live_match):
         for detail in self.match_details:
-            if match.match.team1.name == detail[0] and match.match.team2.name == detail[1]:
-                if match.victorious_team.name == detail[0]:
+            if live_match.match.team1.name == detail[0] and live_match.match.team2.name == detail[1]:
+                if live_match.victorious_team.name == detail[0]:
                     detail[2] = detail[0]
-                elif match.victorious_team.name == detail[1]:
+                elif live_match.victorious_team.name == detail[1]:
                     detail[2] = detail[1]
                 else:
                     detail[2] = "None"
 
     def play_championship(self):
-        for match in self.championship.matches:
-            for team in match.match.teams:
+        for live_match in self.championship.matches:
+            for team in live_match.match.teams:
                 team.get_players_default_lanes()
-            match.picks_and_bans()
-            match.simulation()
-            self.get_winning_team(match)
-            self.assign_win_and_loss_in_championship_table(match)
+            live_match.picks_and_bans()
+            live_match.simulation()
+            self.get_winning_team(live_match)
+            self.assign_win_and_loss_in_championship_table(live_match)
 
-            for team in match.match.teams:
+            for team in live_match.match.teams:
                 team.reset_values()
 
     def reset_championship(self):

@@ -62,7 +62,7 @@ class NewGameController(IController):
                         and values["create_manager_display_calendar"] != ""
                 ):
                     if values["new_game_checkbox"]:
-                        self.core.db.generate_all()
+                        self.core.db.generate_moba_files()
 
                     make_screen("new_game_screen", "team_select_screen")
                 else:

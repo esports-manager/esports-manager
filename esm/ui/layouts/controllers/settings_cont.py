@@ -36,7 +36,7 @@ class SettingsController(IController):
         self.core.settings.amount_players = amount
 
     def generate_all_data(self) -> None:
-        self.core.db.generate_all()
+        self.core.db.generate_moba_files()
 
     def update_inputs(self):
         self.controller.update_element_on_screen("settings_root_dir", value=self.core.settings.root_dir)
@@ -121,5 +121,5 @@ class SettingsController(IController):
                 else:
                     self.controller.amount_players = value
                 finally:
-                    self.core.db.generate_all()
+                    self.core.db.generate_moba_files()
                     self.update_inputs()

@@ -13,7 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+import uuid
 
 class Champion:
     def __init__(self, champion_id: int, name: str, skill: int):
@@ -27,7 +27,7 @@ class Champion:
 
     @classmethod
     def get_from_dict(cls, dictionary: dict):
-        champion_id = dictionary['id']
+        champion_id = uuid.UUID(int=dictionary['id'])
         name = dictionary['name']
         skill = dictionary['skill']
         return Champion(champion_id, name, skill)

@@ -1,5 +1,5 @@
 #      eSports Manager - free and open source eSports Management game
-#      Copyright (C) 2020-2022  Pedrenrique G. Guimarães
+#      Copyright (C) 2020-2023  Pedrenrique G. Guimarães
 #
 #      This program is free software: you can redistribute it and/or modify
 #      it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ def db(settings) -> DB:
 
 
 def test_db_load_moba_teams(db):
-    db.generate_all()
+    db.generate_moba_files()
     teams = db.load_moba_teams()
     for team in teams:
         assert isinstance(team, Team)

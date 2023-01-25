@@ -208,7 +208,7 @@ class Team:
     @classmethod
     def get_from_dict(cls, team: dict):
         return cls(
-            team["id"],
+            uuid.UUID(int=team["id"]),
             team["name"],
             team["roster"],
         )

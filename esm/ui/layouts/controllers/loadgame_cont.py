@@ -56,7 +56,7 @@ class LoadGameController(IController):
             if event == "load_game_btn":
                 if self.filename not in [[], self.default_value, None]:
                     filename = os.path.join(self.core.settings.save_file_dir, self.filename)
-                    self.core.game_manager.load_game(filename)
+                    self.core.game_session.load_game(filename)
                     make_screen("load_game_screen", "game_dashboard_screen")
                 else:
                     self.controller.get_gui_information_window(

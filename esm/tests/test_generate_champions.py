@@ -41,7 +41,7 @@ def test_get_champions(champion_generator):
     champion_generator.champions_list = []
     champion_generator.get_champions()
     file_contents = get_from_file(champion_generator.file_name)
-    assert len(file_contents) == len(champion_generator.champions_obj)
+    assert len(file_contents) == len(champion_generator.champions)
 
 
 def test_generate_file(champion_generator):

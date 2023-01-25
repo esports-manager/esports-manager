@@ -68,7 +68,7 @@ class MatchLive:
         self.picks_bans = PicksBans(
             self.match.team1,
             self.match.team2,
-            self.champions.champions_obj,
+            self.champions.champions,
             self.ban_per_team,
             self.difficulty_level,
             self.picks_bans_queue,
@@ -82,7 +82,7 @@ class MatchLive:
         self.is_match_over = False
         self.event_handler = MobaEventHandler(self.show_commentary, queue)
         self.champions.get_champions()
-        self.picks_bans.champion_list = self.champions.champions_obj
+        self.picks_bans.champion_list = self.champions.champions
         self.picks_bans.queue = picks_bans_queue
         gc.collect()
 

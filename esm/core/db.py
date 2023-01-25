@@ -1,5 +1,5 @@
 #      eSports Manager - free and open source eSports Management game
-#      Copyright (C) 2020-2022  Pedrenrique G. Guimarães
+#      Copyright (C) 2020-2023  Pedrenrique G. Guimarães
 #
 #      This program is free software: you can redistribute it and/or modify
 #      it under the terms of the GNU General Public License as published by
@@ -41,10 +41,10 @@ class DB:
         champions = ChampionGenerator(file_name=self.champions_file)
         return players, teams, champions
 
-    def generate_all(self):
+    def generate_moba_files(self):
         players_gen, teams_gen, champions_gen = self.get_moba_generators()
         champions_gen.generate_champions()
-        players_gen.champions_list = champions_gen.champions_obj
+        players_gen.champions_list = champions_gen.champions
 
         players_gen.lane = 0
         players_gen.generate_players(amount=self.settings.amount_players)
@@ -63,7 +63,7 @@ class DB:
         players_gen, teams_gen, champions_gen = self.get_moba_generators()
 
         champions_gen.get_champions()
-        players_gen.champions_list = champions_gen.champions_obj
+        players_gen.champions_list = champions_gen.champions
         players_gen.get_players_objects()
         teams_gen.player_list = players_gen.players
         teams_gen.get_teams_objects()

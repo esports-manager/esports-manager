@@ -31,7 +31,6 @@ class ChampionGenerator:
             name: str = None,
             skill: int = None,
             lane: str = None,
-            champion_dict: dict = None,
             file_name: Union[str, Path] = CHAMPIONS_FILE,
             champion_obj: Champion = None,
             champion_names: list = None,
@@ -41,11 +40,9 @@ class ChampionGenerator:
         self.skill = skill
         self.lane = lane
         self.file_name = file_name
-        self.champion_dict = champion_dict
         self.champion_obj = champion_obj
         self.champion_names = champion_names
-        self.champions_list = []
-        self.champions_obj = []
+        self.champions = []
 
     def generate_champion_id(self) -> None:
         """
@@ -77,16 +74,6 @@ class ChampionGenerator:
         # converting skill to int
         self.skill = int(self.skill)
 
-    def generate_champion_dict(self) -> None:
-        """
-        Generates the champion dictionary
-        """
-        self.champion_dict = {
-            "name": self.name,
-            "id": self.champion_id.int,
-            "skill": self.skill,
-        }
-
     def generate_champion_obj(self) -> None:
         """
         Generates the champion object based on the Champion class
@@ -104,44 +91,29 @@ class ChampionGenerator:
             self.generate_champion_id()
             self.name = name
             self.generate_champion_skill()
-            self.generate_champion_dict()
             self.generate_champion_obj()
-            self.champions_list.append(self.champion_dict)
-            self.champions_obj.append(self.champion_obj)
+            self.champions.append(self.champion_obj)
 
     def get_champions(self) -> None:
         """
         Retrieves champions from the list of champions. Perhaps at the point when we implement
         a database this can replace the load_list_from_json function.
         """
-        if not self.champions_list:
-            self.champions_list = load_list_from_file(self.file_name)
-        self.champions_obj = []
-        for champion in self.champions_list:
+        champions_list = load_list_from_file(self.file_name)
+        self.champions = []
+        for champion in champions_list:
             self.name = champion["name"]
             self.champion_id = uuid.UUID(champion["id"])
             self.skill = champion["skill"]
             self.generate_champion_obj()
-            self.champions_obj.append(self.champion_obj)
+            self.champions.append(self.champion_obj)
 
-    def get_champion_by_id(self, champ_id, ch_list=None) -> Union[Champion, None]:
-        if not self.champions_list:
-            self.get_champions()
+    def get_champion_by_id(self, champ_id, ch_list) -> Union[Champion, None]:
+        self.champions = ch_list
 
-        if ch_list:
-            self.champions_obj = ch_list
-
-        return next((champion for champion in self.champions_obj if champ_id == champion.champion_id), None)
+        return next((champion for champion in self.champions if champ_id == champion.champion_id), None)
 
     def get_from_data_file(self, data: list, only_dict: bool = False):
-        self.champions_list = data.copy()
+        champions_list = data.copy()
         if only_dict:
-            self.champions_obj = [Champion.get_from_dict(champion) for champion in self.champions_list]
-
-    def generate_file(
-            self,
-    ) -> None:
-        """
-        Generates the champion file
-        """
-        write_to_file(self.champions_list, self.file_name)
+            self.champions = [Champion.get_from_dict(champion) for champion in champions_list]

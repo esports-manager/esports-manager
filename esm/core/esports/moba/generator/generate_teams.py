@@ -21,7 +21,6 @@ from typing import Union
 from esm.core.esports.moba.generator.default_team_names import get_default_team_names
 from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator
 from esm.core.esports.moba.team import Team
-from esm.core.utils import write_to_file, load_list_from_file
 from esm.definitions import TEAMS_FILE
 
 
@@ -44,8 +43,6 @@ class TeamGenerator:
         self.team_id = None
         self.file_name = file_name
         self.teams = []
-        self.teams_dict = []
-        self.team_dict = None
         self.team_obj = None
         self.player_list = players
         self.roster = None
@@ -124,16 +121,6 @@ class TeamGenerator:
 
         return [player.player_id for player in self.roster]
 
-    def get_dictionary(self) -> None:
-        """
-        Generates the team dictionary
-        """
-        self.team_dict = {
-            "id": self.team_id.int,
-            "name": self.name,
-            "roster": self.get_roster_ids(),
-        }
-
     def get_object(self) -> None:
         """
         Generates the team object
@@ -161,10 +148,8 @@ class TeamGenerator:
         self.generate_id()
         self.generate_name()
         self.generate_roster()
-        self.get_dictionary()
         self.get_object()
         self.teams.append(self.team_obj)
-        self.teams_dict.append(self.team_dict)
 
     def generate_teams(self) -> None:
         """
@@ -172,15 +157,6 @@ class TeamGenerator:
         """
         for _ in range(self.amount):
             self.generate_team()
-
-    def get_teams_dict(self) -> None:
-        """
-        Retrieves teams list based on the teams file
-        """
-        if self.teams_dict:
-            self.teams_dict.clear()
-        self.get_players_list()
-        self.teams_dict = load_list_from_file(self.file_name)
 
     def get_roster(self, team) -> list:
         """
@@ -201,8 +177,6 @@ class TeamGenerator:
         Retrieves champions objects based on teams list dict
         """
         self.teams = []
-        if not self.teams_dict:
-            self.get_teams_dict()
         self.get_players_list()
         for team in self.teams_dict:
             self.team_id = team["id"]
@@ -211,22 +185,13 @@ class TeamGenerator:
             self.get_object()
             self.teams.append(self.team_obj)
 
-    def get_from_data_file(self, data: list, only_dict: bool = False):
-        self.teams_dict = data.copy()
-        if not only_dict:
-            self.teams = [Team.get_from_dict(team) for team in self.teams_dict]
+    def get_from_data_file(self, data: list):
+        teams_dict = data.copy()
+        self.teams = [Team.get_from_dict(team) for team in teams_dict]
 
-    def get_team_from_id(self, team_id: Union[int, uuid.UUID]):
+    def get_team_from_id(self, team_id: uuid.UUID):
         for team in self.teams:
-            if team.team_id == team_id:
+            if team.team_id.int == team_id:
                 return team
 
         raise ValueError("Team ID not found!")
-
-    def generate_file(
-            self,
-    ) -> None:
-        """
-        Generates the teams file
-        """
-        write_to_file(self.teams_dict, self.file_name)

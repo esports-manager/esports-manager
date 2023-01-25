@@ -21,7 +21,7 @@ from .esports.moba.modules.match_factory import MatchFactory
 from .settings import Settings
 from .db import DB
 from ..definitions import DEBUG, LOG_FILE
-from .game_manager import GameManager
+from .game_session import GameSession
 
 
 class AmountPlayersError(Exception):
@@ -37,7 +37,7 @@ class ESMCore:
         self.settings.load_config_file()
         self.logger = initialize_logging()
         self.db = DB(self.settings)
-        self.game_manager = GameManager(self.settings, self.db, self.settings.enable_auto_save)
+        self.game_session = GameSession(self.settings, self.db, self.settings.enable_auto_save)
 
     @property
     def amount_players(self):
@@ -74,7 +74,7 @@ class ESMCore:
         try:
             self.check_if_files_exist()
         except FileNotFoundError:
-            self.db.generate_all()
+            self.db.generate_moba_files()
 
 
 def initialize_logging():

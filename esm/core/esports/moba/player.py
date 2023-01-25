@@ -170,7 +170,7 @@ class MobaPlayer(Player):
             (
                 ch["mult"]
                 for ch in self.champions
-                if ch["id"] == champion.champion_id
+                if ch["id"] == champion.champion_id.int
             ),
             0.5,
         )
@@ -214,7 +214,7 @@ class MobaPlayer(Player):
     @classmethod
     def get_from_dict(cls, player: dict):
         return cls(
-            player["id"],
+            uuid.UUID(int=player["id"]),
             player["nationality"],
             player["first_name"],
             player["last_name"],
@@ -225,6 +225,21 @@ class MobaPlayer(Player):
             player["skill_gain"],
             player["champions"]
         )
+
+    def get_dict(self) -> dict:
+        return {
+            "id": self.player_id.int,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "birthday": "{:%Y/%m/%d}".format(self.birthday),
+            "nick_name": self.nick_name,
+            "nationality": self.nationality,
+            "skill": self.skill,
+            "skill_gain": self.skill_lvl.skill_gain.name,
+            "exp": self.skill_lvl.exp,
+            "multipliers": self.mult,
+            "champions": self.champions.copy(),
+        }
 
     def __repr__(self):
         return "{0} {1}".format(self.__class__.__name__, self.nick_name)

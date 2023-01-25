@@ -1,4 +1,6 @@
-**NOTE:** *THIS PROJECT IS STILL UNDER DEVELOPMENT, AND IS NOT READY FOR GAMEPLAY YET. AS SOON AS GAMEPLAY FEATURES ARE IMPLEMENTED, THIS NOTE WILL BE REMOVED AND NEW INFO WILL BE ADDED TO THIS REPOSITORY.*
+**NOTE:** *THIS PROJECT IS STILL UNDER DEVELOPMENT, AND IS NOT READY FOR GAMEPLAY YET.*
+
+![eSports Manager Logo](esm/resources/images/logo/esportsmanager.png)
 
 # eSports Manager
 
@@ -12,6 +14,48 @@ In this game, you will be able set up your team, get them to play in whatever po
 
 The game is still not ready to be played. Many features are yet to be implemented, and a lot of things are missing. There's no gameplay experience, only testing material here.
 
+## SCREENSHOTS
+
+<img src="esm/resources/images/main_screen.PNG" width="65%" alt="">
+
+<img src="esm/resources/images/debug_match_screen.PNG" width="65%" alt="">
+
+<img src="esm/resources/images/match_tester.PNG" width="65%" alt="">
+
+<img src="esm/resources/images/debug_championship_screen.PNG" width="65%" alt="">
+
+<img src="esm/resources/images/team_select_screen.PNG" width="65%" alt="">
+
+## HOW TO RUN THE DEBUG VERSION
+
+To run the debug version first you need to have Python 3 installed. Use Python 3.7 or higher, there's no guarantee it will work with Python 3.6 or older.
+
+To manage dependencies, we use Pipenv. To install pipenv:
+
+```
+pip install pipenv
+```
+
+Then, clone the repo and run:
+
+```
+pipenv install
+```
+
+And then you can do:
+
+```
+pipenv shell
+```
+
+To get into the python virtual environment shell. And then just run:
+
+```
+python run.py
+```
+
+You can test the Debug Match window, and check other dummy features like New Game, Load Game, and Settings.
+
 ## FEATURES
 
 Check [FEATURES.md](FEATURES.md) to get more information on the planned features and features that are already implemented.
@@ -23,7 +67,7 @@ Check our [CONTRIBUTING.md](CONTRIBUTING.md) to get more information on how to c
 ## LICENSE
 
     eSports Manager - A free and open source eSports management game
-    Copyright (C) 2020  Pedrenrique G. Guimarães
+    Copyright (C) 2020-2023  Pedrenrique G. Guimarães
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

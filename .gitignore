@@ -135,4 +135,20 @@ dmypy.json
 .pyre/
 node_modules/
 .vscode/settings.json
-.vscode/settings.json
+
+# ESM resources
+/esm/resources/db/teams.json
+/esm/resources/db/players.json
+/esm/resources/db/champions.json
+/esm/resources/db/teams.cbor
+/esm/resources/db/players.cbor
+/esm/resources/db/champions.cbor
+
+# Ignore potential save files
+/esm/resources/save/*
+
+# ignore config file
+/esm/config/config.yaml
+
+# Pipfile lock (causes a bit of problems in other OSes)
+Pipfile.lock

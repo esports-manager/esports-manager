@@ -14,48 +14,35 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import uuid
+from dataclasses import dataclass, field
 from typing import Union
+from .player import MobaPlayer, MobaPlayerSimulator
 
 
+@dataclass
 class Team:
-    def __init__(
-            self,
-            team_id: Union[int, uuid.UUID],
-            name: str,
-            list_players,
-            is_players_team=False
-    ):
-        """
-        Initiates the team object.
-        """
-        self._points = 0
-        if isinstance(team_id, int):
-            self.team_id = uuid.UUID(int=team_id)
-        elif isinstance(team_id, uuid.UUID):
-            self.team_id = team_id
-        self.name = name
+    team_id: uuid.UUID
+    name: str
+    list_players: list[MobaPlayer]
 
-        # MATCH RELATED
-        self.towers = {"top": 3, "mid": 3, "bot": 3, "base": 2}
-        self.inhibitors = {"top": 1, "mid": 1, "bot": 1}
 
-        self.is_players_team = is_players_team  # Checks if the user is controlling the team
 
-        self.nexus = 1
-
-        self.win_prob = 0.00
-
-        self.list_players = list_players
-
-        self._kills = 0
-        self._deaths = 0
-        self._assists = 0
-
-        self._player_overall = 0
-        self._champion_overall = 0
-        self._total_skill = 0
-
-        self._bans = []
+@dataclass
+class TeamSimulation:
+    team: Team
+    towers: dict[str, int]
+    inhibitors: dict[str, int]
+    is_players_team: bool
+    nexus: int
+    players: list[MobaPlayerSimulator]
+    win_prob: float = 0.00
+    _kills: int = 0
+    _deaths: int = 0
+    _assists: int = 0
+    _player_overall: int = 0
+    _champion_overall: int = 0
+    _total_skill: int = 0
+    _bans: list[Champion] = field(default=list)
 
     def is_tower_up(self, lane: str) -> bool:
         return self.towers[lane] != 0

@@ -26,9 +26,9 @@ def champion():
         Lanes.JNG: 1.0,
         Lanes.MID: 0.45,
         Lanes.ADC: 0.3,
-        Lanes.SUP: 0.0,
+        Lanes.SUP: 0.1,
     }
-    return Champion(uuid.UUID(int=1), "MyChampion", 87, lanes)
+    return Champion(uuid.UUID(int=1), "MyChampion", 87, 0.5, 20, lanes)
 
 
 @pytest.fixture
@@ -41,8 +41,10 @@ def champion_dict():
             1: 1.0,
             2: 0.45,
             3: 0.3,
-            4: 0.0,
+            4: 0.1,
         },
+        "scaling_factor": 0.5,
+        "scaling_peak": 20,
         "skill": 87
     }
 
@@ -65,69 +67,37 @@ def test_get_current_skill(champion: Champion):
     assert expected_output == champion_lanes
 
 
-def test_get_champion_with_negative_skill():
-    champion_dict = {
-        "id": '00000000000000000000000000000001',
-        "name": "MyChampion",
-        "lanes": {
-            0: 1.0,
-            1: 1.0,
-            2: 0.45,
-            3: 0.3,
-            4: 0.0,
-        },
-        "skill": -1
+def test_get_champion_with_negative_skill(champion_dict):
+    champion_dict["skill"] = -100
+    with pytest.raises(ChampionLoadError):
+        Champion.get_from_dict(champion_dict)
+
+
+def test_get_champion_with_more_than_max_skill(champion_dict):
+    champion_dict["skill"] = 101
+    with pytest.raises(ChampionLoadError):
+        Champion.get_from_dict(champion_dict)
+
+
+def test_get_champion_with_negative_multipliers(champion_dict):
+    champion_dict["lanes"] = {
+        0: -1.0,
+        1: 1.0,
+        2: 0.45,
+        3: 0.3,
+        4: 0.1,
     }
     with pytest.raises(ChampionLoadError):
         Champion.get_from_dict(champion_dict)
 
 
-def test_get_champion_with_more_than_max_skill():
-    champion_dict = {
-        "id": '00000000000000000000000000000001',
-        "name": "MyChampion",
-        "lanes": {
-            0: 1.0,
-            1: 1.0,
-            2: 0.45,
-            3: 0.3,
-            4: 0.0,
-        },
-        "skill": 100
-    }
-    with pytest.raises(ChampionLoadError):
-        Champion.get_from_dict(champion_dict)
-
-
-def test_get_champion_with_negative_multipliers():
-    champion_dict = {
-        "id": '00000000000000000000000000000001',
-        "name": "MyChampion",
-        "lanes": {
-            0: -1.0,
-            1: 1.0,
-            2: 0.45,
-            3: 0.3,
-            4: 0.0,
-        },
-        "skill": 87,
-    }
-    with pytest.raises(ChampionLoadError):
-        Champion.get_from_dict(champion_dict)
-
-
-def test_get_champion_with_big_multipliers():
-    champion_dict = {
-        "id": '00000000000000000000000000000001',
-        "name": "MyChampion",
-        "lanes": {
-            0: 1.0,
-            1: 1.0,
-            2: 1.1,
-            3: 0.3,
-            4: 0.0,
-        },
-        "skill": 100
+def test_get_champion_with_more_than_max_multiplier(champion_dict):
+    champion_dict["lanes"] = {
+        0: 1.0,
+        1: 1.0,
+        2: 0.45,
+        3: 0.3,
+        4: 1.1,
     }
     with pytest.raises(ChampionLoadError):
         Champion.get_from_dict(champion_dict)

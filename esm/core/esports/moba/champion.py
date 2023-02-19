@@ -28,6 +28,8 @@ class Champion:
     champion_id: uuid.UUID
     name: str
     skill: int
+    scaling_factor: float
+    scaling_peak: int
     lanes: dict[Lanes, float]
 
     @classmethod
@@ -35,8 +37,10 @@ class Champion:
         champion_id = uuid.UUID(hex=dictionary['id'])
         name = dictionary['name']
         skill = dictionary['skill']
+        scaling_factor = dictionary['scaling_factor']
+        scaling_peak = dictionary['scaling_peak']
 
-        if skill > 99 or skill < 0:
+        if skill > 100 or skill < 0:
             raise ChampionLoadError(f"Skill value is not supported for champion with ID {champion_id.hex}!")
 
         lanes = dictionary['lanes']
@@ -45,7 +49,7 @@ class Champion:
             if lane > 1.0 or lane < 0.0:
                 raise ChampionLoadError(f"Lane value {lane} is not supported for champion with ID {champion_id.hex}!")
 
-        return cls(champion_id, name, skill, get_lanes_from_dict(lanes))
+        return cls(champion_id, name, skill, scaling_factor, scaling_peak, get_lanes_from_dict(lanes))
 
     def serialize_lanes(self) -> dict[int, float]:
         _lanes = {}
@@ -59,6 +63,8 @@ class Champion:
             "id": self.champion_id.hex,
             "name": self.name,
             "skill": self.skill,
+            "scaling_factor": self.scaling_factor,
+            "scaling_peak": self.scaling_peak,
             "lanes": self.serialize_lanes()
         }
 

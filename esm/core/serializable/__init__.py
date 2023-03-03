@@ -13,31 +13,15 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import uuid
-from datetime import date
-from dataclasses import dataclass
+from abc import ABC, abstractmethod
 
 
-@dataclass
-class Player:
-    """
-    Base player class.
-    May be used by all other eSports.
-    """
-    player_id: uuid.UUID
-    nationality: str
-    first_name: str
-    last_name: str
-    birthday: date
-    nick_name: str
-    
-    def get_age(self, today: date = date.today()) -> int:
-        """
-        Defines the player's age. Today generally refers to the datetime.today function, but when we implement
-        a calendar, it will all be based on the current calendar date in-game.
-        """
-        age = today - self.birthday
-        return int(age.days * 0.0027379070)
+class Serializable(ABC):
+    @classmethod
+    @abstractmethod
+    def get_from_dict(cls, dictionary: dict):
+        pass
 
-    def __eq__(self, other):
-        return self.player_id == other.player_id if isinstance(other, Player) else NotImplemented
+    @abstractmethod
+    def serialize(self) -> dict:
+        pass

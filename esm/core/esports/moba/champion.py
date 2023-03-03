@@ -13,10 +13,11 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from dataclasses import dataclass, field
-from typing import Any
-from .moba_enums_def import Lanes, get_lanes_from_dict
 import uuid
+from dataclasses import dataclass
+from typing import Any
+from .moba_enums_def import Lanes, LaneMultipliers, get_lanes_from_dict
+from ...serializable import Serializable
 
 
 class ChampionLoadError(Exception):
@@ -24,13 +25,13 @@ class ChampionLoadError(Exception):
 
 
 @dataclass(eq=False)
-class Champion:
+class Champion(Serializable):
     champion_id: uuid.UUID
     name: str
     skill: int
     scaling_factor: float
     scaling_peak: int
-    lanes: dict[Lanes, float]
+    lanes: LaneMultipliers
 
     @classmethod
     def get_from_dict(cls, dictionary: dict):
@@ -43,20 +44,9 @@ class Champion:
         if skill > 100 or skill < 0:
             raise ChampionLoadError(f"Skill value is not supported for champion with ID {champion_id.hex}!")
 
-        lanes = dictionary['lanes']
+        lanes = LaneMultipliers.get_from_dict(dictionary["lanes"])
 
-        for _, lane in lanes.items():
-            if lane > 1.0 or lane < 0.0:
-                raise ChampionLoadError(f"Lane value {lane} is not supported for champion with ID {champion_id.hex}!")
-
-        return cls(champion_id, name, skill, scaling_factor, scaling_peak, get_lanes_from_dict(lanes))
-
-    def serialize_lanes(self) -> dict[int, float]:
-        _lanes = {}
-        for lane, mult in self.lanes.items():
-            _lanes.update({lane.value: mult})
-
-        return _lanes
+        return cls(champion_id, name, skill, scaling_factor, scaling_peak, lanes)
 
     def serialize(self) -> dict:
         return {
@@ -65,11 +55,11 @@ class Champion:
             "skill": self.skill,
             "scaling_factor": self.scaling_factor,
             "scaling_peak": self.scaling_peak,
-            "lanes": self.serialize_lanes()
+            "lanes": self.lanes.serialize()
         }
 
-    def get_current_skill(self, lane: Lanes):
-        return self.lanes[lane]
+    def get_current_skill(self, lane: Lanes) -> int:
+        return self.lanes[lane] * self.skill
 
     def __str__(self):
         return f"{self.name}"

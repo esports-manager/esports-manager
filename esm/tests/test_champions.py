@@ -16,18 +16,12 @@ import pytest
 import uuid
 
 from esm.core.esports.moba.champion import Champion, ChampionLoadError
-from esm.core.esports.moba.moba_enums_def import Lanes
+from esm.core.esports.moba.moba_enums_def import Lanes, LaneMultipliers, LaneMultiplierError
 
 
 @pytest.fixture
 def champion():
-    lanes = {
-        Lanes.TOP: 1.0,
-        Lanes.JNG: 1.0,
-        Lanes.MID: 0.45,
-        Lanes.ADC: 0.3,
-        Lanes.SUP: 0.1,
-    }
+    lanes = LaneMultipliers(0.80, 1.00, 0.45, 0.30, 0.10)
     return Champion(uuid.UUID(int=1), "MyChampion", 87, 0.5, 20, lanes)
 
 
@@ -37,11 +31,11 @@ def champion_dict():
         "id": '00000000000000000000000000000001',
         "name": "MyChampion",
         "lanes": {
-            0: 1.0,
-            1: 1.0,
-            2: 0.45,
-            3: 0.3,
-            4: 0.1,
+            Lanes.TOP.value: 0.80,
+            Lanes.JNG.value: 1.00,
+            Lanes.MID.value: 0.45,
+            Lanes.ADC.value: 0.30,
+            Lanes.SUP.value: 0.10,
         },
         "scaling_factor": 0.5,
         "scaling_peak": 20,
@@ -62,9 +56,20 @@ def test_champion_name_str(champion: Champion):
 
 
 def test_get_current_skill(champion: Champion):
-    expected_output = [mult for _, mult in champion.lanes.items()]
+    expected_output = [
+        champion.skill * champion.lanes.top,
+        champion.skill * champion.lanes.jng,
+        champion.skill * champion.lanes.mid,
+        champion.skill * champion.lanes.adc,
+        champion.skill * champion.lanes.sup
+    ]
     champion_lanes = [champion.get_current_skill(lane) for lane in Lanes]
     assert expected_output == champion_lanes
+
+
+def test_get_best_lane(champion):
+    expected_lane = Lanes.JNG
+    assert expected_lane == champion.lanes.get_best_attribute()
 
 
 def test_get_champion_with_negative_skill(champion_dict):
@@ -81,23 +86,23 @@ def test_get_champion_with_more_than_max_skill(champion_dict):
 
 def test_get_champion_with_negative_multipliers(champion_dict):
     champion_dict["lanes"] = {
-        0: -1.0,
-        1: 1.0,
-        2: 0.45,
-        3: 0.3,
-        4: 0.1,
+        Lanes.TOP.value: -1.00,
+        Lanes.JNG.value: 1.00,
+        Lanes.MID.value: 0.45,
+        Lanes.ADC.value: 0.30,
+        Lanes.SUP.value: 0.10,
     }
-    with pytest.raises(ChampionLoadError):
+    with pytest.raises(LaneMultiplierError):
         Champion.get_from_dict(champion_dict)
 
 
 def test_get_champion_with_more_than_max_multiplier(champion_dict):
     champion_dict["lanes"] = {
-        0: 1.0,
-        1: 1.0,
-        2: 0.45,
-        3: 0.3,
-        4: 1.1,
+        Lanes.TOP.value: 1.00,
+        Lanes.JNG.value: 1.00,
+        Lanes.MID.value: 0.45,
+        Lanes.ADC.value: 0.30,
+        Lanes.SUP.value: 1.10,
     }
-    with pytest.raises(ChampionLoadError):
+    with pytest.raises(LaneMultiplierError):
         Champion.get_from_dict(champion_dict)

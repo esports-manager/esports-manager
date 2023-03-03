@@ -13,3 +13,23 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import pytest
+from typing import Callable
+from hypothesis import given
+from hypothesis.strategies import composite, SearchStrategy
+from esm.core.esports.moba.generator.generate_champions import ChampionGenerator
+
+
+
+@composite
+def champion_definition() -> dict:
+    pass
+
+
+def champion_defs() -> list[dict]:
+    pass
+
+
+@pytest.fixture
+def champion_gen() -> ChampionGenerator:
+    return ChampionGenerator(champion_defs())

@@ -14,10 +14,11 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import uuid
+import datetime
 from dataclasses import dataclass, asdict
 
 from .champion import Champion
-from .moba_enums_def import Lanes, LaneError, LaneMultipliers
+from .moba_definitions import Lanes, LaneError, LaneMultipliers
 from ..player import Player
 from ...serializable import Serializable
 
@@ -44,7 +45,7 @@ class MobaPlayerAttributes(Serializable):
     @classmethod
     def get_from_dict(cls, attributes: dict[str, int]):
         return cls(
-            attributes["agressiveness"],
+            attributes["aggressiveness"],
             attributes["mechanics"],
             attributes["awareness"],
             attributes["knowledge"],
@@ -59,23 +60,42 @@ class MobaPlayerAttributes(Serializable):
 
 
 @dataclass
+class MobaPlayerChampion(Serializable):
+    champion: uuid.UUID
+    champion_multiplier: float
+
+    @classmethod
+    def get_from_dict(cls, dictionary: dict):
+        return cls(
+            uuid.UUID(hex=dictionary["champion_id"]),
+            dictionary["champion_multiplier"]
+        )
+
+    def serialize(self) -> dict:
+        return {
+            "champion_id": self.champion.hex,
+            "champion_multiplier": self.champion_multiplier
+        }
+
+
+@dataclass
 class MobaPlayer(Player, Serializable):
     lanes: LaneMultipliers
     attributes: MobaPlayerAttributes
-    champions: list[dict]
+    champions: list[MobaPlayerChampion]
 
     @classmethod
     def get_from_dict(cls, player: dict):
         return cls(
-            uuid.UUID(int=player["id"]),
+            uuid.UUID(player["id"]),
             player["nationality"],
             player["first_name"],
             player["last_name"],
-            player["birthday"],
+            datetime.datetime.strptime(player["birthday"], "%Y-%m-%d").date(),
             player["nick_name"],
-            player["attributes"],
-            LaneMultipliers.get_from_dict(player["multipliers"]),
-            player["champions"]
+            LaneMultipliers.get_from_dict(player["lanes"]),
+            MobaPlayerAttributes.get_from_dict(player["attributes"]),
+            [MobaPlayerChampion.get_from_dict(champion) for champion in player["champions"]]
         )
 
     def serialize(self) -> dict[str, int | str | float | dict | list]:
@@ -83,12 +103,12 @@ class MobaPlayer(Player, Serializable):
             "id": self.player_id.hex,
             "first_name": self.first_name,
             "last_name": self.last_name,
-            "birthday": "{:%Y/%m/%d}".format(self.birthday),
+            "birthday": "{:%Y-%m-%d}".format(self.birthday),
             "nick_name": self.nick_name,
             "nationality": self.nationality,
             "attributes": self.attributes.serialize(),
             "lanes": self.lanes.serialize(),
-            "champions": self.champions.copy(),
+            "champions": [champion.serialize() for champion in self.champions],
         }
 
     def __repr__(self):
@@ -155,9 +175,9 @@ class MobaPlayerSimulator:
             return 0
         mult = next(
             (
-                ch["mult"]
+                ch.champion_multiplier
                 for ch in self.player.champions
-                if ch["id"] == champion.champion_id.hex
+                if ch.champion == champion.champion_id.hex
             ),
             0.5,
         )

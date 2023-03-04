@@ -16,7 +16,7 @@
 import uuid
 from dataclasses import dataclass
 from typing import Any
-from .moba_enums_def import Lanes, LaneMultipliers, get_lanes_from_dict
+from .moba_definitions import Lanes, LaneMultipliers, get_lanes_from_dict
 from ...serializable import Serializable
 
 

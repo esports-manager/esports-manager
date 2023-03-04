@@ -16,7 +16,7 @@ import pytest
 import uuid
 
 from esm.core.esports.moba.champion import Champion, ChampionLoadError
-from esm.core.esports.moba.moba_enums_def import Lanes, LaneMultipliers, LaneMultiplierError
+from esm.core.esports.moba.moba_definitions import Lanes, LaneMultipliers, LaneMultiplierError
 
 
 @pytest.fixture

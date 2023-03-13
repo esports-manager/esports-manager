@@ -42,12 +42,11 @@ class ChampionGenerator(GeneratorInterface):
         return random.choice(self.random_names)
 
     def generate_champion_name(self, champion_def: Optional[dict]) -> str:
-        if self.random:
-            name = self._get_random_champion_name()
-        else:
-            name = champion_def["name"]
-
-        return name
+        return (
+            self._get_random_champion_name()
+            if self.random
+            else champion_def["name"]
+        )
 
     def generate_champion_scaling(self) -> float:
         return round(random.random(), 2)
@@ -57,16 +56,16 @@ class ChampionGenerator(GeneratorInterface):
         if not self.random:
             for lane in Lanes:
                 if lane.name in champion_def["lanes"]:
-                    lanes.update({lane: 1.0})
+                    lanes[lane] = 1.0
                 else:
-                    lanes.update({lane: round(random.randrange(1, 95) / 100, 2)})
+                    lanes[lane] = round(random.randrange(1, 95) / 100, 2)
         else:
             main_lane = random.choice(list(Lanes))
             for lane in Lanes:
                 if lane == main_lane:
-                    lanes.update({lane: 1.0})
+                    lanes[lane] = 1.0
                 else:
-                    lanes.update({lane: round(random.randrange(1, 95) / 100, 2)})
+                    lanes[lane] = round(random.randrange(1, 95) / 100, 2)
         return lanes
 
     def generate_scaling_peak(self) -> int:

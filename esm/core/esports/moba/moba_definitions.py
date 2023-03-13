@@ -122,8 +122,4 @@ class LaneMultipliers(Serializable):
 
 
 def get_lanes_from_dict(lanes: dict[int, float]) -> dict[Lanes, float]:
-    _lanes = {}
-    for lane, mult in lanes.items():
-        _lanes.update({Lanes(lane): mult})
-
-    return _lanes
+    return {Lanes(lane): mult for lane, mult in lanes.items()}

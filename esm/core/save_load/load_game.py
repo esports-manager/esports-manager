@@ -79,13 +79,10 @@ class LoadGame:
         Deserialize data from the load file.
         """
         data = self.load_game_file(filename)
-        if self.__check_key_integrity(data):
-            teams = data["teams"]
-            players = data["players"]
-            champions = data["champions"]
-            return data, teams, players, champions
-        else:
+        if not self.__check_key_integrity(data):
             raise LoadGameError("The save file does not contain the expected keys")
+        teams = data["teams"]
+        return data, teams, data["players"], data["champions"]
 
     def load_game_state(self, filename: str) -> GameState:
         """

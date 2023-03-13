@@ -135,15 +135,11 @@ class Commentaries:
             atk_team_name,
             lane,
     ):
-        if defended:
-            self.commentary = (
-                def_team_name
-                + " has defended the "
-                + lane
-                + " inhibitor successfully"
-            )
-        else:
-            self.commentary = f"{atk_team_name} has destroyed the {lane} inhibitor"
+        self.commentary = (
+            f"{def_team_name} has defended the {lane} inhibitor successfully"
+            if defended
+            else f"{atk_team_name} has destroyed the {lane} inhibitor"
+        )
 
     def _get_tower_commentary(
             self,

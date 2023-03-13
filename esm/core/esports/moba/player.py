@@ -35,12 +35,34 @@ class MobaPlayerAttributes(Serializable):
     cs: int
 
     def get_skill_from_lane(self, lane: Lanes) -> int:
-        if lane == Lanes.TOP or lane == Lanes.MID or lane == Lanes.ADC:
-            skill = int((self.aggressiveness + self.mechanics + self.awareness + self.knowledge + self.reflexes + self.positioning + self.cs + self.timing) / 8)
-        else:
-            skill = int((self.aggressiveness + self.mechanics + self.awareness + self.knowledge + self.reflexes + self.positioning + self.timing) / 7)
-
-        return skill
+        return (
+            int(
+                (
+                    self.aggressiveness
+                    + self.mechanics
+                    + self.awareness
+                    + self.knowledge
+                    + self.reflexes
+                    + self.positioning
+                    + self.cs
+                    + self.timing
+                )
+                / 8
+            )
+            if lane in [Lanes.TOP, Lanes.MID, Lanes.ADC]
+            else int(
+                (
+                    self.aggressiveness
+                    + self.mechanics
+                    + self.awareness
+                    + self.knowledge
+                    + self.reflexes
+                    + self.positioning
+                    + self.timing
+                )
+                / 7
+            )
+        )
 
     @classmethod
     def get_from_dict(cls, attributes: dict[str, int]):

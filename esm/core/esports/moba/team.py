@@ -131,34 +131,22 @@ class TeamSimulation:
 
     @property
     def kills(self) -> int:
-        self._kills = 0
-        for player in self.list_players:
-            self._kills += player.kills
-
+        self._kills = sum(player.kills for player in self.list_players)
         return self._kills
 
     @property
     def deaths(self) -> int:
-        self._deaths = 0
-        for player in self.list_players:
-            self._deaths += player.deaths
-
+        self._deaths = sum(player.deaths for player in self.list_players)
         return self._deaths
 
     @property
     def assists(self) -> int:
-        self._assists = 0
-        for player in self.list_players:
-            self._assists += player.assists
-
+        self._assists = sum(player.assists for player in self.list_players)
         return self._assists
 
     @property
     def points(self) -> int:
-        self._points = 0
-        for player in self.list_players:
-            self._points += player.points
-
+        self._points = sum(player.points for player in self.list_players)
         return self._points
 
     def get_team_overall(self) -> int:

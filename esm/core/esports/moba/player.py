@@ -28,32 +28,54 @@ class MobaPlayerAttributes(Serializable):
     aggressiveness: int
     mechanics: int
     awareness: int
+    lane_control: int
+    map_control: int
     knowledge: int
     reflexes: int
+    team_work: int
+    speed: int
     positioning: int
     timing: int
     cs: int
 
-    def get_skill_from_lane(self, lane: Lanes) -> int:
-        if lane == Lanes.TOP or lane == Lanes.MID or lane == Lanes.ADC:
-            skill = int((self.aggressiveness + self.mechanics + self.awareness + self.knowledge + self.reflexes + self.positioning + self.cs + self.timing) / 8)
-        else:
-            skill = int((self.aggressiveness + self.mechanics + self.awareness + self.knowledge + self.reflexes + self.positioning + self.timing) / 7)
-
-        return skill
+    def get_overall_from_lane(self, lane: Lanes) -> int:
+        return (
+            int(
+                (
+                    self.aggressiveness
+                    + self.mechanics
+                    + self.awareness
+                    + self.lane_control
+                    + self.knowledge
+                    + self.reflexes
+                    + self.team_work
+                    + self.speed
+                    + self.positioning
+                    + self.cs
+                    + self.timing
+                )
+                / 11
+            )
+            if lane in [Lanes.TOP, Lanes.MID, Lanes.ADC]
+            else int(
+                (
+                    self.aggressiveness
+                    + self.mechanics
+                    + self.awareness
+                    + self.map_control
+                    + self.knowledge
+                    + self.reflexes
+                    + self.team_work
+                    + self.positioning
+                    + self.timing
+                )
+                / 9
+            )
+        )
 
     @classmethod
     def get_from_dict(cls, attributes: dict[str, int]):
-        return cls(
-            attributes["aggressiveness"],
-            attributes["mechanics"],
-            attributes["awareness"],
-            attributes["knowledge"],
-            attributes["reflexes"],
-            attributes["positioning"],
-            attributes["timing"],
-            attributes["cs"],
-        )
+        return cls(**attributes)
 
     def serialize(self) -> dict:
         return asdict(self)
@@ -165,7 +187,7 @@ class MobaPlayerSimulator:
         """
         Gets the player's skill according to the lane he is currently at.
         """
-        return self.player.attributes.get_skill_from_lane(self.lane) * self.get_curr_lane_multiplier()
+        return self.player.attributes.get_overall_from_lane(self.lane) * self.get_curr_lane_multiplier()
 
     def get_projected_champion_skill(self, champion: Champion) -> float:
         """

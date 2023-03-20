@@ -29,7 +29,7 @@ def lanes() -> LaneMultipliers:
 
 @pytest.fixture
 def attributes() -> MobaPlayerAttributes:
-    return MobaPlayerAttributes(75, 85, 87, 91, 95, 82, 90, 89)
+    return MobaPlayerAttributes(75, 85, 87, 86, 49, 91, 95, 82, 90, 89, 84, 85)
 
 
 @pytest.fixture

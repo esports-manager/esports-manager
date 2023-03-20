@@ -13,15 +13,37 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from .core.esmcore import ESMCore
+from .ui.guicontroller import GUIController
 
-from .controllerinterface import IController
-from ..pickteam import PickTeamLayout
 
+class ESMController:
+    """
+    This class is the Game controller. It initializes the game's modules and game settings.
 
-class PickTeamController(IController):
+    This class should also communicate with the UI.
+    """
+
     def __init__(self):
-        self.layout = PickTeamLayout()
+        self.core = ESMCore()
+        try:
+            self.core.check_files()
+        except FileNotFoundError:
+            self.core.db.generate_moba_files()
+        
+        self.view = GUIController(self.core)
 
-    def update(self, event, values, make_screen):
-        if event == "debug_cancelteam_btn":
-            make_screen("debug_pickteam_screen", "debug_game_mode_screen")
+    @property
+    def amount_players(self):
+        return self.core.amount_players
+
+    @amount_players.setter
+    def amount_players(self, value):
+        self.core.amount_players = value
+
+    @property
+    def settings(self):
+        return self.core.settings
+
+    def app(self) -> None:
+        self.view.start()

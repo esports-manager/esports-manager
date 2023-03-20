@@ -14,23 +14,22 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .controllerinterface import IController
-from ..mainscreen import MainScreenLayout
+from typing import Optional
+
+from esm.core.esmcore import ESMCore
+from esm.core.esports.moba.team import Team
+from esm.ui.igamecontroller import IGameController
+from esm.ui.controllers.controllerinterface import IController
+from esm.ui.layouts.game.game_dashboard import GameDashboardLayout
 
 
-class MainScreenController(IController):
-    def __init__(self):
-        self.layout = MainScreenLayout()
+class GameDashboardController(IController):
+    def __init__(self, controller: IGameController, core: ESMCore):
+        self.controller = controller
+        self.core = core
+        self.layout = GameDashboardLayout()
+        self.team_name: Optional[Team] = None
+        #TODO: rewrite this class
 
     def update(self, event, values, make_screen):
-        if event == "main_debug_btn":
-            make_screen("main_screen", "debug_game_mode_screen")
-
-        elif event == "main_newgame_btn":
-            make_screen("main_screen", "new_game_screen")
-
-        elif event == "main_loadgame_btn":
-            make_screen("main_screen", "load_game_screen")
-
-        elif event == "main_settings_btn":
-            make_screen("main_screen", "settings_screen")
+        pass

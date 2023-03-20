@@ -13,37 +13,24 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from .esmcore import ESMCore
-from ..ui.guicontroller import GUIController
+
+from .controllerinterface import IController
+from esm.ui.layouts.mainscreen import MainScreenLayout
 
 
-class ESMController:
-    """
-    This class is the Game controller. It initializes the game's modules and game settings.
-
-    This class should also communicate with the UI.
-    """
-
+class MainScreenController(IController):
     def __init__(self):
-        self.core = ESMCore()
-        try:
-            self.core.check_files()
-        except FileNotFoundError:
-            self.core.db.generate_moba_files()
-        
-        self.view = GUIController(self.core)
+        self.layout = MainScreenLayout()
 
-    @property
-    def amount_players(self):
-        return self.core.amount_players
+    def update(self, event, values, make_screen):
+        if event == "main_debug_btn":
+            make_screen("main_screen", "debug_game_mode_screen")
 
-    @amount_players.setter
-    def amount_players(self, value):
-        self.core.amount_players = value
+        elif event == "main_newgame_btn":
+            make_screen("main_screen", "new_game_screen")
 
-    @property
-    def settings(self):
-        return self.core.settings
+        elif event == "main_loadgame_btn":
+            make_screen("main_screen", "load_game_screen")
 
-    def app(self) -> None:
-        self.view.start()
+        elif event == "main_settings_btn":
+            make_screen("main_screen", "settings_screen")

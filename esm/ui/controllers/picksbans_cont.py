@@ -20,8 +20,8 @@ from queue import Queue
 from esm.core.esmcore import ESMCore
 from esm.core.esports.moba.modules.match_factory import MatchFactory
 from .controllerinterface import IController
-from ..picksbans import PicksBansLayout
-from ...igamecontroller import IGameController
+from esm.ui.layouts.picksbans import PicksBansLayout
+from esm.ui.igamecontroller import IGameController
 
 
 class PicksBansController(IController):

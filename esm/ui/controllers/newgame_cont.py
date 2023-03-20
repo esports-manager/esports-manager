@@ -15,9 +15,9 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from esm.core.esmcore import ESMCore
 from .controllerinterface import IController
-from ..newgame import NewGameLayout
+from esm.ui.layouts.newgame import NewGameLayout
 from esm.core.utils import get_nations
-from ...igamecontroller import IGameController
+from esm.ui.igamecontroller import IGameController
 
 
 class NewGameController(IController):

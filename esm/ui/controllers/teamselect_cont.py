@@ -15,10 +15,10 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .controllerinterface import IController
-from ..teamselect import TeamSelectLayout
-from ...igamecontroller import IGameController
-from ....core.esports.manager import Manager
-from ....core.esmcore import ESMCore
+from esm.ui.layouts.teamselect import TeamSelectLayout
+from esm.ui.igamecontroller import IGameController
+from esm.core.esports.manager import Manager
+from esm.core.esmcore import ESMCore
 
 
 class TeamSelectControllerError(Exception):

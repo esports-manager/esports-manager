@@ -19,7 +19,7 @@ from typing import Union
 from esm.core.esmcore import ESMCore
 from esm.core.esports.moba.match_tester import MatchTester
 from esm.ui.igamecontroller import IGameController
-from esm.ui.layouts.controllers.controllerinterface import IController
+from esm.ui.controllers.controllerinterface import IController
 from esm.ui.layouts.match_tester import MatchTesterLayout
 from esm.core.esports.moba.modules.match_factory import MatchFactory, MatchLive
 

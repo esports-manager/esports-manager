@@ -15,9 +15,9 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .controllerinterface import IController
-from ..settings import SettingsLayout
-from ...igamecontroller import IGameController
-from ....core.esmcore import ESMCore
+from esm.ui.layouts.settings import SettingsLayout
+from esm.ui.igamecontroller import IGameController
+from esm.core.esmcore import ESMCore
 
 
 class SettingsController(IController):

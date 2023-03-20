@@ -86,8 +86,7 @@ def normalize_filename(filename, delim=u'_') -> str:
 
     filename = delim.join(result)
     filename = ''.join(filename)
-    filename = f'{filename}.cbor'
-    return filename
+    return f'{filename}.cbor'
 
 
 def get_nations(file: Union[str, os.PathLike] = NAMES_FILE) -> list[dict]:

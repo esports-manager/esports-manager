@@ -13,24 +13,15 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import uuid
 
-from typing import Optional
-
-from esm.core.esmcore import ESMCore
-from esm.core.esports.moba.team import Team
-from esm.ui.igamecontroller import IGameController
-from esm.ui.layouts.controllers.controllerinterface import IController
-from esm.ui.layouts.game.game_dashboard import GameDashboardLayout
+from .controllerinterface import IController
+from esm.ui.layouts.pickteam import PickTeamLayout
 
 
-class GameDashboardController(IController):
-    def __init__(self, controller: IGameController, core: ESMCore):
-        self.controller = controller
-        self.core = core
-        self.layout = GameDashboardLayout()
-        self.team_name: Optional[Team] = None
-        #TODO: rewrite this class
+class PickTeamController(IController):
+    def __init__(self):
+        self.layout = PickTeamLayout()
 
     def update(self, event, values, make_screen):
-        pass
+        if event == "debug_cancelteam_btn":
+            make_screen("debug_pickteam_screen", "debug_game_mode_screen")

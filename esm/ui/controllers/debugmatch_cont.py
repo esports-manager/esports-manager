@@ -16,10 +16,10 @@
 from queue import Queue
 
 from .controllerinterface import IController
-from ..debugmatch import DebugMatchLayout
-from ...igamecontroller import IGameController
-from ....core.esmcore import ESMCore
-from ....core.esports.moba.modules.match_factory import MatchFactory
+from esm.ui.layouts.debugmatch import DebugMatchLayout
+from esm.ui.igamecontroller import IGameController
+from esm.core.esmcore import ESMCore
+from esm.core.esports.moba.modules.match_factory import MatchFactory
 
 
 class DebugMatchController(IController):

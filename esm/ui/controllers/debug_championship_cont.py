@@ -13,15 +13,14 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import gc
 import threading
 import uuid
 
 from esm.core.esports.moba.championship import Championship
-from ...igamecontroller import IGameController
-from ....core.esmcore import ESMCore
+from esm.ui.igamecontroller import IGameController
+from esm.core.esmcore import ESMCore
 from .controllerinterface import IController
-from ..debug_championship import DebugChampionshipLayout
+from esm.ui.layouts.debug_championship import DebugChampionshipLayout
 
 
 class DebugChampionshipController(IController):

@@ -16,7 +16,7 @@
 from .igamecontroller import IGameController
 from .gui import GUI, init_theme
 from .gui_components import sg
-from .layouts.controllers import *
+from .controllers import *
 from ..definitions import DEBUG
 from ..core.esmcore import ESMCore
 
@@ -35,9 +35,9 @@ class GUIController(IGameController):
 
     def __initialize_controllers(self, core: ESMCore):
         self.controllers = [
-            LoadGameController(self, core),
             MainScreenController(),
             NewGameController(self, core),
+            LoadGameController(self, core),
             SettingsController(self, core),
             GameDashboardController(self, core),
         ]

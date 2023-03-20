@@ -13,11 +13,12 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
+from .serializable import Serializable
 
 
 @dataclass
-class GameState:
+class GameState(Serializable):
     gamename: str
     filename: str
     manager: dict
@@ -26,3 +27,10 @@ class GameState:
     teams: list
     players: list
     champions: list
+
+    @classmethod
+    def get_from_dict(cls, data: dict):
+        return cls(**data)
+
+    def serialize(self) -> dict[str, str | dict | list]:
+        return asdict(self)

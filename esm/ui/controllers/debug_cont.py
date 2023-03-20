@@ -15,7 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .controllerinterface import IController
-from ..debug import DebugLayout
+from esm.ui.layouts.debug import DebugLayout
 
 
 class DebugController(IController):

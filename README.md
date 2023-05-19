@@ -1,5 +1,7 @@
 **NOTE:** *THIS PROJECT IS STILL UNDER DEVELOPMENT, AND IS NOT READY FOR GAMEPLAY YET.*
 
+**This project is going through a rework. Lots of things are broken and might not even compile right now. If you want to try out the last working Debug version, check out the master branch.**
+
 ![eSports Manager Logo](esm/res/images/logo/esportsmanager.png)
 
 # eSports Manager

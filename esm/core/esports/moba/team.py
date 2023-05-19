@@ -15,8 +15,8 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import uuid
 from dataclasses import dataclass, field
-from .champion import Champion
 from .player import MobaPlayer, MobaPlayerSimulator
+from .champion import Champion
 
 
 @dataclass
@@ -24,7 +24,6 @@ class Team:
     team_id: uuid.UUID
     name: str
     list_players: list[MobaPlayer]
-
 
 
 @dataclass
@@ -42,7 +41,8 @@ class TeamSimulation:
     _player_overall: int = 0
     _champion_overall: int = 0
     _total_skill: int = 0
-    _bans: list[None | Champion] = field(default=list)
+    _points: int = 0
+    _bans: list[Champion] = field(default=list)
 
     def is_tower_up(self, lane: str) -> bool:
         return self.towers[lane] != 0
@@ -52,17 +52,17 @@ class TeamSimulation:
 
     def are_all_towers_down(self) -> bool:
         return (
-                self.towers["top"] == 0
-                and self.towers["mid"] == 0
-                and self.towers["bot"] == 0
-                and self.towers["base"] == 0
+            self.towers["top"] == 0
+            and self.towers["mid"] == 0
+            and self.towers["bot"] == 0
+            and self.towers["base"] == 0
         )
 
     def are_all_lane_towers_down(self) -> bool:
         return (
-                self.towers["top"] == 0
-                and self.towers["mid"] == 0
-                and self.towers["bot"] == 0
+            self.towers["top"] == 0
+            and self.towers["mid"] == 0
+            and self.towers["bot"] == 0
         )
 
     def is_inhibitor_up(self, lane: str) -> bool:
@@ -73,9 +73,9 @@ class TeamSimulation:
 
     def are_inhibs_exposed(self) -> bool:
         return (
-                self.towers["top"] == 0
-                or self.towers["mid"] == 0
-                or self.towers["bot"] == 0
+            self.towers["top"] == 0
+            or self.towers["mid"] == 0
+            or self.towers["bot"] == 0
         )
 
     def get_exposed_inhibs(self):
@@ -92,11 +92,11 @@ class TeamSimulation:
         return not self.are_all_inhibitors_up()
 
     def get_players_default_lanes(self):
-        for player in self.list_players:
-            player.get_default_lane()
+        for player in self.players:
+            player.get_best_lane()
 
     def reset_values(self) -> None:
-        for player in self.list_players:
+        for player in self.players:
             player.reset_attributes()
 
         self._bans.clear()
@@ -132,7 +132,7 @@ class TeamSimulation:
     @property
     def kills(self) -> int:
         self._kills = 0
-        for player in self.list_players:
+        for player in self.players:
             self._kills += player.kills
 
         return self._kills
@@ -140,7 +140,7 @@ class TeamSimulation:
     @property
     def deaths(self) -> int:
         self._deaths = 0
-        for player in self.list_players:
+        for player in self.players:
             self._deaths += player.deaths
 
         return self._deaths
@@ -148,7 +148,7 @@ class TeamSimulation:
     @property
     def assists(self) -> int:
         self._assists = 0
-        for player in self.list_players:
+        for player in self.players:
             self._assists += player.assists
 
         return self._assists
@@ -156,15 +156,13 @@ class TeamSimulation:
     @property
     def points(self) -> int:
         self._points = 0
-        for player in self.list_players:
+        for player in self.players:
             self._points += player.points
 
         return self._points
 
     def get_team_overall(self) -> int:
-        return int(sum(
-            player.skill for player in self.list_players
-        ) / len(self.list_players))
+        return int(sum(player.skill for player in self.players) / len(self.players))
 
     @property
     def player_overall(self) -> int:
@@ -172,23 +170,23 @@ class TeamSimulation:
         This method is calculating team's overall
         :return:
         """
-        self._player_overall = sum(
-            player.get_curr_player_skill() for player in self.list_players
-        )
+        self._player_overall = sum(player.skill for player in self.players)
 
         return self._player_overall
 
     @property
     def champion_overall(self) -> int:
         self._champion_overall = int(
-            sum(player.get_champion_skill() for player in self.list_players)
+            sum(player.get_champion_skill() for player in self.players)
         )
 
         return self._champion_overall
 
     @property
     def total_skill(self) -> int:
-        self._total_skill = ((self.player_overall + self.champion_overall) / 10) + self.points
+        self._total_skill = (
+            int((self.player_overall + self.champion_overall) / 10) + self.points
+        )
 
         return int(self._total_skill)
 
@@ -201,10 +199,14 @@ class TeamSimulation:
         )
 
     def __str__(self):
-        return "{0}".format(self.name)
+        return "{0}".format(self.team.name)
 
     def __repr__(self):
-        return "{0} {1}".format(self.__class__.__name__, self.name)
+        return "{0} {1}".format(self.__class__.__name__, self.team.name)
 
     def __eq__(self, other):
-        return self.team_id == other.team_id if isinstance(other, Team) else NotImplemented
+        return (
+            self.team.team_id == other.team.team_id
+            if isinstance(other, TeamSimulation)
+            else NotImplemented
+        )

@@ -13,3 +13,18 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import pytest
+
+from esm.core.esports.moba.generator.default_champion_defs import (
+    get_default_champion_defs,
+)
+from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator
+from esm.core.esports.moba.generator.generate_champions import ChampionGenerator
+from esm.core.esports.moba.player import MobaPlayer
+
+
+@pytest.fixture
+def moba_player_gen() -> MobaPlayerGenerator:
+    champions = ChampionGenerator(get_default_champion_defs())
+    champions.generate_champion
+    return MobaPlayerGenerator()

@@ -1049,5 +1049,5 @@ def get_default_team_names() -> list:
         "One Breath Gaming",
         "RoX",
         "Unicorns Of Love",
-        "Vega Squadron"
+        "Vega Squadron",
     ]

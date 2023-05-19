@@ -35,13 +35,13 @@ class CreateGameSession:
         self.champions = ChampionGenerator()
 
     def get_names(
-            self,
-            filename: str,
-            game_name: str,
-            manager_name: str,
-            date_of_birth: str,
-            season: str,
-            esport: str,
+        self,
+        filename: str,
+        game_name: str,
+        manager_name: str,
+        date_of_birth: str,
+        season: str,
+        esport: str,
     ):
         self.filename = filename
         self.game_name = game_name
@@ -52,11 +52,7 @@ class CreateGameSession:
 
     def start_new_game(self):
         self.manager = Manager(
-            self.manager_name,
-            self.date_of_birth,
-            self.team,
-            True,
-            50
+            self.manager_name, self.date_of_birth, self.team, True, 50
         )
 
     def generate_new_database(self):

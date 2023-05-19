@@ -16,11 +16,12 @@
 
 import random
 import uuid
-from typing import Union
+from typing import Optional
 
 from esm.core.esports.moba.generator.default_team_names import get_default_team_names
 from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator
 from esm.core.esports.moba.team import Team
+from esm.core.esports.moba.player import MobaPlayer
 from esm.definitions import TEAMS_FILE
 
 
@@ -30,22 +31,22 @@ class TeamGeneratorError(Exception):
 
 class TeamGenerator:
     def __init__(
-            self,
-            nationality: str = None,
-            amount: int = 1,
-            players: list = None,
-            organized: bool = True,
-            file_name: str = TEAMS_FILE,
+        self,
+        nationality: Optional[str] = None,
+        amount: int = 1,
+        players: Optional[list] = None,
+        organized: bool = True,
+        file_name: str = TEAMS_FILE,
     ):
         self.name = None
         self.nationality = nationality
         self.logo = None
         self.team_id = None
         self.file_name = file_name
-        self.teams = []
+        self.teams: list[Team] = []
         self.team_obj = None
         self.player_list = players
-        self.roster = None
+        self.roster: Optional[MobaPlayer] = None
         self.names = None
         self.amount = amount
         self.organized = organized
@@ -54,7 +55,7 @@ class TeamGenerator:
         """
         Gets all available names from the team_names file
         """
-        self.names = get_default_team_names()
+        self.names: list[str] = get_default_team_names()
 
     def generate_id(self) -> None:
         """
@@ -89,9 +90,10 @@ class TeamGenerator:
     def generate_roster(self) -> None:
         """
         Generates a roster.
-        If the self.organized attribute is set to True, it is going to generate teams with players that are specialists
-        at their lanes.
-        Otherwise, it selects random players, regardless of their lane specialty.
+        If the self.organized attribute is set to True,
+        it is going to generate teams with players that are specialists
+        at their lanes. Otherwise, it selects random players, regardless
+        of their lane specialty.
         """
         self.roster = []
         self.get_players_list()
@@ -151,47 +153,9 @@ class TeamGenerator:
         self.get_object()
         self.teams.append(self.team_obj)
 
-    def generate_teams(self) -> None:
+    def generate(self) -> None:
         """
         Generates a "self.amount" of teams
         """
         for _ in range(self.amount):
             self.generate_team()
-
-    def get_roster(self, team) -> list:
-        """
-        Gets the roster based on the player's ID
-        """
-        self.roster = []
-        if self.player_list is not None:
-            for roster_id in team["roster"]:
-                for player in self.player_list:
-                    if player.player_id == roster_id:
-                        self.roster.append(player)
-                        break
-
-        return self.roster
-
-    def get_teams_objects(self) -> None:
-        """
-        Retrieves champions objects based on teams list dict
-        """
-        self.teams = []
-        self.get_players_list()
-        for team in self.teams_dict:
-            self.team_id = team["id"]
-            self.name = team["name"]
-            self.get_roster(team)
-            self.get_object()
-            self.teams.append(self.team_obj)
-
-    def get_from_data_file(self, data: list):
-        teams_dict = data.copy()
-        self.teams = [Team.get_from_dict(team) for team in teams_dict]
-
-    def get_team_from_id(self, team_id: uuid.UUID):
-        for team in self.teams:
-            if team.team_id.int == team_id:
-                return team
-
-        raise ValueError("Team ID not found!")

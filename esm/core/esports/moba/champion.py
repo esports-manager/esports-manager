@@ -35,14 +35,16 @@ class Champion(Serializable):
 
     @classmethod
     def get_from_dict(cls, dictionary: dict):
-        champion_id = uuid.UUID(hex=dictionary['id'])
-        name = dictionary['name']
-        skill = dictionary['skill']
-        scaling_factor = dictionary['scaling_factor']
-        scaling_peak = dictionary['scaling_peak']
+        champion_id = uuid.UUID(hex=dictionary["id"])
+        name = dictionary["name"]
+        skill = dictionary["skill"]
+        scaling_factor = dictionary["scaling_factor"]
+        scaling_peak = dictionary["scaling_peak"]
 
         if skill > 100 or skill < 0:
-            raise ChampionLoadError(f"Skill value is not supported for champion with ID {champion_id.hex}!")
+            raise ChampionLoadError(
+                f"Skill value is not supported for champion with ID {champion_id.hex}!"
+            )
 
         lanes = LaneMultipliers.get_from_dict(dictionary["lanes"])
 
@@ -55,7 +57,7 @@ class Champion(Serializable):
             "skill": self.skill,
             "scaling_factor": self.scaling_factor,
             "scaling_peak": self.scaling_peak,
-            "lanes": self.lanes.serialize()
+            "lanes": self.lanes.serialize(),
         }
 
     def get_current_skill(self, lane: Lanes) -> int:

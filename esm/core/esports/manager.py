@@ -22,24 +22,19 @@ from esm.core.esports.moba.team import Team
 
 class Manager(Player):
     def __init__(
-            self,
-            player_id: int,
-            nationality: str,
-            first_name: str,
-            last_name: str,
-            birthday: Union[date, datetime, str],
-            nick_name: str,
-            team: Union[int, Team],
-            is_player: bool,
-            quality: int
+        self,
+        player_id: int,
+        nationality: str,
+        first_name: str,
+        last_name: str,
+        birthday: Union[date, datetime, str],
+        nick_name: str,
+        team: Union[int, Team],
+        is_player: bool,
+        quality: int,
     ):
         super().__init__(
-            player_id,
-            nationality,
-            first_name,
-            last_name,
-            birthday,
-            nick_name
+            player_id, nationality, first_name, last_name, birthday, nick_name
         )
         self.team = team
         self.is_player = is_player
@@ -54,5 +49,5 @@ class Manager(Player):
             "birthday": self.birthday.strftime("%Y/%m/%d"),
             "team": team,
             "is_player": self.is_player,
-            "quality": self.quality
+            "quality": self.quality,
         }

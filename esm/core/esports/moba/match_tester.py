@@ -89,7 +89,7 @@ class MatchTester:
 
     def run_match_test(self):
         i = 0
-        print('Starting tests!')
+        print("Starting tests!")
         while self.running_test and i <= self.amount_test:
             self.match.simulation()
             self.get_team_stats()
@@ -104,10 +104,10 @@ class MatchTester:
         print(self.avg_team_deaths)
         print(self.avg_team_assists)
         print(self.amount_team_wins)
-        print(self.match.match.team1.name, 'won', self.amount_team_wins[0], 'times')
+        print(self.match.match.team1.name, "won",
+              self.amount_team_wins[0], "times")
         percentage = (self.amount_team_wins[0] / self.amount_test) * 100
-        print('Won about ', percentage, '% of the games')
-        print('Avg gametime was', self.get_avg_game_time())
-        print('Max gametime was', self.get_max_game_time())
+        print("Won about ", percentage, "% of the games")
+        print("Avg gametime was", self.get_avg_game_time())
+        print("Max gametime was", self.get_max_game_time())
         self.running_test = False
-

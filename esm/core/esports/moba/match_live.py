@@ -20,9 +20,9 @@ import random
 import time
 import uuid
 from queue import Queue
-from typing import Union, Tuple
+from typing import Union, Tuple, Optional
 
-from .generator import ChampionGenerator
+from .champion import Champion
 from .match import Match
 from .mobaevent import MobaEventHandler
 from .picksbans import PicksBans
@@ -41,15 +41,17 @@ class MatchLive:
     """
 
     def __init__(
-            self, match: Match,
-            show_commentary: bool = True,
-            match_speed: int = 1,
-            simulation_delay: bool = True,
-            ban_per_team: int = 5,
-            difficulty_level: int = 1,
-            is_player_match: bool = False,
-            queue: Queue = None,
-            picks_bans_queue: Queue = None,
+        self,
+        match: Match,
+        champions: list[Champion],
+        show_commentary: bool = True,
+        match_speed: int = 1,
+        simulation_delay: bool = True,
+        ban_per_team: int = 5,
+        difficulty_level: int = 1,
+        is_player_match: bool = False,
+        queue: Optional[Queue] = None,
+        picks_bans_queue: Optional[Queue] = None,
     ):
         self.match = match
         self.game_time = 0.0
@@ -60,15 +62,14 @@ class MatchLive:
         self.bans = []
         self.simulation_delay = simulation_delay
         self.event_handler = MobaEventHandler(self.show_commentary, queue)
-        self.champions = ChampionGenerator()
-        self.champions.get_champions()
+        self.champions = champions
         self.ban_per_team = ban_per_team
         self.difficulty_level = difficulty_level
         self.picks_bans_queue = picks_bans_queue
         self.picks_bans = PicksBans(
             self.match.team1,
             self.match.team2,
-            self.champions.champions,
+            self.champions,
             self.ban_per_team,
             self.difficulty_level,
             self.picks_bans_queue,
@@ -81,8 +82,7 @@ class MatchLive:
         self.victorious_team = None
         self.is_match_over = False
         self.event_handler = MobaEventHandler(self.show_commentary, queue)
-        self.champions.get_champions()
-        self.picks_bans.champion_list = self.champions.champions
+        self.picks_bans.champion_list = self.champions
         self.picks_bans.queue = picks_bans_queue
         gc.collect()
 
@@ -196,21 +196,23 @@ class MatchLive:
 
 class MatchSeries:
     def __init__(
-            self,
-            team1,
-            team2,
-            championship_id,
-            best_of=3,
-            show_commentary: bool = True,
-            match_speed: int = 1,
-            simulation_delay: bool = True,
-            ban_per_team: int = 5,
-            difficulty_level: int = 1,
-            is_player_match: bool = False
+        self,
+        team1,
+        team2,
+        championship_id,
+        champions: list[Champion],
+        best_of=3,
+        show_commentary: bool = True,
+        match_speed: int = 1,
+        simulation_delay: bool = True,
+        ban_per_team: int = 5,
+        difficulty_level: int = 1,
+        is_player_match: bool = False,
     ):
         self.championship_id = championship_id
         self.team1 = team1
         self.team2 = team2
+        self.champions = champions
         self.best_of = best_of
 
         # If there is a chance to draw a match
@@ -257,6 +259,7 @@ class MatchSeries:
             self.matches.append(
                 MatchLive(
                     Match(uuid.uuid4(), self.championship_id, teams[0], teams[1]),
+                    self.champions,
                     self.show_commentary,
                     self.match_speed,
                     self.simulation_delay,

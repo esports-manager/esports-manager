@@ -15,7 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import uuid
 from dataclasses import dataclass, field
-from typing import Union
+from .champion import Champion
 from .player import MobaPlayer, MobaPlayerSimulator
 
 
@@ -42,7 +42,7 @@ class TeamSimulation:
     _player_overall: int = 0
     _champion_overall: int = 0
     _total_skill: int = 0
-    _bans: list[Champion] = field(default=list)
+    _bans: list[None | Champion] = field(default=list)
 
     def is_tower_up(self, lane: str) -> bool:
         return self.towers[lane] != 0

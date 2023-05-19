@@ -14,36 +14,21 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 def get_moba_events():
     return [
-        {
-            "name": "NOTHING",
-            "priority": 10,
-            "points": 0
-        },
-        {
-            "name": "KILL",
-            "priority": 10,
-            "points": 10
-        },
-        {
-            "name": "TOWER ASSAULT",
-            "priority": 30,
-            "points": 15,
-            "start_assault": 15.0
-        },
-        {
-            "name": "INHIB ASSAULT",
-            "priority": 50,
-            "points": 15
-        },
+        {"name": "NOTHING", "priority": 10, "points": 0},
+        {"name": "KILL", "priority": 10, "points": 10},
+        {"name": "TOWER ASSAULT", "priority": 30,
+            "points": 15, "start_assault": 15.0},
+        {"name": "INHIB ASSAULT", "priority": 50, "points": 15},
         {
             "name": "HERALD",
             "priority": 25,
             "points": 8,
             "spawn_time": 8.0,
             "cooldown": 6.0,
-            "end_time": 19.5
+            "end_time": 19.5,
         },
         {
             "name": "BARON",
@@ -51,7 +36,7 @@ def get_moba_events():
             "points": 25,
             "spawn_time": 20.0,
             "cooldown": 6.0,
-            "end_time": 0.0
+            "end_time": 0.0,
         },
         {
             "name": "DRAGON",
@@ -59,11 +44,7 @@ def get_moba_events():
             "points": 10,
             "spawn_time": 5.0,
             "cooldown": 5.0,
-            "end_time": 0.0
+            "end_time": 0.0,
         },
-        {
-            "name": "NEXUS ASSAULT",
-            "priority": 80,
-            "points": 100
-        }
+        {"name": "NEXUS ASSAULT", "priority": 80, "points": 100},
     ]

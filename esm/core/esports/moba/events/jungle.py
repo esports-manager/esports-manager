@@ -26,11 +26,7 @@ logger = logging.getLogger(__name__)
 
 class JungleEventEventCreator(EventCreator):
     def factory_method(
-            self,
-            event_chosen: dict,
-            game_time: float,
-            show_commentary: bool,
-            queue: Queue
+        self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
     ):
         return JungleEvent(
             event_name=event_chosen["name"],
@@ -38,7 +34,7 @@ class JungleEventEventCreator(EventCreator):
             points=event_chosen["points"],
             event_time=game_time,
             show_commentary=show_commentary,
-            queue=queue
+            queue=queue,
         )
 
 
@@ -57,7 +53,9 @@ class JungleEvent(MobaEvent):
             player.points += self.points / 5
 
         if prevailing_team == attack_team:
-            self.get_commentary(atk_team_name=prevailing_team.name, jg_name=self.event_name)
+            self.get_commentary(
+                atk_team_name=prevailing_team.name, jg_name=self.event_name
+            )
         else:
             self.get_commentary(
                 def_team_name=prevailing_team.name, jg_name=self.event_name, stole=True

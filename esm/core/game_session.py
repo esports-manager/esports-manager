@@ -29,12 +29,7 @@ class GameSession:
     Manages the state of the current game session.
     """
 
-    def __init__(
-            self,
-            settings: Settings,
-            db: DB,
-            auto_save_enabled: bool = True
-    ):
+    def __init__(self, settings: Settings, db: DB, auto_save_enabled: bool = True):
         self.settings = settings
         self.auto_save_enabled = auto_save_enabled
         self.db = db
@@ -45,5 +40,10 @@ class GameSession:
         self.gamestate = load.load_game_state(filename)
 
     def save_game(self, filename: Union[str, os.PathLike]):
-        save = SaveGame(self.gamestate, filename, self.settings.save_file_dir, self.auto_save_enabled)
+        save = SaveGame(
+            self.gamestate,
+            filename,
+            self.settings.save_file_dir,
+            self.auto_save_enabled,
+        )
         save.save_game()

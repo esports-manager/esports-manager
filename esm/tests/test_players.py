@@ -17,7 +17,12 @@ import pytest
 import uuid
 from datetime import date
 
-from esm.core.esports.moba.player import MobaPlayer, MobaPlayerAttributes, MobaPlayerSimulator, MobaPlayerChampion
+from esm.core.esports.moba.player import (
+    MobaPlayer,
+    MobaPlayerAttributes,
+    MobaPlayerSimulator,
+    MobaPlayerChampion,
+)
 from esm.core.esports.moba.champion import Champion
 from esm.core.esports.moba.moba_definitions import LaneMultipliers
 
@@ -29,7 +34,7 @@ def lanes() -> LaneMultipliers:
 
 @pytest.fixture
 def attributes() -> MobaPlayerAttributes:
-    return MobaPlayerAttributes(75, 85, 87, 86, 49, 91, 95, 82, 90, 89, 84, 85)
+    return MobaPlayerAttributes(75, 85, 87, 86, 49, 91, 95, 82, 90, 89, 84, 85, 36)
 
 
 @pytest.fixture
@@ -69,7 +74,7 @@ def player_dict(lanes, attributes, champions) -> dict:
         "nick_name": "NickName",
         "lanes": lanes.serialize(),
         "attributes": attributes.serialize(),
-        "champions": [champion.serialize() for champion in champions]
+        "champions": [champion.serialize() for champion in champions],
     }
 
 
@@ -83,5 +88,3 @@ def test_player_get_from_dict(player, player_dict):
 
 def test_player_str(player):
     assert player.__str__() == "NickName"
-
-

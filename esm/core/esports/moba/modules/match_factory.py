@@ -16,11 +16,11 @@
 import random
 import uuid
 import threading
+from typing import Optional
 from queue import Queue
 from ..match_live import MatchLive
 from ..team import Team
 from ..match import Match
-from typing import Optional
 
 
 class MatchFactory:

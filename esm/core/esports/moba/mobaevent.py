@@ -24,12 +24,18 @@ from esm.core.esports.moba.moba_events_details import get_moba_events
 logger = logging.getLogger(__name__)
 
 
-def generate_event(event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue) -> MobaEvent:
+def generate_event(
+    event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
+) -> MobaEvent:
     name = event_chosen["name"]
     if name == "NOTHING":
-        return NothingEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
+        return NothingEvent.get_from_dict(
+            event_chosen, game_time, show_commentary, queue
+        )
     elif name in ["BARON", "DRAGON", "HERALD"]:
-        return JungleEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
+        return JungleEvent.get_from_dict(
+            event_chosen, game_time, show_commentary, queue
+        )
     elif name == "INHIB ASSAULT":
         return InhibEvent.get_from_dict(event_chosen, game_time, show_commentary, queue)
     elif name == "TOWER ASSAULT":
@@ -54,7 +60,7 @@ class MobaEventHandler:
         self.queue = queue if self.show_commentary else None
 
     def get_game_state(
-            self, game_time, which_nexus_exposed, is_any_inhib_open, towers_number
+        self, game_time, which_nexus_exposed, is_any_inhib_open, towers_number
     ) -> None:
         if game_time == 0.0:
             self.get_enabled_events(["NOTHING", "KILL"])
@@ -81,17 +87,16 @@ class MobaEventHandler:
         Checks if the jungle event is available
         """
         jungle_events = ["BARON", "DRAGON", "HERALD"]
-        jungle_names = [event for event in self.events if event["name"] in jungle_events]
+        jungle_names = [
+            event for event in self.events if event["name"] in jungle_events
+        ]
 
         for event in jungle_names:
             if self.event.event_name == event["name"]:
                 if event in self.enabled_events:
                     self.enabled_events.remove(event)
                 event["spawn_time"] += event["cooldown"]
-            elif (
-                    game_time >= event["spawn_time"]
-                    and event not in self.enabled_events
-            ):
+            elif game_time >= event["spawn_time"] and event not in self.enabled_events:
                 self.enabled_events.append(event)
             if 0.0 < event["end_time"] <= game_time and event in self.enabled_events:
                 self.enabled_events.remove(event)
@@ -125,5 +130,7 @@ class MobaEventHandler:
         """
         priorities = self.get_event_priorities()
         ev_chosen = random.choices(self.enabled_events, priorities)[0]
-        self.event = generate_event(ev_chosen, game_time, self.show_commentary, self.queue)
+        self.event = generate_event(
+            ev_chosen, game_time, self.show_commentary, self.queue
+        )
         self.event_history.append(self.event)

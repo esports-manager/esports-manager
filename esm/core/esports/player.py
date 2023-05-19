@@ -24,13 +24,14 @@ class Player:
     Base player class.
     May be used by all other eSports.
     """
+
     player_id: uuid.UUID
     nationality: str
     first_name: str
     last_name: str
     birthday: date
     nick_name: str
-    
+
     def get_age(self, today: date = date.today()) -> int:
         """
         Defines the player's age. Today generally refers to the datetime.today function, but when we implement
@@ -40,4 +41,8 @@ class Player:
         return int(age.days * 0.0027379070)
 
     def __eq__(self, other):
-        return self.player_id == other.player_id if isinstance(other, Player) else NotImplemented
+        return (
+            self.player_id == other.player_id
+            if isinstance(other, Player)
+            else NotImplemented
+        )

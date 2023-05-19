@@ -44,7 +44,7 @@ class LoadGame:
         Checks if a file contains autosaves. This will prompt the user that an autosave file has been identified
         and will ask them if they want to load the autosave file instead of the save file.
         """
-        autosave = str(filename.split('.')[0]) + '.autosav'
+        autosave = str(filename.split(".")[0]) + ".autosav"
         return autosave in list_files
 
     def load_game_file(self, filename: str):
@@ -53,7 +53,7 @@ class LoadGame:
         """
         filename = os.path.join(self.folder, filename)
         if self.check_game_file(filename):
-            with open(filename, 'rb') as fp:
+            with open(filename, "rb") as fp:
                 return cbor2.load(fp)
         else:
             raise LoadGameError("The save file is corrupted!")
@@ -69,7 +69,7 @@ class LoadGame:
             "teams",
             "players",
             "champions",
-            "save_date"
+            "save_date",
         ]
         obtained_keys = list(data)
         return expected_keys == obtained_keys
@@ -85,7 +85,8 @@ class LoadGame:
             champions = data["champions"]
             return data, teams, players, champions
         else:
-            raise LoadGameError("The save file does not contain the expected keys")
+            raise LoadGameError(
+                "The save file does not contain the expected keys")
 
     def load_game_state(self, filename: str) -> GameState:
         """
@@ -100,7 +101,7 @@ class LoadGame:
             data["esport"],
             teams,
             players,
-            champions
+            champions,
         )
 
     def get_load_game_files(self, extension: str) -> list:
@@ -112,6 +113,7 @@ class LoadGame:
 
         load_game_files = []
         for root, _, files in os.walk(self.folder):
-            load_game_files.extend(file for file in files if file.endswith(extension))
+            load_game_files.extend(
+                file for file in files if file.endswith(extension))
 
         return load_game_files

@@ -21,7 +21,9 @@ from esm.core.esports.moba.match_live import MatchLive
 
 
 class Championship:
-    def __init__(self, name: str, championship_id: uuid.UUID, country: str, teams: list):
+    def __init__(
+        self, name: str, championship_id: uuid.UUID, country: str, teams: list
+    ):
         self.name = name
         self.championship_id = championship_id
         self.country = country

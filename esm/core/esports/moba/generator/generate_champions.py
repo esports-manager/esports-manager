@@ -28,7 +28,7 @@ class ChampionGenerator(GeneratorInterface):
     def __init__(self, champion_def: list[dict]):
         self.champion_def = champion_def
         self.random = False
-        self.random_names = []
+        self.random_names: list[str] = []
 
     def generate_champion_id(self) -> uuid.UUID:
         """
@@ -42,11 +42,7 @@ class ChampionGenerator(GeneratorInterface):
         return random.choice(self.random_names)
 
     def generate_champion_name(self, champion_def: Optional[dict]) -> str:
-        return (
-            self._get_random_champion_name()
-            if self.random
-            else champion_def["name"]
-        )
+        return self._get_random_champion_name() if self.random else champion_def["name"]
 
     def generate_champion_scaling(self) -> float:
         return round(random.random(), 2)
@@ -78,7 +74,9 @@ class ChampionGenerator(GeneratorInterface):
     def generate_champion_skill(self) -> int:
         return random.randrange(1, 100)
 
-    def generate(self, champion_def: Optional[dict] = None, rand: bool = False) -> Champion:
+    def generate_champion(
+        self, champion_def: Optional[dict] = None, rand: bool = False
+    ) -> Champion:
         if rand:
             self.random = True
         champion_id = self.generate_champion_id()
@@ -89,11 +87,14 @@ class ChampionGenerator(GeneratorInterface):
         lanes = self.generate_champion_lanes(champion_def)
         return Champion(champion_id, name, skill, scaling_factor, scaling_peak, lanes)
 
-    def generate_champion_list(self, amount: int = 0, rand: bool = False) -> list[Champion]:
+    def generate(self, amount: int = 0, rand: bool = False) -> list[Champion]:
         if amount == 0:
             amount = len(self.champion_def)
         elif amount < 20:
             amount = 20
             random.shuffle(self.champion_def)
 
-        return [self.generate(ch_def, rand) for ch_def in self.champion_def[:amount]]
+        return [
+            self.generate_champion(ch_def, rand)
+            for ch_def in self.champion_def[:amount]
+        ]

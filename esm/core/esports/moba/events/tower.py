@@ -26,11 +26,7 @@ logger = logging.getLogger(__name__)
 
 class TowerEventEventCreator(EventCreator):
     def factory_method(
-            self,
-            event_chosen: dict,
-            game_time: float,
-            show_commentary: bool,
-            queue: Queue
+        self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
     ):
         return TowerEvent(
             event_name=event_chosen["name"],
@@ -38,7 +34,7 @@ class TowerEventEventCreator(EventCreator):
             points=event_chosen["points"],
             event_time=game_time,
             show_commentary=show_commentary,
-            queue=queue
+            queue=queue,
         )
 
 
@@ -57,7 +53,8 @@ class TowerEvent(MobaEvent):
         else:
             attack_team, def_team = self._get_probable_team(team1, team2)
 
-        lanes = [lanes for lanes, value in def_team.towers.items() if value != 0]
+        lanes = [lanes for lanes, value in def_team.towers.items()
+                 if value != 0]
 
         # You cannot attack a base tower unless it is exposed
         if not def_team.are_base_towers_exposed():
@@ -82,10 +79,8 @@ class TowerEvent(MobaEvent):
 
     def _destroy_tower(self, prevailing, attack_team, def_team, lane):
         # Decides the player that destroys the tower
-        skills = [
-            player.get_player_total_skill()
-            for player in prevailing.list_players
-        ]
+        skills = [player.get_player_total_skill()
+                  for player in prevailing.list_players]
         player = random.choices(attack_team.list_players, skills)[0]
 
         # player gets full points for destroying the tower
@@ -99,7 +94,8 @@ class TowerEvent(MobaEvent):
         def_team.towers[lane] -= 1
         self.get_commentary(atk_team_name=prevailing.name, lane=lane)
 
-        logger.debug("Team {0} destroyed the {1} tower".format(prevailing.name, lane))
+        logger.debug("Team {0} destroyed the {1} tower".format(
+            prevailing.name, lane))
 
     def calculate_event(self, team1: Team, team2: Team, which_nexus: Union[Team, None]):
         """
@@ -114,9 +110,7 @@ class TowerEvent(MobaEvent):
             )[0]
             # If the prevailing team destroys the tower
             if prevailing == attack_team:
-                self._destroy_tower(
-                    prevailing, attack_team, def_team, lane
-                )
+                self._destroy_tower(prevailing, attack_team, def_team, lane)
 
             else:
                 self.get_commentary(

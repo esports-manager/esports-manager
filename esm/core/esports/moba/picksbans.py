@@ -28,13 +28,13 @@ class PicksBans:
     """
 
     def __init__(
-            self,
-            team1: Team,
-            team2: Team,
-            champion_list: list,
-            ban_per_team: int = 5,
-            difficulty_level: int = 1,
-            queue: Queue = None,
+        self,
+        team1: Team,
+        team2: Team,
+        champion_list: list,
+        ban_per_team: int = 5,
+        difficulty_level: int = 1,
+        queue: Queue = None,
     ):
         self.bans_turn = 0
         self.picks_turn = -1
@@ -106,9 +106,11 @@ class PicksBans:
         """
         champion = None
         if self.picks_turn == 0:
-            champion = self.get_input(self.team1, self.team2, pick=True, player=player)
+            champion = self.get_input(
+                self.team1, self.team2, pick=True, player=player)
         elif self.picks_turn == 1:
-            champion = self.get_input(self.team2, self.team1, pick=True, player=player)
+            champion = self.get_input(
+                self.team2, self.team1, pick=True, player=player)
 
         # Team 1 starts picking. It picks 1 champion, and the turn goes to team 2.
         # Team 2 picks 2 champions. A total of 3 champions were picked, now it's team 1's turn.
@@ -163,8 +165,11 @@ class PicksBans:
 
     def get_player_input(self) -> Champion:
         champion = self.queue.get()
-        if not isinstance(champion,
-                          Champion) and champion in self.banned_champions and champion in self.picked_champions:
+        if (
+            not isinstance(champion, Champion)
+            and champion in self.banned_champions
+            and champion in self.picked_champions
+        ):
             champion = None
 
         return champion
@@ -173,12 +178,20 @@ class PicksBans:
         self.set_up_player_picks()
 
         if self.team1.is_players_team:
-            self.team2_ai = PickBanAI(self.team2, self.team1, self.champion_list, self.difficulty_level)
+            self.team2_ai = PickBanAI(
+                self.team2, self.team1, self.champion_list, self.difficulty_level
+            )
         elif self.team2.is_players_team:
-            self.team1_ai = PickBanAI(self.team1, self.team2, self.champion_list, self.difficulty_level)
+            self.team1_ai = PickBanAI(
+                self.team1, self.team2, self.champion_list, self.difficulty_level
+            )
         else:
-            self.team1_ai = PickBanAI(self.team1, self.team2, self.champion_list, self.difficulty_level)
-            self.team2_ai = PickBanAI(self.team2, self.team1, self.champion_list, self.difficulty_level)
+            self.team1_ai = PickBanAI(
+                self.team1, self.team2, self.champion_list, self.difficulty_level
+            )
+            self.team2_ai = PickBanAI(
+                self.team2, self.team1, self.champion_list, self.difficulty_level
+            )
 
         while self.num_picks < 10:
             player = self.picks_order[0]
@@ -263,11 +276,13 @@ class PickBanAI:
         """
         # Adds all the best champions to the list of best champions
         for player in self.team.list_players:
-            self.check_champion(player.champions, self.opponents_best_champions)
+            self.check_champion(
+                player.champions, self.opponents_best_champions)
 
         # If the list is empty, chooses a random champion from the list
         if not self.opponents_best_champions:
-            self.opponents_best_champions.append(random.choice(self.champion_list))
+            self.opponents_best_champions.append(
+                random.choice(self.champion_list))
 
     def check_champion_used(self):
         for champion in self.champion_list:

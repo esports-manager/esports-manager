@@ -43,15 +43,8 @@ class Match:
         self.championship_id = championship_id
         self.team1 = team1
         self.team2 = team2
-        self._teams = []
+        self.teams = [self.team1, self.team2]
         self.victorious_team = None
-
-    @property
-    def teams(self) -> list:
-        self._teams.clear()
-
-        self._teams = [self.team1, self.team2]
-        return self._teams
 
     def __repr__(self) -> str:
         return "{0} {1}".format(self.__class__.__name__, self.match_id)

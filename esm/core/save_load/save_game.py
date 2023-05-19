@@ -29,11 +29,11 @@ from esm.definitions import SAVE_FILE_DIR
 
 class SaveGame:
     def __init__(
-            self,
-            gamestate: GameState,
-            filename: Union[str, Path],
-            save_directory: str = None,
-            autosave_enabled: bool = True
+        self,
+        gamestate: GameState,
+        filename: Union[str, Path],
+        save_directory: str = None,
+        autosave_enabled: bool = True,
     ):
         self.gamestate = gamestate
         self.save_directory = save_directory
@@ -57,7 +57,7 @@ class SaveGame:
         """
         data = asdict(self.gamestate)
         save_date = datetime.strftime(datetime.now(), "%Y/%m/%d %H:%M:%S:%f")
-        data['save_date'] = save_date
+        data["save_date"] = save_date
         return data
 
     def save_temporary_file(self):
@@ -84,7 +84,7 @@ class SaveGame:
         """
         self.save_temporary_file()
         # TODO: We perhaps can have a list of autosave files and we might identify a list of autosaves, if needed.
-        autosave = str(self.filename.split('.')[0]) + '.autosav'
+        autosave = str(self.filename.split(".")[0]) + ".autosav"
         self.autosave = os.path.join(self.save_directory, autosave)
         self.write_save_file(self.autosave)
 
@@ -126,7 +126,7 @@ class SaveGame:
         This will be used by the LoadGame module to check for corrupted save files.
         """
         data = self.setup_data_file()
-        with open(filename, 'wb') as fp:
+        with open(filename, "wb") as fp:
             cbor2.dump(data, fp, timezone=timezone.utc)
 
     def delete_temporary_file(self):

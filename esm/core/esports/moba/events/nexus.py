@@ -26,11 +26,7 @@ logger = logging.getLogger(__name__)
 
 class NexusEventEventCreator(EventCreator):
     def factory_method(
-            self,
-            event_chosen: dict,
-            game_time: float,
-            show_commentary: bool,
-            queue: Queue
+        self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
     ):
         return NexusEvent(
             event_name=event_chosen["name"],
@@ -38,7 +34,7 @@ class NexusEventEventCreator(EventCreator):
             points=event_chosen["points"],
             event_time=game_time,
             show_commentary=show_commentary,
-            queue=queue
+            queue=queue,
         )
 
 

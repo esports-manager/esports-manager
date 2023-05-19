@@ -28,6 +28,7 @@ class Lanes(Enum):
     """
     Defines lanes that can be played during a MOBA match
     """
+
     TOP = 0
     JNG = auto()
     MID = auto()
@@ -53,10 +54,15 @@ class LaneMultipliers(Serializable):
 
     def __post_init__(self):
         if not (
-                self._check_multiplier(self.top) and self._check_multiplier(self.jng) and self._check_multiplier(
-                self.mid) and self._check_multiplier(self.adc) and self._check_multiplier(self.sup)
+            self._check_multiplier(self.top)
+            and self._check_multiplier(self.jng)
+            and self._check_multiplier(self.mid)
+            and self._check_multiplier(self.adc)
+            and self._check_multiplier(self.sup)
         ):
-            raise LaneMultiplierError("Lane value cannot be negative or greater than 1.0!")
+            raise LaneMultiplierError(
+                "Lane value cannot be negative or greater than 1.0!"
+            )
 
     def __getitem__(self, key: Lanes):
         if key == Lanes.TOP:
@@ -117,7 +123,7 @@ class LaneMultipliers(Serializable):
             Lanes.JNG.value: self.jng,
             Lanes.MID.value: self.mid,
             Lanes.ADC.value: self.adc,
-            Lanes.SUP.value: self.sup
+            Lanes.SUP.value: self.sup,
         }
 
 

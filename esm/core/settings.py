@@ -39,22 +39,22 @@ class Settings:
 
     def load_config_file(self):
         if os.path.exists(self.config_file):
-            with open(self.config_file, 'r') as fp:
+            with open(self.config_file, "r") as fp:
                 return yaml.safe_load(fp)
         else:
             self.create_config_file()
 
     def parse_config_file(self, data):
-        self.font_scale = data['font_scale']
-        self.amount_players = data['amount_players']
-        self.enable_auto_save = data['enable_auto_save']
-        self.root_dir = data['root_dir']
-        self.res_dir = data['res_dir']
-        self.db_dir = data['db_dir']
-        self.save_file_dir = data['save_file_dir']
-        self.champions_file = data['champions_file']
-        self.players_file = data['players_file']
-        self.teams_file = data['teams_file']
+        self.font_scale = data["font_scale"]
+        self.amount_players = data["amount_players"]
+        self.enable_auto_save = data["enable_auto_save"]
+        self.root_dir = data["root_dir"]
+        self.res_dir = data["res_dir"]
+        self.db_dir = data["db_dir"]
+        self.save_file_dir = data["save_file_dir"]
+        self.champions_file = data["champions_file"]
+        self.players_file = data["players_file"]
+        self.teams_file = data["teams_file"]
 
     def get_data(self):
         return {
@@ -72,5 +72,5 @@ class Settings:
 
     def create_config_file(self):
         os.makedirs(os.path.dirname(self.config_file), exist_ok=True)
-        with open(self.config_file, 'w') as fp:
+        with open(self.config_file, "w") as fp:
             yaml.safe_dump(self.get_data(), fp)

@@ -16,7 +16,7 @@
 import random
 import uuid
 
-from esm.core.esports.moba.match import Match
+from esm.core.esports.moba.game import Game
 from esm.core.esports.moba.match_live import MatchLive
 
 
@@ -44,7 +44,7 @@ class Championship:
             for opp_team in opp_teams:
                 self.matches.append(
                     MatchLive(
-                        Match(uuid.uuid4(), self.championship_id, team, opp_team),
+                        Game(uuid.uuid4(), self.championship_id, team, opp_team),
                         show_commentary=False,
                         simulation_delay=False,
                     )
@@ -60,7 +60,7 @@ class Championship:
         matches_per_team = []
 
         for team in self.teams:
-            count = sum(team in match.match.teams for match in self.matches)
+            count = sum(team in match.game.teams for match in self.matches)
             matches_per_team.append([team, count])
 
         return matches_per_team

@@ -36,9 +36,9 @@ class DB:
         return self.settings.champions_file
 
     def get_moba_generators(self) -> Tuple[MobaPlayerGenerator, TeamGenerator, ChampionGenerator]:
-        players = MobaPlayerGenerator(file_name=self.players_file)
-        teams = TeamGenerator(file_name=self.teams_file)
-        champions = ChampionGenerator(file_name=self.champions_file)
+        players = MobaPlayerGenerator()
+        teams = TeamGenerator()
+        champions = ChampionGenerator()
         return players, teams, champions
 
     def generate_moba_files(self):

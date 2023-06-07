@@ -17,34 +17,12 @@
 
 def get_moba_events():
     return [
-        {"name": "NOTHING", "priority": 10, "points": 0},
-        {"name": "KILL", "priority": 10, "points": 10},
-        {"name": "TOWER ASSAULT", "priority": 30,
-            "points": 15, "start_assault": 15.0},
-        {"name": "INHIB ASSAULT", "priority": 50, "points": 15},
-        {
-            "name": "HERALD",
-            "priority": 25,
-            "points": 8,
-            "spawn_time": 8.0,
-            "cooldown": 6.0,
-            "end_time": 19.5,
-        },
-        {
-            "name": "BARON",
-            "priority": 50,
-            "points": 25,
-            "spawn_time": 20.0,
-            "cooldown": 6.0,
-            "end_time": 0.0,
-        },
-        {
-            "name": "DRAGON",
-            "priority": 25,
-            "points": 10,
-            "spawn_time": 5.0,
-            "cooldown": 5.0,
-            "end_time": 0.0,
-        },
-        {"name": "NEXUS ASSAULT", "priority": 80, "points": 100},
+        {"name": "NOTHING", "priority": 10, "points": 0, "spawn_time": 10.0, "cooldown": 0.0, "end_time": 0.0},
+        {"name": "KILL", "priority": 10, "points": 10, "spawn_time": 10.0, "cooldown": 0.0, "end_time": 0.0},
+        {"name": "TOWER ASSAULT", "priority": 30, "points": 15, "spawn_time": 10.0, "cooldown": 0.0, "end_time": 0.0},
+        {"name": "INHIB ASSAULT", "priority": 50, "points": 15, "spawn_time": 0.0, "cooldown": 5.0, "end_time": 0.0},
+        {"name": "HERALD", "priority": 25, "points": 8, "spawn_time": 8.0, "cooldown": 6.0, "end_time": 19.5},
+        {"name": "BARON", "priority": 50, "points": 25, "spawn_time": 20.0, "cooldown": 6.0, "end_time": 0.0},
+        {"name": "DRAGON", "priority": 25, "points": 10, "spawn_time": 5.0, "cooldown": 5.0, "end_time": 0.0},
+        {"name": "NEXUS ASSAULT", "priority": 80, "points": 100, "spawn_time": 0.0, "cooldown": 0.0, "end_time": 0.0},
     ]

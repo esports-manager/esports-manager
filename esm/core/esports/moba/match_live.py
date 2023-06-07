@@ -23,10 +23,10 @@ from queue import Queue
 from typing import Union, Tuple, Optional
 
 from .champion import Champion
-from .match import Match
+from .game import Game
 from .mobaevent import MobaEventHandler
 from .picksbans import PicksBans
-from .team import Team
+from .team import TeamSimulation
 
 
 class MatchLive:
@@ -42,7 +42,7 @@ class MatchLive:
 
     def __init__(
         self,
-        match: Match,
+        game: Game,
         champions: list[Champion],
         show_commentary: bool = True,
         match_speed: int = 1,
@@ -53,7 +53,7 @@ class MatchLive:
         queue: Optional[Queue] = None,
         picks_bans_queue: Optional[Queue] = None,
     ):
-        self.match = match
+        self.game = game
         self.game_time = 0.0
         self.victorious_team = None
         self.show_commentary = show_commentary
@@ -67,8 +67,8 @@ class MatchLive:
         self.difficulty_level = difficulty_level
         self.picks_bans_queue = picks_bans_queue
         self.picks_bans = PicksBans(
-            self.match.team1,
-            self.match.team2,
+            self.game.team1,
+            self.game.team2,
             self.champions,
             self.ban_per_team,
             self.difficulty_level,
@@ -87,10 +87,10 @@ class MatchLive:
         gc.collect()
 
     def check_is_player_match(self) -> bool:
-        return any(team.is_players_team for team in self.match.teams)
+        return any(team.is_players_team for team in self.game.teams)
 
     def reset_teams(self) -> None:
-        for team in self.match.teams:
+        for team in self.game.teams:
             team.reset_values()
 
     def picks_and_bans(self) -> None:
@@ -108,9 +108,9 @@ class MatchLive:
         Calculates both teams Win probabilities. This is used for internal match simulation calculations. The winning
         team will always have a significant advantage over the losing team.
         """
-        total_prob = sum(team.total_skill for team in self.match.teams)
+        total_prob = sum(team.total_skill for team in self.game.teams)
 
-        for team in self.match.teams:
+        for team in self.game.teams:
             team.win_prob = team.total_skill / total_prob
 
     def increment_game_time(self, quantity):
@@ -124,18 +124,18 @@ class MatchLive:
         Gets the amount of towers in the game. If neither team has any towers, the game stops trying to generate the
         Tower Assault events.
         """
-        return sum(sum(team.towers.values()) for team in self.match.teams)
+        return sum(sum(team.towers.values()) for team in self.game.teams)
 
-    def get_team_exposed_nexus(self) -> Union[Tuple[Team, Team], Team, None]:
+    def get_team_exposed_nexus(self) -> Union[Tuple[TeamSimulation, TeamSimulation], TeamSimulation, None]:
         """
         Gets the exposed nexus from one or both of the teams.
         """
-        if self.match.team1.is_nexus_exposed():
-            if self.match.team2.is_nexus_exposed():
-                return self.match.team1, self.match.team2
-            return self.match.team1
-        elif self.match.team2.is_nexus_exposed():
-            return self.match.team2
+        if self.game.team1.is_nexus_exposed():
+            if self.game.team2.is_nexus_exposed():
+                return self.game.team1, self.game.team2
+            return self.game.team1
+        elif self.game.team2.is_nexus_exposed():
+            return self.game.team2
         else:
             return None
 
@@ -143,7 +143,7 @@ class MatchLive:
         """
         Checks if one of the nexus is down and terminates the simulation
         """
-        for team in self.match.teams:
+        for team in self.game.teams:
             if team.nexus == 0:
                 self.is_match_over = True
 
@@ -151,16 +151,16 @@ class MatchLive:
         """
         Assigns the winner to the team that still has the nexus up
         """
-        for team in self.match.teams:
+        for team in self.game.teams:
             if team.nexus == 1:
                 self.victorious_team = team
-                self.match.victorious_team = self.victorious_team
+                self.game.victorious_team = self.victorious_team
 
     def is_any_inhib_open(self) -> bool:
         """
         Checks for open inhibitors, to decide whether a base tower or nexus can be attacked
         """
-        return any(team.get_exposed_inhibs() for team in self.match.teams)
+        return any(team.get_exposed_inhibs() for team in self.game.teams)
 
     def simulation(self) -> None:
         """
@@ -183,7 +183,7 @@ class MatchLive:
         )
         self.event_handler.generate_event(self.game_time)
         self.event_handler.event.calculate_event(
-            self.match.team1, self.match.team2, self.get_team_exposed_nexus()
+            self.game.team1, self.game.team2, self.get_team_exposed_nexus()
         )
         self.check_match_over()
 
@@ -258,7 +258,7 @@ class MatchSeries:
 
             self.matches.append(
                 MatchLive(
-                    Match(uuid.uuid4(), self.championship_id, teams[0], teams[1]),
+                    Game(uuid.uuid4(), self.championship_id, teams[0], teams[1]),
                     self.champions,
                     self.show_commentary,
                     self.match_speed,

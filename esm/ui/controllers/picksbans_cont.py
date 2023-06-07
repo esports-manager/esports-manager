@@ -105,11 +105,11 @@ class PicksBansController(IController):
             self.controller.update_element_on_screen("pickban_pick_btn", text="Pick")
 
     def get_elements(self):
-        self.team1 = self.current_match.match.team1
-        self.team2 = self.current_match.match.team2
+        self.team1 = self.current_match.game.team1
+        self.team2 = self.current_match.game.team2
         self.ch_list = self.current_match.picks_bans.champion_list
-        self.team1_bans = self.current_match.match.team1.bans
-        self.team2_bans = self.current_match.match.team2.bans
+        self.team1_bans = self.current_match.game.team1.bans
+        self.team2_bans = self.current_match.game.team2.bans
 
     def update(self, event, values, make_screen):
         if not self.controller.get_gui_element("debug_picks_bans_screen").visible:
@@ -119,7 +119,7 @@ class PicksBansController(IController):
             self.core.check_files()
             teams = self.core.db.load_moba_teams()
             self.current_match = self.game_initializer.initialize_random_debug_game(teams, picks_bans_queue=self.queue)
-            self.current_match.match.team1.is_players_team = True
+            self.current_match.game.team1.is_players_team = True
             try:
                 self.pick_ban_thread = threading.Thread(target=self.current_match.picks_and_bans, daemon=True)
                 self.pick_ban_thread.start()

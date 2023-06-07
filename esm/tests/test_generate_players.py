@@ -21,10 +21,16 @@ from esm.core.esports.moba.generator.default_champion_defs import (
 from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator
 from esm.core.esports.moba.generator.generate_champions import ChampionGenerator
 from esm.core.esports.moba.player import MobaPlayer
+from esm.core.utils import load_list_from_file
+from esm.definitions import NAMES_FILE
 
 
 @pytest.fixture
 def moba_player_gen() -> MobaPlayerGenerator:
-    champions = ChampionGenerator(get_default_champion_defs())
-    champions.generate_champion
-    return MobaPlayerGenerator()
+    champions_gen = ChampionGenerator(get_default_champion_defs())
+    champions = champions_gen.generate()
+    names = load_list_from_file(NAMES_FILE)
+    return MobaPlayerGenerator(champions, names)
+
+
+

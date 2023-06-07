@@ -209,7 +209,7 @@ class MobaPlayerStats:
 
 
 @dataclass
-class MobaPlayerSimulator:
+class MobaPlayerSimulation:
     player: MobaPlayer
     champion: Champion
     lane: Lanes

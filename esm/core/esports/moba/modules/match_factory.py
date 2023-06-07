@@ -19,19 +19,25 @@ import threading
 from typing import Optional
 from queue import Queue
 from ..match_live import MatchLive
-from ..team import Team
-from ..match import Match
+from ..team import TeamSimulation
+from ..game import Game
 
 
 class MatchFactory:
     def __init__(self):
-        self.current_game: Optional[Match] = None
+        self.current_game: Optional[Game] = None
         self.current_live_game: Optional[MatchLive] = None
         self.game_thread: Optional[threading.Thread] = None
         self.is_game_running: bool = False
 
-    def initialize_game(self, game_id: uuid.UUID, championship_id: uuid.UUID, team1: Team, team2: Team):
-        self.current_game = Match(
+    def initialize_game(
+        self,
+        game_id: uuid.UUID,
+        championship_id: uuid.UUID,
+        team1: TeamSimulation,
+        team2: TeamSimulation
+    ):
+        self.current_game = Game(
             game_id,
             championship_id,
             team1,
@@ -39,16 +45,16 @@ class MatchFactory:
         )
 
     def initialize_live_game(
-            self,
-            game: Match,
-            show_commentary: bool,
-            match_speed: int,
-            simulation_delay: bool,
-            ban_per_team: int,
-            difficulty_level: int,
-            is_player_match: bool,
-            queue: Queue,
-            picks_bans_queue: Queue
+        self,
+        game: Game,
+        show_commentary: bool,
+        match_speed: int,
+        simulation_delay: bool,
+        ban_per_team: int,
+        difficulty_level: int,
+        is_player_match: bool,
+        queue: Queue,
+        picks_bans_queue: Queue
     ):
         self.current_live_game = MatchLive(
             game,

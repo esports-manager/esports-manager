@@ -51,13 +51,16 @@ class DebugMatchLayout(ILayout):
             [esm_table(headings, headings=headings, key="debug_team1table")],
             [
                 esm_form_text("Towers: "),
-                esm_form_text(
-                    {"top": 3, "mid": 3, "bot": 3, "base": 2}, key="debug_team1towers"
-                ),
+                esm_form_text("Top tower: 3", key="debug_team1_top_tower"),
+                esm_form_text("Mid tower: 3", key="debug_team1_mid_tower"),
+                esm_form_text("Bot tower: 3", key="debug_team1_bot_tower"),
+                esm_form_text("Base tower: 3", key="debug_team1_base_tower"),
             ],
             [
                 esm_form_text("Inhibitors: "),
-                esm_form_text({"top": 1, "mid": 1, "bot": 1}, key="debug_team1inhibs"),
+                esm_form_text("Top inhib: 1", key="debug_team1_top_inhib"),
+                esm_form_text("Mid inhib: 1", key="debug_team1_mid_inhib"),
+                esm_form_text("Bot inhib: 1", key="debug_team1_bot_inhib"),
             ],
         ]
 
@@ -70,13 +73,16 @@ class DebugMatchLayout(ILayout):
             [esm_table(headings, headings=headings, key="debug_team2table")],
             [
                 esm_form_text("Towers: "),
-                esm_form_text(
-                    {"top": 3, "mid": 3, "bot": 3, "base": 2}, key="debug_team2towers"
-                ),
+                esm_form_text("Top tower: 3", key="debug_team2_top_tower"),
+                esm_form_text("Mid tower: 3", key="debug_team2_mid_tower"),
+                esm_form_text("Bot tower: 3", key="debug_team2_bot_tower"),
+                esm_form_text("Base tower: 3", key="debug_team2_base_tower"),
             ],
             [
                 esm_form_text("Inhibitors: "),
-                esm_form_text({"top": 1, "mid": 1, "bot": 1}, key="debug_team2inhibs"),
+                esm_form_text("Top inhib: 1", key="debug_team2_top_inhib"),
+                esm_form_text("Mid inhib: 1", key="debug_team2_mid_inhib"),
+                esm_form_text("Bot inhib: 1", key="debug_team2_bot_inhib"),
             ],
         ]
 

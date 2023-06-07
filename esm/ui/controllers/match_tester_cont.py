@@ -40,7 +40,7 @@ class MatchTesterController(IController):
 
     @current_match.setter
     def current_match(self, game: MatchLive):
-        self.game_initializer.current_game = game.match
+        self.game_initializer.current_game = game.game
         self.game_initializer.current_live_game = MatchLive
 
     @property
@@ -110,7 +110,7 @@ class MatchTesterController(IController):
             return None
 
         players = [list(team.list_players)
-                   for team in self.current_match.match.teams]
+                   for team in self.current_match.game.teams]
 
         data = []
         for team in players:
@@ -133,13 +133,13 @@ class MatchTesterController(IController):
         self.controller.update_element_on_screen(
             'match_tester_team2table', values=data[1])
         self.controller.update_element_on_screen(
-            'match_tester_team1skill', value=self.current_match.match.team1.total_skill)
+            'match_tester_team1skill', value=self.current_match.game.team1.total_skill)
         self.controller.update_element_on_screen(
-            'match_tester_team2skill', value=self.current_match.match.team2.total_skill)
+            'match_tester_team2skill', value=self.current_match.game.team2.total_skill)
         self.controller.update_element_on_screen(
-            'match_tester_team1name', value=self.current_match.match.team1.name)
+            'match_tester_team1name', value=self.current_match.game.team1.name)
         self.controller.update_element_on_screen(
-            'match_tester_team2name', value=self.current_match.match.team2.name)
+            'match_tester_team2name', value=self.current_match.game.team2.name)
 
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("match_tester_screen").visible:

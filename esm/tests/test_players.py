@@ -20,7 +20,7 @@ from datetime import date
 from esm.core.esports.moba.player import (
     MobaPlayer,
     MobaPlayerAttributes,
-    MobaPlayerSimulator,
+    MobaPlayerSimulation,
     MobaPlayerChampion,
 )
 from esm.core.esports.moba.champion import Champion

@@ -14,35 +14,86 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import uuid
-from dataclasses import dataclass, field
-from .player import MobaPlayer, MobaPlayerSimulator
+from dataclasses import dataclass, asdict
+from .player import MobaPlayer, MobaPlayerSimulation
 from .champion import Champion
+from ...serializable import Serializable
+
+
+class PlayerSerializeError(Exception):
+    pass
+
+
+def get_players_from_list(list_player_ids: list[str], players: list[MobaPlayer]) -> list[MobaPlayer]:
+    player_ids = [uuid.UUID(hex=player_id) for player_id in list_player_ids]
+    roster = []
+
+    for player_id in player_ids:
+        for player in players:
+            if player.player_id == player_id:
+                roster.append(player)
+
+    if not roster:
+        raise PlayerSerializeError("Roster is empty")
+
+    return roster
 
 
 @dataclass
-class Team:
+class Team(Serializable):
     team_id: uuid.UUID
     name: str
     list_players: list[MobaPlayer]
 
+    def serialize(self) -> dict:
+        players = [player.player_id for player in self.list_players]
+        return {
+            "team_id": self.team_id,
+            "name": self.name,
+            "list_players": players
+        }
+
+    @classmethod
+    def get_from_dict(cls, dictionary: dict, players: list[MobaPlayer]):
+        get_players_from_list(dictionary["list_players"], players)
+        return cls(
+            dictionary["team_id"],
+            dictionary["name"],
+            players,
+        )
+
 
 @dataclass
+class TeamStats:
+    kills: int = 0
+    deaths: int = 0
+    assists: int = 0
+
+
 class TeamSimulation:
-    team: Team
-    towers: dict[str, int]
-    inhibitors: dict[str, int]
-    is_players_team: bool
-    nexus: int
-    players: list[MobaPlayerSimulator]
-    win_prob: float = 0.00
-    _kills: int = 0
-    _deaths: int = 0
-    _assists: int = 0
-    _player_overall: int = 0
-    _champion_overall: int = 0
-    _total_skill: int = 0
-    _points: int = 0
-    _bans: list[Champion] = field(default=list)
+    def __init__(self, team: Team, players: list[MobaPlayerSimulation], is_players_team: bool):
+        self.team: Team = team
+        self.towers: dict[str, int] = {
+            "top": 3,
+            "mid": 3,
+            "bot": 3,
+            "base": 2,
+        }
+        self.inhibitors: dict[str, int] = {
+            "top": 1,
+            "mid": 1,
+            "bot": 1,
+        }
+        self.is_players_team: bool = is_players_team
+        self.nexus: int = 1
+        self.players: list[MobaPlayerSimulation] = players
+        self.stats: TeamStats = TeamStats()
+        self.win_prob: float = 0.00
+        self._player_overall: int = 0
+        self._champion_overall: int = 0
+        self._total_skill: int = 0
+        self._points: int = 0
+        self._bans: list[Champion] = []
 
     def is_tower_up(self, lane: str) -> bool:
         return self.towers[lane] != 0
@@ -118,7 +169,7 @@ class TeamSimulation:
             }
         )
 
-        self.win_prob = 0
+        self.win_prob = 0.0
         self.nexus = 1
 
     @property
@@ -131,27 +182,27 @@ class TeamSimulation:
 
     @property
     def kills(self) -> int:
-        self._kills = 0
+        self.stats.kills = 0
         for player in self.players:
-            self._kills += player.kills
+            self.stats.kills += player.stats.kills
 
-        return self._kills
+        return self.stats.kills
 
     @property
     def deaths(self) -> int:
-        self._deaths = 0
+        self.stats.deaths = 0
         for player in self.players:
-            self._deaths += player.deaths
+            self.stats.deaths += player.stats.deaths
 
-        return self._deaths
+        return self.stats.deaths
 
     @property
     def assists(self) -> int:
-        self._assists = 0
+        self.stats.assists = 0
         for player in self.players:
-            self._assists += player.assists
+            self.stats.assists += player.stats.assists
 
-        return self._assists
+        return self.stats.assists
 
     @property
     def points(self) -> int:
@@ -189,14 +240,6 @@ class TeamSimulation:
         )
 
         return int(self._total_skill)
-
-    @classmethod
-    def get_from_dict(cls, team: dict):
-        return cls(
-            uuid.UUID(int=team["id"]),
-            team["name"],
-            team["roster"],
-        )
 
     def __str__(self):
         return "{0}".format(self.team.name)

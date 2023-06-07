@@ -61,14 +61,14 @@ class DebugChampionshipController(IController):
 
     def get_default_match_details(self):
         self.match_details = [
-            [match.match.team1.name, match.match.team2.name, "None"]
+            [match.game.team1.name, match.game.team2.name, "None"]
             for match in self.championship.matches
         ]
 
     def assign_win_and_loss_in_championship_table(self, match):
         for detail in self.championship_details:
-            if detail[0] in [match.match.team1.name, match.match.team2.name]:
-                if detail[0] == match.match.victorious_team.name:
+            if detail[0] in [match.game.team1.name, match.game.team2.name]:
+                if detail[0] == match.game.victorious_team.name:
                     detail[2] += 1
                     detail[4] += 3
                 else:
@@ -76,7 +76,7 @@ class DebugChampionshipController(IController):
 
     def get_winning_team(self, live_match):
         for detail in self.match_details:
-            if live_match.match.team1.name == detail[0] and live_match.match.team2.name == detail[1]:
+            if live_match.game.team1.name == detail[0] and live_match.game.team2.name == detail[1]:
                 if live_match.victorious_team.name == detail[0]:
                     detail[2] = detail[0]
                 elif live_match.victorious_team.name == detail[1]:
@@ -86,14 +86,14 @@ class DebugChampionshipController(IController):
 
     def play_championship(self):
         for live_match in self.championship.matches:
-            for team in live_match.match.teams:
+            for team in live_match.game.teams:
                 team.get_players_default_lanes()
             live_match.picks_and_bans()
             live_match.simulation()
             self.get_winning_team(live_match)
             self.assign_win_and_loss_in_championship_table(live_match)
 
-            for team in live_match.match.teams:
+            for team in live_match.game.teams:
                 team.reset_values()
 
     def reset_championship(self):

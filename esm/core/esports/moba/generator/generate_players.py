@@ -29,6 +29,7 @@ from ..player import (
     LaneMultipliers,
     MobaPlayerAttributes,
     MobaPlayerChampion,
+    Lanes,
 )
 from ....utils import get_nations
 
@@ -50,8 +51,8 @@ class MobaPlayerGenerator(GeneratorInterface):
         min_age: int = 16,
         max_age: int = 25,
     ):
-        self.nationalities = None
-        self.nick_names = None
+        self.nationalities = get_nations()
+        self.nick_names = get_default_player_nick_names()
 
         if min_age > max_age:
             raise MobaPlayerGeneratorError(
@@ -64,14 +65,9 @@ class MobaPlayerGenerator(GeneratorInterface):
         self.champions_list = champions_list
         self.names = names
 
-    def get_nick_names(self) -> None:
-        self.nick_names = get_default_player_nick_names()
-
-    def generate_id(self) -> uuid.UUID:
+    @staticmethod
+    def generate_id() -> uuid.UUID:
         return uuid.uuid4()
-
-    def get_nationalities(self) -> None:
-        self.nationalities = get_nations()
 
     def get_nationality(self) -> str:
         """
@@ -84,7 +80,8 @@ class MobaPlayerGenerator(GeneratorInterface):
         Generates the player's date of birth
         """
         year = timedelta(
-            seconds=31556952)  # definition of a Gregorian calendar date
+            seconds=31556952
+        )  # definition of a Gregorian calendar date
 
         max_age = (
             self.max_age * year
@@ -102,7 +99,7 @@ class MobaPlayerGenerator(GeneratorInterface):
         return min_year + timedelta(days=rand_date)  # assigns date of birth
 
     def generate_champions(
-        self, lane: int, amount: int = 0
+        self, lane: Lanes, amount: int = 0
     ) -> list[MobaPlayerChampion]:
         """
         Generates champion skill level for each player.
@@ -135,18 +132,14 @@ class MobaPlayerGenerator(GeneratorInterface):
 
                 return mu, sigma
 
-    def generate_attributes(self, nationality: str, lane: int) -> MobaPlayerAttributes:
+    def generate_attributes(self, nationality: str, lane: Lanes) -> MobaPlayerAttributes:
         """
         Randomly generates players skills according to their nationality
         """
         mu, sigma = self.get_nationality_skill(nationality)
-        skill = int(random.gauss(mu, sigma))
 
-        # Players' skill will follow the 30 < skill < 90 interval
-        if skill >= 90:
-            skill = 90
-        elif skill < 30:
-            skill = 30
+
+
 
     def generate_first_name(self, nationality: str) -> str:
         """
@@ -174,7 +167,7 @@ class MobaPlayerGenerator(GeneratorInterface):
         """
         return random.choice(self.nick_names)
 
-    def generate_multipliers(self, main_lane: int) -> LaneMultipliers:
+    def generate_multipliers(self, main_lane: Lanes) -> LaneMultipliers:
         """
         Generates players multipliers.
         Multipliers are used to define the player's experience on a lane.
@@ -187,13 +180,12 @@ class MobaPlayerGenerator(GeneratorInterface):
         """
         mult = {}
         for lane in range(5):
-            multiplier = random.randrange(
-                55, 100) / 100 if lane == main_lane else 1
+            multiplier = random.randrange(55, 100) / 100 if lane != main_lane else 1
             mult[lane] = multiplier
 
         return LaneMultipliers.get_from_dict(mult)
 
-    def generate_player(self, lane: int, amount_champions: int = 0) -> MobaPlayer:
+    def generate_player(self, lane: Lanes, amount_champions: int = 0) -> MobaPlayer:
         """
         Runs the player generation routine
         """
@@ -218,7 +210,7 @@ class MobaPlayerGenerator(GeneratorInterface):
         """
         if rand:
             for lane in range(amount):
-                self.generate_player(lane)
+                self.generate_player(Lanes(lane))
         else:
             for lane, __ in itertools.product(range(5), range(amount // 5)):
                 self.generate_player(lane)

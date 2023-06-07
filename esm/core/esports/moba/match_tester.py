@@ -51,7 +51,7 @@ class MatchTester:
         self.running_test = False
 
     def _get_team_stats(self, i):
-        team = self.match.match.teams[i]
+        team = self.match.game.teams[i]
         self.amount_team_kills[i].append(team.kills)
         self.amount_team_deaths[i].append(team.deaths)
         self.amount_team_assists[i].append(team.assists)
@@ -63,7 +63,7 @@ class MatchTester:
         self.avg_team_assists[i] += team.assists
 
     def _get_amount_wins(self):
-        if self.match.victorious_team == self.match.match.team1:
+        if self.match.victorious_team == self.match.game.team1:
             self.amount_team_wins[0] += 1
         else:
             self.amount_team_wins[1] += 1
@@ -104,7 +104,7 @@ class MatchTester:
         print(self.avg_team_deaths)
         print(self.avg_team_assists)
         print(self.amount_team_wins)
-        print(self.match.match.team1.name, "won",
+        print(self.match.game.team1.team.name, "won",
               self.amount_team_wins[0], "times")
         percentage = (self.amount_team_wins[0] / self.amount_test) * 100
         print("Won about ", percentage, "% of the games")

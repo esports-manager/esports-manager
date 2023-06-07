@@ -95,7 +95,7 @@ class MobaEventHandler:
             if self.event.event_name == event["name"]:
                 if event in self.enabled_events:
                     self.enabled_events.remove(event)
-                event["spawn_time"] += event["cooldown"]
+                event["spawn_time"] = game_time + event["cooldown"]
             elif game_time >= event["spawn_time"] and event not in self.enabled_events:
                 self.enabled_events.append(event)
             if 0.0 < event["end_time"] <= game_time and event in self.enabled_events:

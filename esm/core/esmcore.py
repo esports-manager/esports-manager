@@ -58,16 +58,16 @@ class ESMCore:
         if self.amount_players > 300 or self.amount_players < 50:
             error_message = dedent(
                 """
-            Number of players is not supported! Ranges from 50 to 300 players! Defaulting to 50.
-            """
+                Number of players is not supported! Ranges from 50 to 300 players! Defaulting to 50.
+                """
             ).strip()
             raise AmountPlayersError(error_message)
 
         if self.amount_players % 5 != 0:
             error_message = dedent(
                 """
-            Number of players is not supported! Number should be a multiple of 5!
-            """
+                Number of players is not supported! Number should be a multiple of 5!
+                """
             )
             raise AmountPlayersError(error_message)
 

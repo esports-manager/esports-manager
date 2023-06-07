@@ -19,7 +19,7 @@ from abc import ABC, abstractmethod
 class Serializable(ABC):
     @classmethod
     @abstractmethod
-    def get_from_dict(cls, dictionary: dict):
+    def get_from_dict(cls, *args, **kwargs):
         pass
 
     @abstractmethod

@@ -21,7 +21,7 @@ from esm.core.esports.moba.match_tester import MatchTester
 from esm.ui.igamecontroller import IGameController
 from esm.ui.controllers.controllerinterface import IController
 from esm.ui.layouts.match_tester import MatchTesterLayout
-from esm.core.esports.moba.modules.match_factory import MatchFactory, MatchLive
+from esm.core.esports.moba.modules.match_manager import MatchManager, MatchLive
 
 
 class MatchTesterController(IController):
@@ -29,7 +29,7 @@ class MatchTesterController(IController):
         self.controller = controller
         self.core = core
         self.layout = MatchTesterLayout()
-        self.game_initializer = MatchFactory()
+        self.game_initializer = MatchManager()
         self._amount_test_matches = 1000
         self.match_tester = None
         self.match_tester_thread = None

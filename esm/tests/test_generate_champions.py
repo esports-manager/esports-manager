@@ -24,3 +24,5 @@ def champion_gen() -> ChampionGenerator:
     return ChampionGenerator(get_default_champion_defs())
 
 
+def test_generate_champions(champion_gen: ChampionGenerator):
+    champions = champion_gen.generate()

@@ -24,111 +24,12 @@ from ...serializable import Serializable
 
 
 @dataclass
-class MobaPlayerAttributes(Serializable):
-    offensive: int
-    mechanics: int
-    awareness: int
+class OffensiveAttributes(Serializable):
     lane_control: int
-    map_control: int
-    intelligence: int
-    reflexes: int
-    team_work: int
-    speed: int
     positioning: int
-    timing: int
-    farming: int
-    support: int
-
-    def get_overall(self, lane: Lanes) -> int:
-        if lane == Lanes.TOP:
-            return int(
-                (
-                    self.offensive
-                    + self.mechanics
-                    + self.awareness
-                    + (self.lane_control * 2)
-                    + self.map_control
-                    + self.intelligence
-                    + self.reflexes
-                    + self.team_work
-                    + self.speed
-                    + self.positioning
-                    + self.timing
-                    + (self.farming * 2)
-                )
-                / 14
-            )
-        if lane == Lanes.JNG:
-            return int(
-                (
-                    self.offensive
-                    + self.mechanics
-                    + (self.awareness * 2)
-                    + (self.lane_control * 2)
-                    + (self.map_control * 2)
-                    + self.intelligence
-                    + self.reflexes
-                    + (self.team_work * 2)
-                    + self.speed
-                    + self.positioning
-                    + (self.timing * 2)
-                    + self.farming
-                )
-                / 14
-            )
-        if lane == Lanes.MID:
-            return int(
-                (
-                    self.offensive
-                    + self.mechanics
-                    + (self.awareness * 2)
-                    + (self.map_control * 2)
-                    + (self.intelligence * 2)
-                    + self.reflexes
-                    + self.team_work
-                    + self.speed
-                    + (self.positioning * 2)
-                    + self.timing
-                    + (self.farming * 2)
-                )
-                / 16
-            )
-        if lane == Lanes.ADC:
-            return int(
-                (
-                    self.offensive
-                    + self.mechanics
-                    + (self.awareness * 2)
-                    + self.map_control
-                    + self.intelligence
-                    + self.reflexes
-                    + (self.team_work * 2)
-                    + (self.speed * 2)
-                    + (self.positioning * 2)
-                    + self.timing
-                    + (self.farming * 2)
-                )
-                / 16
-            )
-        if lane == Lanes.SUP:
-            return int(
-                (
-                    self.offensive
-                    + self.mechanics
-                    + (self.awareness * 2)
-                    + (self.map_control * 2)
-                    + self.intelligence
-                    + self.reflexes
-                    + (self.team_work * 2)
-                    + self.speed
-                    + self.positioning
-                    + self.timing
-                    + (self.support * 2)
-                )
-                / 15
-            )
-
-        return 0
+    decision_making: int
+    kill_instinct: int
+    skill_shot_accuracy: int
 
     @classmethod
     def get_from_dict(cls, dictionary: dict[str, int]):
@@ -136,6 +37,89 @@ class MobaPlayerAttributes(Serializable):
 
     def serialize(self) -> dict:
         return asdict(self)
+    
+    def get_overall(self) -> int:
+        attrs = asdict(self)
+        return int(sum(attrs.values) / len(attrs))
+
+
+@dataclass
+class IntelligenceAttributes(Serializable):
+    map_awareness: int
+    reflexes: int
+    speed: int
+    farming: int
+    team_work: int
+    timing: int
+    mechanics: int
+
+    @classmethod
+    def get_from_dict(cls, dictionary: dict[str, int]):
+        return cls(**dictionary)
+
+    def serialize(self) -> dict:
+        return asdict(self)
+    
+    def get_overall(self) -> int:
+        attrs = asdict(self)
+        return int(sum(attrs.values) / len(attrs))
+
+
+@dataclass
+class SupportiveAttributes(Serializable):
+    vision_control: int
+    positioning: int
+    accuracy: int
+    roaming: int
+    ganking: int
+    objective_control: int
+
+    @classmethod
+    def get_from_dict(cls, dictionary: dict[str, int]):
+        return cls(**dictionary)
+
+    def serialize(self) -> dict:
+        return asdict(self)
+
+    def get_overall(self) -> int:
+        attrs = asdict(self)
+        return int(sum(attrs.values) / len(attrs))
+
+
+@dataclass
+class MobaPlayerAttributes(Serializable):
+    offensive: OffensiveAttributes
+    intelligence: IntelligenceAttributes
+    supportive: SupportiveAttributes
+
+    def get_overall(self, lane: Lanes) -> int:
+        overall = 0
+        if lane == Lanes.ADC:
+            overall = (self.offensive * 3 + self. intelligence * 2 + self.supportive) / 6
+        elif lane == Lanes.MID:
+            overall = (self.offensive * 2 + self.intelligence * 3 + self.supportive) / 6
+        elif lane == Lanes.TOP:
+            overall = (self.offensive * 2 + self.intelligence * 2 + self.supportive) / 5
+        elif lane == Lanes.JNG:
+            overall = (self.offensive + self.intelligence * 2 + self.supportive * 2) / 5
+        elif lane == Lanes.SUP:
+            overall = (self.offensive + self.intelligence * 2 + self.supportive * 3) / 5
+        
+        return int(overall)
+
+    @classmethod
+    def get_from_dict(cls, dictionary: dict[str, int]):
+        offensive = OffensiveAttributes.get_from_dict(dictionary["offensive"])
+        intelligence = IntelligenceAttributes.get_from_dict(dictionary["intelligence"])
+        supportive = SupportiveAttributes.get_from_dict(dictionary["supportive"])
+        return cls(offensive, intelligence, supportive)
+
+    def serialize(self) -> dict:
+        return {
+            "offensive": self.offensive.serialize(),
+            "intelligence": self.intelligence.serialize(),
+            "supportive": self.supportive.serialize(),
+        }
 
 
 @dataclass
@@ -206,6 +190,15 @@ class MobaPlayerStats:
     kills: int = 0
     deaths: int = 0
     assists: int = 0
+    max_consecutive_kills: int = 0
+    max_kill_streak: int = 0
+
+    def reset(self):
+        self.kills = 0
+        self.deaths = 0
+        self.assists = 0
+        self.max_consecutive_kills = 0
+        self.max_kill_streak = 0
 
 
 @dataclass
@@ -219,9 +212,7 @@ class MobaPlayerSimulation:
 
     def reset_attributes(self) -> None:
         self.points = 0
-        self.stats.kills = 0
-        self.stats.deaths = 0
-        self.stats.assists = 0
+        self.stats.reset()
         self.consecutive_kills = 0
 
     def get_highest_multiplier(self) -> float:

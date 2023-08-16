@@ -20,6 +20,9 @@ from datetime import date
 from esm.core.esports.moba.player import (
     MobaPlayer,
     MobaPlayerAttributes,
+    OffensiveAttributes,
+    IntelligenceAttributes,
+    SupportiveAttributes,
     MobaPlayerSimulation,
     MobaPlayerChampion,
 )
@@ -34,7 +37,10 @@ def lanes() -> LaneMultipliers:
 
 @pytest.fixture
 def attributes() -> MobaPlayerAttributes:
-    return MobaPlayerAttributes(75, 85, 87, 86, 49, 91, 95, 82, 90, 89, 84, 85, 36)
+    offensive = OffensiveAttributes(80, 85, 91, 88, 95)
+    intelligence = IntelligenceAttributes(90, 89, 86, 95, 78, 88, 90)
+    supportive = SupportiveAttributes(80, 90, 78, 88, 90, 89)
+    return MobaPlayerAttributes(offensive, intelligence, supportive)
 
 
 @pytest.fixture

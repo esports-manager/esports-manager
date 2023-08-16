@@ -33,15 +33,19 @@ class GameSession:
         self.settings = settings
         self.auto_save_enabled = auto_save_enabled
         self.db = db
-        self.gamestate: Optional[GameState] = None
+    
+    def get_gamestate(self) -> GameState:
+        return self.db.create_gamestate()
 
     def load_game(self, filename: Union[str, os.PathLike]):
         load = LoadGame(self.settings.save_file_dir)
-        self.gamestate = load.load_game_state(filename)
+        gamestate = load.load_game_state(filename)
+        self.db.load_from_gamestate(gamestate)
 
     def save_game(self, filename: Union[str, os.PathLike]):
+        gamestate = self.get_gamestate()
         save = SaveGame(
-            self.gamestate,
+            gamestate,
             filename,
             self.settings.save_file_dir,
             self.auto_save_enabled,

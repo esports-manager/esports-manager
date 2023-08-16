@@ -17,6 +17,7 @@ import os
 from .settings import Settings
 from .esports.moba.generator import TeamGenerator, ChampionGenerator, MobaPlayerGenerator
 from typing import Tuple
+from .gamestate import GameState
 
 
 class DB:
@@ -69,3 +70,10 @@ class DB:
         teams_gen.get_teams_objects()
 
         return teams_gen.teams
+
+    def get_gamestate(self) -> GameState:
+        pass
+
+    def load_from_gamestate(self, gamestate: GameState):
+        pass
+    

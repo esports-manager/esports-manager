@@ -18,7 +18,7 @@ import threading
 from queue import Queue
 
 from esm.core.esmcore import ESMCore
-from esm.core.esports.moba.modules.match_factory import MatchFactory
+from esm.core.esports.moba.modules.match_manager import MatchManager
 from .controllerinterface import IController
 from esm.ui.layouts.picksbans import PicksBansLayout
 from esm.ui.igamecontroller import IGameController
@@ -28,7 +28,7 @@ class PicksBansController(IController):
     def __init__(self, controller: IGameController, core: ESMCore):
         self.controller = controller
         self.core = core
-        self.game_initializer = MatchFactory()
+        self.game_initializer = MatchManager()
         self.layout = PicksBansLayout()
         self.queue = Queue()
         self.current_match = None

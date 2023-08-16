@@ -27,16 +27,72 @@ from ..champion import Champion
 from ..player import (
     MobaPlayer,
     LaneMultipliers,
+    OffensiveAttributes,
+    IntelligenceAttributes,
+    SupportiveAttributes,
     MobaPlayerAttributes,
     MobaPlayerChampion,
     Lanes,
 )
 from ....utils import get_nations
 
+def generate_attribute_value(mu, sigma) -> int:
+    return abs(int(random.gauss(mu, sigma)))
 
 class MobaPlayerGeneratorError(Exception):
     pass
 
+
+class MobaPlayerAttributesGeneratorError(Exception):
+    pass
+
+
+class MobaPlayerAttributesGenerator(GeneratorInterface):
+    def generate_offensive_attributes(self, mu: int = 50, sigma: int = 10) -> OffensiveAttributes:
+        return OffensiveAttributes(
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+        )
+    
+    def generate_intelligence_attributes(self, mu: int = 50, sigma: int = 10) -> IntelligenceAttributes:
+        return IntelligenceAttributes(
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+        )
+
+    def generate_supportive_attributes(self, mu: int = 50, sigma: int = 10) -> SupportiveAttributes:
+        return SupportiveAttributes(
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+        )
+
+    def generate(self, mu: int, sigma: int, lane: Lanes) -> MobaPlayerAttributes:
+        if lane in [Lanes.JNG, Lanes.SUP]:
+            offensive = self.generate_offensive_attributes()
+            intelligence = self.generate_intelligence_attributes(mu, sigma)
+            supportive = self.generate_supportive_attributes(mu, sigma)
+        elif lane in [Lanes.MID, Lanes.TOP, Lanes.ADC]:
+            offensive = self.generate_offensive_attributes(mu, sigma)
+            intelligence = self.generate_intelligence_attributes(mu, sigma)
+            supportive = self.generate_supportive_attributes()
+
+        return MobaPlayerAttributes(
+            offensive,
+            intelligence,
+            supportive
+        )        
 
 class MobaPlayerGenerator(GeneratorInterface):
     """
@@ -58,7 +114,8 @@ class MobaPlayerGenerator(GeneratorInterface):
             raise MobaPlayerGeneratorError(
                 "Minimum age cannot be higher than maximum age!"
             )
-
+        
+        self.attribute_gen = MobaPlayerAttributesGenerator()
         self.min_age = min_age
         self.max_age = max_age
         self.td = today  # used to calculate the date of birth. Varies according to the current season calendar
@@ -137,9 +194,7 @@ class MobaPlayerGenerator(GeneratorInterface):
         Randomly generates players skills according to their nationality
         """
         mu, sigma = self.get_nationality_skill(nationality)
-
-
-
+        return self.attribute_gen.generate(mu, sigma, lane)
 
     def generate_first_name(self, nationality: str) -> str:
         """
@@ -202,15 +257,24 @@ class MobaPlayerGenerator(GeneratorInterface):
             self.generate_champions(lane, amount_champions),
         )
 
-    def generate(self, rand: bool = False, amount: int = 5) -> None:
+    def generate(self, rand: bool = False, amount: int = 5) -> list[MobaPlayer]:
         """
         Generates an "amount" of players.
         If the rand parameter is set to True, then it randomly generates players with variable lanes.
         Otherwise, it generates an "amount/5" players that play on the same lane, doing that for every lane.
         """
+        players = []
+        if amount % 5 != 0:
+            raise MobaPlayerGeneratorError("Amount is not divisible by 5")
+        
         if rand:
             for lane in range(amount):
-                self.generate_player(Lanes(lane))
+                player = self.generate_player(Lanes(lane))
+                players.append(player)
         else:
             for lane, __ in itertools.product(range(5), range(amount // 5)):
-                self.generate_player(lane)
+                player = self.generate_player(lane)
+                players.append(player)
+        
+        return players
+    

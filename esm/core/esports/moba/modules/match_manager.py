@@ -23,7 +23,7 @@ from ..team import TeamSimulation
 from ..game import Game
 
 
-class MatchFactory:
+class MatchManager:
     def __init__(self):
         self.current_game: Optional[Game] = None
         self.current_live_game: Optional[MatchLive] = None

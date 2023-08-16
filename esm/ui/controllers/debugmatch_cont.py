@@ -19,7 +19,7 @@ from .controllerinterface import IController
 from esm.ui.layouts.debugmatch import DebugMatchLayout
 from esm.ui.igamecontroller import IGameController
 from esm.core.esmcore import ESMCore
-from esm.core.esports.moba.modules.match_factory import MatchFactory
+from esm.core.esports.moba.modules.match_manager import MatchManager
 
 
 class DebugMatchController(IController):
@@ -28,7 +28,7 @@ class DebugMatchController(IController):
         self.core = core
         self.layout = DebugMatchLayout()
         self.queue = Queue()
-        self.match_sim = MatchFactory()
+        self.match_sim = MatchManager()
         self.buttons_disabled = False
 
     def start_match(self):
@@ -135,12 +135,12 @@ class DebugMatchController(IController):
     def cancel_match(self, make_screen):
         if self.match_sim.is_game_running:
             self.match_sim.current_live_game.is_match_over = True
-        self.match_sim = MatchFactory()
+        self.match_sim = MatchManager()
         make_screen("debug_match_screen", "main_screen")
 
     def update(self, event, values, make_screen):
         if not self.controller.get_gui_element("debug_match_screen").visible:
-            self.match_sim = MatchFactory()
+            self.match_sim = MatchManager()
             self.queue = Queue()
         else:
             self.check_disabled_buttons()

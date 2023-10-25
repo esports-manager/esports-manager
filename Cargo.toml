@@ -1,0 +1,23 @@
+[package]
+name = "esm"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = { version="0.4", features=["serde"] }
+rand = "0.8.5"
+serde = { version="1.0", features=["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+thiserror = "1.0"
+
+[dependencies.uuid]
+version = "1.3"
+features = [
+    "serde",
+    "v4",                # Lets you generate random UUIDs
+    "fast-rng",          # Use a faster (but still sufficiently random) RNG
+    "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
+]

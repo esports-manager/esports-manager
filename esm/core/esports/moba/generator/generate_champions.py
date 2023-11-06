@@ -19,7 +19,7 @@ import uuid
 from typing import Optional
 
 from .generator import GeneratorInterface
-from ..champion import Champion
+from ..champion import Champion, ChampionType, ChampionDifficulty
 from ..player import Lanes, LaneMultipliers
 from .default_champion_defs import get_default_champion_names
 
@@ -31,9 +31,6 @@ class ChampionGenerator(GeneratorInterface):
         self.random_names: list[str] = []
 
     def generate_champion_id(self) -> uuid.UUID:
-        """
-        Generates champion UUID
-        """
         return uuid.uuid4()
 
     def _get_random_champion_name(self) -> str:
@@ -69,10 +66,24 @@ class ChampionGenerator(GeneratorInterface):
         """
         Generates the time when the scaling reaches its peak and the champion stops growing.
         """
-        return random.randrange(10, 30)
+        return random.randrange(15, 30)
 
     def generate_champion_skill(self) -> int:
         return random.randrange(1, 100)
+
+    def generate_champion_difficulty(self, difficulty: Optional[str] = None):
+        if difficulty:
+            return ChampionDifficulty(difficulty)
+        return random.choice(list(ChampionDifficulty))
+
+    def generate_champion_type(self, ch_type: Optional[str] = None, used_type: ChampionType = None) -> ChampionType:
+        if ch_type:
+            return ChampionType(ch_type)
+
+        ch_types = list(ChampionType)
+        if used_type:
+            ch_types.remove(used_type)
+        return random.choice(ch_types)
 
     def generate_champion(
         self, champion_def: Optional[dict] = None, rand: bool = False
@@ -85,7 +96,21 @@ class ChampionGenerator(GeneratorInterface):
         scaling_peak = self.generate_scaling_peak()
         skill = self.generate_champion_skill()
         lanes = self.generate_champion_lanes(champion_def)
-        return Champion(champion_id, name, skill, scaling_factor, scaling_peak, lanes)
+        difficulty = self.generate_champion_difficulty(champion_def["champion_difficulty"])
+        champion_type1 = self.generate_champion_type(champion_def["champion_type1"])
+        champion_type2 = self.generate_champion_type(champion_def["champion_type2"], champion_type1)
+
+        return Champion(
+            champion_id,
+            name,
+            skill,
+            scaling_factor,
+            scaling_peak,
+            lanes,
+            difficulty,
+            champion_type1,
+            champion_type2
+        )
 
     def generate(self, amount: int = 0, rand: bool = False) -> list[Champion]:
         if amount == 0:

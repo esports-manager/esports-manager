@@ -14,14 +14,34 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import uuid
+
+from enum import Enum, auto
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Optional
 from .moba_definitions import Lanes, LaneMultipliers
 from ...serializable import Serializable
 
 
 class ChampionLoadError(Exception):
     pass
+
+
+class ChampionDifficulty(Enum):
+    EASY = auto()
+    MEDIUM = auto()
+    HARD = auto()
+    PRO = auto()
+    GOD = auto()
+
+
+class ChampionType(Enum):
+    TANK = auto()
+    FIGHTER = auto()
+    ASSASSIN = auto()
+    MAGE = auto()
+    MARKSMAN = auto()
+    UTILITY = auto()
+    HEALER = auto()
 
 
 @dataclass(eq=False)
@@ -32,6 +52,9 @@ class Champion(Serializable):
     scaling_factor: float
     scaling_peak: int
     lanes: LaneMultipliers
+    champion_difficulty: ChampionDifficulty
+    champion_type1: ChampionType
+    champion_type2: Optional[ChampionType] = None
 
     @classmethod
     def get_from_dict(cls, dictionary: dict):
@@ -40,6 +63,9 @@ class Champion(Serializable):
         skill = dictionary["skill"]
         scaling_factor = dictionary["scaling_factor"]
         scaling_peak = dictionary["scaling_peak"]
+        difficulty = dictionary["champion_difficulty"]
+        champion_type1 = dictionary["champion_type1"]
+        champion_type2 = dictionary["champion_type2"]
 
         if skill > 100 or skill < 0:
             raise ChampionLoadError(
@@ -48,7 +74,17 @@ class Champion(Serializable):
 
         lanes = LaneMultipliers.get_from_dict(dictionary["lanes"])
 
-        return cls(champion_id, name, skill, scaling_factor, scaling_peak, lanes)
+        return cls(
+            champion_id,
+            name,
+            skill,
+            scaling_factor,
+            scaling_peak,
+            lanes,
+            difficulty,
+            champion_type1,
+            champion_type2
+        )
 
     def serialize(self) -> dict:
         return {
@@ -58,6 +94,9 @@ class Champion(Serializable):
             "scaling_factor": self.scaling_factor,
             "scaling_peak": self.scaling_peak,
             "lanes": self.lanes.serialize(),
+            "champion_difficulty": self.champion_difficulty.name,
+            "champion_type1": self.champion_type1.name,
+            "champion_type2": self.champion_type2.name if self.champion_type2 is not None else None
         }
 
     def get_current_skill(self, lane: Lanes) -> int:

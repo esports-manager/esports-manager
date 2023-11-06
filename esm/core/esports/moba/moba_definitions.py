@@ -109,12 +109,14 @@ class LaneMultipliers(Serializable):
 
     @classmethod
     def get_from_dict(cls, dictionary: dict):
+        attributes = {Lanes(key): value for key, value in dictionary.items()}
+
         return cls(
-            dictionary[Lanes.TOP.value],
-            dictionary[Lanes.JNG.value],
-            dictionary[Lanes.MID.value],
-            dictionary[Lanes.ADC.value],
-            dictionary[Lanes.SUP.value],
+            attributes[Lanes.TOP],
+            attributes[Lanes.JNG],
+            attributes[Lanes.MID],
+            attributes[Lanes.ADC],
+            attributes[Lanes.SUP],
         )
 
     def serialize(self) -> dict[int, float]:

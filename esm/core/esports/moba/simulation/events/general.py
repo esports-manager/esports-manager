@@ -21,7 +21,7 @@ from datetime import timedelta
 from queue import Queue
 from typing import Union
 
-from esm.core.esports.moba.commentaries import Commentaries
+from esm.core.esports.moba.simulation.commentaries import Commentaries
 from esm.core.esports.moba.team import Team
 
 logger = logging.getLogger(__name__)

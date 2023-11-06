@@ -22,11 +22,11 @@ import uuid
 from queue import Queue
 from typing import Union, Tuple, Optional
 
-from .champion import Champion
-from .game import Game
-from .mobaevent import MobaEventHandler
-from .picksbans import PicksBans
-from .team import TeamSimulation
+from esm.core.esports.moba.champion import Champion
+from esm.core.esports.moba.game import Game
+from esm.core.esports.moba.simulation.mobaevent import MobaEventHandler
+from esm.core.esports.moba.simulation.picksbans import PicksBans
+from esm.core.esports.moba.team import TeamSimulation
 
 
 class MatchLive:

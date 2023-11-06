@@ -229,7 +229,7 @@ class PickBanAI:
         return self.get_ai_pick_input(player) if pick else self.get_ai_ban_input()
 
     def get_best_champions(self, player) -> None:
-        self.check_champion(player.champions, self.best_champions)
+        self.check_champion(player.champion_pool, self.best_champions)
 
         # If the list is empty, chooses a random champion from the list
         if not self.best_champions:
@@ -277,7 +277,7 @@ class PickBanAI:
         # Adds all the best champions to the list of best champions
         for player in self.team.list_players:
             self.check_champion(
-                player.champions, self.opponents_best_champions)
+                player.champion_pool, self.opponents_best_champions)
 
         # If the list is empty, chooses a random champion from the list
         if not self.opponents_best_champions:

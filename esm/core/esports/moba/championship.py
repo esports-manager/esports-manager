@@ -17,7 +17,7 @@ import random
 import uuid
 
 from esm.core.esports.moba.game import Game
-from esm.core.esports.moba.match_live import MatchLive
+from esm.core.esports.moba.simulation.match_live import MatchLive
 
 
 class Championship:

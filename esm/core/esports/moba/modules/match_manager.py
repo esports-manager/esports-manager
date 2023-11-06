@@ -18,7 +18,7 @@ import uuid
 import threading
 from typing import Optional
 from queue import Queue
-from ..match_live import MatchLive
+from esm.core.esports.moba.simulation.match_live import MatchLive
 from ..team import TeamSimulation
 from ..game import Game
 

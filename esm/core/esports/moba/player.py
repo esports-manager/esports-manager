@@ -16,6 +16,7 @@
 import uuid
 import datetime
 from dataclasses import dataclass, asdict
+from enum import Enum, auto
 
 from .champion import Champion
 from .moba_definitions import Lanes, LaneError, LaneMultipliers
@@ -40,7 +41,7 @@ class OffensiveAttributes(Serializable):
     
     def get_overall(self) -> int:
         attrs = asdict(self)
-        return int(sum(attrs.values) / len(attrs))
+        return int(sum(attrs.values()) / len(attrs))
 
 
 @dataclass
@@ -62,7 +63,7 @@ class IntelligenceAttributes(Serializable):
     
     def get_overall(self) -> int:
         attrs = asdict(self)
-        return int(sum(attrs.values) / len(attrs))
+        return int(sum(attrs.values()) / len(attrs))
 
 
 @dataclass
@@ -83,7 +84,7 @@ class SupportiveAttributes(Serializable):
 
     def get_overall(self) -> int:
         attrs = asdict(self)
-        return int(sum(attrs.values) / len(attrs))
+        return int(sum(attrs.values()) / len(attrs))
 
 
 @dataclass
@@ -95,20 +96,20 @@ class MobaPlayerAttributes(Serializable):
     def get_overall(self, lane: Lanes) -> int:
         overall = 0
         if lane == Lanes.ADC:
-            overall = (self.offensive * 3 + self. intelligence * 2 + self.supportive) / 6
+            overall = (self.offensive.get_overall() * 3 + self. intelligence.get_overall() * 2 + self.supportive.get_overall()) / 6
         elif lane == Lanes.MID:
-            overall = (self.offensive * 2 + self.intelligence * 3 + self.supportive) / 6
+            overall = (self.offensive.get_overall() * 2 + self.intelligence.get_overall() * 3 + self.supportive.get_overall()) / 6
         elif lane == Lanes.TOP:
-            overall = (self.offensive * 2 + self.intelligence * 2 + self.supportive) / 5
+            overall = (self.offensive.get_overall() * 2 + self.intelligence.get_overall() * 2 + self.supportive.get_overall()) / 5
         elif lane == Lanes.JNG:
-            overall = (self.offensive + self.intelligence * 2 + self.supportive * 2) / 5
+            overall = (self.offensive.get_overall() + self.intelligence.get_overall() * 2 + self.supportive.get_overall() * 2) / 5
         elif lane == Lanes.SUP:
-            overall = (self.offensive + self.intelligence * 2 + self.supportive * 3) / 5
+            overall = (self.offensive.get_overall() + self.intelligence.get_overall() * 2 + self.supportive.get_overall() * 3) / 5
         
         return int(overall)
 
     @classmethod
-    def get_from_dict(cls, dictionary: dict[str, int]):
+    def get_from_dict(cls, dictionary: dict[str, dict[str, int]]):
         offensive = OffensiveAttributes.get_from_dict(dictionary["offensive"])
         intelligence = IntelligenceAttributes.get_from_dict(dictionary["intelligence"])
         supportive = SupportiveAttributes.get_from_dict(dictionary["supportive"])
@@ -122,22 +123,35 @@ class MobaPlayerAttributes(Serializable):
         }
 
 
+class ChampionMastery(Enum):
+    BRONZE = auto()
+    SILVER = auto()
+    GOLD = auto()
+    PLATINUM = auto()
+    DIAMOND = auto()
+    MASTER = auto()
+    GRANDMASTER = auto()
+
+
 @dataclass
 class MobaPlayerChampion(Serializable):
-    champion: uuid.UUID
-    champion_multiplier: float
+    champion_id: uuid.UUID
+    champion_mastery: ChampionMastery
+    total_exp: float
 
     @classmethod
     def get_from_dict(cls, dictionary: dict):
         return cls(
-            uuid.UUID(hex=dictionary["champion_id"]
-                      ), dictionary["champion_multiplier"]
+            uuid.UUID(hex=dictionary["champion_id"]),
+            dictionary["mastery"],
+            dictionary["total_exp"],
         )
 
     def serialize(self) -> dict:
         return {
-            "champion_id": self.champion.hex,
-            "champion_multiplier": self.champion_multiplier,
+            "champion_id": self.champion_id.hex,
+            "mastery": self.champion_mastery,
+            "total_exp": self.total_exp
         }
 
 
@@ -145,7 +159,7 @@ class MobaPlayerChampion(Serializable):
 class MobaPlayer(Player, Serializable):
     lanes: LaneMultipliers
     attributes: MobaPlayerAttributes
-    champions: list[MobaPlayerChampion]
+    champion_pool: list[MobaPlayerChampion]
 
     @classmethod
     def get_from_dict(cls, dictionary: dict):
@@ -161,7 +175,7 @@ class MobaPlayer(Player, Serializable):
             MobaPlayerAttributes.get_from_dict(dictionary["attributes"]),
             [
                 MobaPlayerChampion.get_from_dict(champion)
-                for champion in dictionary["champions"]
+                for champion in dictionary["champion_pool"]
             ],
         )
 
@@ -175,7 +189,7 @@ class MobaPlayer(Player, Serializable):
             "nationality": self.nationality,
             "attributes": self.attributes.serialize(),
             "lanes": self.lanes.serialize(),
-            "champions": [champion.serialize() for champion in self.champions],
+            "champion_pool": [champion.serialize() for champion in self.champion_pool],
         }
 
     def __repr__(self):
@@ -255,22 +269,37 @@ class MobaPlayerSimulation:
         """
         if champion is None:
             return 0
-        mult = next(
-            (
-                ch.champion_multiplier
-                for ch in self.player.champions
-                if ch.champion == champion.champion_id.hex
-            ),
-            0.5,
-        )
 
-        return (0.5 * champion.skill) * (1 + mult)
+        mastery = ChampionMastery.BRONZE
+        champion_ids = [ch.champion_id for ch in self.player.champion_pool]
+
+        if champion.champion_id in champion_ids:
+            for ch in self.player.champion_pool:
+                if champion.champion_id == ch.champion_id:
+                    mastery = ch.champion_mastery
+                    break
+
+        # Default mastery for BRONZE mastery level
+        mult = 1.0
+
+        if mastery == ChampionMastery.SILVER:
+            mult = 1.05
+        elif mastery == ChampionMastery.GOLD:
+            mult = 1.10
+        elif mastery == ChampionMastery.PLATINUM:
+            mult = 1.15
+        elif mastery == ChampionMastery.DIAMOND:
+            mult = 1.20
+        elif mastery == ChampionMastery.MASTER:
+            mult = 1.25
+        elif mastery == ChampionMastery.GRANDMASTER:
+            mult = 1.30
+
+        return champion.skill * mult
 
     def get_champion_skill(self) -> float:
         """
-        Gets the player_champion_skill according to the multiplier.
-        If for some reason a champion is not on the list, it receives a default
-        multiplier of 0.5.
+        Gets the player_champion_skill according to the mastery level.
         """
         return self.get_projected_champion_skill(self.champion)
 
@@ -281,7 +310,7 @@ class MobaPlayerSimulation:
         This will define how strong or how weak a certain player is on the
         current match.
         """
-        return (self.skill + self.get_champion_skill()) / 2 + self.points
+        return self.skill + self.get_champion_skill() + self.points
 
     def is_player_on_killing_spree(self) -> bool:
         """

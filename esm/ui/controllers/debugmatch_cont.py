@@ -57,7 +57,7 @@ class DebugMatchController(IController):
                     player.kills,
                     player.deaths,
                     player.assists,
-                    player.champion,
+                    player.champion_id,
                     int(player.get_player_total_skill()),
                 ]
                 for player in team

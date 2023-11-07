@@ -23,10 +23,9 @@ from esm.core.esports.moba.player import (
     OffensiveAttributes,
     IntelligenceAttributes,
     SupportiveAttributes,
-    MobaPlayerSimulation,
+    ChampionMastery,
     MobaPlayerChampion,
 )
-from esm.core.esports.moba.champion import Champion
 from esm.core.esports.moba.moba_definitions import LaneMultipliers
 
 
@@ -46,11 +45,12 @@ def attributes() -> MobaPlayerAttributes:
 @pytest.fixture
 def champions() -> list[MobaPlayerChampion]:
     return [
-        MobaPlayerChampion(uuid.uuid4(), 0.6),
-        MobaPlayerChampion(uuid.uuid4(), 0.7),
-        MobaPlayerChampion(uuid.uuid4(), 0.8),
-        MobaPlayerChampion(uuid.uuid4(), 0.9),
-        MobaPlayerChampion(uuid.uuid4(), 1.0),
+        MobaPlayerChampion(uuid.uuid4(), ChampionMastery.GOLD, 0.0),
+        MobaPlayerChampion(uuid.uuid4(), ChampionMastery.DIAMOND, 100.0),
+        MobaPlayerChampion(uuid.uuid4(), ChampionMastery.PLATINUM, 50.0),
+        MobaPlayerChampion(uuid.uuid4(), ChampionMastery.SILVER, 1239.0),
+        MobaPlayerChampion(uuid.uuid4(), ChampionMastery.MASTER, 1000.0),
+        MobaPlayerChampion(uuid.uuid4(), ChampionMastery.GRANDMASTER, 0.0),
     ]
 
 
@@ -80,7 +80,7 @@ def player_dict(lanes, attributes, champions) -> dict:
         "nick_name": "NickName",
         "lanes": lanes.serialize(),
         "attributes": attributes.serialize(),
-        "champions": [champion.serialize() for champion in champions],
+        "champion_pool": [champion.serialize() for champion in champions],
     }
 
 

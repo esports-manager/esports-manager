@@ -47,7 +47,7 @@ class PicksBansController(IController):
                 player.lane.name,
                 player.nick_name,
                 player.skill,
-                player.champion,
+                player.champion_id,
                 int(player.get_player_total_skill())
             ] for player in team
         ]

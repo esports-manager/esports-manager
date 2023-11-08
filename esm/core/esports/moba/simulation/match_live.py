@@ -23,7 +23,7 @@ from queue import Queue
 from typing import Union, Tuple, Optional
 
 from esm.core.esports.moba.champion import Champion
-from esm.core.esports.moba.game import Game
+from esm.core.esports.moba.mobamatch import MobaMatch
 from esm.core.esports.moba.simulation.mobaevent import MobaEventHandler
 from esm.core.esports.moba.simulation.picksbans import PicksBans
 from esm.core.esports.moba.team import TeamSimulation
@@ -42,7 +42,7 @@ class MatchLive:
 
     def __init__(
         self,
-        game: Game,
+        game: MobaMatch,
         champions: list[Champion],
         show_commentary: bool = True,
         match_speed: int = 1,
@@ -258,7 +258,7 @@ class MatchSeries:
 
             self.matches.append(
                 MatchLive(
-                    Game(uuid.uuid4(), self.championship_id, teams[0], teams[1]),
+                    MobaMatch(uuid.uuid4(), self.championship_id, teams[0], teams[1]),
                     self.champions,
                     self.show_commentary,
                     self.match_speed,

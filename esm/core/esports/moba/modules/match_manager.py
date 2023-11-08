@@ -20,12 +20,12 @@ from typing import Optional
 from queue import Queue
 from esm.core.esports.moba.simulation.match_live import MatchLive
 from ..team import TeamSimulation
-from ..game import Game
+from ..mobamatch import MobaMatch
 
 
 class MatchManager:
     def __init__(self):
-        self.current_game: Optional[Game] = None
+        self.current_game: Optional[MobaMatch] = None
         self.current_live_game: Optional[MatchLive] = None
         self.game_thread: Optional[threading.Thread] = None
         self.is_game_running: bool = False
@@ -37,7 +37,7 @@ class MatchManager:
         team1: TeamSimulation,
         team2: TeamSimulation
     ):
-        self.current_game = Game(
+        self.current_game = MobaMatch(
             game_id,
             championship_id,
             team1,
@@ -46,7 +46,7 @@ class MatchManager:
 
     def initialize_live_game(
         self,
-        game: Game,
+        game: MobaMatch,
         show_commentary: bool,
         match_speed: int,
         simulation_delay: bool,

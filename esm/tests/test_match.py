@@ -16,6 +16,7 @@
 import pytest
 
 from uuid import uuid4
+from datetime import datetime
 
 from ..core.esports.moba.mobamatch import MobaMatch, MatchType, InvalidTeamId
 
@@ -28,6 +29,7 @@ def moba_match() -> MobaMatch:
         uuid4(),
         uuid4(),
         MatchType.FRIENDLY,
+        datetime.strptime("2020-01-01, 10:00", "%Y-%m-%d, %H:%M"),
         None,
     )
 

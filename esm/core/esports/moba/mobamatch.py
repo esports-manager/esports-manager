@@ -17,8 +17,8 @@ from typing import Optional
 from uuid import UUID
 from enum import Enum, auto
 from dataclasses import dataclass
+from datetime import datetime
 
-from esm.core.esports.moba.team import Team
 from esm.core.serializable import Serializable
 
 
@@ -42,6 +42,7 @@ class MobaMatch(Serializable):
     team1: UUID
     team2: UUID
     match_type: MatchType
+    date: datetime
     victorious_team: Optional[UUID] = None
 
     def serialize(self) -> dict:
@@ -56,6 +57,7 @@ class MobaMatch(Serializable):
             "team1": self.team1.hex,
             "team2": self.team2.hex,
             "match_type": self.match_type.value,
+            "date": self.date.strftime("%Y-%m-%d, %H:%M"),
             "victorious_team": victorious_team,
         }
 
@@ -76,6 +78,7 @@ class MobaMatch(Serializable):
             UUID(hex=team1),
             UUID(hex=team2),
             MatchType(dictionary["match_type"]),
+            datetime.strptime(dictionary["date"], "%Y-%m-%d, %H:%M"),
             victorious_team,
         )
 

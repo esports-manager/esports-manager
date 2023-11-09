@@ -21,9 +21,10 @@ import time
 import uuid
 from queue import Queue
 from typing import Union, Tuple, Optional
+from datetime import datetime
 
 from esm.core.esports.moba.champion import Champion
-from esm.core.esports.moba.mobamatch import MobaMatch
+from esm.core.esports.moba.mobamatch import MobaMatch, MatchType
 from esm.core.esports.moba.simulation.mobaevent import MobaEventHandler
 from esm.core.esports.moba.simulation.picksbans import PicksBans
 from esm.core.esports.moba.team import TeamSimulation
@@ -44,6 +45,8 @@ class MatchLive:
         self,
         game: MobaMatch,
         champions: list[Champion],
+        team1: TeamSimulation,
+        team2: TeamSimulation,
         show_commentary: bool = True,
         match_speed: int = 1,
         simulation_delay: bool = True,
@@ -55,6 +58,9 @@ class MatchLive:
     ):
         self.game = game
         self.game_time = 0.0
+        self.team1 = team1
+        self.team2 = team2
+        self.teams = [self.team1, self.team2]
         self.victorious_team = None
         self.show_commentary = show_commentary
         self.match_speed = match_speed
@@ -67,8 +73,8 @@ class MatchLive:
         self.difficulty_level = difficulty_level
         self.picks_bans_queue = picks_bans_queue
         self.picks_bans = PicksBans(
-            self.game.team1,
-            self.game.team2,
+            self.team1,
+            self.team2,
             self.champions,
             self.ban_per_team,
             self.difficulty_level,
@@ -87,10 +93,10 @@ class MatchLive:
         gc.collect()
 
     def check_is_player_match(self) -> bool:
-        return any(team.is_players_team for team in self.game.teams)
+        return any(team.is_players_team for team in self.teams)
 
     def reset_teams(self) -> None:
-        for team in self.game.teams:
+        for team in self.teams:
             team.reset_values()
 
     def picks_and_bans(self) -> None:
@@ -108,9 +114,9 @@ class MatchLive:
         Calculates both teams Win probabilities. This is used for internal match simulation calculations. The winning
         team will always have a significant advantage over the losing team.
         """
-        total_prob = sum(team.total_skill for team in self.game.teams)
+        total_prob = sum(team.total_skill for team in self.teams)
 
-        for team in self.game.teams:
+        for team in self.teams:
             team.win_prob = team.total_skill / total_prob
 
     def increment_game_time(self, quantity):
@@ -124,18 +130,18 @@ class MatchLive:
         Gets the amount of towers in the game. If neither team has any towers, the game stops trying to generate the
         Tower Assault events.
         """
-        return sum(sum(team.towers.values()) for team in self.game.teams)
+        return sum(sum(team.towers.values()) for team in self.teams)
 
     def get_team_exposed_nexus(self) -> Union[Tuple[TeamSimulation, TeamSimulation], TeamSimulation, None]:
         """
         Gets the exposed nexus from one or both of the teams.
         """
-        if self.game.team1.is_nexus_exposed():
-            if self.game.team2.is_nexus_exposed():
-                return self.game.team1, self.game.team2
-            return self.game.team1
-        elif self.game.team2.is_nexus_exposed():
-            return self.game.team2
+        if self.team1.is_nexus_exposed():
+            if self.team2.is_nexus_exposed():
+                return self.team1, self.team2
+            return self.team1
+        elif self.team2.is_nexus_exposed():
+            return self.team2
         else:
             return None
 
@@ -143,7 +149,7 @@ class MatchLive:
         """
         Checks if one of the nexus is down and terminates the simulation
         """
-        for team in self.game.teams:
+        for team in self.teams:
             if team.nexus == 0:
                 self.is_match_over = True
 
@@ -151,16 +157,16 @@ class MatchLive:
         """
         Assigns the winner to the team that still has the nexus up
         """
-        for team in self.game.teams:
+        for team in self.teams:
             if team.nexus == 1:
                 self.victorious_team = team
-                self.game.victorious_team = self.victorious_team
+                self.victorious_team = self.victorious_team
 
     def is_any_inhib_open(self) -> bool:
         """
         Checks for open inhibitors, to decide whether a base tower or nexus can be attacked
         """
-        return any(team.get_exposed_inhibs() for team in self.game.teams)
+        return any(team.get_exposed_inhibs() for team in self.teams)
 
     def simulation(self) -> None:
         """
@@ -197,11 +203,13 @@ class MatchLive:
 class MatchSeries:
     def __init__(
         self,
-        team1,
-        team2,
-        championship_id,
+        team1: TeamSimulation,
+        team2: TeamSimulation,
+        championship_id: uuid.UUID,
         champions: list[Champion],
-        best_of=3,
+        match_type: MatchType,
+        date: datetime,
+        best_of: int = 3,
         show_commentary: bool = True,
         match_speed: int = 1,
         simulation_delay: bool = True,
@@ -212,10 +220,12 @@ class MatchSeries:
         self.championship_id = championship_id
         self.team1 = team1
         self.team2 = team2
+        self.match_type = match_type
         self.champions = champions
         self.best_of = best_of
+        self.date = date
 
-        # If there is a chance to draw a match
+        # Is there is a chance to draw a match?
         self.drawable = self.best_of % 2 == 0
 
         # How many wins a team must have to be declared winner
@@ -256,21 +266,32 @@ class MatchSeries:
             # Randomly assign teams to a side, so we can have a rotation of team sides
             random.shuffle(teams)
 
-            self.matches.append(
-                MatchLive(
-                    MobaMatch(uuid.uuid4(), self.championship_id, teams[0], teams[1]),
-                    self.champions,
-                    self.show_commentary,
-                    self.match_speed,
-                    self.simulation_delay,
-                    self.ban_per_team,
-                    self.difficulty_level,
-                    self.is_player_match,
-                )
+            match_live = MatchLive(
+                MobaMatch(
+                    uuid.uuid4(),
+                    self.championship_id,
+                    teams[0].team.team_id,
+                    teams[1].team.team_id,
+                    self.match_type,
+                    self.date,
+                ),
+                self.champions,
+                self.team1,
+                self.team2,
+                self.show_commentary,
+                self.match_speed,
+                self.simulation_delay,
+                self.ban_per_team,
+                self.difficulty_level,
+                self.is_player_match,
             )
 
+            match_live.reset_match()
+
+            self.matches.append(match_live)
+
     def assign_match_winner(self, match):
-        if match.victorious_team == self.team1:
+        if match.victorious_team == self.team1.team.team_id:
             self.team_wins[0] += 1
         else:
             self.team_wins[1] += 1

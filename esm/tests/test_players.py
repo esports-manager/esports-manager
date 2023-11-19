@@ -21,8 +21,10 @@ from esm.core.esports.moba.player import (
     MobaPlayer,
     MobaPlayerAttributes,
     OffensiveAttributes,
-    IntelligenceAttributes,
-    SupportiveAttributes,
+    MechanicsAttributes,
+    UtilityAttributes,
+    KnowledgeAttributes,
+    CommunicationAttributes,
     ChampionMastery,
     MobaPlayerChampion,
 )
@@ -36,10 +38,19 @@ def lanes() -> LaneMultipliers:
 
 @pytest.fixture
 def attributes() -> MobaPlayerAttributes:
-    offensive = OffensiveAttributes(80, 85, 91, 88, 95)
-    intelligence = IntelligenceAttributes(90, 89, 86, 95, 78, 88, 90)
-    supportive = SupportiveAttributes(80, 90, 78, 88, 90, 89)
-    return MobaPlayerAttributes(offensive, intelligence, supportive)
+    offensive = OffensiveAttributes(80, 85, 91)
+    communication = CommunicationAttributes(80, 85, 91)
+    mechanics = MechanicsAttributes(90, 89, 86, 95, 78, 88)
+    knowledge = KnowledgeAttributes(80, 85, 91)
+    utility = UtilityAttributes(80, 90, 78)
+
+    return MobaPlayerAttributes(
+        offensive,
+        communication,
+        mechanics,
+        knowledge,
+        utility,
+    )
 
 
 @pytest.fixture

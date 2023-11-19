@@ -17,7 +17,7 @@ import uuid
 import datetime
 from dataclasses import dataclass, asdict
 from enum import Enum, auto
-
+from abc import ABC
 from .champion import Champion
 from .moba_definitions import Lanes, LaneError, LaneMultipliers
 from ..player import Player
@@ -25,101 +25,106 @@ from ...serializable import Serializable
 
 
 @dataclass
-class OffensiveAttributes(Serializable):
-    lane_control: int
-    positioning: int
-    decision_making: int
-    kill_instinct: int
-    skill_shot_accuracy: int
-
+class Attributes(Serializable):
     @classmethod
     def get_from_dict(cls, dictionary: dict[str, int]):
         return cls(**dictionary)
 
     def serialize(self) -> dict:
         return asdict(self)
-    
+
     def get_overall(self) -> int:
         attrs = asdict(self)
         return int(sum(attrs.values()) / len(attrs))
 
 
 @dataclass
-class IntelligenceAttributes(Serializable):
-    map_awareness: int
+class OffensiveAttributes(Attributes):
+    lane_pressure: int
+    kill_instinct: int
+    aggressiveness: int
+
+
+@dataclass
+class CommunicationAttributes(Attributes):
+    shot_calling: int
+    decisioning: int
+    team_work: int
+
+
+@dataclass
+class MechanicsAttributes(Attributes):
     reflexes: int
     speed: int
     farming: int
-    team_work: int
-    timing: int
-    mechanics: int
-
-    @classmethod
-    def get_from_dict(cls, dictionary: dict[str, int]):
-        return cls(**dictionary)
-
-    def serialize(self) -> dict:
-        return asdict(self)
-    
-    def get_overall(self) -> int:
-        attrs = asdict(self)
-        return int(sum(attrs.values()) / len(attrs))
+    kiting: int
+    positioning: int
+    accuracy: int
 
 
 @dataclass
-class SupportiveAttributes(Serializable):
+class UtilityAttributes(Attributes):
     vision_control: int
-    positioning: int
-    accuracy: int
-    roaming: int
-    ganking: int
+    map_control: int
     objective_control: int
 
-    @classmethod
-    def get_from_dict(cls, dictionary: dict[str, int]):
-        return cls(**dictionary)
 
-    def serialize(self) -> dict:
-        return asdict(self)
-
-    def get_overall(self) -> int:
-        attrs = asdict(self)
-        return int(sum(attrs.values()) / len(attrs))
+@dataclass
+class KnowledgeAttributes(Attributes):
+    map_awareness: int
+    timing: int
+    itemization: int
 
 
 @dataclass
 class MobaPlayerAttributes(Serializable):
     offensive: OffensiveAttributes
-    intelligence: IntelligenceAttributes
-    supportive: SupportiveAttributes
+    communication: CommunicationAttributes
+    mechanics: MechanicsAttributes
+    knowledge: KnowledgeAttributes
+    utility: UtilityAttributes
 
     def get_overall(self, lane: Lanes) -> int:
-        overall = 0
-        if lane == Lanes.ADC:
-            overall = (self.offensive.get_overall() * 3 + self. intelligence.get_overall() * 2 + self.supportive.get_overall()) / 6
-        elif lane == Lanes.MID:
-            overall = (self.offensive.get_overall() * 2 + self.intelligence.get_overall() * 3 + self.supportive.get_overall()) / 6
-        elif lane == Lanes.TOP:
-            overall = (self.offensive.get_overall() * 2 + self.intelligence.get_overall() * 2 + self.supportive.get_overall()) / 5
-        elif lane == Lanes.JNG:
-            overall = (self.offensive.get_overall() + self.intelligence.get_overall() * 2 + self.supportive.get_overall() * 2) / 5
-        elif lane == Lanes.SUP:
-            overall = (self.offensive.get_overall() + self.intelligence.get_overall() * 2 + self.supportive.get_overall() * 3) / 5
-        
+        over_sum = (
+            self.offensive.get_overall()
+            + self.communication.get_overall()
+            + self.mechanics.get_overall()
+            + self.knowledge.get_overall()
+            + self.utility.get_overall()
+        )
+        if lane in [Lanes.TOP, Lanes.MID]:
+            over_sum += self.offensive.get_overall()
+            over_sum += self.mechanics.get_overall()
+            over_sum += self.communication.get_overall()
+            over_sum += 2 * self.knowledge.get_overall()
+        elif lane == Lanes.ADC:
+            over_sum += self.offensive.get_overall()
+            over_sum += 2 * self.mechanics.get_overall()
+            over_sum += 2 * self.communication.get_overall()
+        elif lane in [Lanes.JNG, Lanes.SUP]:
+            over_sum += self.communication.get_overall()
+            over_sum += self.knowledge.get_overall()
+            over_sum += 3 * self.utility.get_overall()
+        overall = over_sum / 10
         return int(overall)
 
     @classmethod
     def get_from_dict(cls, dictionary: dict[str, dict[str, int]]):
-        offensive = OffensiveAttributes.get_from_dict(dictionary["offensive"])
-        intelligence = IntelligenceAttributes.get_from_dict(dictionary["intelligence"])
-        supportive = SupportiveAttributes.get_from_dict(dictionary["supportive"])
-        return cls(offensive, intelligence, supportive)
+        return cls(
+            OffensiveAttributes(**dictionary["offensive"]),
+            CommunicationAttributes(**dictionary["communication"]),
+            MechanicsAttributes(**dictionary["mechanics"]),
+            KnowledgeAttributes(**dictionary["knowledge"]),
+            UtilityAttributes(**dictionary["utility"]),
+        )
 
     def serialize(self) -> dict:
         return {
             "offensive": self.offensive.serialize(),
-            "intelligence": self.intelligence.serialize(),
-            "supportive": self.supportive.serialize(),
+            "communication": self.communication.serialize(),
+            "mechanics": self.mechanics.serialize(),
+            "knowledge": self.knowledge.serialize(),
+            "utility": self.utility.serialize(),
         }
 
 
@@ -136,7 +141,7 @@ class ChampionMastery(Enum):
 @dataclass
 class MobaPlayerChampion(Serializable):
     champion_id: uuid.UUID
-    champion_mastery: ChampionMastery
+    mastery: ChampionMastery
     total_exp: float
 
     @classmethod
@@ -150,7 +155,7 @@ class MobaPlayerChampion(Serializable):
     def serialize(self) -> dict:
         return {
             "champion_id": self.champion_id.hex,
-            "mastery": self.champion_mastery,
+            "mastery": self.mastery,
             "total_exp": self.total_exp
         }
 
@@ -276,7 +281,7 @@ class MobaPlayerSimulation:
         if champion.champion_id in champion_ids:
             for ch in self.player.champion_pool:
                 if champion.champion_id == ch.champion_id:
-                    mastery = ch.champion_mastery
+                    mastery = ch.mastery
                     break
 
         # Default mastery for BRONZE mastery level

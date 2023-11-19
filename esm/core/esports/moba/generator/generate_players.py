@@ -28,8 +28,10 @@ from ..player import (
     MobaPlayer,
     LaneMultipliers,
     OffensiveAttributes,
-    IntelligenceAttributes,
-    SupportiveAttributes,
+    MechanicsAttributes,
+    CommunicationAttributes,
+    KnowledgeAttributes,
+    UtilityAttributes,
     MobaPlayerAttributes,
     MobaPlayerChampion,
     Lanes,
@@ -48,18 +50,29 @@ class MobaPlayerAttributesGeneratorError(Exception):
 
 
 class MobaPlayerAttributesGenerator(GeneratorInterface):
-    def generate_offensive_attributes(self, mu: int = 50, sigma: int = 10) -> OffensiveAttributes:
+    def generate_offensive_attributes(self, mu: int = 40, sigma: int = 10) -> OffensiveAttributes:
         return OffensiveAttributes(
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+        )
+
+    def generate_communication_attributes(self, mu: int = 40, sigma: int = 10) -> CommunicationAttributes:
+        return CommunicationAttributes(
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+            generate_attribute_value(mu, sigma),
+        )
+
+    def generate_knowledge_attributes(self, mu: int = 40, sigma: int = 10) -> KnowledgeAttributes:
+        return KnowledgeAttributes(
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
         )
     
-    def generate_intelligence_attributes(self, mu: int = 50, sigma: int = 10) -> IntelligenceAttributes:
-        return IntelligenceAttributes(
-            generate_attribute_value(mu, sigma),
+    def generate_mechanics_attributes(self, mu: int = 40, sigma: int = 10) -> MechanicsAttributes:
+        return MechanicsAttributes(
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
@@ -68,11 +81,8 @@ class MobaPlayerAttributesGenerator(GeneratorInterface):
             generate_attribute_value(mu, sigma),
         )
 
-    def generate_supportive_attributes(self, mu: int = 50, sigma: int = 10) -> SupportiveAttributes:
-        return SupportiveAttributes(
-            generate_attribute_value(mu, sigma),
-            generate_attribute_value(mu, sigma),
-            generate_attribute_value(mu, sigma),
+    def generate_utility_attributes(self, mu: int = 40, sigma: int = 10) -> UtilityAttributes:
+        return UtilityAttributes(
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
@@ -81,17 +91,29 @@ class MobaPlayerAttributesGenerator(GeneratorInterface):
     def generate(self, mu: int, sigma: int, lane: Lanes) -> MobaPlayerAttributes:
         if lane in [Lanes.JNG, Lanes.SUP]:
             offensive = self.generate_offensive_attributes()
-            intelligence = self.generate_intelligence_attributes(mu, sigma)
-            supportive = self.generate_supportive_attributes(mu, sigma)
-        elif lane in [Lanes.MID, Lanes.TOP, Lanes.ADC]:
+            mechanics = self.generate_mechanics_attributes()
+            communication = self.generate_communication_attributes(mu, sigma)
+            knowledge = self.generate_knowledge_attributes(mu, sigma)
+            utility = self.generate_utility_attributes()
+        elif lane in [Lanes.MID, Lanes.TOP]:
             offensive = self.generate_offensive_attributes(mu, sigma)
-            intelligence = self.generate_intelligence_attributes(mu, sigma)
-            supportive = self.generate_supportive_attributes()
+            mechanics = self.generate_mechanics_attributes(mu, sigma)
+            communication = self.generate_communication_attributes(mu, sigma)
+            knowledge = self.generate_knowledge_attributes(mu, sigma)
+            utility = self.generate_utility_attributes()
+        else:
+            offensive = self.generate_offensive_attributes(mu, sigma)
+            mechanics = self.generate_mechanics_attributes(mu, sigma)
+            communication = self.generate_communication_attributes(mu, sigma)
+            knowledge = self.generate_knowledge_attributes()
+            utility = self.generate_utility_attributes()
 
         return MobaPlayerAttributes(
             offensive,
-            intelligence,
-            supportive
+            communication,
+            mechanics,
+            knowledge,
+            utility
         )        
 
 class MobaPlayerGenerator(GeneratorInterface):

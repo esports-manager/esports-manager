@@ -24,6 +24,10 @@ from ..champion import Champion, ChampionType, ChampionDifficulty
 from ..player import Lanes, LaneMultipliers
 
 
+class ChampionGeneratorError(Exception):
+    pass
+
+
 class ChampionGenerator(GeneratorInterface):
     def __init__(self):
         self.random = False
@@ -50,14 +54,14 @@ class ChampionGenerator(GeneratorInterface):
                 if lane.name in champion_def["lanes"]:
                     lanes[lane] = 1.0
                 else:
-                    lanes[lane] = round(random.randrange(1, 95) / 100, 2)
+                    lanes[lane] = round(random.randrange(1, 75) / 100, 2)
         else:
             main_lane = random.choice(list(Lanes))
             for lane in Lanes:
                 if lane == main_lane:
                     lanes[lane] = 1.0
                 else:
-                    lanes[lane] = round(random.randrange(1, 95) / 100, 2)
+                    lanes[lane] = round(random.randrange(1, 75) / 100, 2)
 
         return LaneMultipliers.get_from_dict(lanes)
 
@@ -91,6 +95,8 @@ class ChampionGenerator(GeneratorInterface):
                     pass
             else:
                 try:
+                    if ch_type["champion_type1"] is None:
+                        raise ChampionGeneratorError("Champion type 1 is None")
                     return ChampionType(ch_type["champion_type1"])
                 except KeyError:
                     pass

@@ -35,6 +35,7 @@ from esm.core.esports.moba.player import (
     MobaPlayerChampion,
 )
 
+
 @pytest.fixture
 def champion():
     lanes = LaneMultipliers(0.80, 1.00, 0.45, 0.30, 0.10)
@@ -67,6 +68,7 @@ def champion_dict():
 def moba_player_gen(champions: list[Champion]) -> MobaPlayerGenerator:
     names = load_list_from_file(NAMES_FILE)
     return MobaPlayerGenerator(champions, names)
+
 
 @pytest.fixture
 def lanes() -> LaneMultipliers:

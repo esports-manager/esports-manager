@@ -15,8 +15,8 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import pytest
 
-from esm.core.esports.moba.generator.generate_champions import ChampionGenerator
-from esm.core.esports.moba.champion import Champion, ChampionType, ChampionDifficulty
+from esm.core.esports.moba.generator.generate_champions import ChampionGenerator, ChampionGeneratorError
+from esm.core.esports.moba.champion import ChampionType, ChampionDifficulty, Lanes
 
 
 @pytest.fixture
@@ -32,7 +32,7 @@ def test_generate_champion(champion_gen: ChampionGenerator):
 def test_generate_champion_from_dict(champion_gen: ChampionGenerator):
     champion_dict = {
         "name": "MyChampion",
-        "lanes": ["TOP", "JNG"],
+        "lanes": [Lanes.TOP.name, Lanes.JNG.name],
         "champion_difficulty": ChampionDifficulty.MEDIUM.value,
         "champion_type1": ChampionType.TANK.value,
         "champion_type2": ChampionType.FIGHTER.value,
@@ -49,7 +49,7 @@ def test_generate_champion_from_dict(champion_gen: ChampionGenerator):
 def test_generate_champion_from_dict_without_champion_type(champion_gen: ChampionGenerator):
     champion_dict = {
         "name": "MyChampion",
-        "lanes": ["SUP", "JNG"],
+        "lanes": [Lanes.SUP.name, Lanes.JNG.name],
         "champion_difficulty": ChampionDifficulty.MEDIUM.value,
     }
     obtained_champion = champion_gen.generate(champion_dict)
@@ -59,7 +59,7 @@ def test_generate_champion_from_dict_without_champion_type(champion_gen: Champio
 def test_generate_champion_from_dict_with_none_champion_type(champion_gen: ChampionGenerator):
     champion_dict = {
         "name": "MyChampion",
-        "lanes": ["MID", "ADC"],
+        "lanes": [Lanes.MID.name, Lanes.ADC.name],
         "champion_difficulty": ChampionDifficulty.MEDIUM.value,
         "champion_type1": ChampionType.TANK.value,
         "champion_type2": None,
@@ -67,3 +67,15 @@ def test_generate_champion_from_dict_with_none_champion_type(champion_gen: Champ
     obtained_champion = champion_gen.generate(champion_dict)
     assert obtained_champion.champion_type1 == ChampionType.TANK
     assert obtained_champion.champion_type2 is None
+
+
+def test_raises_error_if_champion_type1_is_none(champion_gen: ChampionGenerator):
+    with pytest.raises(ChampionGeneratorError):
+        champion_dict = {
+            "name": "MyChampion",
+            "lanes": [Lanes.TOP.name, Lanes.ADC.name],
+            "champion_difficulty": ChampionDifficulty.MEDIUM.value,
+            "champion_type1": None,
+            "champion_type2": ChampionType.TANK.value,
+        }
+        champion_gen.generate(champion_dict)

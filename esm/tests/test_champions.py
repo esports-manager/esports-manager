@@ -12,40 +12,10 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import uuid
-
 import pytest
 
-from esm.core.esports.moba.champion import Champion, ChampionLoadError, ChampionDifficulty, ChampionType
-from esm.core.esports.moba.moba_definitions import Lanes, LaneMultipliers, LaneMultiplierError
-
-
-@pytest.fixture
-def champion():
-    lanes = LaneMultipliers(0.80, 1.00, 0.45, 0.30, 0.10)
-    return Champion(uuid.UUID(int=1), "MyChampion", 87, 0.5, 20, lanes, ChampionDifficulty.MEDIUM, ChampionType.TANK,
-                    ChampionType.FIGHTER)
-
-
-@pytest.fixture
-def champion_dict():
-    return {
-        "id": '00000000000000000000000000000001',
-        "name": "MyChampion",
-        "lanes": {
-            Lanes.TOP.value: 0.80,
-            Lanes.JNG.value: 1.00,
-            Lanes.MID.value: 0.45,
-            Lanes.ADC.value: 0.30,
-            Lanes.SUP.value: 0.10,
-        },
-        "scaling_factor": 0.5,
-        "scaling_peak": 20,
-        "skill": 87,
-        "champion_difficulty": "MEDIUM",
-        "champion_type1": "TANK",
-        "champion_type2": "FIGHTER",
-    }
+from esm.core.esports.moba.champion import Champion, ChampionLoadError
+from esm.core.esports.moba.moba_definitions import Lanes, LaneMultiplierError
 
 
 def test_serialize_champion(champion: Champion, champion_dict: dict):

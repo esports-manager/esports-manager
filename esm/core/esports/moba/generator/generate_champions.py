@@ -25,8 +25,7 @@ from ..player import Lanes, LaneMultipliers
 
 
 class ChampionGenerator(GeneratorInterface):
-    def __init__(self, champion_def: list[dict]):
-        self.champion_def = champion_def
+    def __init__(self):
         self.random = False
         self.random_names: list[str] = []
 
@@ -71,24 +70,43 @@ class ChampionGenerator(GeneratorInterface):
     def generate_champion_skill(self) -> int:
         return random.randrange(1, 100)
 
-    def generate_champion_difficulty(self, difficulty: Optional[str] = None):
-        if difficulty:
-            return ChampionDifficulty(difficulty)
+    def generate_champion_difficulty(self, difficulty: Optional[dict] = None) -> ChampionDifficulty:
+        if difficulty is not None:
+            try:
+                return ChampionDifficulty(difficulty["champion_difficulty"])
+            except KeyError:
+                pass
+
         return random.choice(list(ChampionDifficulty))
 
-    def generate_champion_type(self, ch_type: Optional[str] = None, used_type: ChampionType = None) -> ChampionType:
-        if ch_type:
-            return ChampionType(ch_type)
+    def generate_champion_type(self, ch_type: Optional[dict] = None, used_type: ChampionType = None) -> Optional[ChampionType]:
+        if ch_type is not None:
+            if used_type:
+                try:
+                    if ch_type["champion_type2"]:
+                        return ChampionType(ch_type["champion_type2"])
+                    else:
+                        return None
+                except KeyError:
+                    pass
+            else:
+                try:
+                    return ChampionType(ch_type["champion_type1"])
+                except KeyError:
+                    pass
 
         ch_types = list(ChampionType)
         if used_type:
+            is_there_second_type = random.randint(0, 1)
+            if is_there_second_type == 0:
+                return None
             ch_types.remove(used_type)
         return random.choice(ch_types)
 
-    def generate_champion(
-            self, champion_def: Optional[dict] = None, rand: bool = False
+    def generate(
+            self, champion_def: Optional[dict] = None
     ) -> Champion:
-        if rand:
+        if champion_def is None:
             self.random = True
         champion_id = self.generate_champion_id()
         name = self.generate_champion_name(champion_def)
@@ -96,9 +114,9 @@ class ChampionGenerator(GeneratorInterface):
         scaling_peak = self.generate_scaling_peak()
         skill = self.generate_champion_skill()
         lanes = self.generate_champion_lanes(champion_def)
-        difficulty = self.generate_champion_difficulty(champion_def["champion_difficulty"])
-        champion_type1 = self.generate_champion_type(champion_def["champion_type1"])
-        champion_type2 = self.generate_champion_type(champion_def["champion_type2"], champion_type1)
+        difficulty = self.generate_champion_difficulty(champion_def)
+        champion_type1 = self.generate_champion_type(champion_def)
+        champion_type2 = self.generate_champion_type(champion_def, champion_type1)
 
         return Champion(
             champion_id,
@@ -111,15 +129,3 @@ class ChampionGenerator(GeneratorInterface):
             champion_type1,
             champion_type2
         )
-
-    def generate(self, amount: int = 0, rand: bool = False) -> list[Champion]:
-        if amount == 0:
-            amount = len(self.champion_def)
-        elif amount < 20:
-            amount = 20
-            random.shuffle(self.champion_def)
-
-        return [
-            self.generate_champion(ch_def, rand)
-            for ch_def in self.champion_def[:amount]
-        ]

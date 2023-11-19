@@ -15,22 +15,9 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import pytest
 
-from esm.core.esports.moba.generator.default_champion_defs import (
-    get_default_champion_defs,
-)
-from esm.core.esports.moba.generator.generate_champions import ChampionGenerator
 from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator, MobaPlayerGeneratorError
 from esm.core.esports.moba.player import MobaPlayer
-from esm.core.utils import load_list_from_file
-from esm.definitions import NAMES_FILE
 
-
-@pytest.fixture
-def moba_player_gen() -> MobaPlayerGenerator:
-    champions_gen = ChampionGenerator(get_default_champion_defs())
-    champions = champions_gen.generate()
-    names = load_list_from_file(NAMES_FILE)
-    return MobaPlayerGenerator(champions, names)
 
 
 def test_generate_default_mobaplayer(moba_player_gen: MobaPlayerGenerator):

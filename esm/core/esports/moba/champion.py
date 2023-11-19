@@ -35,7 +35,7 @@ class ChampionDifficulty(Enum):
 
 
 class ChampionType(Enum):
-    TANK = auto()
+    TANK = 0
     FIGHTER = auto()
     ASSASSIN = auto()
     MAGE = auto()
@@ -63,9 +63,12 @@ class Champion(Serializable):
         skill = dictionary["skill"]
         scaling_factor = dictionary["scaling_factor"]
         scaling_peak = dictionary["scaling_peak"]
-        difficulty = dictionary["champion_difficulty"]
-        champion_type1 = dictionary["champion_type1"]
-        champion_type2 = dictionary["champion_type2"]
+        difficulty = ChampionDifficulty(dictionary["champion_difficulty"])
+        champion_type1 = ChampionType(dictionary["champion_type1"])
+        if dictionary["champion_type2"] is None:
+            champion_type2 = None
+        else:
+            champion_type2 = ChampionType(dictionary["champion_type2"])
 
         if skill > 100 or skill < 0:
             raise ChampionLoadError(
@@ -94,9 +97,9 @@ class Champion(Serializable):
             "scaling_factor": self.scaling_factor,
             "scaling_peak": self.scaling_peak,
             "lanes": self.lanes.serialize(),
-            "champion_difficulty": self.champion_difficulty.name,
-            "champion_type1": self.champion_type1.name,
-            "champion_type2": self.champion_type2.name if self.champion_type2 is not None else None
+            "champion_difficulty": self.champion_difficulty.value,
+            "champion_type1": self.champion_type1.value,
+            "champion_type2": self.champion_type2.value if self.champion_type2 is not None else None
         }
 
     def get_current_skill(self, lane: Lanes) -> int:

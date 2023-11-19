@@ -18,10 +18,10 @@ import random
 import uuid
 from typing import Optional
 
+from .default_champion_defs import get_default_champion_names
 from .generator import GeneratorInterface
 from ..champion import Champion, ChampionType, ChampionDifficulty
 from ..player import Lanes, LaneMultipliers
-from .default_champion_defs import get_default_champion_names
 
 
 class ChampionGenerator(GeneratorInterface):
@@ -86,7 +86,7 @@ class ChampionGenerator(GeneratorInterface):
         return random.choice(ch_types)
 
     def generate_champion(
-        self, champion_def: Optional[dict] = None, rand: bool = False
+            self, champion_def: Optional[dict] = None, rand: bool = False
     ) -> Champion:
         if rand:
             self.random = True

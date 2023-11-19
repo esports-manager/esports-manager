@@ -14,13 +14,14 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import random
-import uuid
 import threading
-from typing import Optional
+import uuid
 from queue import Queue
+from typing import Optional
+
 from esm.core.esports.moba.simulation.match_live import MatchLive
-from ..team import TeamSimulation
 from ..mobamatch import MobaMatch
+from ..team import TeamSimulation
 
 
 class MatchManager:
@@ -31,11 +32,11 @@ class MatchManager:
         self.is_game_running: bool = False
 
     def initialize_game(
-        self,
-        game_id: uuid.UUID,
-        championship_id: uuid.UUID,
-        team1: TeamSimulation,
-        team2: TeamSimulation
+            self,
+            game_id: uuid.UUID,
+            championship_id: uuid.UUID,
+            team1: TeamSimulation,
+            team2: TeamSimulation
     ):
         self.current_game = MobaMatch(
             game_id,
@@ -45,16 +46,16 @@ class MatchManager:
         )
 
     def initialize_live_game(
-        self,
-        game: MobaMatch,
-        show_commentary: bool,
-        match_speed: int,
-        simulation_delay: bool,
-        ban_per_team: int,
-        difficulty_level: int,
-        is_player_match: bool,
-        queue: Queue,
-        picks_bans_queue: Queue
+            self,
+            game: MobaMatch,
+            show_commentary: bool,
+            match_speed: int,
+            simulation_delay: bool,
+            ban_per_team: int,
+            difficulty_level: int,
+            is_player_match: bool,
+            queue: Queue,
+            picks_bans_queue: Queue
     ):
         self.current_live_game = MatchLive(
             game,

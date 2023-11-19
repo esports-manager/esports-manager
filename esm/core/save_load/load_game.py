@@ -17,7 +17,6 @@ import os
 
 import cbor2
 
-from esm.core.esports.manager import Manager
 from esm.core.gamestate import GameState
 from esm.definitions import SAVE_FILE_DIR
 

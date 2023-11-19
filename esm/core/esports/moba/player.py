@@ -13,11 +13,11 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import uuid
 import datetime
+import uuid
 from dataclasses import dataclass, asdict
 from enum import Enum, auto
-from abc import ABC
+
 from .champion import Champion
 from .moba_definitions import Lanes, LaneError, LaneMultipliers
 from ..player import Player
@@ -86,11 +86,11 @@ class MobaPlayerAttributes(Serializable):
 
     def get_overall(self, lane: Lanes) -> int:
         over_sum = (
-            self.offensive.get_overall()
-            + self.communication.get_overall()
-            + self.mechanics.get_overall()
-            + self.knowledge.get_overall()
-            + self.utility.get_overall()
+                self.offensive.get_overall()
+                + self.communication.get_overall()
+                + self.mechanics.get_overall()
+                + self.knowledge.get_overall()
+                + self.utility.get_overall()
         )
         if lane in [Lanes.TOP, Lanes.MID]:
             over_sum += self.offensive.get_overall()
@@ -264,8 +264,8 @@ class MobaPlayerSimulation:
         Gets the player's skill according to the lane he is currently at.
         """
         return (
-            self.player.attributes.get_overall(self.lane)
-            * self.get_curr_lane_multiplier()
+                self.player.attributes.get_overall(self.lane)
+                * self.get_curr_lane_multiplier()
         )
 
     def get_projected_champion_skill(self, champion: Champion) -> float:

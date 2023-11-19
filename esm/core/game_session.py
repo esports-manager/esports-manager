@@ -14,12 +14,10 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
+from typing import Union
 
-from pathlib import Path
-from typing import Union, Optional
-
-from .gamestate import GameState
 from .db import DB
+from .gamestate import GameState
 from .save_load import LoadGame, SaveGame
 from .settings import Settings
 
@@ -33,7 +31,7 @@ class GameSession:
         self.settings = settings
         self.auto_save_enabled = auto_save_enabled
         self.db = db
-    
+
     def get_gamestate(self) -> GameState:
         return self.db.create_gamestate()
 

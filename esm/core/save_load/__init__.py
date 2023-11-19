@@ -17,8 +17,8 @@ import os
 from pathlib import Path
 from typing import Union
 
-from esm.core.settings import Settings
 from esm.core.gamestate import GameState
+from esm.core.settings import Settings
 from .load_game import LoadGame, LoadGameError
 from .save_game import SaveGame
 
@@ -38,7 +38,7 @@ def get_autosave_files(settings: Settings) -> list:
 
 
 def create_save_game(gamestate: GameState, filename: str, settings: Settings, auto_save_enabled: bool) -> SaveGame:
-    return SaveGame(gamestate, filename, save_directory=settings.save_file_dir, autosave_enabled=auto_save_enabled,)
+    return SaveGame(gamestate, filename, save_directory=settings.save_file_dir, autosave_enabled=auto_save_enabled, )
 
 
 def auto_save(save: SaveGame) -> None:

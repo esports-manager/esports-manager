@@ -13,10 +13,12 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import pytest
 import uuid
 from datetime import date
 
+import pytest
+
+from esm.core.esports.moba.moba_definitions import LaneMultipliers
 from esm.core.esports.moba.player import (
     MobaPlayer,
     MobaPlayerAttributes,
@@ -28,7 +30,6 @@ from esm.core.esports.moba.player import (
     ChampionMastery,
     MobaPlayerChampion,
 )
-from esm.core.esports.moba.moba_definitions import LaneMultipliers
 
 
 @pytest.fixture

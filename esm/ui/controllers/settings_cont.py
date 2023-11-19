@@ -14,10 +14,10 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .controllerinterface import IController
-from esm.ui.layouts.settings import SettingsLayout
-from esm.ui.igamecontroller import IGameController
 from esm.core.esmcore import ESMCore
+from esm.ui.igamecontroller import IGameController
+from esm.ui.layouts.settings import SettingsLayout
+from .controllerinterface import IController
 
 
 class SettingsController(IController):

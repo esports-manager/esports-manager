@@ -30,7 +30,7 @@ class ESMController:
             self.core.check_files()
         except FileNotFoundError:
             self.core.db.generate_moba_files()
-        
+
         self.view = GUIController(self.core)
 
     @property

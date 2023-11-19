@@ -17,9 +17,9 @@ import os
 
 from esm.core.esmcore import ESMCore
 from esm.core.save_load.load_game import LoadGame
-from .controllerinterface import IController
-from esm.ui.layouts.loadgame import LoadGameLayout
 from esm.ui.igamecontroller import IGameController
+from esm.ui.layouts.loadgame import LoadGameLayout
+from .controllerinterface import IController
 
 
 class LoadGameController(IController):

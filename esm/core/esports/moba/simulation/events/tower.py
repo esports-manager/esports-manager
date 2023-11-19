@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 class TowerEventEventCreator(EventCreator):
     def factory_method(
-        self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
+            self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
     ):
         return TowerEvent(
             event_name=event_chosen["name"],

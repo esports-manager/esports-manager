@@ -19,9 +19,9 @@ from queue import Queue
 
 from esm.core.esmcore import ESMCore
 from esm.core.esports.moba.modules.match_manager import MatchManager
-from .controllerinterface import IController
-from esm.ui.layouts.picksbans import PicksBansLayout
 from esm.ui.igamecontroller import IGameController
+from esm.ui.layouts.picksbans import PicksBansLayout
+from .controllerinterface import IController
 
 
 class PicksBansController(IController):
@@ -94,8 +94,10 @@ class PicksBansController(IController):
         pick_ban = self.current_match.picks_bans
         self.controller.update_element_on_screen("pickban_team1_label", value=self.team1.name)
         self.controller.update_element_on_screen("pickban_team2_label", value=self.team2.name)
-        self.controller.update_element_on_screen("pickban_team1_table", values=self.get_players(self.team1.list_players))
-        self.controller.update_element_on_screen("pickban_team2_table", values=self.get_players(self.team2.list_players))
+        self.controller.update_element_on_screen("pickban_team1_table",
+                                                 values=self.get_players(self.team1.list_players))
+        self.controller.update_element_on_screen("pickban_team2_table",
+                                                 values=self.get_players(self.team2.list_players))
         self.controller.update_element_on_screen("pickban_team1_bans", value=self.get_bans(self.team1_bans))
         self.controller.update_element_on_screen("pickban_team2_bans", value=self.get_bans(self.team2_bans))
         self.controller.update_element_on_screen("pickban_champion_table", values=self.get_champions())

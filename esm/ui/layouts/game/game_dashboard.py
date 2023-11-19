@@ -79,7 +79,7 @@ class GameDashboardLayout(ILayout):
             [esm_title_text("SCHEDULED MATCHES\n", justification="center")],
             [esm_table(values=[
                 ["2020/01/01", "TEAMNAME12345678910111213141517181920", "TEAMNAME12345678910111213141517181920"]],
-                       headings=["Date", "Team 1", "Team 2"], size=(100, 300))]
+                headings=["Date", "Team 1", "Team 2"], size=(100, 300))]
         ]
 
         tab_game_details = [
@@ -107,4 +107,3 @@ class GameDashboardLayout(ILayout):
             [esm_button("Next match", size=(15, 2), pad=(None, 80)),
              esm_button("Save game", key="game_dashboard_save"), ],
         ]
-

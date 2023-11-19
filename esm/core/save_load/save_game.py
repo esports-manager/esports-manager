@@ -29,11 +29,11 @@ from esm.definitions import SAVE_FILE_DIR
 
 class SaveGame:
     def __init__(
-        self,
-        gamestate: GameState,
-        filename: Union[str, Path],
-        save_directory: str = None,
-        autosave_enabled: bool = True,
+            self,
+            gamestate: GameState,
+            filename: Union[str, Path],
+            save_directory: str = None,
+            autosave_enabled: bool = True,
     ):
         self.gamestate = gamestate
         self.save_directory = save_directory

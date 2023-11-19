@@ -18,10 +18,10 @@ from typing import Union
 
 from esm.core.esmcore import ESMCore
 from esm.core.esports.moba.match_tester import MatchTester
-from esm.ui.igamecontroller import IGameController
-from esm.ui.controllers.controllerinterface import IController
-from esm.ui.layouts.match_tester import MatchTesterLayout
 from esm.core.esports.moba.modules.match_manager import MatchManager, MatchLive
+from esm.ui.controllers.controllerinterface import IController
+from esm.ui.igamecontroller import IGameController
+from esm.ui.layouts.match_tester import MatchTesterLayout
 
 
 class MatchTesterController(IController):
@@ -159,8 +159,8 @@ class MatchTesterController(IController):
             # Click the Cancel button
             if event == "match_tester_cancel_btn":
                 if (
-                    self.match_tester is not None
-                    and self.match_tester.running_test
+                        self.match_tester is not None
+                        and self.match_tester.running_test
                 ):
                     self.match_tester.running_test = False
                 make_screen("match_tester_screen", "main_screen")

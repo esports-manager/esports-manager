@@ -13,10 +13,10 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import pytest
-
-from uuid import uuid4
 from datetime import datetime
+from uuid import uuid4
+
+import pytest
 
 from ..core.esports.moba.mobamatch import MobaMatch, MatchType, InvalidTeamId
 

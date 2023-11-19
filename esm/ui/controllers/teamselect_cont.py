@@ -14,11 +14,11 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .controllerinterface import IController
-from esm.ui.layouts.teamselect import TeamSelectLayout
-from esm.ui.igamecontroller import IGameController
-from esm.core.esports.manager import Manager
 from esm.core.esmcore import ESMCore
+from esm.core.esports.manager import Manager
+from esm.ui.igamecontroller import IGameController
+from esm.ui.layouts.teamselect import TeamSelectLayout
+from .controllerinterface import IController
 
 
 class TeamSelectControllerError(Exception):
@@ -58,12 +58,12 @@ class TeamSelectController(IController):
         if values["teamselect_team_table"]:
             team_index = values["teamselect_team_table"][0]
             manager = Manager(
-                        values["create_manager_name"],
-                        values["create_manager_display_calendar"],
-                        self.teams.teams[team_index],
-                        True,
-                        50
-                    )
+                values["create_manager_name"],
+                values["create_manager_display_calendar"],
+                self.teams.teams[team_index],
+                True,
+                50
+            )
             self.teams.teams[team_index].is_players_team = True
             # Probably here we should delete the old window and create a new one with new layouts
             # self.create_game_manager(
@@ -76,9 +76,9 @@ class TeamSelectController(IController):
             make_screen("team_select_screen", "game_dashboard_screen")
         else:
             self.controller.get_gui_information_window(
-                        'You must select a team before proceeding!',
-                        title='Select a team!'
-                    )
+                'You must select a team before proceeding!',
+                title='Select a team!'
+            )
 
     def cancel_teamselect(self, make_screen):
         self.teams = None
@@ -88,21 +88,21 @@ class TeamSelectController(IController):
         if self.teams is None:
             self.get_teams()
             self.controller.update_element_on_screen("teamselect_team_table", values=self.get_team_list())
-            
+
         if values["teamselect_team_table"]:
             self.controller.update_element_on_screen(
-                    "teamselect_players_table",
-                    values=self.get_player_list(values["teamselect_team_table"])
-                )
-    
+                "teamselect_players_table",
+                values=self.get_player_list(values["teamselect_team_table"])
+            )
+
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("team_select_screen").visible:
             self.update_teams(values)
-            
+
             # Click the Cancel button
             if event == "teamselect_cancel_btn":
                 self.cancel_teamselect(make_screen)
-            
+
             if event == "teamselect_select_btn":
                 self.select_team(values, make_screen)
         else:

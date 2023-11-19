@@ -13,14 +13,14 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import os
 import logging
+import os
 from textwrap import dedent
 
-from .settings import Settings
 from .db import DB
-from ..definitions import DEBUG, LOG_FILE
 from .game_session import GameSession
+from .settings import Settings
+from ..definitions import DEBUG, LOG_FILE
 
 
 class AmountPlayersError(Exception):
@@ -73,9 +73,9 @@ class ESMCore:
 
     def check_if_files_exist(self) -> None:
         if (
-            not os.path.exists(self.settings.champions_file)
-            and not os.path.exists(self.settings.players_file)
-            and not os.path.exists(self.settings.teams_file)
+                not os.path.exists(self.settings.champions_file)
+                and not os.path.exists(self.settings.players_file)
+                and not os.path.exists(self.settings.teams_file)
         ):
             raise FileNotFoundError
 

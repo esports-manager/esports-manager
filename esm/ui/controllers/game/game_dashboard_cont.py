@@ -18,8 +18,8 @@ from typing import Optional
 
 from esm.core.esmcore import ESMCore
 from esm.core.esports.moba.team import Team
-from esm.ui.igamecontroller import IGameController
 from esm.ui.controllers.controllerinterface import IController
+from esm.ui.igamecontroller import IGameController
 from esm.ui.layouts.game.game_dashboard import GameDashboardLayout
 
 
@@ -29,7 +29,7 @@ class GameDashboardController(IController):
         self.core = core
         self.layout = GameDashboardLayout()
         self.team_name: Optional[Team] = None
-        #TODO: rewrite this class
+        # TODO: rewrite this class
 
     def update(self, event, values, make_screen):
         pass

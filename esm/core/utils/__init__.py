@@ -19,9 +19,9 @@ import os
 import re
 from pathlib import Path
 from typing import Union
-from unicodedata import normalize
 
 import cbor2
+from unicodedata import normalize
 
 from esm.definitions import NAMES_FILE
 

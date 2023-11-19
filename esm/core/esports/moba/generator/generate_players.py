@@ -20,9 +20,8 @@ import uuid
 from datetime import date, timedelta
 from typing import Tuple
 
-
-from .generator import GeneratorInterface
 from .default_player_nick_names import get_default_player_nick_names
+from .generator import GeneratorInterface
 from ..champion import Champion
 from ..player import (
     MobaPlayer,
@@ -38,8 +37,10 @@ from ..player import (
 )
 from ....utils import get_nations
 
+
 def generate_attribute_value(mu, sigma) -> int:
     return abs(int(random.gauss(mu, sigma)))
+
 
 class MobaPlayerGeneratorError(Exception):
     pass
@@ -70,7 +71,7 @@ class MobaPlayerAttributesGenerator(GeneratorInterface):
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
         )
-    
+
     def generate_mechanics_attributes(self, mu: int = 40, sigma: int = 10) -> MechanicsAttributes:
         return MechanicsAttributes(
             generate_attribute_value(mu, sigma),
@@ -114,7 +115,8 @@ class MobaPlayerAttributesGenerator(GeneratorInterface):
             mechanics,
             knowledge,
             utility
-        )        
+        )
+
 
 class MobaPlayerGenerator(GeneratorInterface):
     """
@@ -122,12 +124,12 @@ class MobaPlayerGenerator(GeneratorInterface):
     """
 
     def __init__(
-        self,
-        champions_list: list[Champion],
-        names: list[dict[str, float | str | int]],
-        today: date = date.today(),
-        min_age: int = 16,
-        max_age: int = 25,
+            self,
+            champions_list: list[Champion],
+            names: list[dict[str, float | str | int]],
+            today: date = date.today(),
+            min_age: int = 16,
+            max_age: int = 25,
     ):
         self.nationalities = get_nations()
         self.nick_names = get_default_player_nick_names()
@@ -136,7 +138,7 @@ class MobaPlayerGenerator(GeneratorInterface):
             raise MobaPlayerGeneratorError(
                 "Minimum age cannot be higher than maximum age!"
             )
-        
+
         self.attribute_gen = MobaPlayerAttributesGenerator()
         self.min_age = min_age
         self.max_age = max_age
@@ -163,10 +165,10 @@ class MobaPlayerGenerator(GeneratorInterface):
         )  # definition of a Gregorian calendar date
 
         max_age = (
-            self.max_age * year
+                self.max_age * year
         )  # players should be a max of self.max_age years old
         min_age = (
-            self.min_age * year
+                self.min_age * year
         )  # players can't be less than self.min_age years old
         min_year = self.td - max_age  # minimum date for birthday
         max_year = self.td - min_age  # max date for birthday
@@ -178,7 +180,7 @@ class MobaPlayerGenerator(GeneratorInterface):
         return min_year + timedelta(days=rand_date)  # assigns date of birth
 
     def generate_champions(
-        self, lane: Lanes, amount: int = 0
+            self, lane: Lanes, amount: int = 0
     ) -> list[MobaPlayerChampion]:
         """
         Generates champion skill level for each player.
@@ -288,7 +290,7 @@ class MobaPlayerGenerator(GeneratorInterface):
         players = []
         if amount % 5 != 0:
             raise MobaPlayerGeneratorError("Amount is not divisible by 5")
-        
+
         if rand:
             for lane in range(amount):
                 player = self.generate_player(Lanes(lane))
@@ -297,6 +299,5 @@ class MobaPlayerGenerator(GeneratorInterface):
             for lane, __ in itertools.product(range(5), range(amount // 5)):
                 player = self.generate_player(lane)
                 players.append(player)
-        
+
         return players
-    

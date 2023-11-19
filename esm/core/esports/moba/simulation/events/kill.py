@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 class KillEventEventCreator(EventCreator):
     def factory_method(
-        self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
+            self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
     ):
         return KillEvent(
             event_name=event_chosen["name"],
@@ -81,7 +81,7 @@ class KillEvent(MobaEvent):
         diff_probs = abs(player1_prob - player2_prob)
 
         if player1_prob > player2_prob and (
-            -1.0 <= self.factor <= 1.0 or diff_probs >= 0.3
+                -1.0 <= self.factor <= 1.0 or diff_probs >= 0.3
         ):
             killed = 1
         elif diff_probs <= 0.15 and -0.5 <= self.factor <= 0.5:

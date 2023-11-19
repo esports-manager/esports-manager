@@ -13,11 +13,11 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import os
-from .settings import Settings
-from .esports.moba.generator import TeamGenerator, ChampionGenerator, MobaPlayerGenerator
 from typing import Tuple
+
+from .esports.moba.generator import TeamGenerator, ChampionGenerator, MobaPlayerGenerator
 from .gamestate import GameState
+from .settings import Settings
 
 
 class DB:
@@ -76,4 +76,3 @@ class DB:
 
     def load_from_gamestate(self, gamestate: GameState):
         pass
-    

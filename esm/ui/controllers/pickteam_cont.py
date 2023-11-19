@@ -14,8 +14,8 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .controllerinterface import IController
 from esm.ui.layouts.pickteam import PickTeamLayout
+from .controllerinterface import IController
 
 
 class PickTeamController(IController):

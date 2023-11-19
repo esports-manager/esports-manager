@@ -16,11 +16,11 @@
 import threading
 import uuid
 
+from esm.core.esmcore import ESMCore
 from esm.core.esports.moba.championship import Championship
 from esm.ui.igamecontroller import IGameController
-from esm.core.esmcore import ESMCore
-from .controllerinterface import IController
 from esm.ui.layouts.debug_championship import DebugChampionshipLayout
+from .controllerinterface import IController
 
 
 class DebugChampionshipController(IController):

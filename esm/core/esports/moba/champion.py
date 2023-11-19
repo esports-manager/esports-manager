@@ -14,10 +14,10 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import uuid
-
-from enum import Enum, auto
 from dataclasses import dataclass
+from enum import Enum, auto
 from typing import Any, Optional
+
 from .moba_definitions import Lanes, LaneMultipliers
 from ...serializable import Serializable
 

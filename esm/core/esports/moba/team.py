@@ -14,9 +14,10 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import uuid
-from dataclasses import dataclass, asdict
-from .player import MobaPlayer, MobaPlayerSimulation
+from dataclasses import dataclass
+
 from .champion import Champion
+from .player import MobaPlayer, MobaPlayerSimulation
 from ...serializable import Serializable
 
 
@@ -103,17 +104,17 @@ class TeamSimulation:
 
     def are_all_towers_down(self) -> bool:
         return (
-            self.towers["top"] == 0
-            and self.towers["mid"] == 0
-            and self.towers["bot"] == 0
-            and self.towers["base"] == 0
+                self.towers["top"] == 0
+                and self.towers["mid"] == 0
+                and self.towers["bot"] == 0
+                and self.towers["base"] == 0
         )
 
     def are_all_lane_towers_down(self) -> bool:
         return (
-            self.towers["top"] == 0
-            and self.towers["mid"] == 0
-            and self.towers["bot"] == 0
+                self.towers["top"] == 0
+                and self.towers["mid"] == 0
+                and self.towers["bot"] == 0
         )
 
     def is_inhibitor_up(self, lane: str) -> bool:
@@ -124,9 +125,9 @@ class TeamSimulation:
 
     def are_inhibs_exposed(self) -> bool:
         return (
-            self.towers["top"] == 0
-            or self.towers["mid"] == 0
-            or self.towers["bot"] == 0
+                self.towers["top"] == 0
+                or self.towers["mid"] == 0
+                or self.towers["bot"] == 0
         )
 
     def get_exposed_inhibs(self):
@@ -236,7 +237,7 @@ class TeamSimulation:
     @property
     def total_skill(self) -> int:
         self._total_skill = (
-            int((self.player_overall + self.champion_overall) / 10) + self.points
+                int((self.player_overall + self.champion_overall) / 10) + self.points
         )
 
         return int(self._total_skill)

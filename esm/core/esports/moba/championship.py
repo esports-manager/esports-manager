@@ -22,7 +22,7 @@ from esm.core.esports.moba.simulation.match_live import MatchLive
 
 class Championship:
     def __init__(
-        self, name: str, championship_id: uuid.UUID, country: str, teams: list
+            self, name: str, championship_id: uuid.UUID, country: str, teams: list
     ):
         self.name = name
         self.championship_id = championship_id

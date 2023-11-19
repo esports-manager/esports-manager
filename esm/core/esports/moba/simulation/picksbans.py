@@ -28,13 +28,13 @@ class PicksBans:
     """
 
     def __init__(
-        self,
-        team1: TeamSimulation,
-        team2: TeamSimulation,
-        champion_list: list,
-        ban_per_team: int = 5,
-        difficulty_level: int = 1,
-        queue: Queue = None,
+            self,
+            team1: TeamSimulation,
+            team2: TeamSimulation,
+            champion_list: list,
+            ban_per_team: int = 5,
+            difficulty_level: int = 1,
+            queue: Queue = None,
     ):
         self.bans_turn = 0
         self.picks_turn = -1
@@ -166,9 +166,9 @@ class PicksBans:
     def get_player_input(self) -> Champion:
         champion = self.queue.get()
         if (
-            not isinstance(champion, Champion)
-            and champion in self.banned_champions
-            and champion in self.picked_champions
+                not isinstance(champion, Champion)
+                and champion in self.banned_champions
+                and champion in self.picked_champions
         ):
             champion = None
 

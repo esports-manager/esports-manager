@@ -12,8 +12,9 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import pytest
 import uuid
+
+import pytest
 
 from esm.core.esports.moba.champion import Champion, ChampionLoadError, ChampionDifficulty, ChampionType
 from esm.core.esports.moba.moba_definitions import Lanes, LaneMultipliers, LaneMultiplierError
@@ -22,7 +23,8 @@ from esm.core.esports.moba.moba_definitions import Lanes, LaneMultipliers, LaneM
 @pytest.fixture
 def champion():
     lanes = LaneMultipliers(0.80, 1.00, 0.45, 0.30, 0.10)
-    return Champion(uuid.UUID(int=1), "MyChampion", 87, 0.5, 20, lanes, ChampionDifficulty.MEDIUM, ChampionType.TANK, ChampionType.FIGHTER)
+    return Champion(uuid.UUID(int=1), "MyChampion", 87, 0.5, 20, lanes, ChampionDifficulty.MEDIUM, ChampionType.TANK,
+                    ChampionType.FIGHTER)
 
 
 @pytest.fixture

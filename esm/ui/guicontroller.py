@@ -13,12 +13,12 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from .igamecontroller import IGameController
+from .controllers import *
 from .gui import GUI, init_theme
 from .gui_components import sg
-from .controllers import *
-from ..definitions import DEBUG
+from .igamecontroller import IGameController
 from ..core.esmcore import ESMCore
+from ..definitions import DEBUG
 
 
 class GUIController(IGameController):
@@ -51,7 +51,7 @@ class GUIController(IGameController):
             self.controllers.append(PicksBansController(self, core))
             self.controllers.append(PickTeamController())
             self.controllers.append(MatchTesterController(self, core))
-    
+
     def print_error(self, e):
         self.gui.error_message(e)
 

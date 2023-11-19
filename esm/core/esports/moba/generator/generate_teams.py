@@ -20,8 +20,8 @@ from typing import Optional
 
 from esm.core.esports.moba.generator.default_team_names import get_default_team_names
 from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator
-from esm.core.esports.moba.team import Team
 from esm.core.esports.moba.player import MobaPlayer
+from esm.core.esports.moba.team import Team
 from esm.definitions import TEAMS_FILE
 
 
@@ -31,12 +31,12 @@ class TeamGeneratorError(Exception):
 
 class TeamGenerator:
     def __init__(
-        self,
-        nationality: Optional[str] = None,
-        amount: int = 1,
-        players: Optional[list] = None,
-        organized: bool = True,
-        file_name: str = TEAMS_FILE,
+            self,
+            nationality: Optional[str] = None,
+            amount: int = 1,
+            players: Optional[list] = None,
+            organized: bool = True,
+            file_name: str = TEAMS_FILE,
     ):
         self.name = None
         self.nationality = nationality

@@ -17,6 +17,7 @@
 from .debug_championship_cont import DebugChampionshipController
 from .debug_cont import DebugController
 from .debugmatch_cont import DebugMatchController
+from .game.game_dashboard_cont import GameDashboardController
 from .loadgame_cont import LoadGameController
 from .mainscreen_cont import MainScreenController
 from .match_tester_cont import MatchTesterController
@@ -25,4 +26,3 @@ from .picksbans_cont import PicksBansController
 from .pickteam_cont import PickTeamController
 from .settings_cont import SettingsController
 from .teamselect_cont import TeamSelectController
-from .game.game_dashboard_cont import GameDashboardController

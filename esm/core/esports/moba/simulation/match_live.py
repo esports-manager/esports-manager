@@ -19,9 +19,9 @@ import math
 import random
 import time
 import uuid
+from datetime import datetime
 from queue import Queue
 from typing import Union, Tuple, Optional
-from datetime import datetime
 
 from esm.core.esports.moba.champion import Champion
 from esm.core.esports.moba.mobamatch import MobaMatch, MatchType
@@ -42,19 +42,19 @@ class MatchLive:
     """
 
     def __init__(
-        self,
-        game: MobaMatch,
-        champions: list[Champion],
-        team1: TeamSimulation,
-        team2: TeamSimulation,
-        show_commentary: bool = True,
-        match_speed: int = 1,
-        simulation_delay: bool = True,
-        ban_per_team: int = 5,
-        difficulty_level: int = 1,
-        is_player_match: bool = False,
-        queue: Optional[Queue] = None,
-        picks_bans_queue: Optional[Queue] = None,
+            self,
+            game: MobaMatch,
+            champions: list[Champion],
+            team1: TeamSimulation,
+            team2: TeamSimulation,
+            show_commentary: bool = True,
+            match_speed: int = 1,
+            simulation_delay: bool = True,
+            ban_per_team: int = 5,
+            difficulty_level: int = 1,
+            is_player_match: bool = False,
+            queue: Optional[Queue] = None,
+            picks_bans_queue: Optional[Queue] = None,
     ):
         self.game = game
         self.game_time = 0.0
@@ -202,20 +202,20 @@ class MatchLive:
 
 class MatchSeries:
     def __init__(
-        self,
-        team1: TeamSimulation,
-        team2: TeamSimulation,
-        championship_id: uuid.UUID,
-        champions: list[Champion],
-        match_type: MatchType,
-        date: datetime,
-        best_of: int = 3,
-        show_commentary: bool = True,
-        match_speed: int = 1,
-        simulation_delay: bool = True,
-        ban_per_team: int = 5,
-        difficulty_level: int = 1,
-        is_player_match: bool = False,
+            self,
+            team1: TeamSimulation,
+            team2: TeamSimulation,
+            championship_id: uuid.UUID,
+            champions: list[Champion],
+            match_type: MatchType,
+            date: datetime,
+            best_of: int = 3,
+            show_commentary: bool = True,
+            match_speed: int = 1,
+            simulation_delay: bool = True,
+            ban_per_team: int = 5,
+            difficulty_level: int = 1,
+            is_player_match: bool = False,
     ):
         self.championship_id = championship_id
         self.team1 = team1

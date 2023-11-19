@@ -30,21 +30,21 @@ logger = logging.getLogger(__name__)
 class EventCreator(ABC):
     @abstractmethod
     def factory_method(
-        self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
+            self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
     ):
         pass
 
 
 class MobaEvent(ABC):
     def __init__(
-        self,
-        event_id: int = uuid.uuid4(),
-        event_name: str = None,
-        priority: int = 0,
-        points: int = 0,
-        event_time: float = 0.0,
-        show_commentary: bool = True,
-        queue: Queue = None,
+            self,
+            event_id: int = uuid.uuid4(),
+            event_name: str = None,
+            priority: int = 0,
+            points: int = 0,
+            event_time: float = 0.0,
+            show_commentary: bool = True,
+            queue: Queue = None,
     ):
         self.event_name = event_name
         self.event_id = event_id
@@ -58,7 +58,7 @@ class MobaEvent(ABC):
 
     @classmethod
     def get_from_dict(
-        cls, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
+            cls, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
     ):
         return cls(
             event_name=event_chosen["name"],
@@ -88,15 +88,15 @@ class MobaEvent(ABC):
         return [team1.list_players, team2.list_players]
 
     def get_commentary(
-        self,
-        kill_dict_event: list = None,
-        atk_team_name: str = "",
-        def_team_name: str = "",
-        defended: bool = False,
-        lane: str = "",
-        jg_name: str = "",
-        stole: bool = False,
-        commentaries: list = None,
+            self,
+            kill_dict_event: list = None,
+            atk_team_name: str = "",
+            def_team_name: str = "",
+            defended: bool = False,
+            lane: str = "",
+            jg_name: str = "",
+            stole: bool = False,
+            commentaries: list = None,
     ):
         """
         Chooses commentary based on a list of commentaries.
@@ -116,8 +116,8 @@ class MobaEvent(ABC):
         if self.show_commentary and self.queue:
             logger.debug(self.event_name + str(self.event_time))
             self.commentary = (
-                f"{str(timedelta(minutes=self.event_time))} - {self.commentary.commentary}"
-                + "\n"
+                    f"{str(timedelta(minutes=self.event_time))} - {self.commentary.commentary}"
+                    + "\n"
             )
             self.queue.put(self.commentary, block=False)
 

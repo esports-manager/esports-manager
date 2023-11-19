@@ -70,7 +70,7 @@ class GUI:
         Gets GUI layouts from the controller classes.
         """
         self.layouts = [controller.layout for controller in controllers]
-    
+
     def _get_cols(self) -> list:
         """
         Gets all the layouts and makes them all invisible, except for the main screen one.
@@ -94,7 +94,7 @@ class GUI:
     @staticmethod
     def information_window(*args, **kwargs):
         sg.popup_ok(*args, **kwargs)
-        
+
 
 def init_theme():
     create_look_and_feel()

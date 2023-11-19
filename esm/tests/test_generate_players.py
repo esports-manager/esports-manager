@@ -18,8 +18,8 @@ import pytest
 from esm.core.esports.moba.generator.default_champion_defs import (
     get_default_champion_defs,
 )
-from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator, MobaPlayerAttributesGeneratorError, MobaPlayerGeneratorError
 from esm.core.esports.moba.generator.generate_champions import ChampionGenerator
+from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator, MobaPlayerGeneratorError
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.utils import load_list_from_file
 from esm.definitions import NAMES_FILE
@@ -50,4 +50,3 @@ def test_generate_rand_mobaplayer(moba_player_gen: MobaPlayerGenerator):
 def test_raises_error_if_amount_is_not_divisible_by_five(moba_player_gen: MobaPlayerGenerator):
     with pytest.raises(MobaPlayerGeneratorError):
         players = moba_player_gen.generate(amount=1)
-    

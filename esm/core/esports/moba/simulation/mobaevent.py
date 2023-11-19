@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 def generate_event(
-    event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
+        event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
 ) -> MobaEvent:
     name = event_chosen["name"]
     if name == "NOTHING":
@@ -60,7 +60,7 @@ class MobaEventHandler:
         self.queue = queue if self.show_commentary else None
 
     def get_game_state(
-        self, game_time, which_nexus_exposed, is_any_inhib_open, towers_number
+            self, game_time, which_nexus_exposed, is_any_inhib_open, towers_number
     ) -> None:
         if game_time == 0.0:
             self.get_enabled_events(["NOTHING", "KILL"])

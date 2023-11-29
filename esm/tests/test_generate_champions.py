@@ -15,6 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import pytest
 
+from esm.core.esports.moba.generator.default_champion_defs import get_default_champion_defs
 from esm.core.esports.moba.generator.generate_champions import ChampionGenerator, ChampionGeneratorError
 from esm.core.esports.moba.champion import ChampionType, ChampionDifficulty, Lanes
 
@@ -79,3 +80,23 @@ def test_raises_error_if_champion_type1_is_none(champion_gen: ChampionGenerator)
             "champion_type2": ChampionType.TANK.value,
         }
         champion_gen.generate(champion_dict)
+
+
+def test_generate_many_champions(champion_gen: ChampionGenerator):
+    champ_defs = get_default_champion_defs()
+    for champ_def in champ_defs:
+        obtained_champion = champion_gen.generate(champ_def)
+        assert obtained_champion.name == champ_def["name"]
+        for lane in champ_def["lanes"]:
+            if lane == "TOP":
+                assert obtained_champion.lanes.top == 1.0
+            elif lane == "JNG":
+                assert obtained_champion.lanes.jng == 1.0
+            elif lane == "MID":
+                assert obtained_champion.lanes.mid == 1.0
+            elif lane == "ADC":
+                assert obtained_champion.lanes.adc == 1.0
+            elif lane == "SUP":
+                assert obtained_champion.lanes.sup == 1.0
+        assert obtained_champion.champion_difficulty is not None
+        assert obtained_champion.champion_type1 is not None

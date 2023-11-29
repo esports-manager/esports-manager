@@ -202,7 +202,7 @@ class MobaPlayerGenerator(GeneratorInterface):
         for _ in range(amount):
             ch = random.choice(champs)
             champs.remove(ch)
-            champion_mastery = random.choices(list(ChampionMastery), [0.5, 0.2, 0.1, 0.005, 0.0005, 0.00005, 0.00005])[0]
+            champion_mastery = random.choices(list(ChampionMastery), [0.0, 0.5, 0.2, 0.01, 0.005, 0.0005, 0.0005])[0]
             moba_player_champ = MobaPlayerChampion(ch.champion_id, champion_mastery, 0.0)
             player_champions.append(moba_player_champ)
 

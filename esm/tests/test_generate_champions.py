@@ -100,3 +100,4 @@ def test_generate_many_champions(champion_gen: ChampionGenerator):
                 assert obtained_champion.lanes.sup == 1.0
         assert obtained_champion.champion_difficulty is not None
         assert obtained_champion.champion_type1 is not None
+        assert obtained_champion.champion_type2 != obtained_champion.champion_type1

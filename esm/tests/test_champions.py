@@ -13,9 +13,11 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import pytest
+import hypothesis.strategies as st
 
-from esm.core.esports.moba.champion import Champion, ChampionLoadError
-from esm.core.esports.moba.moba_definitions import Lanes, LaneMultiplierError
+from hypothesis import given
+from esm.core.esports.moba.champion import Champion, ChampionLoadError, ChampionType, ChampionDifficulty
+from esm.core.esports.moba.moba_definitions import Lanes, LaneMultipliers, LaneMultiplierError
 
 
 def test_serialize_champion(champion: Champion, champion_dict: dict):
@@ -81,3 +83,31 @@ def test_get_champion_with_more_than_max_multiplier(champion_dict):
     }
     with pytest.raises(LaneMultiplierError):
         Champion.get_from_dict(champion_dict)
+
+
+@given(
+    st.builds(
+        Champion,
+        champion_id=st.uuids(),
+        name=st.text(),
+        skill=st.integers(),
+        scaling_factor=st.floats(min_value=0.1, max_value=1.0),
+        scaling_peak=st.integers(min_value=1, max_value=30),
+        lanes=st.builds(
+            LaneMultipliers,
+            top=st.floats(min_value=0.1, max_value=1.0),
+            jng=st.floats(min_value=0.1, max_value=1.0),
+            mid=st.floats(min_value=0.1, max_value=1.0),
+            adc=st.floats(min_value=0.1, max_value=1.0),
+            sup=st.floats(min_value=0.1, max_value=1.0)
+        ),
+        champion_difficulty=st.sampled_from(ChampionDifficulty),
+        champion_type1=st.sampled_from(ChampionType),
+        champion_type2=st.sampled_from(ChampionType)
+    )
+)
+def test_generated_champion(champion: Champion):
+    assert isinstance(champion, Champion)
+    assert champion.champion_type2 != champion.champion_type1
+    assert champion.champion_difficulty is not None
+    assert champion.lanes is not None

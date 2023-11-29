@@ -46,6 +46,7 @@ ch = st.lists(
     ), min_size=1, max_size=10
 )
 
+
 @given(ch)
 def test_generate_default_mobaplayer(champions: list[Champion]):
     names = load_list_from_file(NAMES_FILE)

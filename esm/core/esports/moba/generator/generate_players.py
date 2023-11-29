@@ -14,11 +14,10 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import itertools
 import random
 import uuid
 from datetime import date, timedelta
-from typing import Tuple
+from typing import Tuple, Optional
 
 from .default_player_nick_names import get_default_player_nick_names
 from .generator import GeneratorInterface
@@ -33,6 +32,7 @@ from ..player import (
     UtilityAttributes,
     MobaPlayerAttributes,
     MobaPlayerChampion,
+    ChampionMastery,
     Lanes,
 )
 from ....utils import get_nations
@@ -192,15 +192,18 @@ class MobaPlayerGenerator(GeneratorInterface):
             if lane == best_lane:
                 champs.append(champion)
 
+        if not champs:
+            return []
+
         player_champions = []
         if amount == 0:
-            amount = random.randrange(3, 15)
+            amount = random.randrange(1, len(champs))
 
         for _ in range(amount):
             ch = random.choice(champs)
             champs.remove(ch)
-            mult = random.randrange(60, 100) / 100
-            moba_player_champ = MobaPlayerChampion(ch.champion_id, mult)
+            champion_mastery = random.choices(list(ChampionMastery), [0.5, 0.2, 0.1, 0.005, 0.0005, 0.00005, 0.00005])[0]
+            moba_player_champ = MobaPlayerChampion(ch.champion_id, champion_mastery, 0.0)
             player_champions.append(moba_player_champ)
 
         return player_champions
@@ -264,11 +267,13 @@ class MobaPlayerGenerator(GeneratorInterface):
 
         return LaneMultipliers.get_from_dict(mult)
 
-    def generate_player(self, lane: Lanes, amount_champions: int = 0) -> MobaPlayer:
+    def generate(self, lane: Lanes, nationality: Optional[str] = None, amount_champions: int = 0) -> MobaPlayer:
         """
         Runs the player generation routine
         """
-        nationality = self.get_nationality()
+        if not nationality:
+            nationality = self.get_nationality()
+
         return MobaPlayer(
             self.generate_id(),
             nationality,
@@ -280,24 +285,3 @@ class MobaPlayerGenerator(GeneratorInterface):
             self.generate_attributes(nationality, lane),
             self.generate_champions(lane, amount_champions),
         )
-
-    def generate(self, rand: bool = False, amount: int = 5) -> list[MobaPlayer]:
-        """
-        Generates an "amount" of players.
-        If the rand parameter is set to True, then it randomly generates players with variable lanes.
-        Otherwise, it generates an "amount/5" players that play on the same lane, doing that for every lane.
-        """
-        players = []
-        if amount % 5 != 0:
-            raise MobaPlayerGeneratorError("Amount is not divisible by 5")
-
-        if rand:
-            for lane in range(amount):
-                player = self.generate_player(Lanes(lane))
-                players.append(player)
-        else:
-            for lane, __ in itertools.product(range(5), range(amount // 5)):
-                player = self.generate_player(lane)
-                players.append(player)
-
-        return players

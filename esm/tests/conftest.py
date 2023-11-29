@@ -15,9 +15,11 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import pytest
 import uuid
+import hypothesis.strategies as st
+from hypothesis import given
 from datetime import date
 
-from esm.core.esports.moba.champion import ChampionDifficulty, ChampionType
+from esm.core.esports.moba.champion import Champion, ChampionDifficulty, ChampionType
 from esm.core.esports.moba.moba_definitions import Lanes, LaneMultipliers
 from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator
 from esm.core.esports.moba.champion import Champion
@@ -65,12 +67,6 @@ def champion_dict():
 
 
 @pytest.fixture
-def moba_player_gen(champions: list[Champion]) -> MobaPlayerGenerator:
-    names = load_list_from_file(NAMES_FILE)
-    return MobaPlayerGenerator(champions, names)
-
-
-@pytest.fixture
 def lanes() -> LaneMultipliers:
     return LaneMultipliers(0.5, 0.8, 0.4, 1.0, 0.0)
 
@@ -93,7 +89,7 @@ def attributes() -> MobaPlayerAttributes:
 
 
 @pytest.fixture
-def champions() -> list[MobaPlayerChampion]:
+def moba_player_champions() -> list[MobaPlayerChampion]:
     return [
         MobaPlayerChampion(uuid.uuid4(), ChampionMastery.GOLD, 0.0),
         MobaPlayerChampion(uuid.uuid4(), ChampionMastery.DIAMOND, 100.0),
@@ -105,7 +101,7 @@ def champions() -> list[MobaPlayerChampion]:
 
 
 @pytest.fixture
-def player(lanes, attributes, champions) -> MobaPlayer:
+def player(lanes, attributes, moba_player_champions) -> MobaPlayer:
     return MobaPlayer(
         uuid.UUID(int=1),
         "United States",
@@ -115,5 +111,5 @@ def player(lanes, attributes, champions) -> MobaPlayer:
         "NickName",
         lanes,
         attributes,
-        champions,
+        moba_player_champions,
     )

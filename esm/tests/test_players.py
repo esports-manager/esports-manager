@@ -14,7 +14,6 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import uuid
-from datetime import date
 
 import pytest
 
@@ -24,7 +23,7 @@ from esm.core.esports.moba.player import (
 
 
 @pytest.fixture
-def player_dict(lanes, attributes, champions) -> dict:
+def player_dict(lanes, attributes, moba_player_champions) -> dict:
     return {
         "id": uuid.UUID(int=1).hex,
         "nationality": "United States",
@@ -34,7 +33,7 @@ def player_dict(lanes, attributes, champions) -> dict:
         "nick_name": "NickName",
         "lanes": lanes.serialize(),
         "attributes": attributes.serialize(),
-        "champion_pool": [champion.serialize() for champion in champions],
+        "champion_pool": [champion.serialize() for champion in moba_player_champions],
     }
 
 

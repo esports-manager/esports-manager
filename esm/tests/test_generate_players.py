@@ -43,7 +43,7 @@ ch = st.lists(
         champion_difficulty=st.sampled_from(ChampionDifficulty),
         champion_type1=st.sampled_from(ChampionType),
         champion_type2=st.sampled_from(ChampionType)
-    ), min_size=5, max_size=50
+    ), min_size=1, max_size=10
 )
 
 @given(ch)

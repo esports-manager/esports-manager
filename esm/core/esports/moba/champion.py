@@ -56,6 +56,10 @@ class Champion(Serializable):
     champion_type1: ChampionType
     champion_type2: Optional[ChampionType] = None
 
+    def __post_init__(self):
+        if self.champion_type2 == self.champion_type1:
+            self.champion_type2 = None
+
     @classmethod
     def get_from_dict(cls, dictionary: dict):
         champion_id = uuid.UUID(hex=dictionary["id"])

@@ -221,6 +221,12 @@ class MobaPlayerStats:
 
 
 @dataclass
+class MobaPlayerTeam:
+    player_id: uuid.UUID
+    team_id: uuid.UUID
+
+
+@dataclass
 class MobaPlayerSimulation:
     player: MobaPlayer
     champion: Champion

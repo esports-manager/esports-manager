@@ -8,23 +8,22 @@ black = "*"
 pre-commit = "*"
 isort = "*"
 flake8 = "*"
-
-[packages]
-pysimplegui = "==4.60.1"
 pylint = "*"
 autopep8 = "*"
-setuptools = "*"
-coverage = "*"
+hypothesis = "*"
 pytest = "*"
+pyinstaller = "*"
 doq = "*"
+coverage = "*"
 docutils = "*"
+
+[packages]
+pysimplegui = "*"
+setuptools = "*"
 cbor = "*"
 cbor2 = "*"
 pyyaml = "*"
-pyinstaller = "*"
 pillow = "*"
-ttkbootstrap = "*"
-hypothesis = "*"
 
 [requires]
 python_version = "3"

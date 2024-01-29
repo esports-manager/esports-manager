@@ -15,7 +15,12 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import pytest
 
-from esm.core.esports.moba.champion import ChampionDifficulty, ChampionType, Lanes
+from esm.core.esports.moba.champion import (
+    Champion,
+    ChampionDifficulty,
+    ChampionType,
+    Lanes,
+)
 from esm.core.esports.moba.generator.default_champion_defs import (
     get_default_champion_defs,
 )
@@ -33,6 +38,12 @@ def champion_gen() -> ChampionGenerator:
 def test_generate_champion(champion_gen: ChampionGenerator):
     champion = champion_gen.generate(champion_def=None)
     assert champion is not None
+    assert isinstance(champion, Champion)
+    assert champion.name is not None
+    assert champion.champion_type1 in list(ChampionType)
+    assert champion.lanes is not None
+    assert champion.champion_difficulty is not None
+    assert champion.champion_difficulty in list(ChampionDifficulty)
 
 
 def test_generate_champion_from_dict(champion_gen: ChampionGenerator):
@@ -91,9 +102,10 @@ def test_raises_error_if_champion_type1_is_none(champion_gen: ChampionGenerator)
         champion_gen.generate(champion_dict)
 
 
-def test_generate_many_champions(champion_gen: ChampionGenerator):
-    champ_defs = get_default_champion_defs()
-    for champ_def in champ_defs:
+def asserts_for_champions_from_champion_def(
+    champion_gen: ChampionGenerator, champion_defs: list[dict[str, str | int | float]]
+):
+    for champ_def in champion_defs:
         obtained_champion = champion_gen.generate(champ_def)
         assert obtained_champion.name == champ_def["name"]
         for lane in champ_def["lanes"]:
@@ -110,3 +122,17 @@ def test_generate_many_champions(champion_gen: ChampionGenerator):
         assert obtained_champion.champion_difficulty is not None
         assert obtained_champion.champion_type1 is not None
         assert obtained_champion.champion_type2 != obtained_champion.champion_type1
+
+
+def test_generate_champions_from_default_champion_defs(champion_gen: ChampionGenerator):
+    champ_defs = get_default_champion_defs()
+    asserts_for_champions_from_champion_def(champion_gen, champ_defs)
+
+
+def test_generate_champions_from_mock_champion_defs(
+    champion_gen: ChampionGenerator,
+    mock_champion_defs: list[dict[str, str | int | float]],
+):
+    asserts_for_champions_from_champion_def(
+        champion_gen, champion_defs=mock_champion_defs
+    )

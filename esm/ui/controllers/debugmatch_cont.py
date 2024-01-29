@@ -52,8 +52,7 @@ class DebugMatchController(IController):
         if self.match_sim.current_game is None:
             return None
         players = [
-            list(team.list_players)
-            for team in self.match_sim.current_live_game.game.teams
+            list(team.roster) for team in self.match_sim.current_live_game.game.teams
         ]
 
         data = []

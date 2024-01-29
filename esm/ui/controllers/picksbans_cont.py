@@ -97,10 +97,10 @@ class PicksBansController(IController):
             "pickban_team2_label", value=self.team2.name
         )
         self.controller.update_element_on_screen(
-            "pickban_team1_table", values=self.get_players(self.team1.list_players)
+            "pickban_team1_table", values=self.get_players(self.team1.roster)
         )
         self.controller.update_element_on_screen(
-            "pickban_team2_table", values=self.get_players(self.team2.list_players)
+            "pickban_team2_table", values=self.get_players(self.team2.roster)
         )
         self.controller.update_element_on_screen(
             "pickban_team1_bans", value=self.get_bans(self.team1_bans)

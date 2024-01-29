@@ -18,7 +18,7 @@ import random
 from queue import Queue
 from typing import Union
 
-from esm.core.esports.moba.team import Team
+from esm.core.esports.moba.team import TeamSimulation
 
 from .general import EventCreator, MobaEvent
 
@@ -40,7 +40,12 @@ class InhibEventEventCreator(EventCreator):
 
 
 class InhibEvent(MobaEvent):
-    def calculate_event(self, team1: Team, team2: Team, which_nexus: Union[Team, None]):
+    def calculate_event(
+        self,
+        team1: TeamSimulation,
+        team2: TeamSimulation,
+        which_nexus: Union[TeamSimulation, None],
+    ):
         if team1.get_exposed_inhibs():
             attack_team = team2
             def_team = team1
@@ -56,7 +61,7 @@ class InhibEvent(MobaEvent):
             [attack_team, def_team], [attack_team.win_prob, def_team.win_prob]
         )[0]
 
-        for player in prevailing.list_players:
+        for player in prevailing.roster:
             player.points += self.points / 5
 
         if prevailing == attack_team:

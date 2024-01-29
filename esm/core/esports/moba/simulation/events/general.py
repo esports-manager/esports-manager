@@ -22,7 +22,7 @@ from queue import Queue
 from typing import Union
 
 from esm.core.esports.moba.simulation.commentaries import Commentaries
-from esm.core.esports.moba.team import Team
+from esm.core.esports.moba.team import TeamSimulation
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +70,9 @@ class MobaEvent(ABC):
         )
 
     @staticmethod
-    def _get_probable_team(team1: Team, team2: Team):
+    def _get_probable_team(
+        team1: TeamSimulation, team2: TeamSimulation
+    ) -> tuple[TeamSimulation, TeamSimulation]:
         """
         Gets the team with a higher probability to attack the other team
         """
@@ -85,7 +87,7 @@ class MobaEvent(ABC):
         """
         Gets all the players from each team
         """
-        return [team1.list_players, team2.list_players]
+        return [team1.roster, team2.roster]
 
     def get_commentary(
         self,
@@ -127,7 +129,12 @@ class MobaEvent(ABC):
 
 
 class NothingEvent(MobaEvent):
-    def calculate_event(self, team1: Team, team2: Team, which_nexus: Union[Team, None]):
+    def calculate_event(
+        self,
+        team1: TeamSimulation,
+        team2: TeamSimulation,
+        which_nexus: Union[TeamSimulation, None],
+    ):
         pass
 
     def get_commentary(self, *args, **kwargs):

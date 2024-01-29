@@ -31,15 +31,17 @@ class ChampionGeneratorError(Exception):
 class ChampionGenerator(GeneratorInterface):
     def __init__(self):
         self.random = False
-        self.random_names: list[str] = []
+        self.random_names: Optional[list[str]] = None
 
     def generate_champion_id(self) -> uuid.UUID:
         return uuid.uuid4()
 
     def _get_random_champion_name(self) -> str:
-        if not self.random_names:
+        if self.random_names is None:
             self.random_names = get_default_champion_names()
-        return random.choice(self.random_names)
+        name = random.choice(self.random_names)
+        self.random_names.remove(name)
+        return name
 
     def generate_champion_name(self, champion_def: Optional[dict]) -> str:
         return self._get_random_champion_name() if self.random else champion_def["name"]

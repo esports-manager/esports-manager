@@ -18,7 +18,7 @@ import random
 from queue import Queue
 from typing import Union
 
-from esm.core.esports.moba.team import Team
+from esm.core.esports.moba.team import TeamSimulation
 
 from .general import EventCreator, MobaEvent
 
@@ -40,7 +40,12 @@ class NexusEventEventCreator(EventCreator):
 
 
 class NexusEvent(MobaEvent):
-    def calculate_event(self, team1: Team, team2: Team, which_nexus: Union[Team, None]):
+    def calculate_event(
+        self,
+        team1: TeamSimulation,
+        team2: TeamSimulation,
+        which_nexus: Union[TeamSimulation, None],
+    ):
         if which_nexus is not None:
             if which_nexus == team1:
                 atk_team = team2

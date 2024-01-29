@@ -27,7 +27,7 @@ class ChampionLoadError(Exception):
 
 
 class ChampionDifficulty(Enum):
-    EASY = auto()
+    EASY = 0
     MEDIUM = auto()
     HARD = auto()
     PRO = auto()

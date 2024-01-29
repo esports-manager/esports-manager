@@ -18,7 +18,7 @@ import random
 from queue import Queue
 from typing import Union
 
-from esm.core.esports.moba.team import Team
+from esm.core.esports.moba.team import TeamSimulation
 
 from .general import EventCreator, MobaEvent
 
@@ -40,7 +40,12 @@ class JungleEventEventCreator(EventCreator):
 
 
 class JungleEvent(MobaEvent):
-    def calculate_event(self, team1: Team, team2: Team, which_nexus: Union[Team, None]):
+    def calculate_event(
+        self,
+        team1: TeamSimulation,
+        team2: TeamSimulation,
+        which_nexus: Union[TeamSimulation, None],
+    ):
         """
         Calculates the outcome of a major jungle attempt (baron, dragon or herald)
         """
@@ -50,7 +55,7 @@ class JungleEvent(MobaEvent):
             [attack_team, def_team], [attack_team.win_prob, def_team.win_prob]
         )[0]
 
-        for player in prevailing_team.list_players:
+        for player in prevailing_team.roster:
             player.points += self.points / 5
 
         if prevailing_team == attack_team:

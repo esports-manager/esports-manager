@@ -273,7 +273,7 @@ class PickBanAI:
         Gets the list of the best champions from the opponent team.
         """
         # Adds all the best champions to the list of best champions
-        for player in self.team.list_players:
+        for player in self.team.roster:
             self.check_champion(player.champion_pool, self.opponents_best_champions)
 
         # If the list is empty, chooses a random champion from the list

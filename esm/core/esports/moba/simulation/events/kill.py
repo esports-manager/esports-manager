@@ -18,8 +18,8 @@ import random
 from queue import Queue
 from typing import Union
 
-from esm.core.esports.moba.player import MobaPlayer
-from esm.core.esports.moba.team import Team
+from esm.core.esports.moba.player import MobaPlayerSimulation
+from esm.core.esports.moba.team import TeamSimulation
 
 from .general import EventCreator, MobaEvent
 
@@ -41,7 +41,9 @@ class KillEventEventCreator(EventCreator):
 
 
 class KillEvent(MobaEvent):
-    def choose_duel_players(self, killer: MobaPlayer, team: list, amount: int):
+    def choose_duel_players(
+        self, killer: MobaPlayerSimulation, team: list, amount: int
+    ):
         """
         Chooses players to duel. The killer is decided in self.calculate_kill()
         """
@@ -72,7 +74,7 @@ class KillEvent(MobaEvent):
 
         return amount, duel_players
 
-    def player_duel(self, player1: MobaPlayer, player2: MobaPlayer):
+    def player_duel(self, player1: MobaPlayerSimulation, player2: MobaPlayerSimulation):
         killed = 0
         total_prob = player1.get_player_total_skill() + player2.get_player_total_skill()
 
@@ -117,7 +119,7 @@ class KillEvent(MobaEvent):
 
         return None
 
-    def calculate_assists(self, team: list, killer: MobaPlayer):
+    def calculate_assists(self, team: list, killer: MobaPlayerSimulation):
         # 50% chance to get assists
         will_there_be_assists = random.randint(0, 1)
         assistance_players = []
@@ -136,7 +138,9 @@ class KillEvent(MobaEvent):
 
         return assistance_players
 
-    def get_kill_dict(self, killer: MobaPlayer, killed_players: list, team: list):
+    def get_kill_dict(
+        self, killer: MobaPlayerSimulation, killed_players: list, team: list
+    ):
         return [
             {
                 "killer": killer,
@@ -146,7 +150,12 @@ class KillEvent(MobaEvent):
             for killed_player in killed_players
         ]
 
-    def calculate_event(self, team1: Team, team2: Team, which_nexus: Union[Team, None]):
+    def calculate_event(
+        self,
+        team1: TeamSimulation,
+        team2: TeamSimulation,
+        which_nexus: Union[TeamSimulation, None],
+    ):
         """
         This will calculate the kill event
         """

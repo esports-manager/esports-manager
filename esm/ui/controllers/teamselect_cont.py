@@ -47,7 +47,7 @@ class TeamSelectController(IController):
         if not self.teams.teams:
             return ["    ", "Select your team", "       "]
 
-        for player in self.teams.teams[team[0]].list_players:
+        for player in self.teams.teams[team[0]].roster:
             player.get_default_lane()
             data.append([player.lane.name, player.nick_name, player.skill])
 

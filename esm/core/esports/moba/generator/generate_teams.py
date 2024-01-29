@@ -19,11 +19,11 @@ import uuid
 from typing import Optional
 
 from esm.core.esports.moba.generator.default_team_names import get_default_team_names
+from esm.core.esports.moba.generator.generate_champions import Champion
 from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator
 from esm.core.esports.moba.generator.generator import GeneratorInterface
-from esm.core.esports.moba.player import MobaPlayer
+from esm.core.esports.moba.player import Lanes, MobaPlayer
 from esm.core.esports.moba.team import Team
-from esm.definitions import TEAMS_FILE
 
 
 class TeamGeneratorError(Exception):
@@ -33,26 +33,39 @@ class TeamGeneratorError(Exception):
 class TeamGenerator(GeneratorInterface):
     def __init__(
         self,
+        champions: list[Champion],
+        player_names: list[dict[str | int, float]],
         players: Optional[list] = None,
     ):
         self.player_list = players
+        if not champions:
+            raise TeamGeneratorError("Champion list is empty")
+        self.player_gen = MobaPlayerGenerator(champions, player_names)
 
-    def generate_id(self) -> uuid.UUID:
+    @staticmethod
+    def generate_id() -> uuid.UUID:
         """
         Generates teams UUID
         """
         return uuid.uuid4()
 
-    def generate_roster(self) -> None:
+    @staticmethod
+    def generate_name() -> str:
+        return random.choice(get_default_team_names())
+
+    def generate_roster(self, nationality: str) -> list[MobaPlayer]:
         """
         Generates the team roster
         """
-        if self.player_list is None or self.player_list == []:
-            raise TeamGeneratorError("Player roster is invalid!")
+        if self.player_list:
+            return self.player_list
 
-    def generate(self) -> Team:
+        return [
+            self.player_gen.generate(lane=lane, nationality=nationality)
+            for lane in list(Lanes)
+        ]
+
+    def generate(self, team_definition: dict[str, str | int]) -> Team:
         """
         Generates the team
         """
-        if self.player_list is None or self.player_list == []:
-            raise TeamGeneratorError("Player roster is invalid!")

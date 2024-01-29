@@ -18,7 +18,7 @@ import random
 from queue import Queue
 from typing import Union
 
-from esm.core.esports.moba.team import Team
+from esm.core.esports.moba.team import TeamSimulation
 
 from .general import EventCreator, MobaEvent
 
@@ -40,7 +40,7 @@ class TowerEventEventCreator(EventCreator):
 
 
 class TowerEvent(MobaEvent):
-    def _get_tower_attributes(self, team1: Team, team2: Team):
+    def _get_tower_attributes(self, team1: TeamSimulation, team2: TeamSimulation):
         """
         Checks which towers are up, and if they can be attacked. If it is a Base tower,
         there is a higher chance to focus on it
@@ -79,14 +79,14 @@ class TowerEvent(MobaEvent):
 
     def _destroy_tower(self, prevailing, attack_team, def_team, lane):
         # Decides the player that destroys the tower
-        skills = [player.get_player_total_skill() for player in prevailing.list_players]
-        player = random.choices(attack_team.list_players, skills)[0]
+        skills = [player.get_player_total_skill() for player in prevailing.roster]
+        player = random.choices(attack_team.roster, skills)[0]
 
         # player gets full points for destroying the tower
         player.points += self.points
 
         # Other players are awarded points as well, but reduced number of points
-        for other_player in prevailing.list_players:
+        for other_player in prevailing.roster:
             if other_player != player:
                 other_player.points += self.points / 4
 
@@ -95,7 +95,12 @@ class TowerEvent(MobaEvent):
 
         logger.debug("Team {0} destroyed the {1} tower".format(prevailing.name, lane))
 
-    def calculate_event(self, team1: Team, team2: Team, which_nexus: Union[Team, None]):
+    def calculate_event(
+        self,
+        team1: TeamSimulation,
+        team2: TeamSimulation,
+        which_nexus: Union[TeamSimulation, None],
+    ):
         """
         This method calculates the tower assault outcome
         """

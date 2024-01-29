@@ -46,18 +46,24 @@ def get_players_from_list(
 class Team(Serializable):
     team_id: uuid.UUID
     name: str
-    list_players: list[MobaPlayer]
+    nationality: str
+    roster: list[MobaPlayer]
 
     def serialize(self) -> dict:
-        players = [player.player_id for player in self.list_players]
-        return {"team_id": self.team_id, "name": self.name, "list_players": players}
+        players = [player.player_id for player in self.roster]
+        return {
+            "team_id": self.team_id,
+            "name": self.name,
+            "nationality": self.nationality,
+            "roster": players,
+        }
 
     @classmethod
     def get_from_dict(cls, dictionary: dict, players: list[MobaPlayer]):
-        get_players_from_list(dictionary["list_players"], players)
         return cls(
             dictionary["team_id"],
             dictionary["name"],
+            dictionary["nationality"],
             players,
         )
 
@@ -237,7 +243,7 @@ class TeamSimulation:
     @property
     def total_skill(self) -> int:
         self._total_skill = (
-            int((self.player_overall + self.champion_overall) / 10) + self.points
+            int(self.player_overall + self.champion_overall) + self.points
         )
 
         return int(self._total_skill)

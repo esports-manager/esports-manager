@@ -41,14 +41,23 @@ from esm.core.esports.moba.player import (
 @pytest.fixture
 def champion():
     lanes = LaneMultipliers(0.80, 1.00, 0.45, 0.30, 0.10)
-    return Champion(uuid.UUID(int=1), "MyChampion", 87, 0.5, 20, lanes, ChampionDifficulty.MEDIUM, ChampionType.TANK,
-                    ChampionType.FIGHTER)
+    return Champion(
+        uuid.UUID(int=1),
+        "MyChampion",
+        87,
+        0.5,
+        20,
+        lanes,
+        ChampionDifficulty.MEDIUM,
+        ChampionType.TANK,
+        ChampionType.FIGHTER,
+    )
 
 
 @pytest.fixture
 def champion_dict():
     return {
-        "id": '00000000000000000000000000000001',
+        "id": "00000000000000000000000000000001",
         "name": "MyChampion",
         "lanes": {
             Lanes.TOP.value: 0.80,

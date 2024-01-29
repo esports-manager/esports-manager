@@ -48,8 +48,9 @@ class PicksBansController(IController):
                 player.nick_name,
                 player.skill,
                 player.champion_id,
-                int(player.get_player_total_skill())
-            ] for player in team
+                int(player.get_player_total_skill()),
+            ]
+            for player in team
         ]
 
     def get_champions(self):
@@ -64,19 +65,18 @@ class PicksBansController(IController):
                 [
                     champion,
                     champion.skill,
-                    int(player.get_projected_champion_skill(champion)) if player is not None else 0,
-                    champion.status
+                    (
+                        int(player.get_projected_champion_skill(champion))
+                        if player is not None
+                        else 0
+                    ),
+                    champion.status,
                 ]
                 for champion in self.ch_list
             ]
         else:
             self.champion_table_data = [
-                [
-                    champion,
-                    champion.skill,
-                    champion.skill,
-                    champion.status
-                ]
+                [champion, champion.skill, champion.skill, champion.status]
                 for champion in self.ch_list
             ]
 
@@ -85,22 +85,31 @@ class PicksBansController(IController):
 
     @staticmethod
     def get_bans(bans):
-        return [
-            ban.name
-            for ban in bans
-        ]
+        return [ban.name for ban in bans]
 
     def update_elements(self):
         pick_ban = self.current_match.picks_bans
-        self.controller.update_element_on_screen("pickban_team1_label", value=self.team1.name)
-        self.controller.update_element_on_screen("pickban_team2_label", value=self.team2.name)
-        self.controller.update_element_on_screen("pickban_team1_table",
-                                                 values=self.get_players(self.team1.list_players))
-        self.controller.update_element_on_screen("pickban_team2_table",
-                                                 values=self.get_players(self.team2.list_players))
-        self.controller.update_element_on_screen("pickban_team1_bans", value=self.get_bans(self.team1_bans))
-        self.controller.update_element_on_screen("pickban_team2_bans", value=self.get_bans(self.team2_bans))
-        self.controller.update_element_on_screen("pickban_champion_table", values=self.get_champions())
+        self.controller.update_element_on_screen(
+            "pickban_team1_label", value=self.team1.name
+        )
+        self.controller.update_element_on_screen(
+            "pickban_team2_label", value=self.team2.name
+        )
+        self.controller.update_element_on_screen(
+            "pickban_team1_table", values=self.get_players(self.team1.list_players)
+        )
+        self.controller.update_element_on_screen(
+            "pickban_team2_table", values=self.get_players(self.team2.list_players)
+        )
+        self.controller.update_element_on_screen(
+            "pickban_team1_bans", value=self.get_bans(self.team1_bans)
+        )
+        self.controller.update_element_on_screen(
+            "pickban_team2_bans", value=self.get_bans(self.team2_bans)
+        )
+        self.controller.update_element_on_screen(
+            "pickban_champion_table", values=self.get_champions()
+        )
         if pick_ban.bans_turn != -1:
             self.controller.update_element_on_screen("pickban_pick_btn", text="Ban")
         else:
@@ -120,10 +129,14 @@ class PicksBansController(IController):
         if self.current_match is None:
             self.core.check_files()
             teams = self.core.db.load_moba_teams()
-            self.current_match = self.game_initializer.initialize_random_debug_game(teams, picks_bans_queue=self.queue)
+            self.current_match = self.game_initializer.initialize_random_debug_game(
+                teams, picks_bans_queue=self.queue
+            )
             self.current_match.game.team1.is_players_team = True
             try:
-                self.pick_ban_thread = threading.Thread(target=self.current_match.picks_and_bans, daemon=True)
+                self.pick_ban_thread = threading.Thread(
+                    target=self.current_match.picks_and_bans, daemon=True
+                )
                 self.pick_ban_thread.start()
             except RuntimeError as e:
                 self.controller.print_error(e)
@@ -143,7 +156,9 @@ class PicksBansController(IController):
 
         if event == "pickban_pick_btn":
             if values["pickban_champion_table"]:
-                champion = self.champion_table_data[values["pickban_champion_table"][0]][0]
+                champion = self.champion_table_data[
+                    values["pickban_champion_table"][0]
+                ][0]
                 if champion.status == "Not picked":
                     self.queue.put(champion)
 

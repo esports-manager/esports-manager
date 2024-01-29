@@ -39,14 +39,12 @@ class TeamSelectController(IController):
             self.teams = self.core.db.load_moba_teams()
 
     def get_team_list(self):
-        return [
-            [team.name, team.get_team_overall()] for team in self.teams.teams
-        ]
+        return [[team.name, team.get_team_overall()] for team in self.teams.teams]
 
     def get_player_list(self, team):
         data = []
         if not self.teams.teams:
-            return ['    ', 'Select your team', '       ']
+            return ["    ", "Select your team", "       "]
 
         for player in self.teams.teams[team[0]].list_players:
             player.get_default_lane()
@@ -62,7 +60,7 @@ class TeamSelectController(IController):
                 values["create_manager_display_calendar"],
                 self.teams.teams[team_index],
                 True,
-                50
+                50,
             )
             self.teams.teams[team_index].is_players_team = True
             # Probably here we should delete the old window and create a new one with new layouts
@@ -76,8 +74,7 @@ class TeamSelectController(IController):
             make_screen("team_select_screen", "game_dashboard_screen")
         else:
             self.controller.get_gui_information_window(
-                'You must select a team before proceeding!',
-                title='Select a team!'
+                "You must select a team before proceeding!", title="Select a team!"
             )
 
     def cancel_teamselect(self, make_screen):
@@ -87,12 +84,14 @@ class TeamSelectController(IController):
     def update_teams(self, values):
         if self.teams is None:
             self.get_teams()
-            self.controller.update_element_on_screen("teamselect_team_table", values=self.get_team_list())
+            self.controller.update_element_on_screen(
+                "teamselect_team_table", values=self.get_team_list()
+            )
 
         if values["teamselect_team_table"]:
             self.controller.update_element_on_screen(
                 "teamselect_players_table",
-                values=self.get_player_list(values["teamselect_team_table"])
+                values=self.get_player_list(values["teamselect_team_table"]),
             )
 
     def update(self, event, values, make_screen):

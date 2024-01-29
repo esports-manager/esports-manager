@@ -53,11 +53,11 @@ class LaneMultipliers(Serializable):
 
     def __post_init__(self):
         if not (
-                self._check_multiplier(self.top)
-                and self._check_multiplier(self.jng)
-                and self._check_multiplier(self.mid)
-                and self._check_multiplier(self.adc)
-                and self._check_multiplier(self.sup)
+            self._check_multiplier(self.top)
+            and self._check_multiplier(self.jng)
+            and self._check_multiplier(self.mid)
+            and self._check_multiplier(self.adc)
+            and self._check_multiplier(self.sup)
         ):
             raise LaneMultiplierError(
                 "Lane value cannot be negative or greater than 1.0!"

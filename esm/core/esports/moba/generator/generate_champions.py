@@ -74,7 +74,9 @@ class ChampionGenerator(GeneratorInterface):
     def generate_champion_skill(self) -> int:
         return random.randrange(1, 100)
 
-    def generate_champion_difficulty(self, difficulty: Optional[dict] = None) -> ChampionDifficulty:
+    def generate_champion_difficulty(
+        self, difficulty: Optional[dict] = None
+    ) -> ChampionDifficulty:
         if difficulty is not None:
             try:
                 return ChampionDifficulty(difficulty["champion_difficulty"])
@@ -83,7 +85,9 @@ class ChampionGenerator(GeneratorInterface):
 
         return random.choice(list(ChampionDifficulty))
 
-    def generate_champion_type(self, ch_type: Optional[dict] = None, used_type: ChampionType = None) -> Optional[ChampionType]:
+    def generate_champion_type(
+        self, ch_type: Optional[dict] = None, used_type: ChampionType = None
+    ) -> Optional[ChampionType]:
         if ch_type is not None:
             if used_type:
                 try:
@@ -109,9 +113,7 @@ class ChampionGenerator(GeneratorInterface):
             ch_types.remove(used_type)
         return random.choice(ch_types)
 
-    def generate(
-            self, champion_def: Optional[dict] = None
-    ) -> Champion:
+    def generate(self, champion_def: Optional[dict] = None) -> Champion:
         if champion_def is None:
             self.random = True
         champion_id = self.generate_champion_id()
@@ -133,5 +135,5 @@ class ChampionGenerator(GeneratorInterface):
             lanes,
             difficulty,
             champion_type1,
-            champion_type2
+            champion_type2,
         )

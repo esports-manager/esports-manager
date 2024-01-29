@@ -56,12 +56,22 @@ class NewGameLayout(ILayout):
             [esm_input_text("Game1", key="ng_gamename_input")],
             [esm_input_text("John", key="create_manager_name")],
             [esm_input_text("Doe", key="create_manager_nickname")],
-            [esm_input_text("", key="create_manager_display_calendar", size=(23, 1)),
-             esm_calendar_button("Choose date",
-                                 size=(10, 1),
-                                 key="create_manager_calendar",
-                                 format_calendar="%Y/%m/%d")],
-            [esm_input_combo(nationalities, default_value=nationalities[0], key="create_manager_nationality")],
+            [
+                esm_input_text("", key="create_manager_display_calendar", size=(23, 1)),
+                esm_calendar_button(
+                    "Choose date",
+                    size=(10, 1),
+                    key="create_manager_calendar",
+                    format_calendar="%Y/%m/%d",
+                ),
+            ],
+            [
+                esm_input_combo(
+                    nationalities,
+                    default_value=nationalities[0],
+                    key="create_manager_nationality",
+                )
+            ],
             [esm_input_combo(seasons, default_value=seasons[0], key="new_game_season")],
             [esm_input_combo(esports, default_value=esports[0], key="new_game_esport")],
             [esm_checkbox("Generate new database", key="new_game_checkbox")],

@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 class KillEventEventCreator(EventCreator):
     def factory_method(
-            self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
+        self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
     ):
         return KillEvent(
             event_name=event_chosen["name"],
@@ -81,7 +81,7 @@ class KillEvent(MobaEvent):
         diff_probs = abs(player1_prob - player2_prob)
 
         if player1_prob > player2_prob and (
-                -1.0 <= self.factor <= 1.0 or diff_probs >= 0.3
+            -1.0 <= self.factor <= 1.0 or diff_probs >= 0.3
         ):
             killed = 1
         elif diff_probs <= 0.15 and -0.5 <= self.factor <= 0.5:
@@ -152,13 +152,11 @@ class KillEvent(MobaEvent):
         teams = self._get_team_players(team1, team2)
 
         # Chooses the team from which the killer will come from, most likely the team with the highest win probability
-        team_killer = random.choices(
-            teams, [team1.win_prob, team2.win_prob])[0]
+        team_killer = random.choices(teams, [team1.win_prob, team2.win_prob])[0]
 
         # Chooses the killer player, most probably the highest skill player
         killer = random.choices(
-            team_killer, [player.get_player_total_skill()
-                          for player in team_killer]
+            team_killer, [player.get_player_total_skill() for player in team_killer]
         )[0]
 
         # A player is less likely to get a pentakill in a match
@@ -186,8 +184,7 @@ class KillEvent(MobaEvent):
                 killed_players.append(player)
 
         logger.debug(
-            "Killer: {0} killed {1}".format(
-                killer.nick_name, len(killed_players))
+            "Killer: {0} killed {1}".format(killer.nick_name, len(killed_players))
         )
 
         if killed_players:

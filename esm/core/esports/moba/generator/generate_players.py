@@ -51,28 +51,36 @@ class MobaPlayerAttributesGeneratorError(Exception):
 
 
 class MobaPlayerAttributesGenerator(GeneratorInterface):
-    def generate_offensive_attributes(self, mu: int = 40, sigma: int = 10) -> OffensiveAttributes:
+    def generate_offensive_attributes(
+        self, mu: int = 40, sigma: int = 10
+    ) -> OffensiveAttributes:
         return OffensiveAttributes(
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
         )
 
-    def generate_communication_attributes(self, mu: int = 40, sigma: int = 10) -> CommunicationAttributes:
+    def generate_communication_attributes(
+        self, mu: int = 40, sigma: int = 10
+    ) -> CommunicationAttributes:
         return CommunicationAttributes(
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
         )
 
-    def generate_knowledge_attributes(self, mu: int = 40, sigma: int = 10) -> KnowledgeAttributes:
+    def generate_knowledge_attributes(
+        self, mu: int = 40, sigma: int = 10
+    ) -> KnowledgeAttributes:
         return KnowledgeAttributes(
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
         )
 
-    def generate_mechanics_attributes(self, mu: int = 40, sigma: int = 10) -> MechanicsAttributes:
+    def generate_mechanics_attributes(
+        self, mu: int = 40, sigma: int = 10
+    ) -> MechanicsAttributes:
         return MechanicsAttributes(
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
@@ -82,7 +90,9 @@ class MobaPlayerAttributesGenerator(GeneratorInterface):
             generate_attribute_value(mu, sigma),
         )
 
-    def generate_utility_attributes(self, mu: int = 40, sigma: int = 10) -> UtilityAttributes:
+    def generate_utility_attributes(
+        self, mu: int = 40, sigma: int = 10
+    ) -> UtilityAttributes:
         return UtilityAttributes(
             generate_attribute_value(mu, sigma),
             generate_attribute_value(mu, sigma),
@@ -110,11 +120,7 @@ class MobaPlayerAttributesGenerator(GeneratorInterface):
             utility = self.generate_utility_attributes()
 
         return MobaPlayerAttributes(
-            offensive,
-            communication,
-            mechanics,
-            knowledge,
-            utility
+            offensive, communication, mechanics, knowledge, utility
         )
 
 
@@ -124,12 +130,12 @@ class MobaPlayerGenerator(GeneratorInterface):
     """
 
     def __init__(
-            self,
-            champions_list: list[Champion],
-            names: list[dict[str, float | str | int]],
-            today: date = date.today(),
-            min_age: int = 16,
-            max_age: int = 25,
+        self,
+        champions_list: list[Champion],
+        names: list[dict[str, float | str | int]],
+        today: date = date.today(),
+        min_age: int = 16,
+        max_age: int = 25,
     ):
         self.nationalities = get_nations()
         self.nick_names = get_default_player_nick_names()
@@ -160,15 +166,13 @@ class MobaPlayerGenerator(GeneratorInterface):
         """
         Generates the player's date of birth
         """
-        year = timedelta(
-            seconds=31556952
-        )  # definition of a Gregorian calendar date
+        year = timedelta(seconds=31556952)  # definition of a Gregorian calendar date
 
         max_age = (
-                self.max_age * year
+            self.max_age * year
         )  # players should be a max of self.max_age years old
         min_age = (
-                self.min_age * year
+            self.min_age * year
         )  # players can't be less than self.min_age years old
         min_year = self.td - max_age  # minimum date for birthday
         max_year = self.td - min_age  # max date for birthday
@@ -180,7 +184,7 @@ class MobaPlayerGenerator(GeneratorInterface):
         return min_year + timedelta(days=rand_date)  # assigns date of birth
 
     def generate_champions(
-            self, lane: Lanes, amount: int = 0
+        self, lane: Lanes, amount: int = 0
     ) -> list[MobaPlayerChampion]:
         """
         Generates champion skill level for each player.
@@ -202,8 +206,12 @@ class MobaPlayerGenerator(GeneratorInterface):
         for _ in range(amount):
             ch = random.choice(champs)
             champs.remove(ch)
-            champion_mastery = random.choices(list(ChampionMastery), [0.0, 0.5, 0.2, 0.01, 0.005, 0.0005, 0.0005])[0]
-            moba_player_champ = MobaPlayerChampion(ch.champion_id, champion_mastery, 0.0)
+            champion_mastery = random.choices(
+                list(ChampionMastery), [0.0, 0.5, 0.2, 0.01, 0.005, 0.0005, 0.0005]
+            )[0]
+            moba_player_champ = MobaPlayerChampion(
+                ch.champion_id, champion_mastery, 0.0
+            )
             player_champions.append(moba_player_champ)
 
         return player_champions
@@ -216,7 +224,9 @@ class MobaPlayerGenerator(GeneratorInterface):
 
                 return mu, sigma
 
-    def generate_attributes(self, nationality: str, lane: Lanes) -> MobaPlayerAttributes:
+    def generate_attributes(
+        self, nationality: str, lane: Lanes
+    ) -> MobaPlayerAttributes:
         """
         Randomly generates players skills according to their nationality
         """
@@ -267,7 +277,9 @@ class MobaPlayerGenerator(GeneratorInterface):
 
         return LaneMultipliers.get_from_dict(mult)
 
-    def generate(self, lane: Lanes, nationality: Optional[str] = None, amount_champions: int = 0) -> MobaPlayer:
+    def generate(
+        self, lane: Lanes, nationality: Optional[str] = None, amount_champions: int = 0
+    ) -> MobaPlayer:
         """
         Runs the player generation routine
         """

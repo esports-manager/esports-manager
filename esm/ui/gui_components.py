@@ -42,7 +42,7 @@ def create_look_and_feel():
 
 
 def esm_button(
-        text="", font=(default_font, "14"), key=None, pad=None, size=(None, None)
+    text="", font=(default_font, "14"), key=None, pad=None, size=(None, None)
 ):
     return sg.Button(
         text,
@@ -61,13 +61,13 @@ def esm_output(size=(80, 12), font=(default_font, default_font_size), stdout=Tru
 
 
 def esm_title_text(
-        text="",
-        auto_size=True,
-        font=(bold_font, increased_font_size),
-        key=None,
-        size=(None, 1),
-        pad=(300, 1),
-        justification="center",
+    text="",
+    auto_size=True,
+    font=(bold_font, increased_font_size),
+    key=None,
+    size=(None, 1),
+    pad=(300, 1),
+    justification="center",
 ):
     return sg.Text(
         text,
@@ -81,13 +81,13 @@ def esm_title_text(
 
 
 def esm_form_text(
-        text="",
-        font=(default_font, default_font_size),
-        auto_size_text=True,
-        size=(None, 1),
-        key=None,
-        pad=None,
-        justification="center",
+    text="",
+    font=(default_font, default_font_size),
+    auto_size_text=True,
+    size=(None, 1),
+    key=None,
+    pad=None,
+    justification="center",
 ):
     return sg.Text(
         text,
@@ -101,13 +101,13 @@ def esm_form_text(
 
 
 def esm_input_text(
-        text="",
-        font=(default_font, default_font_size),
-        border_width=1,
-        key=None,
-        pad=None,
-        size=(35, 1),
-        enable_events=True,
+    text="",
+    font=(default_font, default_font_size),
+    border_width=1,
+    key=None,
+    pad=None,
+    size=(35, 1),
+    enable_events=True,
 ):
     return sg.InputText(
         text,
@@ -122,14 +122,14 @@ def esm_input_text(
 
 
 def esm_input_combo(
-        values=None,
-        default_value=None,
-        font=(default_font, default_font_size),
-        key=None,
-        pad=None,
-        readonly=True,
-        size=(33, 1),
-        enable_events=True,
+    values=None,
+    default_value=None,
+    font=(default_font, default_font_size),
+    key=None,
+    pad=None,
+    readonly=True,
+    size=(33, 1),
+    enable_events=True,
 ):
     return sg.InputCombo(
         values=values,
@@ -145,16 +145,16 @@ def esm_input_combo(
 
 
 def esm_listbox(
-        values=None,
-        font=(default_font, default_font_size),
-        default_values=None,
-        select_mode=sg.LISTBOX_SELECT_MODE_SINGLE,
-        key=None,
-        pad=None,
-        size=(30, 10),
-        enable_events=False,
-        highlight_background_color="#4FC3F7",
-        highlight_text_color="white",
+    values=None,
+    font=(default_font, default_font_size),
+    default_values=None,
+    select_mode=sg.LISTBOX_SELECT_MODE_SINGLE,
+    key=None,
+    pad=None,
+    size=(30, 10),
+    enable_events=False,
+    highlight_background_color="#4FC3F7",
+    highlight_text_color="white",
 ):
     if default_values is None:
         default_values = []
@@ -174,17 +174,17 @@ def esm_listbox(
 
 
 def esm_table(
-        values,
-        key=None,
-        headings=None,
-        auto_size_columns=True,
-        justification="left",
-        num_rows=6,
-        display_row_numbers=False,
-        font=(default_font, default_font_size),
-        enable_events=True,
-        row_colors=None,
-        size=(None, None),
+    values,
+    key=None,
+    headings=None,
+    auto_size_columns=True,
+    justification="left",
+    num_rows=6,
+    display_row_numbers=False,
+    font=(default_font, default_font_size),
+    enable_events=True,
+    row_colors=None,
+    size=(None, None),
 ):
     return sg.Table(
         values=values,
@@ -202,20 +202,20 @@ def esm_table(
 
 
 def esm_calendar_button(
-        button_text="Calendar",
-        target=(555666777, -1),
-        close_when_date_chosen=True,
-        default_date_m_d_y=(1, 1, 1995),
-        size=(None, None),
-        font=(default_font, default_font_size),
-        auto_size_button=None,
-        border_width=0,
-        title="Choose date of birth",
-        enable_events=True,
-        key=None,
-        format_calendar="%m/%d/%Y",
-        month_names=None,
-        no_titlebar=True,
+    button_text="Calendar",
+    target=(555666777, -1),
+    close_when_date_chosen=True,
+    default_date_m_d_y=(1, 1, 1995),
+    size=(None, None),
+    font=(default_font, default_font_size),
+    auto_size_button=None,
+    border_width=0,
+    title="Choose date of birth",
+    enable_events=True,
+    key=None,
+    format_calendar="%m/%d/%Y",
+    month_names=None,
+    no_titlebar=True,
 ):
     return sg.CalendarButton(
         button_text,
@@ -236,12 +236,12 @@ def esm_calendar_button(
 
 
 def esm_checkbox(
-        text,
-        default=True,
-        font=(default_font, default_font_size),
-        key=None,
-        enable_events=True,
-        visible=True,
+    text,
+    default=True,
+    font=(default_font, default_font_size),
+    key=None,
+    enable_events=True,
+    visible=True,
 ):
     return sg.Checkbox(
         text=text,
@@ -254,13 +254,13 @@ def esm_checkbox(
 
 
 def esm_radio(
-        text,
-        group_id,
-        default=True,
-        font=(default_font, default_font_size),
-        key=None,
-        enable_events=True,
-        visible=True,
+    text,
+    group_id,
+    default=True,
+    font=(default_font, default_font_size),
+    key=None,
+    enable_events=True,
+    visible=True,
 ):
     return sg.Radio(
         text=text,
@@ -269,29 +269,29 @@ def esm_radio(
         font=font,
         key=key,
         enable_events=enable_events,
-        visible=visible
+        visible=visible,
     )
 
 
 def esm_multiline(
-        default_text="",
-        enter_submits=False,
-        disabled=False,
-        size=(80, 12),
-        autoscroll=True,
-        border_width=1,
-        enable_events=True,
-        key=None,
-        write_only=False,
-        font=(default_font, default_font_size),
-        auto_refresh=True,
-        do_not_clear=True,
-        reroute_stdout=False,
-        reroute_stderr=False,
-        reroute_cprint=False,
-        echo_stdout_stderr=False,
-        justification="left",
-        visible=True
+    default_text="",
+    enter_submits=False,
+    disabled=False,
+    size=(80, 12),
+    autoscroll=True,
+    border_width=1,
+    enable_events=True,
+    key=None,
+    write_only=False,
+    font=(default_font, default_font_size),
+    auto_refresh=True,
+    do_not_clear=True,
+    reroute_stdout=False,
+    reroute_stderr=False,
+    reroute_cprint=False,
+    echo_stdout_stderr=False,
+    justification="left",
+    visible=True,
 ):
     return sg.Multiline(
         default_text=default_text,

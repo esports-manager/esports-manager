@@ -46,10 +46,15 @@ class MobaMatch(Serializable):
     victorious_team: Optional[UUID] = None
 
     def serialize(self) -> dict:
-        if self.victorious_team is not None and self.victorious_team not in [self.team1, self.team2]:
+        if self.victorious_team is not None and self.victorious_team not in [
+            self.team1,
+            self.team2,
+        ]:
             raise InvalidTeamId("Team cannot be the victorious team in this match!")
 
-        victorious_team = UUID(hex=self.victorious_team) if self.victorious_team else None
+        victorious_team = (
+            UUID(hex=self.victorious_team) if self.victorious_team else None
+        )
 
         return {
             "game_id": self.game_id.hex,

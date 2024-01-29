@@ -86,11 +86,11 @@ class MobaPlayerAttributes(Serializable):
 
     def get_overall(self, lane: Lanes) -> int:
         over_sum = (
-                self.offensive.get_overall()
-                + self.communication.get_overall()
-                + self.mechanics.get_overall()
-                + self.knowledge.get_overall()
-                + self.utility.get_overall()
+            self.offensive.get_overall()
+            + self.communication.get_overall()
+            + self.mechanics.get_overall()
+            + self.knowledge.get_overall()
+            + self.utility.get_overall()
         )
         if lane in [Lanes.TOP, Lanes.MID]:
             over_sum += self.offensive.get_overall()
@@ -156,7 +156,7 @@ class MobaPlayerChampion(Serializable):
         return {
             "champion_id": self.champion_id.hex,
             "mastery": self.mastery,
-            "total_exp": self.total_exp
+            "total_exp": self.total_exp,
         }
 
 
@@ -173,8 +173,7 @@ class MobaPlayer(Player, Serializable):
             dictionary["nationality"],
             dictionary["first_name"],
             dictionary["last_name"],
-            datetime.datetime.strptime(
-                dictionary["birthday"], "%Y-%m-%d").date(),
+            datetime.datetime.strptime(dictionary["birthday"], "%Y-%m-%d").date(),
             dictionary["nick_name"],
             LaneMultipliers.get_from_dict(dictionary["lanes"]),
             MobaPlayerAttributes.get_from_dict(dictionary["attributes"]),
@@ -270,8 +269,8 @@ class MobaPlayerSimulation:
         Gets the player's skill according to the lane he is currently at.
         """
         return (
-                self.player.attributes.get_overall(self.lane)
-                * self.get_curr_lane_multiplier()
+            self.player.attributes.get_overall(self.lane)
+            * self.get_curr_lane_multiplier()
         )
 
     def get_projected_champion_skill(self, champion: Champion) -> float:

@@ -84,8 +84,7 @@ class LoadGame:
             champions = data["champions"]
             return data, teams, players, champions
         else:
-            raise LoadGameError(
-                "The save file does not contain the expected keys")
+            raise LoadGameError("The save file does not contain the expected keys")
 
     def load_game_state(self, filename: str) -> GameState:
         """
@@ -112,7 +111,6 @@ class LoadGame:
 
         load_game_files = []
         for root, _, files in os.walk(self.folder):
-            load_game_files.extend(
-                file for file in files if file.endswith(extension))
+            load_game_files.extend(file for file in files if file.endswith(extension))
 
         return load_game_files

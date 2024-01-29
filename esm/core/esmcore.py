@@ -73,9 +73,9 @@ class ESMCore:
 
     def check_if_files_exist(self) -> None:
         if (
-                not os.path.exists(self.settings.champions_file)
-                and not os.path.exists(self.settings.players_file)
-                and not os.path.exists(self.settings.teams_file)
+            not os.path.exists(self.settings.champions_file)
+            and not os.path.exists(self.settings.players_file)
+            and not os.path.exists(self.settings.teams_file)
         ):
             raise FileNotFoundError
 

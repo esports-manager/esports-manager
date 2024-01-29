@@ -16,8 +16,17 @@ import pytest
 import hypothesis.strategies as st
 
 from hypothesis import given
-from esm.core.esports.moba.champion import Champion, ChampionLoadError, ChampionType, ChampionDifficulty
-from esm.core.esports.moba.moba_definitions import Lanes, LaneMultipliers, LaneMultiplierError
+from esm.core.esports.moba.champion import (
+    Champion,
+    ChampionLoadError,
+    ChampionType,
+    ChampionDifficulty,
+)
+from esm.core.esports.moba.moba_definitions import (
+    Lanes,
+    LaneMultipliers,
+    LaneMultiplierError,
+)
 
 
 def test_serialize_champion(champion: Champion, champion_dict: dict):
@@ -38,7 +47,7 @@ def test_get_current_skill(champion: Champion):
         champion.skill * champion.lanes.jng,
         champion.skill * champion.lanes.mid,
         champion.skill * champion.lanes.adc,
-        champion.skill * champion.lanes.sup
+        champion.skill * champion.lanes.sup,
     ]
     champion_lanes = [champion.get_current_skill(lane) for lane in Lanes]
     assert expected_output == champion_lanes
@@ -99,11 +108,11 @@ def test_get_champion_with_more_than_max_multiplier(champion_dict):
             jng=st.floats(min_value=0.1, max_value=1.0),
             mid=st.floats(min_value=0.1, max_value=1.0),
             adc=st.floats(min_value=0.1, max_value=1.0),
-            sup=st.floats(min_value=0.1, max_value=1.0)
+            sup=st.floats(min_value=0.1, max_value=1.0),
         ),
         champion_difficulty=st.sampled_from(ChampionDifficulty),
         champion_type1=st.sampled_from(ChampionType),
-        champion_type2=st.sampled_from(ChampionType)
+        champion_type2=st.sampled_from(ChampionType),
     )
 )
 def test_generated_champion(champion: Champion):

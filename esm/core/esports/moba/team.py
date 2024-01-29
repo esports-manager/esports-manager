@@ -25,7 +25,9 @@ class PlayerSerializeError(Exception):
     pass
 
 
-def get_players_from_list(list_player_ids: list[str], players: list[MobaPlayer]) -> list[MobaPlayer]:
+def get_players_from_list(
+    list_player_ids: list[str], players: list[MobaPlayer]
+) -> list[MobaPlayer]:
     player_ids = [uuid.UUID(hex=player_id) for player_id in list_player_ids]
     roster = []
 
@@ -48,11 +50,7 @@ class Team(Serializable):
 
     def serialize(self) -> dict:
         players = [player.player_id for player in self.list_players]
-        return {
-            "team_id": self.team_id,
-            "name": self.name,
-            "list_players": players
-        }
+        return {"team_id": self.team_id, "name": self.name, "list_players": players}
 
     @classmethod
     def get_from_dict(cls, dictionary: dict, players: list[MobaPlayer]):
@@ -72,7 +70,9 @@ class TeamStats:
 
 
 class TeamSimulation:
-    def __init__(self, team: Team, players: list[MobaPlayerSimulation], is_players_team: bool):
+    def __init__(
+        self, team: Team, players: list[MobaPlayerSimulation], is_players_team: bool
+    ):
         self.team: Team = team
         self.towers: dict[str, int] = {
             "top": 3,
@@ -104,17 +104,17 @@ class TeamSimulation:
 
     def are_all_towers_down(self) -> bool:
         return (
-                self.towers["top"] == 0
-                and self.towers["mid"] == 0
-                and self.towers["bot"] == 0
-                and self.towers["base"] == 0
+            self.towers["top"] == 0
+            and self.towers["mid"] == 0
+            and self.towers["bot"] == 0
+            and self.towers["base"] == 0
         )
 
     def are_all_lane_towers_down(self) -> bool:
         return (
-                self.towers["top"] == 0
-                and self.towers["mid"] == 0
-                and self.towers["bot"] == 0
+            self.towers["top"] == 0
+            and self.towers["mid"] == 0
+            and self.towers["bot"] == 0
         )
 
     def is_inhibitor_up(self, lane: str) -> bool:
@@ -125,9 +125,9 @@ class TeamSimulation:
 
     def are_inhibs_exposed(self) -> bool:
         return (
-                self.towers["top"] == 0
-                or self.towers["mid"] == 0
-                or self.towers["bot"] == 0
+            self.towers["top"] == 0
+            or self.towers["mid"] == 0
+            or self.towers["bot"] == 0
         )
 
     def get_exposed_inhibs(self):
@@ -237,7 +237,7 @@ class TeamSimulation:
     @property
     def total_skill(self) -> int:
         self._total_skill = (
-                int((self.player_overall + self.champion_overall) / 10) + self.points
+            int((self.player_overall + self.champion_overall) / 10) + self.points
         )
 
         return int(self._total_skill)

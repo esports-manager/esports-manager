@@ -85,7 +85,7 @@ class GUI:
     def error_message(e) -> None:
         tb = traceback.format_exc()
         sg.Print("The following error happened:", e, tb)
-        sg.popup_error('The following error occurred:', e, tb)
+        sg.popup_error("The following error occurred:", e, tb)
 
     @staticmethod
     def confirmation_window(*args, **kwargs):

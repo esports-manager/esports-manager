@@ -32,7 +32,9 @@ class DebugMatchController(IController):
         self.buttons_disabled = False
 
     def start_match(self):
-        self.controller.update_element_on_screen("debug_match_output", value="", append=False)
+        self.controller.update_element_on_screen(
+            "debug_match_output", value="", append=False
+        )
         self.match_sim.is_game_running = True
         self.reset_match()
         self.match_sim.current_game.is_match_over = False
@@ -41,12 +43,17 @@ class DebugMatchController(IController):
     def get_queue_messages_and_update(self):
         if not self.queue.empty():
             message = self.queue.get(block=False)
-            self.controller.update_element_on_screen("debug_match_output", value=message, append=True)
+            self.controller.update_element_on_screen(
+                "debug_match_output", value=message, append=True
+            )
 
     def get_team_data(self):
         if self.match_sim.current_game is None:
             return None
-        players = [list(team.list_players) for team in self.match_sim.current_live_game.game.teams]
+        players = [
+            list(team.list_players)
+            for team in self.match_sim.current_live_game.game.teams
+        ]
 
         data = []
         for team in players:
@@ -77,18 +84,40 @@ class DebugMatchController(IController):
         win_prob = current_game.game.team1.win_prob * 100
         self.controller.update_element_on_screen("debug_team1table", values=data[0])
         self.controller.update_element_on_screen("debug_team2table", values=data[1])
-        self.controller.update_element_on_screen("debug_team1skill", value=current_game.game.team1.total_skill)
-        self.controller.update_element_on_screen("debug_team2skill", value=current_game.game.team2.total_skill)
-        self.controller.update_element_on_screen("debug_team1winprob", value=current_game.game.team1.win_prob)
-        self.controller.update_element_on_screen("debug_team2winprob", value=current_game.game.team2.win_prob)
+        self.controller.update_element_on_screen(
+            "debug_team1skill", value=current_game.game.team1.total_skill
+        )
+        self.controller.update_element_on_screen(
+            "debug_team2skill", value=current_game.game.team2.total_skill
+        )
+        self.controller.update_element_on_screen(
+            "debug_team1winprob", value=current_game.game.team1.win_prob
+        )
+        self.controller.update_element_on_screen(
+            "debug_team2winprob", value=current_game.game.team2.win_prob
+        )
         self.controller.update_progress_bar("debug_winprob", win_prob)
-        self.controller.update_element_on_screen("debug_match_current_time", value=current_game.game_time)
-        self.controller.update_element_on_screen("debug_team1towers", value=current_game.game.team1.towers)
-        self.controller.update_element_on_screen("debug_team2towers", value=current_game.game.team2.towers)
-        self.controller.update_element_on_screen("debug_team1inhibs", value=current_game.game.team1.inhibitors)
-        self.controller.update_element_on_screen("debug_team2inhibs", value=current_game.game.team2.inhibitors)
-        self.controller.update_element_on_screen("debug_team1name", value=current_game.game.team1.name)
-        self.controller.update_element_on_screen("debug_team2name", value=current_game.game.team2.name)
+        self.controller.update_element_on_screen(
+            "debug_match_current_time", value=current_game.game_time
+        )
+        self.controller.update_element_on_screen(
+            "debug_team1towers", value=current_game.game.team1.towers
+        )
+        self.controller.update_element_on_screen(
+            "debug_team2towers", value=current_game.game.team2.towers
+        )
+        self.controller.update_element_on_screen(
+            "debug_team1inhibs", value=current_game.game.team1.inhibitors
+        )
+        self.controller.update_element_on_screen(
+            "debug_team2inhibs", value=current_game.game.team2.inhibitors
+        )
+        self.controller.update_element_on_screen(
+            "debug_team1name", value=current_game.game.team1.name
+        )
+        self.controller.update_element_on_screen(
+            "debug_team2name", value=current_game.game.team2.name
+        )
 
     def enable_debug_buttons(self):
         self._change_button_status(False)
@@ -98,9 +127,15 @@ class DebugMatchController(IController):
         self.buttons_disabled = True
 
     def _change_button_status(self, disabled):
-        self.controller.update_element_on_screen("debug_startmatch_btn", disabled=disabled)
-        self.controller.update_element_on_screen("debug_newteams_btn", disabled=disabled)
-        self.controller.update_element_on_screen("debug_resetmatch_btn", disabled=disabled)
+        self.controller.update_element_on_screen(
+            "debug_startmatch_btn", disabled=disabled
+        )
+        self.controller.update_element_on_screen(
+            "debug_newteams_btn", disabled=disabled
+        )
+        self.controller.update_element_on_screen(
+            "debug_resetmatch_btn", disabled=disabled
+        )
 
     def start_match_sim_thread(self) -> None:
         if e := self.match_sim.run_game():
@@ -108,9 +143,9 @@ class DebugMatchController(IController):
 
     def update_match_sim_values(self, values):
         if (
-                self.match_sim.current_live_game is not None
-                and self.match_sim.current_live_game.is_match_over
-                and not self.match_sim.game_thread.is_alive()
+            self.match_sim.current_live_game is not None
+            and self.match_sim.current_live_game.is_match_over
+            and not self.match_sim.game_thread.is_alive()
         ):
             self.match_sim.is_game_running = False
 

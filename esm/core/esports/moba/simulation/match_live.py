@@ -42,19 +42,19 @@ class MatchLive:
     """
 
     def __init__(
-            self,
-            game: MobaMatch,
-            champions: list[Champion],
-            team1: TeamSimulation,
-            team2: TeamSimulation,
-            show_commentary: bool = True,
-            match_speed: int = 1,
-            simulation_delay: bool = True,
-            ban_per_team: int = 5,
-            difficulty_level: int = 1,
-            is_player_match: bool = False,
-            queue: Optional[Queue] = None,
-            picks_bans_queue: Optional[Queue] = None,
+        self,
+        game: MobaMatch,
+        champions: list[Champion],
+        team1: TeamSimulation,
+        team2: TeamSimulation,
+        show_commentary: bool = True,
+        match_speed: int = 1,
+        simulation_delay: bool = True,
+        ban_per_team: int = 5,
+        difficulty_level: int = 1,
+        is_player_match: bool = False,
+        queue: Optional[Queue] = None,
+        picks_bans_queue: Optional[Queue] = None,
     ):
         self.game = game
         self.game_time = 0.0
@@ -132,7 +132,9 @@ class MatchLive:
         """
         return sum(sum(team.towers.values()) for team in self.teams)
 
-    def get_team_exposed_nexus(self) -> Union[Tuple[TeamSimulation, TeamSimulation], TeamSimulation, None]:
+    def get_team_exposed_nexus(
+        self,
+    ) -> Union[Tuple[TeamSimulation, TeamSimulation], TeamSimulation, None]:
         """
         Gets the exposed nexus from one or both of the teams.
         """
@@ -202,20 +204,20 @@ class MatchLive:
 
 class MatchSeries:
     def __init__(
-            self,
-            team1: TeamSimulation,
-            team2: TeamSimulation,
-            championship_id: uuid.UUID,
-            champions: list[Champion],
-            match_type: MatchType,
-            date: datetime,
-            best_of: int = 3,
-            show_commentary: bool = True,
-            match_speed: int = 1,
-            simulation_delay: bool = True,
-            ban_per_team: int = 5,
-            difficulty_level: int = 1,
-            is_player_match: bool = False,
+        self,
+        team1: TeamSimulation,
+        team2: TeamSimulation,
+        championship_id: uuid.UUID,
+        champions: list[Champion],
+        match_type: MatchType,
+        date: datetime,
+        best_of: int = 3,
+        show_commentary: bool = True,
+        match_speed: int = 1,
+        simulation_delay: bool = True,
+        ban_per_team: int = 5,
+        difficulty_level: int = 1,
+        is_player_match: bool = False,
     ):
         self.championship_id = championship_id
         self.team1 = team1

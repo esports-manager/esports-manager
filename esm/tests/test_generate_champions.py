@@ -15,8 +15,13 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import pytest
 
-from esm.core.esports.moba.generator.default_champion_defs import get_default_champion_defs
-from esm.core.esports.moba.generator.generate_champions import ChampionGenerator, ChampionGeneratorError
+from esm.core.esports.moba.generator.default_champion_defs import (
+    get_default_champion_defs,
+)
+from esm.core.esports.moba.generator.generate_champions import (
+    ChampionGenerator,
+    ChampionGeneratorError,
+)
 from esm.core.esports.moba.champion import ChampionType, ChampionDifficulty, Lanes
 
 
@@ -47,7 +52,9 @@ def test_generate_champion_from_dict(champion_gen: ChampionGenerator):
     assert obtained_champion.champion_type2 == ChampionType.FIGHTER
 
 
-def test_generate_champion_from_dict_without_champion_type(champion_gen: ChampionGenerator):
+def test_generate_champion_from_dict_without_champion_type(
+    champion_gen: ChampionGenerator,
+):
     champion_dict = {
         "name": "MyChampion",
         "lanes": [Lanes.SUP.name, Lanes.JNG.name],
@@ -57,7 +64,9 @@ def test_generate_champion_from_dict_without_champion_type(champion_gen: Champio
     assert obtained_champion.champion_type1 is not None
 
 
-def test_generate_champion_from_dict_with_none_champion_type(champion_gen: ChampionGenerator):
+def test_generate_champion_from_dict_with_none_champion_type(
+    champion_gen: ChampionGenerator,
+):
     champion_dict = {
         "name": "MyChampion",
         "lanes": [Lanes.MID.name, Lanes.ADC.name],

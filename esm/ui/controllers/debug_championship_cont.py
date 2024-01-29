@@ -55,8 +55,7 @@ class DebugChampionshipController(IController):
 
     def get_default_championship_details(self):
         self.championship_details = [
-            [team.name, team.get_team_overall(), 0, 0, 0]
-            for team in self.teams
+            [team.name, team.get_team_overall(), 0, 0, 0] for team in self.teams
         ]
 
     def get_default_match_details(self):
@@ -76,7 +75,10 @@ class DebugChampionshipController(IController):
 
     def get_winning_team(self, live_match):
         for detail in self.match_details:
-            if live_match.game.team1.name == detail[0] and live_match.game.team2.name == detail[1]:
+            if (
+                live_match.game.team1.name == detail[0]
+                and live_match.game.team2.name == detail[1]
+            ):
                 if live_match.victorious_team.name == detail[0]:
                     detail[2] = detail[0]
                 elif live_match.victorious_team.name == detail[1]:
@@ -103,10 +105,14 @@ class DebugChampionshipController(IController):
 
     def update_data_in_championship_table(self):
         self.championship_details.sort(key=lambda x: x[4], reverse=True)
-        self.controller.update_element_on_screen("debug_championship_table", values=self.championship_details)
+        self.controller.update_element_on_screen(
+            "debug_championship_table", values=self.championship_details
+        )
 
     def update_data_in_matches_table(self):
-        self.controller.update_element_on_screen("debug_matches_table", values=self.match_details)
+        self.controller.update_element_on_screen(
+            "debug_matches_table", values=self.match_details
+        )
 
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("debug_championship_screen").visible is True:
@@ -119,17 +125,23 @@ class DebugChampionshipController(IController):
             if event == "debug_startchampionship_btn":
                 self.reset_championship()
                 try:
-                    self.championship_thread = threading.Thread(target=self.play_championship, daemon=True)
+                    self.championship_thread = threading.Thread(
+                        target=self.play_championship, daemon=True
+                    )
                     self.championship_thread.start()
-                    self.controller.update_element_on_screen("debug_startchampionship_btn", disabled=True)
+                    self.controller.update_element_on_screen(
+                        "debug_startchampionship_btn", disabled=True
+                    )
                 except RuntimeError as e:
                     self.controller.print_error(e)
 
             if (
-                    self.championship_thread is not None
-                    and not self.championship_thread.is_alive()
+                self.championship_thread is not None
+                and not self.championship_thread.is_alive()
             ):
-                self.controller.update_element_on_screen("debug_startchampionship_btn", disabled=False)
+                self.controller.update_element_on_screen(
+                    "debug_startchampionship_btn", disabled=False
+                )
 
             # Click the Cancel button
             if event == "debug_championshipcancel_btn":

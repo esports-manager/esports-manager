@@ -27,8 +27,8 @@ from esm.definitions import NAMES_FILE
 
 
 def write_to_file(
-        contents: list,
-        filename: Union[str, Path],
+    contents: list,
+    filename: Union[str, Path],
 ) -> None:
     file = filename
     if not os.path.exists(filename):
@@ -68,10 +68,10 @@ def load_list_from_file(filepath: Union[str, Path]) -> list[dict]:
     if os.path.exists(filepath):
         return get_from_file(filepath)
     else:
-        raise FileNotFoundError('File was not found')
+        raise FileNotFoundError("File was not found")
 
 
-def normalize_filename(filename, delim=u'_') -> str:
+def normalize_filename(filename, delim="_") -> str:
     """
     Normalizes the save game filename. This will prevent unsupported filenames from being saved.
 
@@ -80,13 +80,13 @@ def normalize_filename(filename, delim=u'_') -> str:
     _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.:]+')
     result = []
     for word in _punct_re.split(filename.lower()):
-        word = normalize('NFKD', word).encode('ascii', 'ignore')
-        if word := word.decode('utf-8'):
+        word = normalize("NFKD", word).encode("ascii", "ignore")
+        if word := word.decode("utf-8"):
             result.append(word)
 
     filename = delim.join(result)
-    filename = ''.join(filename)
-    return f'{filename}.cbor'
+    filename = "".join(filename)
+    return f"{filename}.cbor"
 
 
 def get_nations(file: Union[str, os.PathLike] = NAMES_FILE) -> list[dict]:

@@ -29,16 +29,23 @@ def check_if_save_file_exists(filename: Union[str, Path]) -> bool:
 
 def get_load_game_files(settings: Settings) -> list:
     load = LoadGame(folder=settings.save_file_dir)
-    return load.get_load_game_files('.cbor')
+    return load.get_load_game_files(".cbor")
 
 
 def get_autosave_files(settings: Settings) -> list:
     load = LoadGame(folder=settings.save_file_dir)
-    return load.get_load_game_files('.autosav')
+    return load.get_load_game_files(".autosav")
 
 
-def create_save_game(gamestate: GameState, filename: str, settings: Settings, auto_save_enabled: bool) -> SaveGame:
-    return SaveGame(gamestate, filename, save_directory=settings.save_file_dir, autosave_enabled=auto_save_enabled, )
+def create_save_game(
+    gamestate: GameState, filename: str, settings: Settings, auto_save_enabled: bool
+) -> SaveGame:
+    return SaveGame(
+        gamestate,
+        filename,
+        save_directory=settings.save_file_dir,
+        autosave_enabled=auto_save_enabled,
+    )
 
 
 def auto_save(save: SaveGame) -> None:

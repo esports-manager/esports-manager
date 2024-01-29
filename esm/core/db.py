@@ -15,7 +15,11 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from typing import Tuple
 
-from .esports.moba.generator import TeamGenerator, ChampionGenerator, MobaPlayerGenerator
+from .esports.moba.generator import (
+    TeamGenerator,
+    ChampionGenerator,
+    MobaPlayerGenerator,
+)
 from .gamestate import GameState
 from .settings import Settings
 
@@ -36,7 +40,9 @@ class DB:
     def champions_file(self):
         return self.settings.champions_file
 
-    def get_moba_generators(self) -> Tuple[MobaPlayerGenerator, TeamGenerator, ChampionGenerator]:
+    def get_moba_generators(
+        self,
+    ) -> Tuple[MobaPlayerGenerator, TeamGenerator, ChampionGenerator]:
         players = MobaPlayerGenerator()
         teams = TeamGenerator()
         champions = ChampionGenerator()

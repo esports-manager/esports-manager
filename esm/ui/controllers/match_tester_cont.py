@@ -80,8 +80,7 @@ class MatchTesterController(IController):
         """
         Starts running the match tester task.
         """
-        self.match_tester = MatchTester(
-            self.amount_test_matches, self.current_match)
+        self.match_tester = MatchTester(self.amount_test_matches, self.current_match)
         self.match_tester.running_test = True
         self.match_tester.run_match_test()
         self.enable_match_tester_buttons()
@@ -92,25 +91,28 @@ class MatchTesterController(IController):
         """
         self.controller.write_event_value("MATCH TESTER", "MATCH TESTER DONE")
         self.controller.update_element_on_screen(
-            'match_tester_startmatch_btn', disabled=False)
+            "match_tester_startmatch_btn", disabled=False
+        )
         self.controller.update_element_on_screen(
-            'match_tester_newteams_btn', disabled=False)
+            "match_tester_newteams_btn", disabled=False
+        )
 
     def disable_match_tester_buttons(self):
         """
         Tells the GUI match tester has started, and we should disable the layout buttons
         """
         self.controller.update_element_on_screen(
-            'match_tester_startmatch_btn', disabled=True)
+            "match_tester_startmatch_btn", disabled=True
+        )
         self.controller.update_element_on_screen(
-            'match_tester_newteams_btn', disabled=True)
+            "match_tester_newteams_btn", disabled=True
+        )
 
     def get_team_data(self) -> Union[list, None]:
         if self.current_match is None:
             return None
 
-        players = [list(team.list_players)
-                   for team in self.current_match.game.teams]
+        players = [list(team.list_players) for team in self.current_match.game.teams]
 
         data = []
         for team in players:
@@ -119,7 +121,7 @@ class MatchTesterController(IController):
                     player.lane.name,
                     player.nick_name,
                     player.champion_id,
-                    int(player.get_player_total_skill())
+                    int(player.get_player_total_skill()),
                 ]
                 for player in team
             ]
@@ -129,17 +131,23 @@ class MatchTesterController(IController):
 
     def update_match_tester_match_info(self, data):
         self.controller.update_element_on_screen(
-            'match_tester_team1table', values=data[0])
+            "match_tester_team1table", values=data[0]
+        )
         self.controller.update_element_on_screen(
-            'match_tester_team2table', values=data[1])
+            "match_tester_team2table", values=data[1]
+        )
         self.controller.update_element_on_screen(
-            'match_tester_team1skill', value=self.current_match.game.team1.total_skill)
+            "match_tester_team1skill", value=self.current_match.game.team1.total_skill
+        )
         self.controller.update_element_on_screen(
-            'match_tester_team2skill', value=self.current_match.game.team2.total_skill)
+            "match_tester_team2skill", value=self.current_match.game.team2.total_skill
+        )
         self.controller.update_element_on_screen(
-            'match_tester_team1name', value=self.current_match.game.team1.name)
+            "match_tester_team1name", value=self.current_match.game.team1.name
+        )
         self.controller.update_element_on_screen(
-            'match_tester_team2name', value=self.current_match.game.team2.name)
+            "match_tester_team2name", value=self.current_match.game.team2.name
+        )
 
     def update(self, event, values, make_screen):
         if self.controller.get_gui_element("match_tester_screen").visible:
@@ -151,17 +159,13 @@ class MatchTesterController(IController):
 
             # Click the Start Match button
             if event == "match_tester_startmatch_btn":
-                self.amount_test_matches = int(
-                    values['match_tester_amount_of_matches'])
+                self.amount_test_matches = int(values["match_tester_amount_of_matches"])
                 self.reset_match_tester()
                 self.start_match_tester_thread()
 
             # Click the Cancel button
             if event == "match_tester_cancel_btn":
-                if (
-                        self.match_tester is not None
-                        and self.match_tester.running_test
-                ):
+                if self.match_tester is not None and self.match_tester.running_test:
                     self.match_tester.running_test = False
                 make_screen("match_tester_screen", "main_screen")
 

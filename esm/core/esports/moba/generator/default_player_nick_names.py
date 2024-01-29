@@ -5471,5 +5471,5 @@ def get_default_player_nick_names() -> list:
         "HolyPhoenix",
         "Robogod",
         "Serin",
-        "StarScreen"
+        "StarScreen",
     ]

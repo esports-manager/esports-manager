@@ -35,13 +35,13 @@ class CreateGameSession:
         self.champions = ChampionGenerator()
 
     def get_names(
-            self,
-            filename: str,
-            game_name: str,
-            manager_name: str,
-            date_of_birth: str,
-            season: str,
-            esport: str,
+        self,
+        filename: str,
+        game_name: str,
+        manager_name: str,
+        date_of_birth: str,
+        season: str,
+        esport: str,
     ):
         self.filename = filename
         self.game_name = game_name

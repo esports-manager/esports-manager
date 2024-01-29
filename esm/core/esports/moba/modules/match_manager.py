@@ -32,30 +32,25 @@ class MatchManager:
         self.is_game_running: bool = False
 
     def initialize_game(
-            self,
-            game_id: uuid.UUID,
-            championship_id: uuid.UUID,
-            team1: TeamSimulation,
-            team2: TeamSimulation
+        self,
+        game_id: uuid.UUID,
+        championship_id: uuid.UUID,
+        team1: TeamSimulation,
+        team2: TeamSimulation,
     ):
-        self.current_game = MobaMatch(
-            game_id,
-            championship_id,
-            team1,
-            team2
-        )
+        self.current_game = MobaMatch(game_id, championship_id, team1, team2)
 
     def initialize_live_game(
-            self,
-            game: MobaMatch,
-            show_commentary: bool,
-            match_speed: int,
-            simulation_delay: bool,
-            ban_per_team: int,
-            difficulty_level: int,
-            is_player_match: bool,
-            queue: Queue,
-            picks_bans_queue: Queue
+        self,
+        game: MobaMatch,
+        show_commentary: bool,
+        match_speed: int,
+        simulation_delay: bool,
+        ban_per_team: int,
+        difficulty_level: int,
+        is_player_match: bool,
+        queue: Queue,
+        picks_bans_queue: Queue,
     ):
         self.current_live_game = MatchLive(
             game,
@@ -66,14 +61,16 @@ class MatchManager:
             difficulty_level,
             is_player_match,
             queue,
-            picks_bans_queue
+            picks_bans_queue,
         )
 
     def get_player_default_lanes(self):
         for team in self.current_game.teams:
             team.get_players_default_lanes()
 
-    def initialize_random_debug_game(self, teams: list, queue=None, picksbans=True, picks_bans_queue=None) -> MatchLive:
+    def initialize_random_debug_game(
+        self, teams: list, queue=None, picksbans=True, picks_bans_queue=None
+    ) -> MatchLive:
         team1 = random.choice(teams)
         teams.remove(team1)
         team2 = random.choice(teams)
@@ -89,7 +86,7 @@ class MatchManager:
             difficulty_level=1,
             is_player_match=False,
             queue=queue,
-            picks_bans_queue=picks_bans_queue
+            picks_bans_queue=picks_bans_queue,
         )
 
         self.get_player_default_lanes()

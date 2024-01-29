@@ -46,22 +46,27 @@ class LoadGameController(IController):
                 make_screen("load_game_screen", "main_screen")
 
             if self.load_files:
-                self.controller.update_element_on_screen("load_game_listbox", values=self.load_files)
+                self.controller.update_element_on_screen(
+                    "load_game_listbox", values=self.load_files
+                )
             else:
-                self.controller.update_element_on_screen("load_game_listbox", values=self.default_value)
+                self.controller.update_element_on_screen(
+                    "load_game_listbox", values=self.default_value
+                )
 
             if event == "load_game_listbox":
                 self.filename = values["load_game_listbox"][0]
 
             if event == "load_game_btn":
                 if self.filename not in [[], self.default_value, None]:
-                    filename = os.path.join(self.core.settings.save_file_dir, self.filename)
+                    filename = os.path.join(
+                        self.core.settings.save_file_dir, self.filename
+                    )
                     self.core.game_session.load_game(filename)
                     make_screen("load_game_screen", "game_dashboard_screen")
                 else:
                     self.controller.get_gui_information_window(
-                        "Select a file",
-                        "Select a save game file"
+                        "Select a file", "Select a save game file"
                     )
         else:
             self.load_files = None

@@ -65,7 +65,11 @@ class SettingsLayout(ILayout):
                     key="settings_languages_inpcombo",
                 )
             ],
-            [esm_input_text("1", size=size_elements, key="settings_fontsize_input", pad=(3, 5))],
+            [
+                esm_input_text(
+                    "1", size=size_elements, key="settings_fontsize_input", pad=(3, 5)
+                )
+            ],
             [
                 esm_input_text("50", key="settings_amount_input", size=size_elements),
                 esm_button(
@@ -74,37 +78,84 @@ class SettingsLayout(ILayout):
                     key="settings_generate_btn",
                 ),
             ],
-            [esm_checkbox("Enable autosave: ", default=True, key="settings_enable_autosave")],
+            [
+                esm_checkbox(
+                    "Enable autosave: ", default=True, key="settings_enable_autosave"
+                )
+            ],
         ]
 
         controls_files = [
             [
-                esm_input_text('', size=size_elements, key="settings_root_dir", pad=controls_file_pad),
-                sg.FileBrowse(target="settings_root_dir", font=(default_font, default_font_size)),
+                esm_input_text(
+                    "",
+                    size=size_elements,
+                    key="settings_root_dir",
+                    pad=controls_file_pad,
+                ),
+                sg.FileBrowse(
+                    target="settings_root_dir", font=(default_font, default_font_size)
+                ),
             ],
             [
-                esm_input_text('', size=size_elements, key="settings_res_dir", pad=controls_file_pad),
-                sg.FileBrowse(target="settings_res_dir", font=(default_font, default_font_size)),
+                esm_input_text(
+                    "",
+                    size=size_elements,
+                    key="settings_res_dir",
+                    pad=controls_file_pad,
+                ),
+                sg.FileBrowse(
+                    target="settings_res_dir", font=(default_font, default_font_size)
+                ),
             ],
             [
-                esm_input_text('', size=size_elements, key="settings_db_dir", pad=controls_file_pad),
-                sg.FileBrowse(target="settings_db_dir", font=(default_font, default_font_size)),
+                esm_input_text(
+                    "", size=size_elements, key="settings_db_dir", pad=controls_file_pad
+                ),
+                sg.FileBrowse(
+                    target="settings_db_dir", font=(default_font, default_font_size)
+                ),
             ],
             [
-                esm_input_text('', size=size_elements, key="settings_saves_dir", pad=controls_file_pad),
-                sg.FileBrowse(target="settings_saves_dir", font=(default_font, default_font_size)),
+                esm_input_text(
+                    "",
+                    size=size_elements,
+                    key="settings_saves_dir",
+                    pad=controls_file_pad,
+                ),
+                sg.FileBrowse(
+                    target="settings_saves_dir", font=(default_font, default_font_size)
+                ),
             ],
             [
-                esm_input_text('', size=size_elements, key="settings_ch_file", pad=controls_file_pad),
-                sg.FileBrowse(target="settings_ch_file", font=(default_font, default_font_size)),
+                esm_input_text(
+                    "",
+                    size=size_elements,
+                    key="settings_ch_file",
+                    pad=controls_file_pad,
+                ),
+                sg.FileBrowse(
+                    target="settings_ch_file", font=(default_font, default_font_size)
+                ),
             ],
             [
-                esm_input_text('', size=size_elements, key="settings_pl_file", pad=controls_file_pad),
-                sg.FileBrowse(target="settings_pl_file", font=(default_font, default_font_size)),
+                esm_input_text(
+                    "",
+                    size=size_elements,
+                    key="settings_pl_file",
+                    pad=controls_file_pad,
+                ),
+                sg.FileBrowse(
+                    target="settings_pl_file", font=(default_font, default_font_size)
+                ),
             ],
             [
-                esm_input_text('', size=size_elements, key="settings_t_file", pad=controls_file_pad),
-                sg.FileBrowse(target="settings_t_file", font=(default_font, default_font_size)),
+                esm_input_text(
+                    "", size=size_elements, key="settings_t_file", pad=controls_file_pad
+                ),
+                sg.FileBrowse(
+                    target="settings_t_file", font=(default_font, default_font_size)
+                ),
             ],
         ]
 
@@ -114,7 +165,11 @@ class SettingsLayout(ILayout):
                 sg.Column(labels_inputs, element_justification="right"),
                 sg.Column(controls, element_justification="left"),
             ],
-            [esm_form_text("Warning: Generating players will replace the current champions, players and teams file!")],
+            [
+                esm_form_text(
+                    "Warning: Generating players will replace the current champions, players and teams file!"
+                )
+            ],
             [
                 sg.Column(labels_files, element_justification="right"),
                 sg.Column(controls_files, element_justification="left"),

@@ -15,6 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from esm.ui.layouts.pickteam import PickTeamLayout
+
 from .controllerinterface import IController
 
 

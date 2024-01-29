@@ -5,6 +5,9 @@ verify_ssl = true
 
 [dev-packages]
 black = "*"
+pre-commit = "*"
+isort = "*"
+flake8 = "*"
 
 [packages]
 pysimplegui = "==4.60.1"

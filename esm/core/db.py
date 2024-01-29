@@ -16,9 +16,9 @@
 from typing import Tuple
 
 from .esports.moba.generator import (
-    TeamGenerator,
     ChampionGenerator,
     MobaPlayerGenerator,
+    TeamGenerator,
 )
 from .gamestate import GameState
 from .settings import Settings

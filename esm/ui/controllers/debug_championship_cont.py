@@ -20,6 +20,7 @@ from esm.core.esmcore import ESMCore
 from esm.core.esports.moba.championship import Championship
 from esm.ui.igamecontroller import IGameController
 from esm.ui.layouts.debug_championship import DebugChampionshipLayout
+
 from .controllerinterface import IController
 
 

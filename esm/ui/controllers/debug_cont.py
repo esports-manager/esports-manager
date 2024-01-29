@@ -15,6 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from esm.ui.layouts.debug import DebugLayout
+
 from .controllerinterface import IController
 
 

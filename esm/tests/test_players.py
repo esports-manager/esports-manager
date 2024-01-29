@@ -17,9 +17,7 @@ import uuid
 
 import pytest
 
-from esm.core.esports.moba.player import (
-    MobaPlayer,
-)
+from esm.core.esports.moba.player import MobaPlayer
 
 
 @pytest.fixture

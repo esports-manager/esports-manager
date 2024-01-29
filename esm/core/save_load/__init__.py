@@ -19,6 +19,7 @@ from typing import Union
 
 from esm.core.gamestate import GameState
 from esm.core.settings import Settings
+
 from .load_game import LoadGame, LoadGameError
 from .save_game import SaveGame
 

@@ -13,29 +13,29 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import pytest
 import uuid
-import hypothesis.strategies as st
-from hypothesis import given
 from datetime import date
 
+import hypothesis.strategies as st
+import pytest
+from hypothesis import given
+
 from esm.core.esports.moba.champion import Champion, ChampionDifficulty, ChampionType
-from esm.core.esports.moba.moba_definitions import Lanes, LaneMultipliers
 from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator
-from esm.core.esports.moba.champion import Champion
-from esm.core.utils import load_list_from_file
-from esm.definitions import NAMES_FILE
+from esm.core.esports.moba.moba_definitions import LaneMultipliers, Lanes
 from esm.core.esports.moba.player import (
+    ChampionMastery,
+    CommunicationAttributes,
+    KnowledgeAttributes,
+    MechanicsAttributes,
     MobaPlayer,
     MobaPlayerAttributes,
-    OffensiveAttributes,
-    MechanicsAttributes,
-    UtilityAttributes,
-    KnowledgeAttributes,
-    CommunicationAttributes,
-    ChampionMastery,
     MobaPlayerChampion,
+    OffensiveAttributes,
+    UtilityAttributes,
 )
+from esm.core.utils import load_list_from_file
+from esm.definitions import NAMES_FILE
 
 
 @pytest.fixture

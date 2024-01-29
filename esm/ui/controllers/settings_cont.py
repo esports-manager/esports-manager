@@ -17,6 +17,7 @@
 from esm.core.esmcore import ESMCore
 from esm.ui.igamecontroller import IGameController
 from esm.ui.layouts.settings import SettingsLayout
+
 from .controllerinterface import IController
 
 

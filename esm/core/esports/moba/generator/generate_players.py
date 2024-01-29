@@ -17,25 +17,25 @@
 import random
 import uuid
 from datetime import date, timedelta
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
-from .default_player_nick_names import get_default_player_nick_names
-from .generator import GeneratorInterface
+from ....utils import get_nations
 from ..champion import Champion
 from ..player import (
-    MobaPlayer,
-    LaneMultipliers,
-    OffensiveAttributes,
-    MechanicsAttributes,
+    ChampionMastery,
     CommunicationAttributes,
     KnowledgeAttributes,
-    UtilityAttributes,
+    LaneMultipliers,
+    Lanes,
+    MechanicsAttributes,
+    MobaPlayer,
     MobaPlayerAttributes,
     MobaPlayerChampion,
-    ChampionMastery,
-    Lanes,
+    OffensiveAttributes,
+    UtilityAttributes,
 )
-from ....utils import get_nations
+from .default_player_nick_names import get_default_player_nick_names
+from .generator import GeneratorInterface
 
 
 def generate_attribute_value(mu, sigma) -> int:

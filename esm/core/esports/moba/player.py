@@ -15,13 +15,13 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import datetime
 import uuid
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from enum import Enum, auto
 
-from .champion import Champion
-from .moba_definitions import Lanes, LaneError, LaneMultipliers
-from ..player import Player
 from ...serializable import Serializable
+from ..player import Player
+from .champion import Champion
+from .moba_definitions import LaneError, LaneMultipliers, Lanes
 
 
 @dataclass

@@ -19,6 +19,7 @@ from esm.core.esmcore import ESMCore
 from esm.core.esports.moba.modules.match_manager import MatchManager
 from esm.ui.igamecontroller import IGameController
 from esm.ui.layouts.debugmatch import DebugMatchLayout
+
 from .controllerinterface import IController
 
 

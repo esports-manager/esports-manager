@@ -17,8 +17,9 @@
 import os
 
 from esm.definitions import DEBUG, RES_DIR
-from .layoutinterface import ILayout
+
 from ..gui_components import *
+from .layoutinterface import ILayout
 
 
 class MainScreenLayout(ILayout):

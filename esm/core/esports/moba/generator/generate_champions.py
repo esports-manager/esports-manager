@@ -18,10 +18,10 @@ import random
 import uuid
 from typing import Optional
 
+from ..champion import Champion, ChampionDifficulty, ChampionType
+from ..player import LaneMultipliers, Lanes
 from .default_champion_defs import get_default_champion_names
 from .generator import GeneratorInterface
-from ..champion import Champion, ChampionType, ChampionDifficulty
-from ..player import Lanes, LaneMultipliers
 
 
 class ChampionGeneratorError(Exception):

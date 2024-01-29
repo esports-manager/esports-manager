@@ -12,20 +12,20 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import pytest
 import hypothesis.strategies as st
-
+import pytest
 from hypothesis import given
+
 from esm.core.esports.moba.champion import (
     Champion,
+    ChampionDifficulty,
     ChampionLoadError,
     ChampionType,
-    ChampionDifficulty,
 )
 from esm.core.esports.moba.moba_definitions import (
-    Lanes,
-    LaneMultipliers,
     LaneMultiplierError,
+    LaneMultipliers,
+    Lanes,
 )
 
 

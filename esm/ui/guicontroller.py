@@ -13,12 +13,12 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from ..core.esmcore import ESMCore
+from ..definitions import DEBUG
 from .controllers import *
 from .gui import GUI, init_theme
 from .gui_components import sg
 from .igamecontroller import IGameController
-from ..core.esmcore import ESMCore
-from ..definitions import DEBUG
 
 
 class GUIController(IGameController):

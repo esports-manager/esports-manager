@@ -17,10 +17,10 @@ import logging
 import os
 from textwrap import dedent
 
+from ..definitions import DEBUG, LOG_FILE
 from .db import DB
 from .game_session import GameSession
 from .settings import Settings
-from ..definitions import DEBUG, LOG_FILE
 
 
 class AmountPlayersError(Exception):

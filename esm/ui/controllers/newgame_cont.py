@@ -17,6 +17,7 @@ from esm.core.esmcore import ESMCore
 from esm.core.utils import get_nations
 from esm.ui.igamecontroller import IGameController
 from esm.ui.layouts.newgame import NewGameLayout
+
 from .controllerinterface import IController
 
 

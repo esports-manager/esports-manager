@@ -18,7 +18,7 @@ from uuid import uuid4
 
 import pytest
 
-from ..core.esports.moba.mobamatch import MobaMatch, MatchType, InvalidTeamId
+from ..core.esports.moba.mobamatch import InvalidTeamId, MatchType, MobaMatch
 
 
 @pytest.fixture

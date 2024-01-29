@@ -19,7 +19,8 @@ from queue import Queue
 from typing import Union
 
 from esm.core.esports.moba.team import Team
-from .general import MobaEvent, EventCreator
+
+from .general import EventCreator, MobaEvent
 
 logger = logging.getLogger(__name__)
 

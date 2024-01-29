@@ -15,8 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
 from dataclasses import asdict
-from datetime import datetime
-from datetime import timezone
+from datetime import datetime, timezone
 from pathlib import Path
 from tempfile import mkstemp
 from typing import Union

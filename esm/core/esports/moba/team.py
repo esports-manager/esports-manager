@@ -16,9 +16,9 @@
 import uuid
 from dataclasses import dataclass
 
+from ...serializable import Serializable
 from .champion import Champion
 from .player import MobaPlayer, MobaPlayerSimulation
-from ...serializable import Serializable
 
 
 class PlayerSerializeError(Exception):

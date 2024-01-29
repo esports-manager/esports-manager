@@ -21,10 +21,10 @@ import time
 import uuid
 from datetime import datetime
 from queue import Queue
-from typing import Union, Tuple, Optional
+from typing import Optional, Tuple, Union
 
 from esm.core.esports.moba.champion import Champion
-from esm.core.esports.moba.mobamatch import MobaMatch, MatchType
+from esm.core.esports.moba.mobamatch import MatchType, MobaMatch
 from esm.core.esports.moba.simulation.mobaevent import MobaEventHandler
 from esm.core.esports.moba.simulation.picksbans import PicksBans
 from esm.core.esports.moba.team import TeamSimulation

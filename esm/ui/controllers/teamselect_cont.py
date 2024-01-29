@@ -18,6 +18,7 @@ from esm.core.esmcore import ESMCore
 from esm.core.esports.manager import Manager
 from esm.ui.igamecontroller import IGameController
 from esm.ui.layouts.teamselect import TeamSelectLayout
+
 from .controllerinterface import IController
 
 

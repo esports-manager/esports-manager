@@ -19,8 +19,8 @@ import uuid
 from typing import Optional
 
 from esm.core.esports.moba.generator.default_team_names import get_default_team_names
-from esm.core.esports.moba.generator.generator import GeneratorInterface
 from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator
+from esm.core.esports.moba.generator.generator import GeneratorInterface
 from esm.core.esports.moba.player import MobaPlayer
 from esm.core.esports.moba.team import Team
 from esm.definitions import TEAMS_FILE

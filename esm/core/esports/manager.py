@@ -13,10 +13,11 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from datetime import datetime, date
+from datetime import date, datetime
 from typing import Union
 
 from esm.core.esports.moba.team import Team
+
 from .player import Player
 
 

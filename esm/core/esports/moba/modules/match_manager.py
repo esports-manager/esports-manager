@@ -20,6 +20,7 @@ from queue import Queue
 from typing import Optional
 
 from esm.core.esports.moba.simulation.match_live import MatchLive
+
 from ..mobamatch import MobaMatch
 from ..team import TeamSimulation
 

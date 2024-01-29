@@ -18,8 +18,8 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Any, Optional
 
-from .moba_definitions import Lanes, LaneMultipliers
 from ...serializable import Serializable
+from .moba_definitions import LaneMultipliers, Lanes
 
 
 class ChampionLoadError(Exception):

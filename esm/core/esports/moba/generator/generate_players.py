@@ -225,12 +225,11 @@ class MobaPlayerGenerator(GeneratorInterface):
                 return mu, sigma
 
     def generate_attributes(
-        self, nationality: str, lane: Lanes
+        self, mu: int, sigma: int, lane: Lanes
     ) -> MobaPlayerAttributes:
         """
         Randomly generates players skills according to their nationality
         """
-        mu, sigma = self.get_nationality_skill(nationality)
         return self.attribute_gen.generate(mu, sigma, lane)
 
     def generate_first_name(self, nationality: str) -> str:
@@ -278,13 +277,21 @@ class MobaPlayerGenerator(GeneratorInterface):
         return LaneMultipliers.get_from_dict(mult)
 
     def generate(
-        self, lane: Lanes, nationality: Optional[str] = None, amount_champions: int = 0
+        self,
+        lane: Lanes,
+        nationality: Optional[str] = None,
+        mu: Optional[int] = None,
+        sigma: Optional[int] = None,
+        amount_champions: int = 0
     ) -> MobaPlayer:
         """
         Runs the player generation routine
         """
         if not nationality:
             nationality = self.get_nationality()
+        
+        if mu is None or sigma is None:
+            mu, sigma = self.get_nationality_skill(nationality)
 
         return MobaPlayer(
             self.generate_id(),
@@ -294,6 +301,6 @@ class MobaPlayerGenerator(GeneratorInterface):
             self.generate_dob(),
             self.generate_nick(),
             self.generate_multipliers(lane),
-            self.generate_attributes(nationality, lane),
+            self.generate_attributes(mu, sigma, lane),
             self.generate_champions(lane, amount_champions),
         )

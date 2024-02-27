@@ -53,7 +53,7 @@ class TeamGenerator(GeneratorInterface):
     def generate_name() -> str:
         return random.choice(get_default_team_names())
 
-    def generate_roster(self, nationality: str) -> list[MobaPlayer]:
+    def generate_roster(self, nationality: str, mu: int, sigma: int) -> list[MobaPlayer]:
         """
         Generates the team roster
         """
@@ -61,7 +61,7 @@ class TeamGenerator(GeneratorInterface):
             return self.player_list
 
         return [
-            self.player_gen.generate(lane=lane, nationality=nationality)
+            self.player_gen.generate(lane=lane, nationality=nationality, mu=mu, sigma=sigma)
             for lane in list(Lanes)
         ]
 
@@ -69,3 +69,12 @@ class TeamGenerator(GeneratorInterface):
         """
         Generates the team
         """
+        nationality = team_definition["nationality"]
+        mu = team_definition["mu"]
+        sigma = team_definition["sigma"]
+        return Team(
+            team_id=self.generate_id(),
+            name=team_definition["name"],
+            nationality=nationality,
+            roster=self.generate_roster(nationality, mu, sigma)
+        )

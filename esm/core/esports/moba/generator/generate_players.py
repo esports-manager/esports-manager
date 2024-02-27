@@ -282,14 +282,14 @@ class MobaPlayerGenerator(GeneratorInterface):
         nationality: Optional[str] = None,
         mu: Optional[int] = None,
         sigma: Optional[int] = None,
-        amount_champions: int = 0
+        amount_champions: int = 0,
     ) -> MobaPlayer:
         """
         Runs the player generation routine
         """
         if not nationality:
             nationality = self.get_nationality()
-        
+
         if mu is None or sigma is None:
             mu, sigma = self.get_nationality_skill(nationality)
 

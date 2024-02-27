@@ -17,15 +17,16 @@ import uuid
 
 import pytest
 
+from esm.core.utils import load_list_from_file
+from esm.definitions import NAMES_FILE
+
 from ..core.esports.moba.champion import Champion
 from ..core.esports.moba.generator.generate_teams import (
     TeamGenerator,
     TeamGeneratorError,
 )
-from ..core.esports.moba.team import Team
 from ..core.esports.moba.player import MobaPlayer
-from esm.core.utils import load_list_from_file
-from esm.definitions import NAMES_FILE
+from ..core.esports.moba.team import Team
 
 
 def mock_team_definition() -> dict[str, int | str]:
@@ -56,8 +57,9 @@ def mock_team_definitions() -> list[dict[str, int | str]]:
             "nationality": "China",
             "mu": 89,
             "sigma": 10,
-        }
+        },
     ]
+
 
 @pytest.fixture
 def team_generator(mock_champions: list[Champion]) -> TeamGenerator:
@@ -78,7 +80,7 @@ def test_generate_team(team_generator):
     assert team.nationality == team_def["nationality"]
     for player in team.roster:
         assert isinstance(player, MobaPlayer)
-    
+
 
 def test_generate_multiple_teams(team_generator):
     teams = [team_generator.generate(team_def) for team_def in mock_team_definitions()]

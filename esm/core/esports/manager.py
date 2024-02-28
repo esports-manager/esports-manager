@@ -16,7 +16,7 @@
 from datetime import date, datetime
 from typing import Union
 
-from esm.core.esports.moba.team import Team
+from esm.core.esports.moba.mobateam import MobaTeam
 
 from .player import Player
 
@@ -30,7 +30,7 @@ class Manager(Player):
         last_name: str,
         birthday: Union[date, datetime, str],
         nick_name: str,
-        team: Union[int, Team],
+        team: Union[int, MobaTeam],
         is_player: bool,
         quality: int,
     ):
@@ -42,7 +42,7 @@ class Manager(Player):
         self.quality = quality
 
     def get_dict(self):
-        team = self.team.team_id if isinstance(self.team, Team) else self.team
+        team = self.team.team_id if isinstance(self.team, MobaTeam) else self.team
         return {
             "id": self.player_id.int,
             "first_name": self.first_name,

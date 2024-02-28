@@ -18,8 +18,8 @@ import random
 from queue import Queue
 from typing import Union
 
+from esm.core.esports.moba.mobateam import MobaTeamSimulation
 from esm.core.esports.moba.player import MobaPlayerSimulation
-from esm.core.esports.moba.team import TeamSimulation
 
 from .general import EventCreator, MobaEvent
 
@@ -152,9 +152,9 @@ class KillEvent(MobaEvent):
 
     def calculate_event(
         self,
-        team1: TeamSimulation,
-        team2: TeamSimulation,
-        which_nexus: Union[TeamSimulation, None],
+        team1: MobaTeamSimulation,
+        team2: MobaTeamSimulation,
+        which_nexus: Union[MobaTeamSimulation, None],
     ):
         """
         This will calculate the kill event

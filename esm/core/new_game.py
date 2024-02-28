@@ -19,7 +19,7 @@ from esm.core.esports.moba.generator import (
     MobaPlayerGenerator,
     TeamGenerator,
 )
-from esm.core.esports.moba.team import Team
+from esm.core.esports.moba.mobateam import MobaTeam
 
 
 class CreateGameSession:
@@ -68,5 +68,5 @@ class CreateGameSession:
         self.players.generate_file()
         self.champions.generate_file()
 
-    def get_team(self, team: Team):
+    def get_team(self, team: MobaTeam):
         self.team = team

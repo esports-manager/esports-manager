@@ -25,9 +25,9 @@ from typing import Optional, Tuple, Union
 
 from esm.core.esports.moba.champion import Champion
 from esm.core.esports.moba.mobamatch import MatchType, MobaMatch
+from esm.core.esports.moba.mobateam import MobaTeamSimulation
 from esm.core.esports.moba.simulation.mobaevent import MobaEventHandler
 from esm.core.esports.moba.simulation.picksbans import PicksBans
-from esm.core.esports.moba.team import TeamSimulation
 
 
 class MatchLive:
@@ -45,8 +45,8 @@ class MatchLive:
         self,
         game: MobaMatch,
         champions: list[Champion],
-        team1: TeamSimulation,
-        team2: TeamSimulation,
+        team1: MobaTeamSimulation,
+        team2: MobaTeamSimulation,
         show_commentary: bool = True,
         match_speed: int = 1,
         simulation_delay: bool = True,
@@ -134,7 +134,7 @@ class MatchLive:
 
     def get_team_exposed_nexus(
         self,
-    ) -> Union[Tuple[TeamSimulation, TeamSimulation], TeamSimulation, None]:
+    ) -> Union[Tuple[MobaTeamSimulation, MobaTeamSimulation], MobaTeamSimulation, None]:
         """
         Gets the exposed nexus from one or both of the teams.
         """
@@ -205,8 +205,8 @@ class MatchLive:
 class MatchSeries:
     def __init__(
         self,
-        team1: TeamSimulation,
-        team2: TeamSimulation,
+        team1: MobaTeamSimulation,
+        team2: MobaTeamSimulation,
         championship_id: uuid.UUID,
         champions: list[Champion],
         match_type: MatchType,

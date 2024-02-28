@@ -18,8 +18,8 @@ from queue import Queue
 
 from esm.core.esports.moba.champion import Champion
 from esm.core.esports.moba.generator import ChampionGenerator
+from esm.core.esports.moba.mobateam import MobaTeamSimulation
 from esm.core.esports.moba.player import MobaPlayer
-from esm.core.esports.moba.team import TeamSimulation
 
 
 class PicksBans:
@@ -29,8 +29,8 @@ class PicksBans:
 
     def __init__(
         self,
-        team1: TeamSimulation,
-        team2: TeamSimulation,
+        team1: MobaTeamSimulation,
+        team2: MobaTeamSimulation,
         champion_list: list,
         ban_per_team: int = 5,
         difficulty_level: int = 1,
@@ -58,7 +58,7 @@ class PicksBans:
         champion.status = "Picked"
         self.picked_champions.append(champion)
 
-    def ban(self, team: TeamSimulation, champion: Champion) -> None:
+    def ban(self, team: MobaTeamSimulation, champion: Champion) -> None:
         team.bans = champion
         champion.status = "Banned"
         self.banned_champions.append(champion)

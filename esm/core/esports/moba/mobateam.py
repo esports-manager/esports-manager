@@ -43,7 +43,7 @@ def get_players_from_list(
 
 
 @dataclass
-class Team(Serializable):
+class MobaTeam(Serializable):
     team_id: uuid.UUID
     name: str
     nationality: str
@@ -75,11 +75,11 @@ class TeamStats:
     assists: int = 0
 
 
-class TeamSimulation:
+class MobaTeamSimulation:
     def __init__(
-        self, team: Team, players: list[MobaPlayerSimulation], is_players_team: bool
+        self, team: MobaTeam, players: list[MobaPlayerSimulation], is_players_team: bool
     ):
-        self.team: Team = team
+        self.team: MobaTeam = team
         self.towers: dict[str, int] = {
             "top": 3,
             "mid": 3,
@@ -257,6 +257,6 @@ class TeamSimulation:
     def __eq__(self, other):
         return (
             self.team.team_id == other.team.team_id
-            if isinstance(other, TeamSimulation)
+            if isinstance(other, MobaTeamSimulation)
             else NotImplemented
         )

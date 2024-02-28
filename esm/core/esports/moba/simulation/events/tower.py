@@ -18,7 +18,7 @@ import random
 from queue import Queue
 from typing import Union
 
-from esm.core.esports.moba.team import TeamSimulation
+from esm.core.esports.moba.mobateam import MobaTeamSimulation
 
 from .general import EventCreator, MobaEvent
 
@@ -40,7 +40,9 @@ class TowerEventEventCreator(EventCreator):
 
 
 class TowerEvent(MobaEvent):
-    def _get_tower_attributes(self, team1: TeamSimulation, team2: TeamSimulation):
+    def _get_tower_attributes(
+        self, team1: MobaTeamSimulation, team2: MobaTeamSimulation
+    ):
         """
         Checks which towers are up, and if they can be attacked. If it is a Base tower,
         there is a higher chance to focus on it
@@ -97,9 +99,9 @@ class TowerEvent(MobaEvent):
 
     def calculate_event(
         self,
-        team1: TeamSimulation,
-        team2: TeamSimulation,
-        which_nexus: Union[TeamSimulation, None],
+        team1: MobaTeamSimulation,
+        team2: MobaTeamSimulation,
+        which_nexus: Union[MobaTeamSimulation, None],
     ):
         """
         This method calculates the tower assault outcome

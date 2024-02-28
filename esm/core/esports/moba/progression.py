@@ -17,8 +17,8 @@ from abc import ABC, abstractmethod
 from typing import Union
 from uuid import UUID
 
+from .mobateam import MobaTeam
 from .player import MobaPlayer
-from .team import Team
 
 
 class Progression(ABC):
@@ -28,7 +28,7 @@ class Progression(ABC):
 
 
 class PlayerProgression(Progression):
-    def progress(self, opp_team: Team, player: MobaPlayer):
+    def progress(self, opp_team: MobaTeam, player: MobaPlayer):
         pass
 
 

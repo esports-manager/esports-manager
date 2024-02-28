@@ -21,8 +21,8 @@ from datetime import timedelta
 from queue import Queue
 from typing import Union
 
+from esm.core.esports.moba.mobateam import MobaTeamSimulation
 from esm.core.esports.moba.simulation.commentaries import Commentaries
-from esm.core.esports.moba.team import TeamSimulation
 
 logger = logging.getLogger(__name__)
 
@@ -71,8 +71,8 @@ class MobaEvent(ABC):
 
     @staticmethod
     def _get_probable_team(
-        team1: TeamSimulation, team2: TeamSimulation
-    ) -> tuple[TeamSimulation, TeamSimulation]:
+        team1: MobaTeamSimulation, team2: MobaTeamSimulation
+    ) -> tuple[MobaTeamSimulation, MobaTeamSimulation]:
         """
         Gets the team with a higher probability to attack the other team
         """
@@ -131,9 +131,9 @@ class MobaEvent(ABC):
 class NothingEvent(MobaEvent):
     def calculate_event(
         self,
-        team1: TeamSimulation,
-        team2: TeamSimulation,
-        which_nexus: Union[TeamSimulation, None],
+        team1: MobaTeamSimulation,
+        team2: MobaTeamSimulation,
+        which_nexus: Union[MobaTeamSimulation, None],
     ):
         pass
 

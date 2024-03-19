@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Korea",
+        "short_name": "LCK",
+        "filename": "regions/lck/lck.json"
+    },
+    {
+        "name": "China",
+        "short_name": "LPL",
+        "filename": "regions/lpl/lpl.json"
+    },
+    {
+        "name": "Europe",
+        "short_name": "LEC",
+        "filename": "regions/lec/lec.json"
+    },
+    {
+        "name": "Latin America",
+        "short_name": "LLA",
+        "filename": "regions/lla/lla.json"
+    },
+    {
+        "name": "Brazil",
+        "short_name": "CBLOL",
+        "filename": "regions/cblol/cblol.json"
+    },
+    {
+        "name": "United States",
+        "short_name": "LCS",
+        "filename": "regions/lcs/lcs.json"
+    }
+]

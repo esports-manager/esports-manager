@@ -1,0 +1,62 @@
+[
+    {
+        "name": "G2 Esports",
+        "nationality": "Spain",
+        "mu": 84,
+        "sigma": 12
+    },
+    {
+        "name": "Team BDS",
+        "nationality": "Switzerland",
+        "mu": 82,
+        "sigma": 10
+    },
+    {
+        "name": "SK Gaming",
+        "nationality": "Germany",
+        "mu": 80,
+        "sigma": 12
+    },
+    {
+        "name": "MAD Lions",
+        "nationality": "Spain",
+        "mu": 78,
+        "sigma": 8
+    },
+    {
+        "name": "Fnatic",
+        "nationality": "United Kingdom",
+        "mu": 75,
+        "sigma": 5
+    },
+    {
+        "name": "Team Vitality",
+        "nationality": "France",
+        "mu": 79,
+        "sigma": 10
+    },
+    {
+        "name": "Team Heretics",
+        "nationality": "Spain",
+        "mu": 75,
+        "sigma": 10
+    },
+    {
+        "name": "GIANTX",
+        "nationality": "United Kingdom",
+        "mu": 74,
+        "sigma": 7
+    },
+    {
+        "name": "Rogue",
+        "nationality": "United States",
+        "mu": 78,
+        "sigma": 10
+    },
+    {
+        "name": "Karmine Corp",
+        "nationality": "France",
+        "mu": 72,
+        "sigma": 12
+    }
+]

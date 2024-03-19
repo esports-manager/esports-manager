@@ -1,0 +1,22 @@
+[
+    {
+        "id": "worlds_play_in",
+        "name": "Worlds Play-In Group Stage",
+        "type": "premier",
+        "format": "groups",
+        "qualifies_to": "worlds"
+    },
+    {
+        "id": "worlds",
+        "name": "Worlds Group Stage",
+        "type": "premier",
+        "format": "groups",
+        "qualifies_to": "worlds_playoffs"
+    },
+    {
+        "id": "worlds_playoffs",
+        "name": "Worlds Play-offs",
+        "type": "premier",
+        "format": "playoffs"
+    }
+]

@@ -1,0 +1,62 @@
+[
+    {
+        "name": "Gen.G",
+        "nationality": "Korea",
+        "mu": 93,
+        "sigma": 10
+    },
+    {
+        "name": "T1",
+        "nationality": "Korea",
+        "mu": 92,
+        "sigma": 10
+    },
+    {
+        "name": "Hanwha Life Esports",
+        "nationality": "Korea",
+        "mu": 89,
+        "sigma": 15
+    },
+    {
+        "name": "KT Rolster",
+        "nationality": "Korea",
+        "mu": 87,
+        "sigma": 13
+    },
+    {
+        "name": "Dplus KIA",
+        "nationality": "Korea",
+        "mu": 85,
+        "sigma": 12
+    },
+    {
+        "name": "Kwangdong Freecs",
+        "nationality": "Korea",
+        "mu": 84,
+        "sigma": 11
+    },
+    {
+        "name": "FearX",
+        "nationality": "Korea",
+        "mu": 83,
+        "sigma": 10
+    },
+    {
+        "name": "Nongshim RedForce",
+        "nationality": "Korea",
+        "mu": 80,
+        "sigma": 10
+    },
+    {
+        "name": "DRX",
+        "nationality": "Korea",
+        "mu": 82,
+        "sigma": 10
+    },
+    {
+        "name": "OKSavingsBank BRION",
+        "nationality": "Korea",
+        "mu": 79,
+        "sigma": 5
+    }
+]

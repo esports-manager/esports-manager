@@ -1,0 +1,50 @@
+[
+    {
+        "name": "100 Thieves",
+        "nationality": "United States",
+        "mu": 78,
+        "sigma": 12
+    },
+    {
+        "name": "FlyQuest",
+        "nationality": "United States",
+        "mu": 81,
+        "sigma": 5
+    },
+    {
+        "name": "Cloud9",
+        "nationality": "United States",
+        "mu": 82,
+        "sigma": 15
+    },
+    {
+        "name": "Dignitas",
+        "nationality": "United States",
+        "mu": 79,
+        "sigma": 20
+    },
+    {
+        "name": "Team Liquid",
+        "nationality": "United States",
+        "mu": 75,
+        "sigma": 13
+    },
+    {
+        "name": "NRG",
+        "nationality": "United States",
+        "mu": 74,
+        "sigma": 15
+    },
+    {
+        "name": "Shopify Rebellion",
+        "nationality": "United States",
+        "mu": 75,
+        "sigma": 19
+    },
+    {
+        "name": "Immortals",
+        "nationality": "United States",
+        "mu": 73,
+        "sigma": 12
+    }
+]

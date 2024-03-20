@@ -15,9 +15,11 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import threading
 import uuid
+from typing import Optional
 
 from esm.core.esmcore import ESMCore
 from esm.core.esports.moba.championship import Championship
+from esm.core.esports.moba.mobateam import MobaTeam
 from esm.ui.igamecontroller import IGameController
 from esm.ui.layouts.debug_championship import DebugChampionshipLayout
 
@@ -30,7 +32,7 @@ class DebugChampionshipController(IController):
         self.controller = controller
         self.layout = DebugChampionshipLayout()
         self.championship = None
-        self.teams = None
+        self.teams: Optional[list[MobaTeam]] = None
         self.match_details = []
         self.championship_details = []
         self.championship_thread = None
@@ -61,14 +63,14 @@ class DebugChampionshipController(IController):
 
     def get_default_match_details(self):
         self.match_details = [
-            [match.game.team1.name, match.game.team2.name, "None"]
+            [match.team1.team.name, match.team2.team.name, "None"]
             for match in self.championship.matches
         ]
 
     def assign_win_and_loss_in_championship_table(self, match):
         for detail in self.championship_details:
-            if detail[0] in [match.game.team1.name, match.game.team2.name]:
-                if detail[0] == match.game.victorious_team.name:
+            if detail[0] in [match.team1.team.name, match.team2.team.name]:
+                if detail[0] == match.victorious_team.name:
                     detail[2] += 1
                     detail[4] += 3
                 else:
@@ -77,8 +79,8 @@ class DebugChampionshipController(IController):
     def get_winning_team(self, live_match):
         for detail in self.match_details:
             if (
-                live_match.game.team1.name == detail[0]
-                and live_match.game.team2.name == detail[1]
+                live_match.team1.name == detail[0]
+                and live_match.team2.name == detail[1]
             ):
                 if live_match.victorious_team.name == detail[0]:
                     detail[2] = detail[0]

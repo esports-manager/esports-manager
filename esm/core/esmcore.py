@@ -41,36 +41,6 @@ class ESMCore:
             self.settings, self.db, self.settings.enable_auto_save
         )
 
-    @property
-    def amount_players(self):
-        return self.settings.amount_players
-
-    @amount_players.setter
-    def amount_players(self, value):
-        try:
-            self.check_player_amount()
-        except AmountPlayersError:
-            self.settings.amount_players = 50
-        else:
-            self.settings.amount_players = value
-
-    def check_player_amount(self):
-        if self.amount_players > 300 or self.amount_players < 50:
-            error_message = dedent(
-                """
-                Number of players is not supported! Ranges from 50 to 300 players! Defaulting to 50.
-                """
-            ).strip()
-            raise AmountPlayersError(error_message)
-
-        if self.amount_players % 5 != 0:
-            error_message = dedent(
-                """
-                Number of players is not supported! Number should be a multiple of 5!
-                """
-            )
-            raise AmountPlayersError(error_message)
-
     def check_if_files_exist(self) -> None:
         if (
             not os.path.exists(self.settings.champions_file)

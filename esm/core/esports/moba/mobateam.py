@@ -91,6 +91,11 @@ class MobaTeamSimulation:
             "mid": 1,
             "bot": 1,
         }
+        self.inhibitors_cooldown: dict[str, float] = {
+            "top": 0.0,
+            "mid": 0.0,
+            "bot": 0.0,
+        }
         self.is_players_team: bool = is_players_team
         self.nexus: int = 1
         self.players: list[MobaPlayerSimulation] = players
@@ -101,12 +106,6 @@ class MobaTeamSimulation:
         self._total_skill: int = 0
         self._points: int = 0
         self._bans: list[Champion] = []
-
-    def is_tower_up(self, lane: str) -> bool:
-        return self.towers[lane] != 0
-
-    def are_all_towers_up(self) -> bool:
-        return 0 not in self.towers.values()
 
     def are_all_towers_down(self) -> bool:
         return (

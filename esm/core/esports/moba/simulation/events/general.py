@@ -27,14 +27,6 @@ from esm.core.esports.moba.simulation.commentaries import Commentaries
 logger = logging.getLogger(__name__)
 
 
-class EventCreator(ABC):
-    @abstractmethod
-    def factory_method(
-        self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
-    ):
-        pass
-
-
 class MobaEvent(ABC):
     def __init__(
         self,

@@ -15,28 +15,13 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import logging
 import random
-from queue import Queue
 from typing import Union
 
 from esm.core.esports.moba.mobateam import MobaTeamSimulation
 
-from .general import EventCreator, MobaEvent
+from .general import MobaEvent
 
 logger = logging.getLogger(__name__)
-
-
-class JungleEventEventCreator(EventCreator):
-    def factory_method(
-        self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
-    ):
-        return JungleEvent(
-            event_name=event_chosen["name"],
-            priority=event_chosen["priority"],
-            points=event_chosen["points"],
-            event_time=game_time,
-            show_commentary=show_commentary,
-            queue=queue,
-        )
 
 
 class JungleEvent(MobaEvent):

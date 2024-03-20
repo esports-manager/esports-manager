@@ -51,7 +51,7 @@ class MatchTester:
         self.running_test = False
 
     def _get_team_stats(self, i):
-        team = self.match.game.teams[i]
+        team = self.match.teams[i]
         self.amount_team_kills[i].append(team.kills)
         self.amount_team_deaths[i].append(team.deaths)
         self.amount_team_assists[i].append(team.assists)
@@ -63,7 +63,7 @@ class MatchTester:
         self.avg_team_assists[i] += team.assists
 
     def _get_amount_wins(self):
-        if self.match.victorious_team == self.match.game.team1:
+        if self.match.victorious_team == self.match.team1:
             self.amount_team_wins[0] += 1
         else:
             self.amount_team_wins[1] += 1
@@ -101,17 +101,17 @@ class MatchTester:
         self.get_avg(self.avg_team_assists)
 
         print("Average team kills:")
-        print(f"{self.match.game.team1.team.name}: {self.amount_team_kills[0]}")
-        print(f"{self.match.game.team2.team.name}: {self.amount_team_kills[1]}")
+        print(f"{self.match.team1.team.name}: {self.amount_team_kills[0]}")
+        print(f"{self.match.team2.team.name}: {self.amount_team_kills[1]}")
         print("Average team deaths:")
-        print(f"{self.match.game.team1.team.name}: {self.amount_team_deaths[0]}")
-        print(f"{self.match.game.team2.team.name}: {self.amount_team_deaths[1]}")
+        print(f"{self.match.team1.team.name}: {self.amount_team_deaths[0]}")
+        print(f"{self.match.team2.team.name}: {self.amount_team_deaths[1]}")
         print("Average team assists:")
-        print(f"{self.match.game.team1.team.name}: {self.amount_team_assists[0]}")
-        print(f"{self.match.game.team2.team.name}: {self.amount_team_assists[1]}")
+        print(f"{self.match.team1.team.name}: {self.amount_team_assists[0]}")
+        print(f"{self.match.team2.team.name}: {self.amount_team_assists[1]}")
         print("Amount team wins:")
-        print(f"{self.match.game.team1.team.name}: {self.amount_team_wins[0]}")
-        print(f"{self.match.game.team2.team.name}: {self.amount_team_wins[1]}")
+        print(f"{self.match.team1.team.name}: {self.amount_team_wins[0]}")
+        print(f"{self.match.team2.team.name}: {self.amount_team_wins[1]}")
 
         print("Average game time was", self.get_avg_game_time())
         print("Max game time was", self.get_max_game_time())

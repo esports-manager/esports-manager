@@ -42,7 +42,6 @@ class SettingsLayout(ILayout):
         labels_inputs = [
             [esm_form_text("Language:", pad=label_pad)],
             [esm_form_text("Font scale:", pad=label_pad)],
-            [esm_form_text("Amount of players to generate:", pad=label_pad)],
         ]
 
         labels_files = [
@@ -69,14 +68,6 @@ class SettingsLayout(ILayout):
                 esm_input_text(
                     "1", size=size_elements, key="settings_fontsize_input", pad=(3, 5)
                 )
-            ],
-            [
-                esm_input_text("50", key="settings_amount_input", size=size_elements),
-                esm_button(
-                    "Generate",
-                    font=(default_font, default_font_size),
-                    key="settings_generate_btn",
-                ),
             ],
             [
                 esm_checkbox(

@@ -20,23 +20,9 @@ from typing import Union
 
 from esm.core.esports.moba.mobateam import MobaTeamSimulation
 
-from .general import EventCreator, MobaEvent
+from .general import MobaEvent
 
 logger = logging.getLogger(__name__)
-
-
-class TowerEventEventCreator(EventCreator):
-    def factory_method(
-        self, event_chosen: dict, game_time: float, show_commentary: bool, queue: Queue
-    ):
-        return TowerEvent(
-            event_name=event_chosen["name"],
-            priority=event_chosen["priority"],
-            points=event_chosen["points"],
-            event_time=game_time,
-            show_commentary=show_commentary,
-            queue=queue,
-        )
 
 
 class TowerEvent(MobaEvent):

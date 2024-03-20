@@ -34,14 +34,6 @@ class ESMController:
         self.view = GUIController(self.core)
 
     @property
-    def amount_players(self):
-        return self.core.amount_players
-
-    @amount_players.setter
-    def amount_players(self, value):
-        self.core.amount_players = value
-
-    @property
     def settings(self):
         return self.core.settings
 

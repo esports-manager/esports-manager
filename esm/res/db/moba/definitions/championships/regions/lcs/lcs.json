@@ -1,50 +1,34 @@
 [
     {
-        "name": "100 Thieves",
-        "nationality": "United States",
-        "mu": 78,
-        "sigma": 12
+        "id": "lcs_1",
+        "name": "League Championship Series Spring Split",
+        "short_name": "LCS Spring Split",
+        "type": "regional_league",
+        "format": "round-robin",
+        "qualifies_to": "lcs_playoffs_1"
     },
     {
-        "name": "FlyQuest",
-        "nationality": "United States",
-        "mu": 81,
-        "sigma": 5
+        "id": "lcs_playoffs_1",
+        "name":"League Championship Series Spring Split Play-offs",
+        "short_name": "LCS Spring Split Play-offs",
+        "type": "regional_league",
+        "format": "playoffs-losers-bracket",
+        "qualifies_to": "msi_play_in"
     },
     {
-        "name": "Cloud9",
-        "nationality": "United States",
-        "mu": 82,
-        "sigma": 15
+        "id": "lcs_2",
+        "name": "League Championship Series Summer Split",
+        "short_name": "LCS Summer Split",
+        "type": "regional_league",
+        "format": "round-robin",
+        "qualifies_to": "lcs_playoffs_2"
     },
     {
-        "name": "Dignitas",
-        "nationality": "United States",
-        "mu": 79,
-        "sigma": 20
-    },
-    {
-        "name": "Team Liquid",
-        "nationality": "United States",
-        "mu": 75,
-        "sigma": 13
-    },
-    {
-        "name": "NRG",
-        "nationality": "United States",
-        "mu": 74,
-        "sigma": 15
-    },
-    {
-        "name": "Shopify Rebellion",
-        "nationality": "United States",
-        "mu": 75,
-        "sigma": 19
-    },
-    {
-        "name": "Immortals",
-        "nationality": "United States",
-        "mu": 73,
-        "sigma": 12
+        "id": "lcs_playoffs_2",
+        "name":"League Championship Series Summer Split Play-offs",
+        "short_name": "LCS Summer Split Play-offs",
+        "type": "regional_league",
+        "format": "playoffs-losers-bracket",
+        "qualifies_to": "worlds_play_in"
     }
 ]

@@ -1,62 +1,34 @@
 [
     {
-        "name": "G2 Esports",
-        "nationality": "Spain",
-        "mu": 84,
-        "sigma": 12
+        "id": "lec_1",
+        "name": "League of Legends EMEA Championship Spring Split",
+        "short_name": "LEC Spring Split",
+        "type": "regional_league",
+        "format": "round-robin",
+        "qualifies_to": "lec_playoffs_1"
     },
     {
-        "name": "Team BDS",
-        "nationality": "Switzerland",
-        "mu": 82,
-        "sigma": 10
+        "id": "lec_playoffs_1",
+        "name":"League of Legends EMEA Championship Spring Split Play-offs",
+        "short_name": "LEC Spring Split Play-offs",
+        "type": "regional_league",
+        "format": "playoffs-losers-bracket",
+        "qualifies_to": "msi_play_in"
     },
     {
-        "name": "SK Gaming",
-        "nationality": "Germany",
-        "mu": 80,
-        "sigma": 12
+        "id": "lec_2",
+        "name": "League of Legends EMEA Championship Summer Split",
+        "short_name": "LEC Summer Split",
+        "type": "regional_league",
+        "format": "round-robin",
+        "qualifies_to": "lec_playoffs_2"
     },
     {
-        "name": "MAD Lions",
-        "nationality": "Spain",
-        "mu": 78,
-        "sigma": 8
-    },
-    {
-        "name": "Fnatic",
-        "nationality": "United Kingdom",
-        "mu": 75,
-        "sigma": 5
-    },
-    {
-        "name": "Team Vitality",
-        "nationality": "France",
-        "mu": 79,
-        "sigma": 10
-    },
-    {
-        "name": "Team Heretics",
-        "nationality": "Spain",
-        "mu": 75,
-        "sigma": 10
-    },
-    {
-        "name": "GIANTX",
-        "nationality": "United Kingdom",
-        "mu": 74,
-        "sigma": 7
-    },
-    {
-        "name": "Rogue",
-        "nationality": "United States",
-        "mu": 78,
-        "sigma": 10
-    },
-    {
-        "name": "Karmine Corp",
-        "nationality": "France",
-        "mu": 72,
-        "sigma": 12
+        "id": "lec_playoffs_2",
+        "name":"League of Legends EMEA Championship Summer Split Play-offs",
+        "short_name": "LEC Summer Split Play-offs",
+        "type": "regional_league",
+        "format": "playoffs-losers-bracket",
+        "qualifies_to": "worlds_play_in"
     }
 ]

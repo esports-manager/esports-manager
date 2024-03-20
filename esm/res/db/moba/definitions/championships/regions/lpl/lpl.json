@@ -1,104 +1,34 @@
 [
     {
-        "name": "Bilibili Gaming",
-        "nationality": "China",
-        "mu": 94,
-        "sigma": 10
+        "id": "lpl_1",
+        "name": "League of Legends Pro League Spring Split",
+        "short_name": "LPL Spring Split",
+        "type": "regional_league",
+        "format": "round-robin",
+        "qualifies_to": "lpl_playoffs_1"
     },
     {
-        "name": "JD Gaming",
-        "nationality": "China",
-        "mu": 92,
-        "sigma": 10
+        "id": "lpl_playoffs_1",
+        "name":"League of Legends Pro League Spring Split Play-offs",
+        "short_name": "LPL Spring Split Play-offs",
+        "type": "regional_league",
+        "format": "playoffs-losers-bracket",
+        "qualifies_to": "msi_play_in"
     },
     {
-        "name": "Top Esports",
-        "nationality": "China",
-        "mu": 90,
-        "sigma": 5
+        "id": "lpl_2",
+        "name": "League of Legends Pro League Summer Split",
+        "short_name": "LPL Summer Split",
+        "type": "regional_league",
+        "format": "round-robin",
+        "qualifies_to": "lpl_playoffs_2"
     },
     {
-        "name": "FunPlus Phoenix",
-        "nationality": "China",
-        "mu": 89,
-        "sigma": 12
-    },
-    {
-        "name": "Ninjas in Pyjamas",
-        "nationality": "China",
-        "mu": 85,
-        "sigma": 13
-    },
-    {
-        "name": "Invictus Gaming",
-        "nationality": "China",
-        "mu": 84,
-        "sigma": 15
-    },
-    {
-        "name": "Team WE",
-        "nationality": "China",
-        "mu": 83,
-        "sigma": 10
-    },
-    {
-        "name": "Oh My God",
-        "nationality": "China",
-        "mu": 82,
-        "sigma": 12
-    },
-    {
-        "name": "Anyone's Legend",
-        "nationality": "China",
-        "mu": 80,
-        "sigma": 17
-    },
-    {
-        "name": "LNG Esports",
-        "nationality": "China",
-        "mu": 89,
-        "sigma": 16
-    },
-    {
-        "name": "Weibo Gaming",
-        "nationality": "China",
-        "mu": 82,
-        "sigma": 5
-    },
-    {
-        "name": "ThunderTalk Gaming",
-        "nationality": "China",
-        "mu": 83,
-        "sigma": 10
-    },
-    {
-        "name": "Rare Atom Gaming",
-        "nationality": "China",
-        "mu": 86,
-        "sigma": 10
-    },
-    {
-        "name": "LGD Gaming",
-        "nationality": "China",
-        "mu": 88,
-        "sigma": 10
-    },
-    {
-        "name": "Royal Never Give Up",
-        "nationality": "China",
-        "mu": 80,
-        "sigma": 10
-    },
-    {
-        "name": "EDward Gaming",
-        "nationality": "China",
-        "mu": 78,
-        "sigma": 10
-    },
-    {
-        "name": "Ultra Prime",
-        "nationality": "China",
-        "mu": 75,
-        "sigma": 10
+        "id": "lpl_playoffs_2",
+        "name":"League of Legends Pro League Summer Split Play-offs",
+        "short_name": "LPL Summer Split Play-offs",
+        "type": "regional_league",
+        "format": "playoffs-losers-bracket",
+        "qualifies_to": "worlds_play_in"
     }
 ]

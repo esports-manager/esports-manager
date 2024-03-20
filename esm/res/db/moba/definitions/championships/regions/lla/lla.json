@@ -1,0 +1,34 @@
+[
+    {
+        "id": "lla_1",
+        "name": "Liga Latinoamérica Opening Season",
+        "short_name": "LLA Opening Season",
+        "type": "regional_league",
+        "format": "round-robin",
+        "qualifies_to": "lla_playoffs_1"
+    },
+    {
+        "id": "lla_playoffs_1",
+        "name":"Liga Latinoamérica Opening Season Play-offs",
+        "short_name": "LLA Opening Season Play-offs",
+        "type": "regional_league",
+        "format": "playoffs-losers-bracket",
+        "qualifies_to": "msi_play_in"
+    },
+    {
+        "id": "lla_2",
+        "name": "Liga Latinoamérica Closing Season",
+        "short_name": "LLA Closing Season",
+        "type": "regional_league",
+        "format": "round-robin",
+        "qualifies_to": "lla_playoffs_2"
+    },
+    {
+        "id": "lla_playoffs_2",
+        "name":"Liga Latinoamérica Closing Season Play-offs",
+        "short_name": "LLA Closing Season Play-offs",
+        "type": "regional_league",
+        "format": "playoffs-losers-bracket",
+        "qualifies_to": "worlds_play_in"
+    }
+]

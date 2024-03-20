@@ -22,7 +22,7 @@ from typing import Optional
 from esm.core.esports.moba.simulation.match_live import MatchLive
 
 from ..mobamatch import MobaMatch
-from ..team import TeamSimulation
+from ..mobateam import MobaTeamSimulation
 
 
 class MatchManager:
@@ -36,8 +36,8 @@ class MatchManager:
         self,
         game_id: uuid.UUID,
         championship_id: uuid.UUID,
-        team1: TeamSimulation,
-        team2: TeamSimulation,
+        team1: MobaTeamSimulation,
+        team2: MobaTeamSimulation,
     ):
         self.current_game = MobaMatch(game_id, championship_id, team1, team2)
 

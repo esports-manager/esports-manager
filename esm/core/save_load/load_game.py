@@ -51,11 +51,8 @@ class LoadGame:
         Load data from the game file.
         """
         filename = os.path.join(self.folder, filename)
-        if self.check_game_file(filename):
-            with open(filename, "rb") as fp:
-                return cbor2.load(fp)
-        else:
-            raise LoadGameError("The save file is corrupted!")
+        with open(filename, "rb") as fp:
+            return cbor2.load(fp)
 
     @staticmethod
     def __check_key_integrity(data: dict):

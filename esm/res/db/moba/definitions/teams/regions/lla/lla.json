@@ -1,0 +1,44 @@
+[
+    {
+        "name": "Estral Esports",
+        "nationality": "Mexico",
+        "mu": 50,
+        "sigma": 15
+    },
+    {
+        "name": "Movistar R7",
+        "nationality": "Mexico",
+        "mu": 50,
+        "sigma": 10
+    },
+    {
+        "name": "Isurus",
+        "nationality": "Argentina",
+        "mu": 48,
+        "sigma": 20
+    },
+    {
+        "name": "Leviatan",
+        "nationality": "Argentina",
+        "mu": 47,
+        "sigma": 20
+    },
+    {
+        "name": "All Knights",
+        "nationality": "Chile",
+        "mu": 45,
+        "sigma": 10
+    },
+    {
+        "name": "Six Karma",
+        "nationality": "Mexico",
+        "mu": 45,
+        "sigma": 20
+    },
+    {
+        "name": "Infinity",
+        "nationality": "Costa Rica",
+        "mu": 45,
+        "sigma": 20
+    }
+]

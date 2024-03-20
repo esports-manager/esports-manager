@@ -25,9 +25,9 @@ from typing import Optional, Tuple, Union
 
 from esm.core.esports.moba.champion import Champion
 from esm.core.esports.moba.mobamatch import MatchType, MobaMatch
+from esm.core.esports.moba.mobateam import MobaTeamSimulation
 from esm.core.esports.moba.simulation.mobaevent import MobaEventHandler
 from esm.core.esports.moba.simulation.picksbans import PicksBans
-from esm.core.esports.moba.team import TeamSimulation
 
 
 class MatchLive:
@@ -45,8 +45,8 @@ class MatchLive:
         self,
         game: MobaMatch,
         champions: list[Champion],
-        team1: TeamSimulation,
-        team2: TeamSimulation,
+        team1: MobaTeamSimulation,
+        team2: MobaTeamSimulation,
         show_commentary: bool = True,
         match_speed: int = 1,
         simulation_delay: bool = True,
@@ -125,6 +125,15 @@ class MatchLive:
         """
         self.game_time += quantity
 
+    def check_inhibitor_cooldown(self):
+        for team in self.teams:
+            for inhib, cooldown in team.inhibitors_cooldown.items():
+                if cooldown > 0.0:
+                    team.inhibitors_cooldown[inhib] -= 0.5
+                if cooldown <= 0.0 and team.inhibitors[inhib] == 0:
+                    team.inhibitors_cooldown[inhib] = 0.0
+                    team.inhibitors_cooldown[inhib] = 1
+
     def get_tower_number(self) -> int:
         """
         Gets the amount of towers in the game. If neither team has any towers, the game stops trying to generate the
@@ -134,7 +143,7 @@ class MatchLive:
 
     def get_team_exposed_nexus(
         self,
-    ) -> Union[Tuple[TeamSimulation, TeamSimulation], TeamSimulation, None]:
+    ) -> Union[Tuple[MobaTeamSimulation, MobaTeamSimulation], MobaTeamSimulation, None]:
         """
         Gets the exposed nexus from one or both of the teams.
         """
@@ -193,6 +202,7 @@ class MatchLive:
         self.event_handler.event.calculate_event(
             self.game.team1, self.game.team2, self.get_team_exposed_nexus()
         )
+        self.check_inhibitor_cooldown()
         self.check_match_over()
 
         if not self.is_match_over:
@@ -205,8 +215,8 @@ class MatchLive:
 class MatchSeries:
     def __init__(
         self,
-        team1: TeamSimulation,
-        team2: TeamSimulation,
+        team1: MobaTeamSimulation,
+        team2: MobaTeamSimulation,
         championship_id: uuid.UUID,
         champions: list[Champion],
         match_type: MatchType,

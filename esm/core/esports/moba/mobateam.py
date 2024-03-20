@@ -43,7 +43,7 @@ def get_players_from_list(
 
 
 @dataclass
-class Team(Serializable):
+class MobaTeam(Serializable):
     team_id: uuid.UUID
     name: str
     nationality: str
@@ -75,11 +75,11 @@ class TeamStats:
     assists: int = 0
 
 
-class TeamSimulation:
+class MobaTeamSimulation:
     def __init__(
-        self, team: Team, players: list[MobaPlayerSimulation], is_players_team: bool
+        self, team: MobaTeam, players: list[MobaPlayerSimulation], is_players_team: bool
     ):
-        self.team: Team = team
+        self.team: MobaTeam = team
         self.towers: dict[str, int] = {
             "top": 3,
             "mid": 3,
@@ -91,6 +91,11 @@ class TeamSimulation:
             "mid": 1,
             "bot": 1,
         }
+        self.inhibitors_cooldown: dict[str, float] = {
+            "top": 0.0,
+            "mid": 0.0,
+            "bot": 0.0,
+        }
         self.is_players_team: bool = is_players_team
         self.nexus: int = 1
         self.players: list[MobaPlayerSimulation] = players
@@ -101,12 +106,6 @@ class TeamSimulation:
         self._total_skill: int = 0
         self._points: int = 0
         self._bans: list[Champion] = []
-
-    def is_tower_up(self, lane: str) -> bool:
-        return self.towers[lane] != 0
-
-    def are_all_towers_up(self) -> bool:
-        return 0 not in self.towers.values()
 
     def are_all_towers_down(self) -> bool:
         return (
@@ -257,6 +256,6 @@ class TeamSimulation:
     def __eq__(self, other):
         return (
             self.team.team_id == other.team.team_id
-            if isinstance(other, TeamSimulation)
+            if isinstance(other, MobaTeamSimulation)
             else NotImplemented
         )

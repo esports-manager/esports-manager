@@ -22,8 +22,8 @@ from esm.core.esports.moba.generator.default_team_names import get_default_team_
 from esm.core.esports.moba.generator.generate_champions import Champion
 from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator
 from esm.core.esports.moba.generator.generator import GeneratorInterface
+from esm.core.esports.moba.mobateam import MobaTeam
 from esm.core.esports.moba.player import Lanes, MobaPlayer
-from esm.core.esports.moba.team import Team
 
 
 class TeamGeneratorError(Exception):
@@ -69,14 +69,14 @@ class TeamGenerator(GeneratorInterface):
             for lane in list(Lanes)
         ]
 
-    def generate(self, team_definition: dict[str, str | int]) -> Team:
+    def generate(self, team_definition: dict[str, str | int]) -> MobaTeam:
         """
         Generates the team
         """
         nationality = team_definition["nationality"]
         mu = team_definition["mu"]
         sigma = team_definition["sigma"]
-        return Team(
+        return MobaTeam(
             team_id=self.generate_id(),
             name=team_definition["name"],
             nationality=nationality,

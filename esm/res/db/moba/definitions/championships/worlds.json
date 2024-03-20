@@ -18,5 +18,25 @@
         "name": "Worlds Play-offs",
         "type": "premier",
         "format": "playoffs"
+    },
+    {
+        "id": "msi_play_in",
+        "name": "MSI Play-In Group Stage",
+        "type": "premier",
+        "format": "groups"
+    },
+    {
+        "id": "msi",
+        "name": "MSI Group Stage",
+        "type": "premier",
+        "format": "groups",
+        "qualifies_to": "msi_playoffs"
+    },
+    {
+        "id": "msi_playoffs",
+        "name": "MSI Play-offs",
+        "type": "premier",
+        "format": "playoffs",
+        "qualifies_to": "worlds_play_in"
     }
 ]

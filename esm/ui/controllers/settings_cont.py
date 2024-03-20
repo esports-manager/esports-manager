@@ -47,9 +47,6 @@ class SettingsController(IController):
             "settings_fontsize_input", value=self.core.settings.font_scale
         )
         self.controller.update_element_on_screen(
-            "settings_amount_input", value=self.core.settings.amount_players
-        )
-        self.controller.update_element_on_screen(
             "settings_enable_autosave", value=self.core.settings.enable_auto_save
         )
         self.controller.update_element_on_screen(
@@ -130,16 +127,5 @@ class SettingsController(IController):
                 self.update_inputs()
 
             elif event == "settings_generate_btn":
-                try:
-                    value = int(values["settings_amount_input"])
-                    self.core.check_player_amount()
-                except ValueError as e:
-                    self.controller.get_gui_information_window(
-                        e, "Error in number of players!"
-                    )
-                    self.amount_players = 50
-                else:
-                    self.controller.amount_players = value
-                finally:
-                    self.core.db.generate_moba_files()
-                    self.update_inputs()
+                self.core.db.generate_moba_files()
+                self.update_inputs()

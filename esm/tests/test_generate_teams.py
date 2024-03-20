@@ -25,8 +25,8 @@ from ..core.esports.moba.generator.generate_teams import (
     TeamGenerator,
     TeamGeneratorError,
 )
+from ..core.esports.moba.mobateam import MobaTeam
 from ..core.esports.moba.player import MobaPlayer
-from ..core.esports.moba.team import Team
 
 
 def mock_team_definition() -> dict[str, int | str]:
@@ -75,7 +75,7 @@ def test_team_generator_champion_list_is_empty():
 def test_generate_team(team_generator):
     team_def = mock_team_definition()
     team = team_generator.generate(team_definition=team_def)
-    assert isinstance(team, Team)
+    assert isinstance(team, MobaTeam)
     assert team.name == team_def["name"]
     assert team.nationality == team_def["nationality"]
     for player in team.roster:
@@ -85,7 +85,7 @@ def test_generate_team(team_generator):
 def test_generate_multiple_teams(team_generator):
     teams = [team_generator.generate(team_def) for team_def in mock_team_definitions()]
     for team, team_def in zip(teams, mock_team_definitions()):
-        assert isinstance(team, Team)
+        assert isinstance(team, MobaTeam)
         assert team.name == team_def["name"]
         assert team.nationality == team_def["nationality"]
         assert team.roster is not None

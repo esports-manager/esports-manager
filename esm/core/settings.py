@@ -26,7 +26,6 @@ from esm.definitions import *
 @dataclass
 class Settings:
     font_scale: int = 1
-    amount_players: int = 50
     enable_auto_save = True
     root_dir: Union[str, Path] = ROOT_DIR
     res_dir: Union[str, Path] = RES_DIR
@@ -46,7 +45,6 @@ class Settings:
 
     def parse_config_file(self, data):
         self.font_scale = data["font_scale"]
-        self.amount_players = data["amount_players"]
         self.enable_auto_save = data["enable_auto_save"]
         self.root_dir = data["root_dir"]
         self.res_dir = data["res_dir"]
@@ -59,7 +57,6 @@ class Settings:
     def get_data(self):
         return {
             "font_scale": self.font_scale,
-            "amount_players": self.amount_players,
             "root_dir": str(self.root_dir),
             "enable_auto_save": str(self.enable_auto_save),
             "res_dir": str(self.res_dir),

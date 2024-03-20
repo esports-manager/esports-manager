@@ -1,0 +1,62 @@
+[
+    {
+        "name": "paiN Gaming",
+        "nationality": "Brazil",
+        "mu": 52,
+        "sigma": 15
+    },
+    {
+        "name": "Vivo Keyd Stars",
+        "nationality": "Brazil",
+        "mu": 54,
+        "sigma": 15
+    },
+    {
+        "name": "Fluxo",
+        "nationality": "Brazil",
+        "mu": 45,
+        "sigma": 15
+    },
+    {
+        "name": "LOUD",
+        "nationality": "Brazil",
+        "mu": 58,
+        "sigma": 14
+    },
+    {
+        "name": "INTZ eSports",
+        "nationality": "Brazil",
+        "mu": 40,
+        "sigma": 20
+    },
+    {
+        "name": "KaBuM eSports",
+        "nationality": "Brazil",
+        "mu": 50,
+        "sigma": 10
+    },
+    {
+        "name": "Liberty eSports",
+        "nationality": "Brazil",
+        "mu": 49,
+        "sigma": 10
+    },
+    {
+        "name": "RED Kalunga",
+        "nationality": "Brazil",
+        "mu": 52,
+        "sigma": 12
+    },
+    {
+        "name": "LOS Grandes",
+        "nationality": "Brazil",
+        "mu": 50,
+        "sigma": 20
+    },
+    {
+        "name": "FURIA",
+        "nationality": "Brazil",
+        "mu": 43,
+        "sigma": 10
+    }
+]

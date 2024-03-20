@@ -1,0 +1,34 @@
+[
+    {
+        "id": "cblol_1",
+        "name": "Campeonato Brasileiro de League of Legends Split 1",
+        "short_name": "CBLOL Split 1",
+        "type": "regional_league",
+        "format": "round-robin",
+        "qualifies_to": "cblol_playoffs_1"
+    },
+    {
+        "id": "cblol_playoffs_1",
+        "name":"Campeonato Brasileiro de League of Legends Split 1 Play-offs",
+        "short_name": "CBLOL Split 1 Play-offs",
+        "type": "regional_league",
+        "format": "playoffs-losers-bracket",
+        "qualifies_to": "msi_play_in"
+    },
+    {
+        "id": "cblol_2",
+        "name": "Campeonato Brasileiro de League of Legends Split 2",
+        "short_name": "CBLOL Split 2",
+        "type": "regional_league",
+        "format": "round-robin",
+        "qualifies_to": "cblol_playoffs_2"
+    },
+    {
+        "id": "cblol_playoffs_2",
+        "name":"Campeonato Brasileiro de League of Legends Split 2 Play-offs",
+        "short_name": "CBLOL Split 2 Play-offs",
+        "type": "regional_league",
+        "format": "playoffs-losers-bracket",
+        "qualifies_to": "worlds_play_in"
+    }
+]

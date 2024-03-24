@@ -71,6 +71,12 @@ def load_list_from_file(filepath: Union[str, Path]) -> list[dict]:
         raise FileNotFoundError("File was not found")
 
 
+def get_files_from_extension(directory: Union[str, Path], extension: str) -> list[str]:
+    return [
+        str(file) for file in Path(directory).glob(f"*{extension}") if file.is_file()
+    ]
+
+
 def normalize_filename(filename, delim="_") -> str:
     """
     Normalizes the save game filename. This will prevent unsupported filenames from being saved.

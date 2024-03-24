@@ -13,6 +13,8 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from .default_champion_defs import get_default_champion_defs
+from .default_player_nick_names import get_default_player_nick_names
 from .generate_champions import ChampionGenerator
 from .generate_players import MobaPlayerGenerator
 from .generate_teams import TeamGenerator

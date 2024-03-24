@@ -1,32 +1,32 @@
 [
     {
         "id": "lcs_1",
-        "name": "League Championship Series Spring Split",
-        "short_name": "LCS Spring Split",
+        "name": "League Championship Series Spring",
+        "short_name": "LCS Spring",
         "type": "regional_league",
         "format": "round-robin",
         "qualifies_to": "lcs_playoffs_1"
     },
     {
         "id": "lcs_playoffs_1",
-        "name":"League Championship Series Spring Split Play-offs",
-        "short_name": "LCS Spring Split Play-offs",
+        "name":"League Championship Series Spring Play-offs",
+        "short_name": "LCS Spring Play-offs",
         "type": "regional_league",
         "format": "playoffs-losers-bracket",
         "qualifies_to": "msi_play_in"
     },
     {
         "id": "lcs_2",
-        "name": "League Championship Series Summer Split",
-        "short_name": "LCS Summer Split",
+        "name": "League Championship Series Summer",
+        "short_name": "LCS Summer",
         "type": "regional_league",
         "format": "round-robin",
         "qualifies_to": "lcs_playoffs_2"
     },
     {
         "id": "lcs_playoffs_2",
-        "name":"League Championship Series Summer Split Play-offs",
-        "short_name": "LCS Summer Split Play-offs",
+        "name":"League Championship Series Summer Play-offs",
+        "short_name": "LCS Summer Play-offs",
         "type": "regional_league",
         "format": "playoffs-losers-bracket",
         "qualifies_to": "worlds_play_in"

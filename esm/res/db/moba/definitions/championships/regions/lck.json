@@ -1,32 +1,32 @@
 [
     {
         "id": "lck_1",
-        "name": "League of Legends Champions Korea Spring Split",
-        "short_name": "LCK Spring Split",
+        "name": "League of Legends Champions Korea Spring",
+        "short_name": "LCK Spring",
         "type": "regional_league",
         "format": "round-robin",
         "qualifies_to": "lck_playoffs_1"
     },
     {
         "id": "lck_playoffs_1",
-        "name":"League of Legends Champions Korea Spring Split Play-offs",
-        "short_name": "LCK Spring Split Play-offs",
+        "name":"League of Legends Champions Korea Spring Play-offs",
+        "short_name": "LCK Spring  Play-offs",
         "type": "regional_league",
         "format": "playoffs-losers-bracket",
         "qualifies_to": "msi"
     },
     {
         "id": "lck_2",
-        "name": "League of Legends Champions Korea Summer Split",
-        "short_name": "LCK Summer Split",
+        "name": "League of Legends Champions Korea Summer",
+        "short_name": "LCK Summer",
         "type": "regional_league",
         "format": "round-robin",
         "qualifies_to": "lck_playoffs_2"
     },
     {
         "id": "lck_playoffs_2",
-        "name":"League of Legends Champions Korea Summer Split Play-offs",
-        "short_name": "LCK Summer Split Play-offs",
+        "name":"League of Legends Champions Korea Summer Play-offs",
+        "short_name": "LCK Summer Play-offs",
         "type": "regional_league",
         "format": "playoffs-losers-bracket",
         "qualifies_to": "worlds"

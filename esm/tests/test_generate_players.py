@@ -14,7 +14,6 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import hypothesis.strategies as st
-import pytest
 from hypothesis import given
 
 from esm.core.esports.moba.champion import (
@@ -25,8 +24,7 @@ from esm.core.esports.moba.champion import (
 )
 from esm.core.esports.moba.generator.generate_players import Lanes, MobaPlayerGenerator
 from esm.core.esports.moba.player import MobaPlayer
-from esm.core.utils import load_list_from_file
-from esm.definitions import NAMES_FILE
+from esm.core.utils import get_default_names_file, load_list_from_file
 
 ch = st.lists(
     st.builds(
@@ -55,7 +53,7 @@ ch = st.lists(
 
 @given(ch)
 def test_generate_default_mobaplayer(champions: list[Champion]):
-    names = load_list_from_file(NAMES_FILE)
+    names = load_list_from_file(get_default_names_file())
     moba_player_gen = MobaPlayerGenerator(champions_list=champions, names=names)
     for lane in Lanes:
         player = moba_player_gen.generate(lane=lane)
@@ -64,7 +62,7 @@ def test_generate_default_mobaplayer(champions: list[Champion]):
 
 @given(ch)
 def test_generate_rand_mobaplayer(champions: list[Champion]):
-    names = load_list_from_file(NAMES_FILE)
+    names = load_list_from_file(get_default_names_file())
     moba_player_gen = MobaPlayerGenerator(champions_list=champions, names=names)
     players = [moba_player_gen.generate(lane=Lanes(i)) for i in range(5)]
     assert len(players) == 5

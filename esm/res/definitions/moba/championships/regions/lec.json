@@ -1,32 +1,32 @@
 [
     {
         "id": "lec_1",
-        "name": "League of Legends EMEA Championship Spring Split",
-        "short_name": "LEC Spring Split",
+        "name": "League of Legends EMEA Championship Spring",
+        "short_name": "LEC Spring",
         "type": "regional_league",
         "format": "round-robin",
         "qualifies_to": "lec_playoffs_1"
     },
     {
         "id": "lec_playoffs_1",
-        "name":"League of Legends EMEA Championship Spring Split Play-offs",
-        "short_name": "LEC Spring Split Play-offs",
+        "name":"League of Legends EMEA Championship Spring Play-offs",
+        "short_name": "LEC Spring Play-offs",
         "type": "regional_league",
         "format": "playoffs-losers-bracket",
         "qualifies_to": "msi_play_in"
     },
     {
         "id": "lec_2",
-        "name": "League of Legends EMEA Championship Summer Split",
-        "short_name": "LEC Summer Split",
+        "name": "League of Legends EMEA Championship Summer",
+        "short_name": "LEC Summer",
         "type": "regional_league",
         "format": "round-robin",
         "qualifies_to": "lec_playoffs_2"
     },
     {
         "id": "lec_playoffs_2",
-        "name":"League of Legends EMEA Championship Summer Split Play-offs",
-        "short_name": "LEC Summer Split Play-offs",
+        "name":"League of Legends EMEA Championship Summer Play-offs",
+        "short_name": "LEC Summer Play-offs",
         "type": "regional_league",
         "format": "playoffs-losers-bracket",
         "qualifies_to": "worlds_play_in"

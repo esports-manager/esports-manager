@@ -23,7 +23,7 @@ from unicodedata import normalize
 
 import cbor2
 
-from esm.definitions import NAMES_FILE
+from ...definitions import ROOT_DIR
 
 
 def write_to_file(
@@ -42,17 +42,17 @@ def write_to_file(
             cbor2.dump(contents, fp)
 
 
-def get_from_file(file_name: Union[str, Path]) -> list[dict]:
+def get_from_file(file_name: Path) -> list[dict]:
     """
     General function used to read a JSON/CBOR file, extracting its data to a dictionary/list
     :param file_name:
     :return:
     """
-    if file_name.endswith(".json"):
-        with open(file_name, "r", encoding="utf-8") as fp:
+    if file_name.suffix == ".json":
+        with file_name.open("r", encoding="utf-8") as fp:
             dictionary = json.load(fp)
     else:
-        with open(file_name, "rb") as fp:
+        with file_name.open("rb") as fp:
             dictionary = cbor2.load(fp)
 
     return dictionary
@@ -69,6 +69,12 @@ def load_list_from_file(filepath: Union[str, Path]) -> list[dict]:
         return get_from_file(filepath)
     else:
         raise FileNotFoundError("File was not found")
+
+
+def get_files_from_extension(directory: Union[str, Path], extension: str) -> list[str]:
+    return [
+        str(file) for file in Path(directory).glob(f"*{extension}") if file.is_file()
+    ]
 
 
 def normalize_filename(filename, delim="_") -> str:
@@ -89,6 +95,9 @@ def normalize_filename(filename, delim="_") -> str:
     return f"{filename}.cbor"
 
 
-def get_nations(file: Union[str, os.PathLike] = NAMES_FILE) -> list[dict]:
-    names = load_list_from_file(file)
+def get_nations(names: list[dict[str, str | float]]) -> list[dict]:
     return [nat["region"] for nat in names]
+
+
+def get_default_names_file() -> Path:
+    return ROOT_DIR / "res" / "definitions" / "names.json"

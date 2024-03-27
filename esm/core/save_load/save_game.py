@@ -18,12 +18,11 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 from tempfile import mkstemp
-from typing import Union
+from typing import Optional, Union
 
 import cbor2
 
 from esm.core.gamestate import GameState
-from esm.definitions import SAVE_FILE_DIR
 
 
 class SaveGame:
@@ -31,14 +30,11 @@ class SaveGame:
         self,
         gamestate: GameState,
         filename: Union[str, Path],
-        save_directory: str = None,
+        save_directory: Path,
         autosave_enabled: bool = True,
     ):
         self.gamestate = gamestate
         self.save_directory = save_directory
-
-        if self.save_directory is None:
-            self.save_directory = SAVE_FILE_DIR
 
         self.filename = os.path.join(self.save_directory, filename)
         self.gamestate.filename = self.filename

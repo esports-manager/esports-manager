@@ -33,7 +33,7 @@ class GameSession:
         self.db = db
 
     def get_gamestate(self) -> GameState:
-        return self.db.create_gamestate()
+        pass
 
     def load_game(self, filename: Union[str, os.PathLike]):
         load = LoadGame(self.settings.save_file_dir)

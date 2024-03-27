@@ -1,16 +1,16 @@
 [
     {
         "id": "lpl_1",
-        "name": "League of Legends Pro League Spring Split",
-        "short_name": "LPL Spring Split",
+        "name": "League of Legends Pro League Spring",
+        "short_name": "LPL Spring",
         "type": "regional_league",
         "format": "round-robin",
         "qualifies_to": "lpl_playoffs_1"
     },
     {
         "id": "lpl_playoffs_1",
-        "name":"League of Legends Pro League Spring Split Play-offs",
-        "short_name": "LPL Spring Split Play-offs",
+        "name":"League of Legends Pro League Spring Play-offs",
+        "short_name": "LPL Spring Play-offs",
         "type": "regional_league",
         "format": "playoffs-losers-bracket",
         "qualifies_to": "msi_play_in"
@@ -18,15 +18,15 @@
     {
         "id": "lpl_2",
         "name": "League of Legends Pro League Summer Split",
-        "short_name": "LPL Summer Split",
+        "short_name": "LPL Summer",
         "type": "regional_league",
         "format": "round-robin",
         "qualifies_to": "lpl_playoffs_2"
     },
     {
         "id": "lpl_playoffs_2",
-        "name":"League of Legends Pro League Summer Split Play-offs",
-        "short_name": "LPL Summer Split Play-offs",
+        "name":"League of Legends Pro League Summer Play-offs",
+        "short_name": "LPL Summer Play-offs",
         "type": "regional_league",
         "format": "playoffs-losers-bracket",
         "qualifies_to": "worlds_play_in"

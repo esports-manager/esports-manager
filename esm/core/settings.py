@@ -13,28 +13,73 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import os.path
-from dataclasses import dataclass
+import os
 from pathlib import Path
-from typing import Union
 
 import yaml
 
 from esm.definitions import *
 
 
-@dataclass
 class Settings:
-    font_scale: int = 1
-    enable_auto_save = True
-    root_dir: Union[str, Path] = ROOT_DIR
-    res_dir: Union[str, Path] = RES_DIR
-    db_dir: Union[str, Path] = DB_DIR
-    save_file_dir: Union[str, Path] = SAVE_FILE_DIR
-    champions_file: Union[str, Path] = CHAMPIONS_FILE
-    players_file: Union[str, Path] = PLAYERS_FILE
-    teams_file: Union[str, Path] = TEAMS_FILE
-    config_file: Union[str, Path] = CONFIG_FILE
+    def __init__(self, root_dir: Path = ROOT_DIR):
+        self.root_dir: Path = root_dir
+        self.res_dir: Path = self.root_dir / "res"
+        self.db_dir: Path = self.root_dir / "db"
+        self.save_file_dir: Path = self.root_dir / "saves"
+        self.logs_dir: Path = self.root_dir / "logs"
+
+    @property
+    def config_file(self) -> Path:
+        return self.root_dir / "config.yaml"
+
+    @property
+    def definitions_dir(self) -> Path:
+        return self.res_dir / "definitions"
+
+    @property
+    def names_file(self) -> Path:
+        return self.definitions_dir / "names.json"
+
+    @property
+    def moba_definitions_dir(self) -> Path:
+        return self.definitions_dir / "moba"
+
+    @property
+    def moba_champion_defs(self) -> Path:
+        return self.moba_definitions_dir / "champions"
+
+    @property
+    def moba_championship_defs(self) -> Path:
+        return self.moba_definitions_dir / "championships"
+
+    @property
+    def moba_team_defs(self) -> Path:
+        return self.moba_definitions_dir / "teams"
+
+    @property
+    def db_moba_dir(self):
+        return self.db_dir / "moba"
+
+    @property
+    def moba_region_defs(self) -> Path:
+        return self.moba_team_defs / "regions.json"
+
+    @property
+    def moba_teams(self) -> Path:
+        return self.db_moba_dir / "teams.json"
+
+    @property
+    def moba_regions(self) -> Path:
+        return self.db_moba_dir / "regions.json"
+
+    @property
+    def moba_players(self) -> Path:
+        return self.db_moba_dir / "players.json"
+
+    @property
+    def moba_champions(self) -> Path:
+        return self.db_moba_dir / "champions.json"
 
     def load_config_file(self):
         if os.path.exists(self.config_file):
@@ -43,31 +88,23 @@ class Settings:
         else:
             self.create_config_file()
 
-    def parse_config_file(self, data):
-        self.font_scale = data["font_scale"]
-        self.enable_auto_save = data["enable_auto_save"]
-        self.root_dir = data["root_dir"]
-        self.res_dir = data["res_dir"]
-        self.db_dir = data["db_dir"]
-        self.save_file_dir = data["save_file_dir"]
-        self.champions_file = data["champions_file"]
-        self.players_file = data["players_file"]
-        self.teams_file = data["teams_file"]
+    def get_from_dict(self, data: dict[str, int | float | str]):
+        self.root_dir = Path(data["root_dir"])
+        self.res_dir = Path(data["res_dir"])
+        self.db_dir = Path(data["db_dir"])
+        self.save_file_dir = Path(data["save_file_dir"])
+        self.logs_dir = Path(data["logs_dir"])
 
-    def get_data(self):
+    def serialize(self) -> dict[str, int | float | str]:
         return {
-            "font_scale": self.font_scale,
-            "root_dir": str(self.root_dir),
-            "enable_auto_save": str(self.enable_auto_save),
-            "res_dir": str(self.res_dir),
-            "db_dir": str(self.db_dir),
-            "save_file_dir": str(self.save_file_dir),
-            "champions_file": str(self.champions_file),
-            "players_file": str(self.players_file),
-            "teams_file": str(self.teams_file),
+            "root_dir": str(self.root_dir.absolute()),
+            "res_dir": str(self.res_dir.absolute()),
+            "db_dir": str(self.db_dir.absolute()),
+            "save_file_dir": str(self.save_file_dir.absolute()),
+            "logs_dir": str(self.logs_dir.absolute()),
         }
 
     def create_config_file(self):
         os.makedirs(os.path.dirname(self.config_file), exist_ok=True)
         with open(self.config_file, "w") as fp:
-            yaml.safe_dump(self.get_data(), fp)
+            yaml.safe_dump(self.serialize(), fp)

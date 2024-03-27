@@ -15,15 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
+from pathlib import Path
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-RES_DIR = os.path.join(ROOT_DIR, "res")
-DB_DIR = os.path.join(RES_DIR, "db")
-SAVE_FILE_DIR = os.path.join(RES_DIR, "save")
-CHAMPIONS_FILE = os.path.join(DB_DIR, "champions.json")
-PLAYERS_FILE = os.path.join(DB_DIR, "players.json")
-TEAMS_FILE = os.path.join(DB_DIR, "teams.json")
-NAMES_FILE = os.path.join(DB_DIR, "names.json")
-CONFIG_FILE = os.path.join(ROOT_DIR, "config.yaml")
-LOG_FILE = os.path.join(ROOT_DIR, "logs", "esm.log")
+ROOT_DIR = Path(__file__).parent
 DEBUG = True

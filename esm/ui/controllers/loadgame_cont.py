@@ -28,7 +28,7 @@ class LoadGameController(IController):
         self.controller = controller
         self.core = core
         self.layout = LoadGameLayout()
-        self.load_game: LoadGame = LoadGame()
+        self.load_game: LoadGame = LoadGame(self.core.settings.save_file_dir)
         self.load_files = None
         self.filename = None
         self.default_value = ["No save games encountered"]

@@ -14,7 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from esm.core.esmcore import ESMCore
-from esm.core.utils import get_nations
+from esm.core.utils import get_nations, load_list_from_file
 from esm.ui.igamecontroller import IGameController
 from esm.ui.layouts.newgame import NewGameLayout
 
@@ -30,7 +30,8 @@ class NewGameController(IController):
 
     def load_nationalities(self):
         if self.nationalities is None:
-            self.nationalities = get_nations()
+            names = load_list_from_file(self.core.settings.names_file)
+            self.nationalities = get_nations(names)
             self.controller.get_gui_element("create_manager_nationality").update(
                 values=self.nationalities
             )

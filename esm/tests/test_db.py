@@ -13,3 +13,8 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from esm.core.db import DB
+from esm.core.settings import Settings
+
+# def test_generate_moba_files(db: DB):
+#     db.generate_moba_files()

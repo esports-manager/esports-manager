@@ -14,11 +14,11 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
+from pathlib import Path
 
 import cbor2
 
 from esm.core.gamestate import GameState
-from esm.definitions import SAVE_FILE_DIR
 
 
 class LoadGameError(Exception):
@@ -34,7 +34,7 @@ class LoadGame:
     is in the save game file, the module throws an error that the file is corrupted.
     """
 
-    def __init__(self, folder=SAVE_FILE_DIR):
+    def __init__(self, folder: Path):
         self.folder = folder
 
     @staticmethod
@@ -62,6 +62,7 @@ class LoadGame:
             "manager",
             "season",
             "esport",
+            "regions",
             "teams",
             "players",
             "champions",
@@ -76,10 +77,11 @@ class LoadGame:
         """
         data = self.load_game_file(filename)
         if self.__check_key_integrity(data):
+            regions = data["regions"]
             teams = data["teams"]
             players = data["players"]
             champions = data["champions"]
-            return data, teams, players, champions
+            return data, teams, regions, players, champions
         else:
             raise LoadGameError("The save file does not contain the expected keys")
 
@@ -87,13 +89,14 @@ class LoadGame:
         """
         Turns load game data into GameState data.
         """
-        data, teams, players, champions = self.__get_game_data(filename)
+        data, teams, regions, players, champions = self.__get_game_data(filename)
         return GameState(
             data["gamename"],
             filename,
             data["manager"],
             data["season"],
             data["esport"],
+            regions,
             teams,
             players,
             champions,

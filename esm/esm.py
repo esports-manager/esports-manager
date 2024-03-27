@@ -26,11 +26,6 @@ class ESMController:
 
     def __init__(self):
         self.core = ESMCore()
-        try:
-            self.core.check_files()
-        except FileNotFoundError:
-            self.core.db.generate_moba_files()
-
         self.view = GUIController(self.core)
 
     @property

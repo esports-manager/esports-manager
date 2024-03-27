@@ -15,21 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
+from pathlib import Path
 
-ROOT_DIR = os.path.dirname(os.path.abspath(os.curdir))
-RES_DIR = os.path.join(ROOT_DIR, "res")
-DB_DIR = os.path.join(RES_DIR, "db")
-SAVE_FILE_DIR = os.path.join(RES_DIR, "save")
-MOBA_DEFINITIONS_DIR = os.path.join(DB_DIR, "moba", "definitions")
-MOBA_CHAMPION_DEFINITIONS = os.path.join(MOBA_DEFINITIONS_DIR, "champions")
-MOBA_TEAM_DEFINITIONS = os.path.join(MOBA_DEFINITIONS_DIR, "teams")
-MOBA_CHAMPIONSHIP_DEFINITIONS = os.path.join(MOBA_DEFINITIONS_DIR, "championships")
-MOBA_REGION_DEFINITIONS = os.path.join(MOBA_DEFINITIONS_DIR, "teams", "regions.json")
-MOBA_TEAMS = os.path.join(DB_DIR, "moba", "teams.json")
-MOBA_CHAMPIONS = os.path.join(DB_DIR, "moba", "champions.json")
-MOBA_PLAYERS = os.path.join(DB_DIR, "moba", "players.json")
-MOBA_REGIONS = os.path.join(DB_DIR, "moba", "regions.json")
-NAMES_FILE = os.path.join(DB_DIR, "names.json")
-CONFIG_FILE = os.path.join(ROOT_DIR, "config.yaml")
-LOG_FILE = os.path.join(ROOT_DIR, "logs", "esm.log")
+ROOT_DIR = Path(__file__).parent
 DEBUG = True

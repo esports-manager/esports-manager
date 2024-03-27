@@ -15,9 +15,8 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import logging
 import os
-from textwrap import dedent
 
-from ..definitions import DEBUG, LOG_FILE
+from ..definitions import DEBUG
 from .db import DB
 from .game_session import GameSession
 from .settings import Settings
@@ -35,41 +34,23 @@ class ESMCore:
     def __init__(self):
         self.settings = Settings()
         self.settings.load_config_file()
-        self.logger = initialize_logging()
+        self.logger = self.initialize_logging()
         self.db = DB(self.settings)
-        self.game_session = GameSession(
-            self.settings, self.db, self.settings.enable_auto_save
+        self.game_session = GameSession(self.settings, self.db)
+
+    def initialize_logging(self):
+        os.makedirs(self.settings.logs_dir, exist_ok=True)
+        logs_file = self.settings.logs_dir / "esm.log"
+        logging.basicConfig(
+            filename=logs_file,
+            encoding="utf-8",
+            format="%(levelname)s %(asctime)s: %(message)s",
+            datefmt="%m/%d/%Y %I:%M:%S %p ",
         )
 
-    def check_if_files_exist(self) -> None:
-        if (
-            not os.path.exists(self.settings.champions_file)
-            and not os.path.exists(self.settings.players_file)
-            and not os.path.exists(self.settings.teams_file)
-        ):
-            raise FileNotFoundError
+        if DEBUG:
+            logging.basicConfig(level=logging.DEBUG)
+        else:
+            logging.basicConfig(level=logging.ERROR)
 
-    def check_files(self) -> None:
-        try:
-            self.check_if_files_exist()
-        except FileNotFoundError:
-            self.db.generate_moba_files()
-
-
-def initialize_logging():
-    logs_dir = os.path.dirname(LOG_FILE)
-    if not os.path.exists(logs_dir):
-        os.makedirs(logs_dir, exist_ok=True)
-    logging.basicConfig(
-        filename=LOG_FILE,
-        encoding="utf-8",
-        format="%(levelname)s %(asctime)s: %(message)s",
-        datefmt="%m/%d/%Y %I:%M:%S %p ",
-    )
-
-    if DEBUG:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.ERROR)
-
-    return logging.getLogger(__name__)
+        return logging.getLogger(__name__)

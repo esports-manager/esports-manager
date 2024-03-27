@@ -18,7 +18,6 @@ import uuid
 import pytest
 
 from esm.core.utils import load_list_from_file
-from esm.definitions import NAMES_FILE
 
 from ..core.esports.moba.champion import Champion
 from ..core.esports.moba.generator.generate_teams import (
@@ -62,9 +61,10 @@ def mock_team_definitions() -> list[dict[str, int | str]]:
 
 
 @pytest.fixture
-def team_generator(mock_champions: list[Champion]) -> TeamGenerator:
-    names = load_list_from_file(NAMES_FILE)
-    return TeamGenerator(champions=mock_champions, player_names=names)
+def team_generator(
+    mock_champions: list[Champion], names_file: list[dict[str, str | float]]
+) -> TeamGenerator:
+    return TeamGenerator(champions=mock_champions, player_names=names_file)
 
 
 def test_team_generator_champion_list_is_empty():

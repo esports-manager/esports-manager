@@ -13,34 +13,73 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import os.path
-from dataclasses import dataclass
+import os
 from pathlib import Path
-from typing import Union
 
 import yaml
 
 from esm.definitions import *
 
 
-@dataclass
 class Settings:
-    font_scale: int = 1
-    enable_auto_save = True
-    root_dir: Union[str, Path] = ROOT_DIR
-    res_dir: Union[str, Path] = RES_DIR
-    db_dir: Union[str, Path] = DB_DIR
-    save_file_dir: Union[str, Path] = SAVE_FILE_DIR
-    moba_team_defs: Union[str, Path] = MOBA_TEAM_DEFINITIONS
-    moba_championship_defs: Union[str, Path] = MOBA_CHAMPIONSHIP_DEFINITIONS
-    moba_champion_defs: Union[str, Path] = MOBA_CHAMPION_DEFINITIONS
-    moba_region_defs: Union[str, Path] = MOBA_REGION_DEFINITIONS
-    moba_teams: Union[str, Path] = MOBA_TEAMS
-    moba_champions: Union[str, Path] = MOBA_CHAMPIONS
-    moba_players: Union[str, Path] = MOBA_PLAYERS
-    moba_regions: Union[str, Path] = MOBA_REGIONS
-    names_file: Union[str, Path] = NAMES_FILE
-    config_file: Union[str, Path] = CONFIG_FILE
+    def __init__(self, root_dir: Path = ROOT_DIR):
+        self.root_dir: Path = root_dir
+        self.res_dir: Path = self.root_dir / "res"
+        self.db_dir: Path = self.root_dir / "db"
+        self.save_file_dir: Path = self.root_dir / "saves"
+        self.logs_dir: Path = self.root_dir / "logs"
+
+    @property
+    def config_file(self) -> Path:
+        return self.root_dir / "config.yaml"
+
+    @property
+    def definitions_dir(self) -> Path:
+        return self.res_dir / "definitions"
+
+    @property
+    def names_file(self) -> Path:
+        return self.definitions_dir / "names.json"
+
+    @property
+    def moba_definitions_dir(self) -> Path:
+        return self.definitions_dir / "moba"
+
+    @property
+    def moba_champion_defs(self) -> Path:
+        return self.moba_definitions_dir / "champions"
+
+    @property
+    def moba_championship_defs(self) -> Path:
+        return self.moba_definitions_dir / "championships"
+
+    @property
+    def moba_team_defs(self) -> Path:
+        return self.moba_definitions_dir / "teams"
+
+    @property
+    def db_moba_dir(self):
+        return self.db_dir / "moba"
+
+    @property
+    def moba_region_defs(self) -> Path:
+        return self.moba_team_defs / "regions.json"
+
+    @property
+    def moba_teams(self) -> Path:
+        return self.db_moba_dir / "teams.json"
+
+    @property
+    def moba_regions(self) -> Path:
+        return self.db_moba_dir / "regions.json"
+
+    @property
+    def moba_players(self) -> Path:
+        return self.db_moba_dir / "players.json"
+
+    @property
+    def moba_champions(self) -> Path:
+        return self.db_moba_dir / "champions.json"
 
     def load_config_file(self):
         if os.path.exists(self.config_file):
@@ -50,35 +89,19 @@ class Settings:
             self.create_config_file()
 
     def get_from_dict(self, data: dict[str, int | float | str]):
-        self.font_scale = data["font_scale"]
-        self.enable_auto_save = data["enable_auto_save"]
-        self.root_dir = data["root_dir"]
-        self.res_dir = data["res_dir"]
-        self.db_dir = data["db_dir"]
-        self.moba_team_defs = data["moba_team_defs"]
-        self.moba_championship_defs = data["moba_championship_defs"]
-        self.moba_champion_defs = data["moba_champion_defs"]
-        self.moba_teams = data["moba_teams"]
-        self.moba_champions = data["moba_champions"]
-        self.moba_players = data["moba_players"]
-        self.moba_regions = data["moba_regions"]
-        self.names_file = data["names_file"]
-        self.save_file_dir = data["save_file_dir"]
+        self.root_dir = Path(data["root_dir"])
+        self.res_dir = Path(data["res_dir"])
+        self.db_dir = Path(data["db_dir"])
+        self.save_file_dir = Path(data["save_file_dir"])
+        self.logs_dir = Path(data["logs_dir"])
 
     def serialize(self) -> dict[str, int | float | str]:
         return {
-            "font_scale": self.font_scale,
-            "root_dir": str(self.root_dir),
-            "enable_auto_save": str(self.enable_auto_save),
-            "res_dir": str(self.res_dir),
-            "db_dir": str(self.db_dir),
-            "moba_team_defs": str(self.moba_team_defs),
-            "moba_championship_defs": str(self.moba_championship_defs),
-            "moba_teams": str(self.moba_teams),
-            "moba_champions": str(self.moba_champions),
-            "moba_players": str(self.moba_players),
-            "moba_regions": str(self.moba_regions),
-            "save_file_dir": str(self.save_file_dir),
+            "root_dir": str(self.root_dir.absolute()),
+            "res_dir": str(self.res_dir.absolute()),
+            "db_dir": str(self.db_dir.absolute()),
+            "save_file_dir": str(self.save_file_dir.absolute()),
+            "logs_dir": str(self.logs_dir.absolute()),
         }
 
     def create_config_file(self):

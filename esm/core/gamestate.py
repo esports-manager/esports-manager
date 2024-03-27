@@ -25,9 +25,10 @@ class GameState(Serializable):
     manager: dict
     season: str
     esport: str
-    teams: list
-    players: list
-    champions: list
+    regions: dict
+    teams: dict
+    players: dict
+    champions: dict
 
     @classmethod
     def get_from_dict(cls, data: dict):

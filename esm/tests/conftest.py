@@ -16,12 +16,10 @@
 import uuid
 from datetime import date
 
-import hypothesis.strategies as st
 import pytest
-from hypothesis import given
 
+from esm.core.db import DB
 from esm.core.esports.moba.champion import Champion, ChampionDifficulty, ChampionType
-from esm.core.esports.moba.generator.generate_players import MobaPlayerGenerator
 from esm.core.esports.moba.moba_definitions import LaneMultipliers, Lanes
 from esm.core.esports.moba.player import (
     ChampionMastery,
@@ -34,8 +32,15 @@ from esm.core.esports.moba.player import (
     OffensiveAttributes,
     UtilityAttributes,
 )
+from esm.core.settings import Settings
 from esm.core.utils import load_list_from_file
-from esm.definitions import NAMES_FILE
+from esm.definitions import ROOT_DIR
+
+
+@pytest.fixture
+def names_file() -> list[dict[str, str | float]]:
+    filename = ROOT_DIR / "res" / "definitions" / "names.json"
+    return load_list_from_file(filename)
 
 
 @pytest.fixture
@@ -344,3 +349,15 @@ def mock_champion_defs() -> list[dict[str, str | int | float]]:
             "champion_type2": None,
         },
     ]
+
+
+@pytest.fixture
+def settings(tmp_path) -> Settings:
+    root_dir = tmp_path / "esm"
+    settings = Settings(root_dir)
+    return settings
+
+
+@pytest.fixture
+def db(settings: Settings) -> DB:
+    return DB(settings)

@@ -137,12 +137,7 @@ node_modules/
 .vscode/settings.json
 
 # ESM res
-/esm/res/db/teams.json
-/esm/res/db/players.json
-/esm/res/db/champions.json
-/esm/res/db/teams.cbor
-/esm/res/db/players.cbor
-/esm/res/db/champions.cbor
+/esm/res/db/*
 
 # Ignore potential save files
 /esm/res/save/*

@@ -137,7 +137,7 @@ class MobaPlayerGenerator(GeneratorInterface):
         min_age: int = 16,
         max_age: int = 25,
     ):
-        self.nationalities = get_nations()
+        self.nationalities = get_nations(names)
         self.nick_names = get_default_player_nick_names()
 
         if min_age > max_age:

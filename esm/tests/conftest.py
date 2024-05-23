@@ -38,7 +38,7 @@ from esm.core.esports.moba.mobaplayer import (
 )
 from esm.core.esports.moba.mobateam import MobaTeam, MobaTeamSimulation
 from esm.core.esports.moba.simulation.mobamatchsimulation import MobaMatchSimulation
-from esm.core.esports.moba.simulation.picksbans import PickBanAI, PicksBans
+from esm.core.esports.moba.simulation.picksbans import PicksBans
 from esm.core.settings import Settings
 from esm.core.utils import get_default_names_file, load_list_from_file
 from esm.definitions import ROOT_DIR
@@ -137,225 +137,19 @@ def player(lanes, attributes, moba_player_champions) -> MobaPlayer:
 
 
 @pytest.fixture
-def mock_champions() -> list[Champion]:
-    return [
-        Champion(
-            champion_id=uuid.uuid4(),
-            name="Caitlyn",
-            skill=60,
-            scaling_factor=0.5,
-            scaling_peak=20,
-            lanes=LaneMultipliers(0.20, 0.10, 0.5, 1.00, 0.70),
-            champion_difficulty=ChampionDifficulty.MEDIUM,
-            champion_type1=ChampionType.MARKSMAN,
-            champion_type2=None,
-        ),
-        Champion(
-            champion_id=uuid.uuid4(),
-            name="Kassadin",
-            skill=70,
-            scaling_factor=0.7,
-            scaling_peak=25,
-            lanes=LaneMultipliers(0.70, 0.10, 1.00, 0.05, 0.05),
-            champion_difficulty=ChampionDifficulty.EASY,
-            champion_type1=ChampionType.ASSASSIN,
-            champion_type2=ChampionType.MAGE,
-        ),
-        Champion(
-            champion_id=uuid.uuid4(),
-            name="Soraka",
-            skill=45,
-            scaling_factor=0.2,
-            scaling_peak=35,
-            lanes=LaneMultipliers(0.60, 0.10, 0.05, 0.05, 1.00),
-            champion_difficulty=ChampionDifficulty.EASY,
-            champion_type1=ChampionType.HEALER,
-            champion_type2=ChampionType.UTILITY,
-        ),
-        Champion(
-            champion_id=uuid.uuid4(),
-            name="K'Sante",
-            skill=80,
-            scaling_factor=0.9,
-            scaling_peak=30,
-            lanes=LaneMultipliers(1.00, 0.50, 1.00, 0.10, 0.60),
-            champion_difficulty=ChampionDifficulty.MEDIUM,
-            champion_type1=ChampionType.TANK,
-            champion_type2=ChampionType.FIGHTER,
-        ),
-        Champion(
-            champion_id=uuid.uuid4(),
-            name="Lee Sin",
-            skill=85,
-            scaling_factor=0.4,
-            scaling_peak=24,
-            lanes=LaneMultipliers(0.80, 1.00, 0.60, 0.05, 0.05),
-            champion_difficulty=ChampionDifficulty.HARD,
-            champion_type1=ChampionType.FIGHTER,
-            champion_type2=None,
-        ),
-        Champion(
-            champion_id=uuid.uuid4(),
-            name="Braum",
-            skill=65,
-            scaling_factor=0.3,
-            scaling_peak=22,
-            lanes=LaneMultipliers(0.05, 0.05, 0.05, 0.05, 1.00),
-            champion_difficulty=ChampionDifficulty.EASY,
-            champion_type1=ChampionType.TANK,
-            champion_type2=ChampionType.UTILITY,
-        ),
-        Champion(
-            champion_id=uuid.uuid4(),
-            name="Twisted Fate",
-            skill=85,
-            scaling_factor=0.8,
-            scaling_peak=28,
-            lanes=LaneMultipliers(0.70, 0.10, 1.00, 0.80, 0.20),
-            champion_difficulty=ChampionDifficulty.MEDIUM,
-            champion_type1=ChampionType.MAGE,
-            champion_type2=ChampionType.MARKSMAN,
-        ),
-        Champion(
-            champion_id=uuid.uuid4(),
-            name="Draven",
-            skill=60,
-            scaling_factor=0.7,
-            scaling_peak=20,
-            lanes=LaneMultipliers(0.20, 0.10, 0.5, 1.00, 0.70),
-            champion_difficulty=ChampionDifficulty.HARD,
-            champion_type1=ChampionType.MARKSMAN,
-            champion_type2=None,
-        ),
-        Champion(
-            champion_id=uuid.uuid4(),
-            name="Gangplank",
-            skill=70,
-            scaling_factor=0.7,
-            scaling_peak=20,
-            lanes=LaneMultipliers(1.00, 0.10, 0.80, 0.10, 0.70),
-            champion_difficulty=ChampionDifficulty.HARD,
-            champion_type1=ChampionType.FIGHTER,
-            champion_type2=None,
-        ),
-        Champion(
-            champion_id=uuid.uuid4(),
-            name="Kha'Zix",
-            skill=54,
-            scaling_factor=0.7,
-            scaling_peak=26,
-            lanes=LaneMultipliers(0.20, 1.00, 0.4, 0.05, 0.05),
-            champion_difficulty=ChampionDifficulty.EASY,
-            champion_type1=ChampionType.ASSASSIN,
-            champion_type2=None,
-        ),
-    ]
+def mock_champion_defs() -> list[dict[str, str | int | float]]:
+    filename = (
+        ROOT_DIR / "res" / "definitions" / "moba" / "champions" / "champions.json"
+    )
+    return load_list_from_file(filename)
 
 
 @pytest.fixture
-def mock_champion_defs() -> list[dict[str, str | int | float]]:
-    return [
-        {
-            "name": "Caitlyn",
-            "skill": 60,
-            "scaling_factor ": 0.5,
-            "scaling_peak": 20,
-            "lanes": ["ADC"],
-            "champion_difficulty": 1,
-            "champion_type1": 4,
-            "champion_type2": None,
-        },
-        {
-            "name": "Kassadin",
-            "skill": 70,
-            "scaling_factor ": 0.7,
-            "scaling_peak": 25,
-            "lanes": ["JNG"],
-            "champion_difficulty": 0,
-            "champion_type1": 2,
-            "champion_type2": 3,
-        },
-        {
-            "name": "Soraka",
-            "skill": 45,
-            "scaling_factor ": 0.2,
-            "scaling_peak": 35,
-            "lanes": ["SUP"],
-            "champion_difficulty": 0,
-            "champion_type1": 6,
-            "champion_type2": 5,
-        },
-        {
-            "name": "K'Sante",
-            "skill": 80,
-            "scaling_factor ": 0.9,
-            "scaling_peak": 30,
-            "lanes": ["TOP", "MID"],
-            "champion_difficulty": 1,
-            "champion_type1": 0,
-            "champion_type2": 1,
-        },
-        {
-            "name": "Lee Sin",
-            "skill": 85,
-            "scaling_factor ": 0.4,
-            "scaling_peak": 24,
-            "lanes": ["JNG"],
-            "champion_difficulty": 2,
-            "champion_type1": 1,
-            "champion_type2": None,
-        },
-        {
-            "name": "Braum",
-            "skill": 65,
-            "scaling_factor": 0.3,
-            "scaling_peak": 22,
-            "lanes": ["SUP"],
-            "champion_difficulty": 0,
-            "champion_type1": 0,
-            "champion_type2": 5,
-        },
-        {
-            "name": "Twisted Fate",
-            "skill": 85,
-            "scaling_factor": 0.8,
-            "scaling_peak": 28,
-            "lanes": ["MID"],
-            "champion_difficulty": 1,
-            "champion_type1": 3,
-            "champion_type2": 4,
-        },
-        {
-            "name": "Draven",
-            "skill": 60,
-            "scaling_factor": 0.7,
-            "scaling_peak": 20,
-            "lanes": ["ADC"],
-            "champion_difficulty": 2,
-            "champion_type1": 4,
-            "champion_type2": None,
-        },
-        {
-            "name": "Gangplank",
-            "skill": 70,
-            "scaling_factor": 0.7,
-            "scaling_peak": 20,
-            "lanes": ["TOP"],
-            "champion_difficulty": 2,
-            "champion_type1": 1,
-            "champion_type2": None,
-        },
-        {
-            "name": "Kha'Zix",
-            "skill": 54,
-            "scaling_factor": 0.7,
-            "scaling_peak": 26,
-            "lanes": ["JNG"],
-            "champion_difficulty": 0,
-            "champion_type1": 2,
-            "champion_type2": None,
-        },
-    ]
+def mock_champions(
+    mock_champion_defs: list[dict[str, str | int | float]]
+) -> list[Champion]:
+    champion_gen = ChampionGenerator()
+    return [champion_gen.generate(champion_def) for champion_def in mock_champion_defs]
 
 
 @pytest.fixture
@@ -395,22 +189,12 @@ def mock_team_definitions() -> list[dict[str, int | str]]:
 
 
 @pytest.fixture
-def moba_champions(
-    mock_champion_defs: list[dict[str, str | int | float]]
-) -> list[Champion]:
-    return [
-        ChampionGenerator().generate(champion_def)
-        for champion_def in mock_champion_defs
-    ]
-
-
-@pytest.fixture
 def mock_moba_teams(
-    mock_team_definitions: list[dict[str, int | str]], moba_champions: list[Champion]
+    mock_team_definitions: list[dict[str, int | str]], mock_champions: list[Champion]
 ) -> list[MobaTeam]:
     names = load_list_from_file(get_default_names_file())
     teams = [
-        MobaTeamGenerator(moba_champions, player_names=names).generate(team_def)
+        MobaTeamGenerator(mock_champions, player_names=names).generate(team_def)
         for team_def in mock_team_definitions
     ]
     return teams
@@ -447,8 +231,8 @@ def moba_match_simulation(moba_match: MobaMatch) -> MobaMatchSimulation:
 
 @pytest.fixture
 def moba_picks_bans(
-    moba_match_simulation: MobaMatchSimulation, moba_champions: list[Champion]
+    moba_match_simulation: MobaMatchSimulation, mock_champions: list[Champion]
 ) -> PicksBans:
     team1 = moba_match_simulation.team1
     team2 = moba_match_simulation.team2
-    return PicksBans(team1, team2, moba_champions)
+    return PicksBans(mock_champions, team1, team2)

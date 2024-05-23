@@ -35,6 +35,12 @@ def test_try_start_simulation_without_picking_champions(
         moba_match_simulation.run()
 
 
+def test_picksbans_bans_phase(
+    moba_match_simulation: MobaMatchSimulation, moba_picks_bans: PicksBans
+) -> None:
+    pass
+
+
 # TODO: write the proper picks and bans and make it work here
 # def test_simulate_moba_game(moba_match_simulation: MobaMatchSimulation, moba_picks_bans: PicksBans) -> None:
 #     moba_picks_bans.picks_bans()

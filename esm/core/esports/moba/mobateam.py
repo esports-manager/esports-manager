@@ -97,15 +97,14 @@ class MobaTeamSimulation:
             "bot": 0.0,
         }
         self.is_players_team: bool = is_players_team
-        self.nexus: int = 1
         self.players: list[MobaPlayerSimulation] = players
         self.stats: TeamStats = TeamStats()
+        self.nexus: int = 1
         self.win_prob: float = 0.00
         self._player_overall: int = 0
         self._champion_overall: int = 0
         self._total_skill: int = 0
         self._points: int = 0
-        self._bans: list[Champion] = []
 
     def are_all_towers_down(self) -> bool:
         return (
@@ -156,8 +155,6 @@ class MobaTeamSimulation:
         for player in self.players:
             player.reset_attributes()
 
-        self._bans.clear()
-
         self.towers.update(
             {
                 "top": 3,
@@ -166,7 +163,6 @@ class MobaTeamSimulation:
                 "base": 2,
             }
         )
-
         self.inhibitors.update(
             {
                 "top": 1,
@@ -174,17 +170,14 @@ class MobaTeamSimulation:
                 "bot": 1,
             }
         )
+        self.inhibitors_cooldown: dict[str, float] = {
+            "top": 0.0,
+            "mid": 0.0,
+            "bot": 0.0,
+        }
 
         self.win_prob = 0.0
         self.nexus = 1
-
-    @property
-    def bans(self) -> list:
-        return self._bans
-
-    @bans.setter
-    def bans(self, champion) -> None:
-        self._bans.append(champion)
 
     @property
     def kills(self) -> int:

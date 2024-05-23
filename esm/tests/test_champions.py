@@ -53,7 +53,7 @@ def test_get_current_skill(champion: Champion):
     assert expected_output == champion_lanes
 
 
-def test_get_best_lane(champion):
+def test_get_best_lane(champion: Champion):
     expected_lane = Lanes.JNG
     assert expected_lane == champion.lanes.get_best_attribute()
 

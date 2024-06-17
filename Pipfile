@@ -18,7 +18,6 @@ coverage = "*"
 docutils = "*"
 
 [packages]
-pysimplegui = "*"
 setuptools = "*"
 cbor = "*"
 cbor2 = "*"

@@ -23,6 +23,9 @@ cbor = "*"
 cbor2 = "*"
 pyyaml = "*"
 pillow = "*"
+pywebview = "*"
+qtpy = "*"
+pyside6 = "*"
 
 [requires]
 python_version = "3"

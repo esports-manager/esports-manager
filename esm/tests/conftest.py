@@ -81,9 +81,9 @@ def champion_dict():
         "scaling_factor": 0.5,
         "scaling_peak": 20,
         "skill": 87,
-        "champion_difficulty": ChampionDifficulty.MEDIUM.value,
-        "champion_type1": ChampionType.TANK.value,
-        "champion_type2": ChampionType.FIGHTER.value,
+        "difficulty": ChampionDifficulty.MEDIUM.value,
+        "type1": ChampionType.TANK.value,
+        "type2": ChampionType.FIGHTER.value,
     }
 
 

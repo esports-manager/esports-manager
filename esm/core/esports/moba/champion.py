@@ -67,12 +67,12 @@ class Champion(Serializable):
         skill = dictionary["skill"]
         scaling_factor = dictionary["scaling_factor"]
         scaling_peak = dictionary["scaling_peak"]
-        difficulty = ChampionDifficulty(dictionary["champion_difficulty"])
-        champion_type1 = ChampionType(dictionary["champion_type1"])
-        if dictionary["champion_type2"] is None:
+        difficulty = ChampionDifficulty(dictionary["difficulty"])
+        champion_type1 = ChampionType(dictionary["type1"])
+        if dictionary["type2"] is None:
             champion_type2 = None
         else:
-            champion_type2 = ChampionType(dictionary["champion_type2"])
+            champion_type2 = ChampionType(dictionary["type2"])
 
         if skill > 100 or skill < 0:
             raise ChampionLoadError(
@@ -101,9 +101,9 @@ class Champion(Serializable):
             "scaling_factor": self.scaling_factor,
             "scaling_peak": self.scaling_peak,
             "lanes": self.lanes.serialize(),
-            "champion_difficulty": self.champion_difficulty.value,
-            "champion_type1": self.champion_type1.value,
-            "champion_type2": (
+            "difficulty": self.champion_difficulty.value,
+            "type1": self.champion_type1.value,
+            "type2": (
                 self.champion_type2.value if self.champion_type2 is not None else None
             ),
         }

@@ -81,7 +81,7 @@ class ChampionGenerator(GeneratorInterface):
     ) -> ChampionDifficulty:
         if difficulty is not None:
             try:
-                return ChampionDifficulty(difficulty["champion_difficulty"])
+                return ChampionDifficulty(difficulty["difficulty"])
             except KeyError:
                 pass
 
@@ -93,17 +93,17 @@ class ChampionGenerator(GeneratorInterface):
         if ch_type is not None:
             if used_type:
                 try:
-                    if ch_type["champion_type2"]:
-                        return ChampionType(ch_type["champion_type2"])
+                    if ch_type["type2"]:
+                        return ChampionType(ch_type["type2"])
                     else:
                         return None
                 except KeyError:
                     pass
             else:
                 try:
-                    if ch_type["champion_type1"] is None:
+                    if ch_type["type1"] is None:
                         raise ChampionGeneratorError("Champion type 1 is None")
-                    return ChampionType(ch_type["champion_type1"])
+                    return ChampionType(ch_type["type1"])
                 except KeyError:
                     pass
 

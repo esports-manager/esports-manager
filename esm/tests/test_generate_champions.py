@@ -50,9 +50,9 @@ def test_generate_champion_from_dict(champion_gen: ChampionGenerator):
     champion_dict = {
         "name": "MyChampion",
         "lanes": [Lanes.TOP.name, Lanes.JNG.name],
-        "champion_difficulty": ChampionDifficulty.MEDIUM.value,
-        "champion_type1": ChampionType.TANK.value,
-        "champion_type2": ChampionType.FIGHTER.value,
+        "difficulty": ChampionDifficulty.MEDIUM.value,
+        "type1": ChampionType.TANK.value,
+        "type2": ChampionType.FIGHTER.value,
     }
     obtained_champion = champion_gen.generate(champion_dict)
     assert obtained_champion.name == champion_dict["name"]
@@ -69,7 +69,7 @@ def test_generate_champion_from_dict_without_champion_type(
     champion_dict = {
         "name": "MyChampion",
         "lanes": [Lanes.SUP.name, Lanes.JNG.name],
-        "champion_difficulty": ChampionDifficulty.MEDIUM.value,
+        "difficulty": ChampionDifficulty.MEDIUM.value,
     }
     obtained_champion = champion_gen.generate(champion_dict)
     assert obtained_champion.champion_type1 is not None
@@ -81,9 +81,9 @@ def test_generate_champion_from_dict_with_none_champion_type(
     champion_dict = {
         "name": "MyChampion",
         "lanes": [Lanes.MID.name, Lanes.ADC.name],
-        "champion_difficulty": ChampionDifficulty.MEDIUM.value,
-        "champion_type1": ChampionType.TANK.value,
-        "champion_type2": None,
+        "difficulty": ChampionDifficulty.MEDIUM.value,
+        "type1": ChampionType.TANK.value,
+        "type2": None,
     }
     obtained_champion = champion_gen.generate(champion_dict)
     assert obtained_champion.champion_type1 == ChampionType.TANK
@@ -95,9 +95,9 @@ def test_raises_error_if_champion_type1_is_none(champion_gen: ChampionGenerator)
         champion_dict = {
             "name": "MyChampion",
             "lanes": [Lanes.TOP.name, Lanes.ADC.name],
-            "champion_difficulty": ChampionDifficulty.MEDIUM.value,
-            "champion_type1": None,
-            "champion_type2": ChampionType.TANK.value,
+            "difficulty": ChampionDifficulty.MEDIUM.value,
+            "type1": None,
+            "type2": ChampionType.TANK.value,
         }
         champion_gen.generate(champion_dict)
 

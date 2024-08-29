@@ -33,19 +33,3 @@ def test_try_start_simulation_without_picking_champions(
 ) -> None:
     with pytest.raises(NoChampionError):
         moba_match_simulation.run()
-
-
-# def test_picksbans_bans_phase(
-#     moba_match_simulation: MobaMatchSimulation, moba_picks_bans: PicksBans
-# ) -> None:
-#     pass
-
-
-# TODO: write the proper picks and bans and make it work here
-# def test_simulate_moba_game(moba_match_simulation: MobaMatchSimulation, moba_picks_bans: PicksBans) -> None:
-#     moba_picks_bans.picks_bans()
-#     moba_match_simulation.run()
-#     assert moba_match_simulation.is_running is False
-#     assert moba_match_simulation.is_match_over is True
-#     assert moba_match_simulation.get_winning_team() is not None
-#     assert moba_match_simulation.get_winning_team().nexus == 1

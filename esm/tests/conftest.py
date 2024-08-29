@@ -165,7 +165,7 @@ def db() -> DB:
 
 
 @pytest.fixture
-def mock_team_definitions() -> list[dict[str, int | str]]:
+def mock_moba_team_definitions() -> list[dict[str, int | str]]:
     return [
         {
             "name": "KoreanTeam",
@@ -190,12 +190,12 @@ def mock_team_definitions() -> list[dict[str, int | str]]:
 
 @pytest.fixture
 def mock_moba_teams(
-    mock_team_definitions: list[dict[str, int | str]], mock_champions: list[Champion]
+    mock_moba_team_definitions, mock_champions: list[Champion]
 ) -> list[MobaTeam]:
     names = load_list_from_file(get_default_names_file())
     teams = [
         MobaTeamGenerator(mock_champions, player_names=names).generate(team_def)
-        for team_def in mock_team_definitions
+        for team_def in mock_moba_team_definitions
     ]
     return teams
 

@@ -82,3 +82,11 @@ def test_second_pick_phase(moba_picks_bans: PicksBans):
     assert moba_picks_bans.picks_count == 10
     assert moba_picks_bans.pb_phase == PBPhase.PB_DONE
     assert moba_picks_bans.is_over is True
+
+
+def test_picks_and_bans_run(moba_picks_bans: PicksBans):
+    moba_picks_bans.run()
+    assert moba_picks_bans.is_over
+    assert moba_picks_bans.bans_count == 10
+    assert moba_picks_bans.picks_count == 10
+    assert moba_picks_bans.pb_phase == PBPhase.PB_DONE

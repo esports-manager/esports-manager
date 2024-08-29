@@ -13,6 +13,8 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import os
+
 import yaml
 
 from esm.definitions import *
@@ -21,14 +23,11 @@ from esm.definitions import *
 class Settings:
     def __init__(self, root_dir: Path = ROOT_DIR):
         self.root_dir: Path = root_dir
+        self.config_file = self.root_dir / "config.yml"
         self.res_dir: Path = self.root_dir / "res"
         self.db_dir: Path = self.root_dir / "db"
         self.save_file_dir: Path = self.root_dir / "saves"
         self.logs_dir: Path = self.root_dir / "logs"
-
-    @property
-    def config_file(self) -> Path:
-        return self.root_dir / "config.yaml"
 
     @property
     def definitions_dir(self) -> Path:

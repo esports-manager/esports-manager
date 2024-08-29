@@ -13,3 +13,18 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import pytest
+
+from esm.core.settings import Settings
+
+
+@pytest.fixture
+def settings(tmp_path) -> Settings:
+    settings = Settings()
+    settings.config_file = tmp_path / "settings.yaml"
+    return settings
+
+
+def test_settings_config_file(settings: Settings):
+    settings.load_config_file()
+    assert settings.config_file.exists()

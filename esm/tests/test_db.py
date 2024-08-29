@@ -40,13 +40,13 @@ def test_generate_champion_files(
 def test_generate_team_files(
     db: DB,
     mock_champion_defs: list[dict[str, str | int | float]],
-    mock_team_definitions: list[dict[str, str | int]],
+    mock_moba_team_definitions,
     names_file: list[dict[str, dict[str, str | int]]],
     tmp_path: Path,
 ) -> None:
     teams_filepath = tmp_path / "moba_teams.json"
     champions = db.generate_moba_champions(mock_champion_defs)
-    teams = db.generate_moba_teams(names_file, champions, mock_team_definitions)
+    teams = db.generate_moba_teams(names_file, champions, mock_moba_team_definitions)
     serialized_teams = db.serialize_teams(teams)
     db.generate_moba_file(teams_filepath, serialized_teams)
     assert teams_filepath.exists()
@@ -58,12 +58,12 @@ def test_generate_team_files(
 def test_get_players_from_teams(
     db: DB,
     mock_champion_defs: list[dict[str, str | int | float]],
-    mock_team_definitions: list[dict[str, str | int]],
+    mock_moba_team_definitions,
     names_file: list[dict[str, dict[str, str | int]]],
     tmp_path: Path,
 ) -> None:
     champions = db.generate_moba_champions(mock_champion_defs)
-    teams = db.generate_moba_teams(names_file, champions, mock_team_definitions)
+    teams = db.generate_moba_teams(names_file, champions, mock_moba_team_definitions)
     players = db.get_moba_players_from_teams(teams)
     assert len(players) > 0
     assert all(isinstance(player, MobaPlayer) for player in players)
@@ -72,13 +72,13 @@ def test_get_players_from_teams(
 def test_generate_players_file(
     db: DB,
     mock_champion_defs: list[dict[str, str | int | float]],
-    mock_team_definitions: list[dict[str, str | int]],
+    mock_moba_team_definitions,
     names_file: list[dict[str, dict[str, str | int]]],
     tmp_path: Path,
 ) -> None:
     players_filepath = tmp_path / "moba_players.json"
     champions = db.generate_moba_champions(mock_champion_defs)
-    teams = db.generate_moba_teams(names_file, champions, mock_team_definitions)
+    teams = db.generate_moba_teams(names_file, champions, mock_moba_team_definitions)
     players = db.get_moba_players_from_teams(teams)
     serialized_players = db.serialize_players(players)
     db.generate_moba_file(players_filepath, serialized_players)
@@ -187,7 +187,7 @@ def test_get_region_defs_non_existant_file(
 def test_extract_teams_from_region_file(
     db: DB,
     mock_champion_defs: list[dict[str, str | int | float]],
-    mock_team_definitions: list[dict[str, str | int]],
+    mock_moba_team_definitions,
     tmp_path: Path,
 ) -> None:
     mock_team_file = tmp_path / "testregion" / "teams.json"
@@ -200,7 +200,7 @@ def test_extract_teams_from_region_file(
     }
 
     with mock_team_file.open("w") as fp:
-        json.dump(mock_team_definitions, fp)
+        json.dump(mock_moba_team_definitions, fp)
 
     champions = db.generate_moba_champions(mock_champion_defs)
     player_names = load_list_from_file(get_default_names_file())
@@ -216,7 +216,7 @@ def test_extract_teams_from_region_file(
 def test_extract_regions_from_region_file(
     db: DB,
     mock_champion_defs: list[dict[str, str | int | float]],
-    mock_team_definitions: list[dict[str, str | int]],
+    mock_moba_team_definitions,
     tmp_path: Path,
 ) -> None:
     mock_team_file1 = tmp_path / "testregion" / "teams.json"
@@ -239,10 +239,10 @@ def test_extract_regions_from_region_file(
     ]
 
     with mock_team_file1.open("w", encoding="utf-8") as fp:
-        json.dump(mock_team_definitions, fp)
+        json.dump(mock_moba_team_definitions, fp)
 
     with mock_team_file2.open("w", encoding="utf-8") as fp:
-        json.dump(mock_team_definitions, fp)
+        json.dump(mock_moba_team_definitions, fp)
 
     champions = db.generate_moba_champions(mock_champion_defs)
     player_names = load_list_from_file(get_default_names_file())
@@ -254,13 +254,13 @@ def test_extract_regions_from_region_file(
     for region in regions:
         for team in region.teams:
             assert isinstance(team, MobaTeam)
-        assert len(region.teams) == len(mock_team_definitions)
+        assert len(region.teams) == len(mock_moba_team_definitions)
 
 
 def test_generate_regions_file(
     db: DB,
     mock_champion_defs: list[dict[str, str | int | float]],
-    mock_team_definitions: list[dict[str, str | int]],
+    mock_moba_team_definitions,
     names_file: list[dict[str, dict[str, str | int]]],
     tmp_path: Path,
 ):
@@ -285,10 +285,10 @@ def test_generate_regions_file(
     ]
 
     with mock_team_file1.open("w", encoding="utf-8") as fp:
-        json.dump(mock_team_definitions, fp)
+        json.dump(mock_moba_team_definitions, fp)
 
     with mock_team_file2.open("w", encoding="utf-8") as fp:
-        json.dump(mock_team_definitions, fp)
+        json.dump(mock_moba_team_definitions, fp)
 
     regions_def = db.get_moba_region_definitions(regions_def, tmp_path)
     champions = db.generate_moba_champions(mock_champion_defs)

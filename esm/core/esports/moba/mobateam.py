@@ -17,7 +17,7 @@ import uuid
 from dataclasses import dataclass
 
 from ...serializable import Serializable
-from .mobaplayer import MobaPlayer, MobaPlayerSimulation
+from .mobaplayer import Lanes, MobaPlayer, MobaPlayerSimulation
 
 
 @dataclass
@@ -98,6 +98,8 @@ class MobaTeamSimulation:
     ):
         self.team: MobaTeam = team
         self.towers: MobaTowers = MobaTowers()
+        self.picks = []
+        self.bans = []
         self.inhibitors: dict[str, int] = {
             "top": 1,
             "mid": 1,
@@ -110,6 +112,16 @@ class MobaTeamSimulation:
         }
         self.is_players_team: bool = is_players_team
         self.players: list[MobaPlayerSimulation] = players
+        self.player_lanes = {
+            Lanes.TOP: None,
+            Lanes.JNG: None,
+            Lanes.MID: None,
+            Lanes.ADC: None,
+            Lanes.SUP: None,
+        }
+        for lane, player in zip(list(Lanes), self.players):
+            self.player_lanes[lane] = player
+            player.lane = lane
         self.stats: TeamStats = TeamStats()
         self.nexus: int = 1
         self.win_prob: float = 0.00
@@ -128,11 +140,7 @@ class MobaTeamSimulation:
         return 0 not in self.inhibitors.values()
 
     def are_inhibs_exposed(self) -> bool:
-        return (
-            self.towers["top"] == 0
-            or self.towers["mid"] == 0
-            or self.towers["bot"] == 0
-        )
+        return self.towers.top == 0 or self.towers.mid == 0 or self.towers.bot == 0
 
     def get_exposed_inhibs(self):
         return [

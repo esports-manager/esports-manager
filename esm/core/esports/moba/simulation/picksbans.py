@@ -17,6 +17,7 @@ import random
 from enum import Enum, auto
 from queue import Queue
 from typing import Optional
+from uuid import UUID
 
 from esm.core.esports.moba.champion import Champion
 from esm.core.esports.moba.mobaplayer import Lanes
@@ -64,16 +65,16 @@ class PicksBans:
         self.champions = champions
         self.team1 = team1
         self.team2 = team2
-        self.team1_bans: list[Champion] = []
-        self.team2_bans: list[Champion] = []
-        self.team1_picks: list[Champion] = []
-        self.team2_picks: list[Champion] = []
         if team1_input is None:
-            self.team1_input: Optional[PickBanInput] = PicksBansAI(team1, champions)
+            self.team1_input: Optional[PickBanInput] = PicksBansAI(
+                team1, team2, champions
+            )
         else:
             self.team1_input = team1_input
         if team2_input is None:
-            self.team2_input: Optional[PickBanInput] = PicksBansAI(team2, champions)
+            self.team2_input: Optional[PickBanInput] = PicksBansAI(
+                team2, team1, champions
+            )
         else:
             self.team2_input: Optional[PickBanInput] = team2_input
         self.is_over = False
@@ -136,13 +137,70 @@ class PicksBans:
 
 
 class PicksBansAI(PickBanInput):
-    def __init__(self, team: MobaTeamSimulation, champions: list[Champion]):
+    def __init__(
+        self,
+        team: MobaTeamSimulation,
+        opposing_team: MobaTeamSimulation,
+        champions: list[Champion],
+    ):
         self.team = team
+        self.opposing_team = opposing_team
         self.champions = champions
-        self.picks_prio = list(Lanes)
+        self.picks = {lane: None for lane in list(Lanes)}
+        self.opposing_team_champions = self.setup_champions(
+            self.opposing_team, {ch.champion_id: 0 for ch in self.champions}
+        )
+        self.champion_ids = {ch.champion_id: ch for ch in self.champions}
+
+    @staticmethod
+    def setup_champions(
+        team: MobaTeamSimulation, champions: dict[UUID, int]
+    ) -> dict[UUID, int]:
+        for player in team.players:
+            for champion in player.player.champion_pool:
+                champions[champion.champion_id] += 1
+
+        return {ch: v for ch, v in champions.items() if v != 0}
 
     def pick(self):
-        pass
+        # Choose lane to pick
+        lanes = [lane for lane in list(Lanes) if self.picks[lane] is None]
+        if len(lanes) == 1:
+            lane = lanes[0]
+        else:
+            lane = random.choice(lanes)
+
+        # Get the player from the lane
+        player = self.team.player_lanes[lane]
+
+        # Filter champions to pick based on lane
+        champions_for_lane = [
+            ch
+            for ch in self.champions
+            if ch.lanes[lane] == 1.0 and ch.champion_id in self.champion_ids
+        ]
+
+        # Then we calculate the skill levels of each champion, and we choose
+        # the champion based on the resulting skill level
+        champions_to_pick = [
+            (champion, player.get_projected_champion_skill(champion))
+            for champion in champions_for_lane
+        ]
+
+        # Now we just use these skill levels as probabilities and we pick the champion
+        champions = [ch[0] for ch in champions_to_pick]
+        probabilities = [ch[1] for ch in champions_to_pick]
+        champion = random.choices(champions, probabilities)[0]
+
+        # Finally, we pick the champion
+        self.picks[lane] = champion
+        player.champion = champion
+
+        # And we remove the champion from the list of available ones
+        # and add it to the list of picks
+        self.champion_ids.pop(champion.champion_id)
+        self.champions.remove(champion)
+        self.team.picks.append(champion)
 
     def ban(self):
         pass

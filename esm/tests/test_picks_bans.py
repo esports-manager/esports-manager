@@ -13,10 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import pytest
-
-from esm.core.esports.moba.generator import MobaTeamGenerator
-from esm.core.esports.moba.simulation.picksbans import PBPhase, PickBanInput, PicksBans
+from esm.core.esports.moba.simulation.picksbans import PBPhase, PicksBans
 
 
 def test_first_ban_phase(moba_picks_bans: PicksBans):

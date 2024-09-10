@@ -14,6 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import random
+from abc import ABC, abstractmethod
 from enum import Enum, auto
 from queue import Queue
 from typing import Optional
@@ -22,17 +23,6 @@ from uuid import UUID
 from esm.core.esports.moba.champion import Champion
 from esm.core.esports.moba.mobaplayer import Lanes
 from esm.core.esports.moba.mobateam import MobaTeamSimulation
-
-"""
-PICKS AND BANS REWORK:
-
-    - Picks are not specific to a player
-    - Maybe assign picks to a lane
-    - Give the player the option to reshuffle their picks
-    - Pick and Bans AI should take into account the player's lanes
-      and ban according to the opponent team's strongest picks
-"""
-from abc import ABC, abstractmethod
 
 
 class PBPhase(Enum):
@@ -135,6 +125,12 @@ class PicksBans:
             self.bans()
             self.picks()
 
+        if isinstance(self.team1_input, PicksBansAI):
+            self.team1_input.finalize()
+
+        if isinstance(self.team2_input, PicksBansAI):
+            self.team2_input.finalize()
+
 
 class PicksBansAI(PickBanInput):
     def __init__(
@@ -194,7 +190,6 @@ class PicksBansAI(PickBanInput):
 
         # Finally, we pick the champion
         self.picks[lane] = champion
-        player.champion = champion
 
         # And we remove the champion from the list of available ones
         # and add it to the list of picks
@@ -203,4 +198,42 @@ class PicksBansAI(PickBanInput):
         self.team.picks.append(champion)
 
     def ban(self):
-        pass
+        # The algorithm should consider opposing team's picks
+        # For example: If the team has already picked their ADC, there's no need to ban an ADC
+        # But this simplified version should suffice for now
+
+        # Choose a lane to ban
+        lane = random.choice(list(Lanes))
+
+        # Get the player from the lane
+        player = self.opposing_team.player_lanes[lane]
+
+        # Filter champions to ban based on lane
+        champions_for_lane = [
+            ch
+            for ch in self.champions
+            if ch.lanes[lane] == 1.0 and ch.champion_id in self.champion_ids
+        ]
+
+        # Then we calculate the skill levels of each champion, and we choose
+        # the champion based on the resulting skill level
+        champions_to_ban = [
+            (champion, player.get_projected_champion_skill(champion))
+            for champion in champions_for_lane
+        ]
+
+        # Now we just use these skill levels as probabilities and we pick the champion to ban
+        champions = [ch[0] for ch in champions_to_ban]
+        probabilities = [ch[1] for ch in champions_to_ban]
+        champion = random.choices(champions, probabilities)[0]
+
+        # Finally, we ban the champion
+        self.champion_ids.pop(champion.champion_id)
+        self.champions.remove(champion)
+        self.team.bans.append(champion)
+
+    def finalize(self):
+        for lane in list(Lanes):
+            champion = self.picks[lane]
+            if champion is not None:
+                self.team.player_lanes[lane].champion = champion

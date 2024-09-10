@@ -72,7 +72,6 @@ class PicksBans:
         self.bans_count = 0
         self.picks_count = 0
         self.max_bans = 10
-        self.queue = Queue()
 
     def bans(self):
         if self.pb_phase == PBPhase.BAN_BLUE_SIDE:
@@ -130,6 +129,17 @@ class PicksBans:
 
         if isinstance(self.team2_input, PicksBansAI):
             self.team2_input.finalize()
+
+
+class PickBansHumanInput(PickBanInput):
+    def __init__(self):
+        self.queue = Queue()
+
+    def pick(self):
+        return self.queue.get()
+
+    def ban(self):
+        return self.queue.get()
 
 
 class PicksBansAI(PickBanInput):

@@ -15,21 +15,14 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import pytest
 
-from esm.core.esports.moba.simulation.mobamatchsimulation import (
-    MobaMatchSimulation,
+from esm.core.esports.moba.simulation.moba_sim_match import (
+    MobaSimMatch,
     NoChampionError,
 )
-from esm.core.esports.moba.simulation.mobasimulationengine import MobaSimulationEngine
-from esm.core.esports.moba.simulation.picksbans import PicksBans
-
-
-@pytest.fixture
-def moba_simulation_engine() -> MobaSimulationEngine:
-    return MobaSimulationEngine(show_commentary=False)
 
 
 def test_try_start_simulation_without_picking_champions(
-    moba_match_simulation: MobaMatchSimulation,
+    moba_match_simulation: MobaSimMatch,
 ) -> None:
     with pytest.raises(NoChampionError):
         moba_match_simulation.run()

@@ -237,24 +237,13 @@ class MobaPlayerSimulation:
         self.consecutive_kills = 0
 
     def get_highest_multiplier(self) -> float:
-        """
-        Gets the highest lane multiplier.
-        """
         lanes = self.player.lanes.serialize()
         return max(lanes.values())
 
     def get_best_lane(self) -> Lanes:
-        """
-        Gets the highest lane multiplier, the lane that the player is 100% confident on playing.
-        """
         return self.player.lanes.get_best_attribute()
 
     def get_curr_lane_multiplier(self) -> float:
-        """
-        Gets the current lane multiplier in-game, this will define how good a player is on that particular lane.
-
-        Each player has at least one lane where he is 100% confident to play on.
-        """
         if self.lane is not None:
             return self.player.lanes[self.lane]
 
@@ -262,77 +251,65 @@ class MobaPlayerSimulation:
 
     @property
     def skill(self) -> float:
-        """
-        Gets the player's skill according to the lane he is currently at.
-        """
         return (
             self.player.attributes.get_overall(self.lane)
             * self.get_curr_lane_multiplier()
         )
 
-    def get_projected_champion_skill(self, champion: Champion) -> float:
-        """
-        Gets a projected champion skill level, for champions that are not yet picked.
-        """
-        if champion is None:
-            return 0
-
-        mastery = ChampionMastery.BRONZE
+    def get_champion_mastery_level(
+        self, champion: Champion
+    ) -> Optional[ChampionMastery]:
         champion_ids = [ch.champion_id for ch in self.player.champion_pool]
+        if champion.champion_id not in champion_ids:
+            return ChampionMastery.BRONZE
 
-        if champion.champion_id in champion_ids:
-            for ch in self.player.champion_pool:
-                if champion.champion_id == ch.champion_id:
-                    mastery = ch.mastery
-                    break
+        for ch in self.player.champion_pool:
+            if champion.champion_id == ch.champion_id:
+                return ch.mastery
 
-        # Default mastery for BRONZE mastery level
-        mult = 1.0
+        return None
 
-        if mastery == ChampionMastery.SILVER:
-            mult = 1.05
-        elif mastery == ChampionMastery.GOLD:
-            mult = 1.10
-        elif mastery == ChampionMastery.PLATINUM:
-            mult = 1.15
-        elif mastery == ChampionMastery.DIAMOND:
-            mult = 1.20
-        elif mastery == ChampionMastery.MASTER:
-            mult = 1.25
-        elif mastery == ChampionMastery.GRANDMASTER:
-            mult = 1.30
+    def get_champion_mastery_value(self, champion: Champion) -> float:
+        mastery_level = self.get_champion_mastery_level(champion)
+        if mastery_level is None:
+            return 0.0
 
+        if mastery_level == ChampionMastery.BRONZE:
+            return 1.0
+        elif mastery_level == ChampionMastery.SILVER:
+            return 1.05
+        elif mastery_level == ChampionMastery.GOLD:
+            return 1.10
+        elif mastery_level == ChampionMastery.PLATINUM:
+            return 1.15
+        elif mastery_level == ChampionMastery.DIAMOND:
+            return 1.20
+        elif mastery_level == ChampionMastery.MASTER:
+            return 1.25
+        elif mastery_level == ChampionMastery.GRANDMASTER:
+            return 1.30
+
+        return 0.0
+
+    def get_projected_champion_skill(self, champion: Champion) -> float:
+        if champion is None:
+            return 0.0
+
+        mult = self.get_champion_mastery_value(champion)
         return champion.skill * mult
 
     def get_champion_skill(self) -> float:
-        """
-        Gets the player_champion_skill according to the mastery level.
-        """
         return self.get_projected_champion_skill(self.champion)
 
     @property
     def total_skill(self) -> float:
-        """
-        Gets the player + player_champion_skill + points to use in the match.
-        This will define how strong or how weak a certain player is on the
-        current match.
-        """
         return self.skill + self.get_champion_skill() + self.points
 
     def is_player_on_killing_spree(self) -> bool:
-        """
-        Returns true if the player is on killing spree. False otherwise.
-        """
         return 2 <= self.consecutive_kills <= 4
 
     def is_player_godlike(self) -> bool:
-        """
-        Returns true if the player is godlike. False otherwise.
-        """
         return 4 < self.consecutive_kills < 8
 
     def is_player_legendary(self):
-        """
-        Returns true if the player is legendary. False otherwise.
-        """
         return self.consecutive_kills >= 8

@@ -66,6 +66,9 @@ class MobaTowers:
         self.bot = 3
         self.base = 2
 
+    def get_num_towers(self):
+        return self.top + self.mid + self.bot + self.base
+
     def all_down(self) -> bool:
         return self.top == 0 and self.mid == 0 and self.bot == 0 and self.base == 0
 

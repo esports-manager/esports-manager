@@ -16,6 +16,7 @@ pyinstaller = "*"
 doq = "*"
 coverage = "*"
 docutils = "*"
+pytailwindcss = "*"
 
 [packages]
 setuptools = "*"

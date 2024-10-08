@@ -13,24 +13,35 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from enum import Enum, auto
+from flask import Flask, render_template
+
+app = Flask(__name__)
 
 
-class MobaEventType(Enum):
-    NOTHING = auto()
-    FIGHT = auto()
-    JUNGLE = auto()
-    INHIB_ASSAULT = auto()
-    TOWER_ASSAULT = auto()
-    NEXUS_ASSAULT = auto()
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 
-class MobaEventOutcome(Enum):
-    NOTHING = auto()
-    KILL = auto()
-    DEFEND_INHIB = auto()
-    DEFEND_TOWER = auto()
-    DEFEND_NEXUS = auto()
-    TAKE_INHIB = auto()
-    TAKE_TOWER = auto()
-    TAKE_NEXUS = auto()
+@app.route("/new_game")
+def new_game():
+    return render_template("layout.html")
+
+
+@app.route("/load_game")
+def load_game():
+    return "<p>load game</p>"
+
+
+@app.route("/debug_mode")
+def debug_mode():
+    return "<p>debug mode</p>"
+
+
+@app.route("/settings")
+def settings():
+    return "<p>settings</p>"
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

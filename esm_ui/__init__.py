@@ -13,24 +13,3 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from datetime import timedelta
-
-from ...mobateam import MobaTeamSimulation
-from ..moba_event_base import MobaEvent, MobaEventBase, MobaEventPriority
-from ..moba_event_type import MobaEventType
-
-
-class MobaEventKill(MobaEvent, MobaEventBase):
-    def __init__(
-        self,
-        team1: MobaTeamSimulation,
-        team2: MobaTeamSimulation,
-        event_time: timedelta,
-        points: float,
-    ):
-        super().__init__(
-            MobaEventType.KILL, team1, team2, MobaEventPriority.LOW, event_time, points
-        )
-
-    def calculate_event(self):
-        pass

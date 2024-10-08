@@ -13,8 +13,12 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from datetime import timedelta
+from typing import Optional
+
 from ..mobateam import MobaTeamSimulation
 from .events import MobaEventFactory
+from .moba_event_type import MobaEventOutcome
 
 
 class MobaSimEngine:
@@ -24,6 +28,19 @@ class MobaSimEngine:
         self.events = []
         self.event_history = []
         self.event_factory = MobaEventFactory()
+        self.match_time: timedelta = timedelta(0)
 
-    def get_events(self):
+    def get_events(self, outcome: Optional[MobaEventOutcome]):
         self.events.clear()
+
+        if outcome:
+            self.event_factory.get_event_from_outcome(
+                self.team1, self.team2, self.match_time, outcome
+            )
+
+    def run(self):
+        outcome = None
+        if self.event_history:
+            outcome = self.event_history[-1].outcome
+
+        self.get_events(outcome)

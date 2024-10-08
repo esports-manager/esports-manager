@@ -13,41 +13,29 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from abc import ABC, abstractmethod
 from datetime import timedelta
-from enum import Enum, auto
-from typing import Optional
 
-from ..mobateam import MobaTeamSimulation
-from .moba_event_type import MobaEventOutcome, MobaEventType
-
-
-class MobaEventPriority(Enum):
-    LOW = auto()
-    NORMAL = auto()
-    HIGH = auto()
+from ...mobateam import MobaTeamSimulation
+from ..moba_event_base import MobaEvent, MobaEventBase, MobaEventPriority
+from ..moba_event_type import MobaEventType
 
 
-class MobaEvent(ABC):
-    @abstractmethod
-    def calculate_event(self):
-        pass
-
-
-class MobaEventBase:
+class MobaEventFight(MobaEvent, MobaEventBase):
     def __init__(
         self,
-        event_type: MobaEventType,
         team1: MobaTeamSimulation,
         team2: MobaTeamSimulation,
-        priority: MobaEventPriority,
         event_time: timedelta,
         points: float,
     ):
-        self.event_type = event_type
-        self.team1 = team1
-        self.team2 = team2
-        self.priority = priority
-        self.event_time = event_time
-        self.points = points
-        self.outcome: Optional[MobaEventOutcome] = None
+        super().__init__(
+            MobaEventType.FIGHT,
+            team1,
+            team2,
+            MobaEventPriority.HIGH,
+            event_time,
+            points,
+        )
+
+    def calculate_event(self):
+        pass

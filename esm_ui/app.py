@@ -23,9 +23,19 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/new_game")
-def new_game():
+@app.route("/page/layout")
+def layout():
     return render_template("layout.html")
+
+
+@app.route("/page/home")
+def new_game():
+    return render_template("pages/home.html")
+
+
+@app.route("/page/roster")
+def roster():
+    return render_template("pages/roster.html")
 
 
 @app.route("/load_game")

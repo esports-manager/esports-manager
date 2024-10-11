@@ -67,7 +67,12 @@
 
   <ul class="px-3">
     <li
+      hx-get="/page/home"
+      hx-target="#maincontent"
+      hx-swap="innerHTML"
+      x-on:click="page = 'home'"
       class="relative flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'home', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'home' }"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +96,12 @@
       </span>
     </li>
     <li
+      hx-get="/page/roster"
+      hx-target="#maincontent"
+      hx-swap="innerHTML"
+      x-on:click="page = 'roster'"
       class="relative flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'roster', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'roster' }"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +116,7 @@
 
       <span
         class="overflow-hidden transition-all"
-        :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded }"
+        :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded}"
       >
         Roster
       </span>

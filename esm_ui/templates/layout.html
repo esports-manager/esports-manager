@@ -17,7 +17,7 @@
   -->
 
 {% extends "base.html" %} {% block content %}
-<div x-data="{expanded: true}">
+<div x-data="{expanded: true, page: 'home'}">
   {% block sidebar %}{% include "partials/sidebar.html" %}{% endblock %}
 
   <div class="flex flex-col w-screen">
@@ -25,9 +25,10 @@
 
     <div class="pt-20 transition-all"
     :class="{ 'ml-64 md:ml-64': expanded, 'ml-16 md:ml-16': !expanded }">
-      <div class="px-10">
-        <h1 class="text-3xl font-bold">Main Content</h1>
-        <p class="text-lg">Hello World! This is your main content area.</p>
+      <div class="px-5">
+        <div id="maincontent">
+          {% include "pages/home.html" %}
+        </div>
       </div>
     </div>
   </div>

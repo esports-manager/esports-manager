@@ -18,8 +18,17 @@
 <!DOCTYPE html>
 <html
   lang="en"
-  x-data="{darkMode: true }"
+  x-data="{
+    darkMode: localStorage.getItem('darkMode')
+      ? JSON.parse(localStorage.getItem('darkMode'))
+      : window.matchMedia('(prefers-color-scheme: dark)').matches,
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+      localStorage.setItem('darkMode', JSON.stringify(this.darkMode));
+    }
+  }"
   :class="{'dark' : darkMode, '' : !darkMode}"
+  x-init="$watch('darkMode', value => document.documentElement.classList.toggle('dark', value))"
 >
   <head>
     <meta charset="UTF-8" />
@@ -30,10 +39,14 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/output.css') }}"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
     <script src="{{ url_for('static', filename='js/htmx.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/alpine.min.js') }}"></script>
   </head>
-  <body class="h-screen flex bg-gray-50 dark:bg-slate-950 dark:text-white">
+  <body class="bg-gray-50 dark:bg-slate-950 dark:text-white">
     {% block content %}{% endblock %}
   </body>
 </html>

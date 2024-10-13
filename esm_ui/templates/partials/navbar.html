@@ -1,30 +1,19 @@
 <nav
-  class="text-black border-b border-b-gray-300 dark:border-b-gray-700 dark:text-white bg-gray-100 dark:bg-slate-800 justify-between transition-all flex flex-items-center px-4 shadow-sm h-[75px] top-0"
-  :class="{ 'ml-64 md:ml-64': expanded, 'ml-16 md:ml-16': !expanded }"
+  class="text-black border-b border-b-gray-300 dark:border-b-gray-700 dark:text-white bg-gray-100 dark:bg-slate-700 justify-between transition-all flex flex-items-center px-4 shadow-sm h-[90px] top-0"
+  :class="{ 'ml-64': expanded, 'ml-16': !expanded }"
 >
-  <div class="font-bold text-3xl text-center px-4 self-center">Team Name</div>
+  <div class="flex flex-row font-bold text-3xl text-center px-4 self-center">
+    <img
+      class="w-14"
+      src="{{ url_for('static', filename='img/g2-logo-clear.webp') }}"
+    />
+    <div class="ml-4 place-self-center">G2 eSports</div>
+  </div>
 
   <div class="flex items-center space-x-4">
     <button
-      class="px-5 py-5 mx-2 bg-gray-300 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        class="size-6"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M19.5 21a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3h-5.379a.75.75 0 0 1-.53-.22L11.47 3.66A2.25 2.25 0 0 0 9.879 3H4.5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h15Zm-6.75-10.5a.75.75 0 0 0-1.5 0v4.19l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V10.5Z"
-          clip-rule="evenodd"
-        />
-      </svg>
-    </button>
-
-    <button
-      @click="darkMode = !darkMode"
-      class="px-5 py-5 mx-2 bg-gray-300 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600"
+      @click="toggleDarkMode"
+      class="px-5 py-5 mx-1 bg-gray-300 hover:bg-gray-200 dark:bg-slate-600 dark:hover:bg-slate-500"
     >
       <span x-show="darkMode !== true">
         <svg
@@ -54,21 +43,21 @@
       </span>
     </button>
 
-    <button class="flex px-5 py-5 bg-blue-500 hover:bg-blue-400 text-white font-bold">
-      Next Game
-      <span class="ml-4"
-        ><svg
+    <button
+      class="flex px-5 py-5 bg-blue-500 hover:bg-blue-400 text-white font-bold uppercase"
+    >
+      Continue
+      <span class="ml-4">
+        <svg
           xmlns="http://www.w3.org/2000/svg"
-          fill="none"
           viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          class="w-6 h-6"
+          fill="currentColor"
+          class="size-6"
         >
           <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M14.752 11.168l-2.536 2.53M12.216 8.64l2.536 2.53m0 0H8.752M12 12H6"
+            fill-rule="evenodd"
+            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm4.28 10.28a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 1 0-1.06 1.06l1.72 1.72H8.25a.75.75 0 0 0 0 1.5h5.69l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3Z"
+            clip-rule="evenodd"
           />
         </svg>
       </span>

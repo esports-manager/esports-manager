@@ -33,6 +33,11 @@ def new_game():
     return render_template("pages/home.html")
 
 
+@app.route("/page/inbox")
+def inbox():
+    return "<h1 class='text-lg'>This is the inbox, leave a message!</h1>"
+
+
 @app.route("/page/roster")
 def roster():
     return render_template("pages/roster.html")

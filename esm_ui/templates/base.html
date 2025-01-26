@@ -16,9 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <!DOCTYPE html>
-<html
-  lang="en"
-  x-data="{
+<html lang="en" x-data="{
     darkMode: localStorage.getItem('darkMode')
       ? JSON.parse(localStorage.getItem('darkMode'))
       : window.matchMedia('(prefers-color-scheme: dark)').matches,
@@ -26,27 +24,24 @@
       this.darkMode = !this.darkMode;
       localStorage.setItem('darkMode', JSON.stringify(this.darkMode));
     }
-  }"
-  :class="{'dark' : darkMode, '' : !darkMode}"
-  x-init="$watch('darkMode', value => document.documentElement.classList.toggle('dark', value))"
->
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>eSports Manager</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/output.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
-    />
-    <script src="{{ url_for('static', filename='js/htmx.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/alpine.min.js') }}"></script>
-  </head>
-  <body class="bg-gray-50 dark:bg-slate-950 dark:text-white">
-    {% block content %}{% endblock %}
-  </body>
+  }" :class="{'dark' : darkMode, '' : !darkMode}"
+  x-init="$watch('darkMode', value => document.documentElement.classList.toggle('dark', value))">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>eSports Manager</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/trophy.svg') }}" />
+  <script src="{{ url_for('static', filename='js/htmx.min.js') }}">
+  </script>
+  <script defer src="{{ url_for('static', filename='js/alpine.min.js') }}"></script>
+</head>
+
+<body class="bg-gray-50 dark:bg-slate-950 dark:text-white">
+  {% block content %}{% endblock %}
+</body>
+
 </html>

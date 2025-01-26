@@ -18,5 +18,5 @@ import webview
 from esm_ui.app import app
 
 if __name__ == "__main__":
-    webview.create_window("eSports Manager", app, resizable=True)
+    webview.create_window("eSports Manager", app, min_size=(800, 600), resizable=True)
     webview.start()

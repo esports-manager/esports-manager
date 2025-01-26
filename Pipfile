@@ -27,6 +27,7 @@ pillow = "*"
 pywebview = "*"
 qtpy = "*"
 pyside6 = "*"
+flask = "*"
 
 [requires]
 python_version = "3"

@@ -42,14 +42,14 @@
     <li hx-get="/page/home" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'home'"
       class="relative flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
       :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'home', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'home' }">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-house-door-fill"
+        viewBox="0 0 16 16">
         <path
-          d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
-        <path
-          d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
+          d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5" />
       </svg>
 
-      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded }">
+      <span class="overflow-hidden transition-all"
+        :class="{'absolute left-full px-3 py-1 ml-4 bg-gray-500 text-white dark:bg-gray-700 text-sm invisible opacity-20 -translate-x-4 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0': !expanded, 'w-52 ml-3': expanded }">
         Home
       </span>
     </li>
@@ -57,40 +57,47 @@
     <li hx-get="/page/inbox" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'inbox'"
       class="relative flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
       :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'inbox', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'inbox' }">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-        <path fill-rule="evenodd"
-          d="M6.912 3a3 3 0 0 0-2.868 2.118l-2.411 7.838a3 3 0 0 0-.133.882V18a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3v-4.162c0-.299-.045-.596-.133-.882l-2.412-7.838A3 3 0 0 0 17.088 3H6.912Zm13.823 9.75-2.213-7.191A1.5 1.5 0 0 0 17.088 4.5H6.912a1.5 1.5 0 0 0-1.434 1.059L3.265 12.75H6.11a3 3 0 0 1 2.684 1.658l.256.513a1.5 1.5 0 0 0 1.342.829h3.218a1.5 1.5 0 0 0 1.342-.83l.256-.512a3 3 0 0 1 2.684-1.658h2.844Z"
-          clip-rule="evenodd" />
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-inbox-fill"
+        viewBox="0 0 16 16">
+        <path
+          d="M4.98 4a.5.5 0 0 0-.39.188L1.54 8H6a.5.5 0 0 1 .5.5 1.5 1.5 0 1 0 3 0A.5.5 0 0 1 10 8h4.46l-3.05-3.812A.5.5 0 0 0 11.02 4zm-1.17-.437A1.5 1.5 0 0 1 4.98 3h6.04a1.5 1.5 0 0 1 1.17.563l3.7 4.625a.5.5 0 0 1 .106.374l-.39 3.124A1.5 1.5 0 0 1 14.117 13H1.883a1.5 1.5 0 0 1-1.489-1.314l-.39-3.124a.5.5 0 0 1 .106-.374z" />
       </svg>
-      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded }">
+      <span class="overflow-hidden transition-all"
+        :class="{ 'absolute left-full px-3 py-1 ml-4 bg-gray-500 text-white dark:bg-gray-700 text-sm invisible opacity-20 -translate-x-4 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0': !expanded, 'w-52 ml-3': expanded }">
         Inbox
       </span>
     </li>
     <li hx-get="/page/roster" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'roster'"
       class="relative flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
       :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'roster', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'roster' }">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-people-fill"
+        viewBox="0 0 16 16">
         <path
-          d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM17.25 19.128l-.001.144a2.25 2.25 0 0 1-.233.96 10.088 10.088 0 0 0 5.06-1.01.75.75 0 0 0 .42-.643 4.875 4.875 0 0 0-6.957-4.611 8.586 8.586 0 0 1 1.71 5.157v.003Z" />
+          d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
       </svg>
 
-      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded }">
+      <span class="overflow-hidden transition-all"
+        :class="{ 'absolute left-full px-3 py-1 ml-4 bg-gray-500 text-white dark:bg-gray-700 text-sm invisible opacity-20 -translate-x-4 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0': !expanded, 'w-52 ml-3': expanded }">
         Roster
       </span>
     </li>
+    <li hx-get="/page/calendar" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'calendar'"
+      class="relative flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'calendar', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'calendar' }">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-calendar-fill"
+        viewBox="0 0 16 16">
+        <path
+          d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5h16V4H0V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5" />
+      </svg>
+      <span class="overflow-hidden transition-all"
+        :class="{ 'absolute left-full px-3 py-1 ml-4 bg-gray-500 text-white dark:bg-gray-700 text-sm invisible opacity-20 -translate-x-4 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0': !expanded, 'w-52 ml-3': expanded }">
+        Calendar
+      </span>
+
+    </li>
   </ul>
-  <div class="px-3 flex mt-auto flex-col ">
-    <hr class="h-px my-2 border-0 bg-gray-400 transition-all" :class="{ 'w-54': expanded, 'w-10': !expanded }" />
-    <ul>
-      <li
-        class="relative flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="size-6">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
-        </svg>
-        <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-54 ml-3': expanded }">Logout</span>
-      </li>
-    </ul>
+
+  <div class="bottom-5 px-3 my-9">
+    <hr clas="h-px my-2 border-0 bg-gray-400 transition-all" />
   </div>
 </aside>

@@ -43,6 +43,11 @@ def roster():
     return render_template("pages/roster.html")
 
 
+@app.route("/page/calendar")
+def calendar():
+    return render_template("pages/calendar.html")
+
+
 @app.route("/load_game")
 def load_game():
     return "<p>load game</p>"

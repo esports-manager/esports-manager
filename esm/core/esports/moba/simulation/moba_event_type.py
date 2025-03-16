@@ -19,7 +19,10 @@ from enum import Enum, auto
 class MobaEventType(Enum):
     NOTHING = auto()
     FIGHT = auto()
-    JUNGLE = auto()
+    JUNGLE_GRUBS = auto()
+    JUNGLE_HERALD = auto()
+    JUNGLE_DRAKE = auto()
+    JUNGLE_BARON = auto()
     INHIB_ASSAULT = auto()
     TOWER_ASSAULT = auto()
     NEXUS_ASSAULT = auto()

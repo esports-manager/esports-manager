@@ -14,9 +14,10 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from abc import ABC, abstractmethod
-from datetime import timedelta
 from enum import Enum, auto
 from typing import Optional
+
+from esm.core.esports.moba.simulation.moba_sim_state import MobaSimState
 
 from ..mobateam import MobaTeamSimulation
 from .moba_event_type import MobaEventOutcome, MobaEventType
@@ -29,19 +30,13 @@ class MobaEventPriority(Enum):
 
 
 class MobaEvent(ABC):
-    @abstractmethod
-    def calculate_event(self):
-        pass
-
-
-class MobaEventBase:
     def __init__(
         self,
         event_type: MobaEventType,
         team1: MobaTeamSimulation,
         team2: MobaTeamSimulation,
         priority: MobaEventPriority,
-        event_time: timedelta,
+        event_time: float,
         points: float,
     ):
         self.event_type = event_type
@@ -51,3 +46,8 @@ class MobaEventBase:
         self.event_time = event_time
         self.points = points
         self.outcome: Optional[MobaEventOutcome] = None
+        self.duration = 0.0
+
+    @abstractmethod
+    def calculate_event(self, sim_state: MobaSimState):
+        pass

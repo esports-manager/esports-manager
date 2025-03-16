@@ -13,10 +13,9 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from datetime import timedelta
-
 from ...mobateam import MobaTeamSimulation
 from ..moba_event_base import MobaEvent
+from ..moba_event_def import MOBA_EVENT_DEF
 from ..moba_event_type import MobaEventOutcome, MobaEventType
 from .moba_event_fight import MobaEventFight
 from .moba_event_inhib import MobaEventInhibAssault
@@ -28,33 +27,27 @@ from .moba_event_tower import MobaEventTowerAssault
 
 class MobaEventFactory:
     def get_points(self, event_type: MobaEventType) -> float:
-        return 0.0
-
-    def get_event_from_outcome(
-        self,
-        team1: MobaTeamSimulation,
-        team2: MobaTeamSimulation,
-        event_time: timedelta,
-        outcome: MobaEventOutcome,
-    ) -> MobaEvent:
-        if outcome == MobaEventOutcome.NOTHING:
-            return MobaEventNothing(team1, team2, event_time)
-        return MobaEventNothing(team1, team2, event_time)
+        return MOBA_EVENT_DEF[event_type]["points"]
 
     def create_event(
         self,
         event_type: MobaEventType,
         team1: MobaTeamSimulation,
         team2: MobaTeamSimulation,
-        event_time: timedelta,
+        event_time: float,
     ) -> MobaEvent:
         if event_type == MobaEventType.NOTHING:
             return MobaEventNothing(team1, team2, event_time)
         elif event_type == MobaEventType.FIGHT:
             return MobaEventFight(team1, team2, event_time, self.get_points(event_type))
-        elif event_type == MobaEventType.JUNGLE:
+        elif event_type in [
+            MobaEventType.JUNGLE_BARON,
+            MobaEventType.JUNGLE_DRAKE,
+            MobaEventType.JUNGLE_GRUBS,
+            MobaEventType.JUNGLE_HERALD,
+        ]:
             return MobaEventJungle(
-                team1, team2, event_time, self.get_points(event_type)
+                event_type, team1, team2, event_time, self.get_points(event_type)
             )
         elif event_type == MobaEventType.INHIB_ASSAULT:
             return MobaEventInhibAssault(
@@ -68,3 +61,5 @@ class MobaEventFactory:
             return MobaEventNexusAssault(
                 team1, team2, event_time, self.get_points(event_type)
             )
+        else:
+            raise NotImplementedError

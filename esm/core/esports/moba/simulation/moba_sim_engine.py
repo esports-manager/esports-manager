@@ -13,34 +13,56 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from datetime import timedelta
-from typing import Optional
+import random
 
 from ..mobateam import MobaTeamSimulation
 from .events import MobaEventFactory
-from .moba_event_type import MobaEventOutcome
+from .moba_event_def import MOBA_EVENT_DEF
+from .moba_event_type import MobaEventOutcome, MobaEventType
+from .moba_sim_state import MobaSimState
 
 
 class MobaSimEngine:
     def __init__(self, team1: MobaTeamSimulation, team2: MobaTeamSimulation):
         self.team1 = team1
         self.team2 = team2
-        self.events = []
         self.event_history = []
         self.event_factory = MobaEventFactory()
-        self.match_time: timedelta = timedelta(0)
+        self.sim_state = MobaSimState()
 
-    def get_events(self, outcome: Optional[MobaEventOutcome]):
-        self.events.clear()
+    def get_events(self) -> list[MobaEventType]:
+        events = [MobaEventType.NOTHING, MobaEventType.FIGHT]
 
-        if outcome:
-            self.event_factory.get_event_from_outcome(
-                self.team1, self.team2, self.match_time, outcome
-            )
+        if ev := self.sim_state.get_event_types():
+            events.extend(ev)
+
+        if (
+            self.team1.get_exposed_towers() or self.team2.get_exposed_towers()
+        ) and self.sim_state.match_time >= MOBA_EVENT_DEF[MobaEventType.TOWER_ASSAULT][
+            "start_time"
+        ]:
+            events.append(MobaEventType.TOWER_ASSAULT)
+
+        if self.team1.get_exposed_inhibs() or self.team2.get_exposed_inhibs():
+            events.append(MobaEventType.INHIB_ASSAULT)
+
+        if self.team1.is_nexus_exposed() or self.team2.is_nexus_exposed():
+            events.append(MobaEventType.NEXUS_ASSAULT)
+
+        return events
+
+    def get_event_probability(self, events: list[MobaEventType]) -> list[int]:
+        probabilities = []
+        for event in events:
+            probabilities.append(MOBA_EVENT_DEF[event]["probability"])
+
+        return probabilities
 
     def run(self):
-        outcome = None
-        if self.event_history:
-            outcome = self.event_history[-1].outcome
-
-        self.get_events(outcome)
+        events = self.get_events()
+        probabilities = self.get_event_probability(events)
+        event_type = random.choices(events, probabilities, k=1)[0]
+        event = self.event_factory.create_event(
+            event_type, self.team1, self.team2, self.sim_state.match_time
+        )
+        event.calculate_event(self.sim_state)

@@ -51,6 +51,8 @@ class TeamStats:
     kills: int = 0
     deaths: int = 0
     assists: int = 0
+    dragons: int = 0
+    grubs: int = 0
 
 
 @dataclass
@@ -143,7 +145,25 @@ class MobaTeamSimulation:
         return 0 not in self.inhibitors.values()
 
     def are_inhibs_exposed(self) -> bool:
-        return self.towers.top == 0 or self.towers.mid == 0 or self.towers.bot == 0
+        return (
+            (self.towers.top == 0 and self.inhibitors["top"] == 1)
+            or (self.towers.mid == 0 and self.inhibitors["mid"] == 1)
+            or (self.towers.bot == 0 and self.inhibitors["bot"] == 1)
+        )
+
+    def get_exposed_towers(self) -> list[str]:
+        exposed = []
+        if self.towers.top > 0:
+            exposed.append("top")
+        if self.towers.mid > 0:
+            exposed.append("mid")
+        if self.towers.bot > 0:
+            exposed.append("bot")
+
+        if 0 in self.inhibitors.values() and self.towers.base > 0:
+            exposed.append("base")
+
+        return exposed
 
     def get_exposed_inhibs(self):
         return [
@@ -166,6 +186,7 @@ class MobaTeamSimulation:
         for player in self.players:
             player.reset_attributes()
 
+        self.stats = TeamStats()
         self.towers.reset()
         self.inhibitors.update(
             {

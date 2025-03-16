@@ -13,23 +13,24 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from datetime import timedelta
+from esm.core.esports.moba.simulation.moba_sim_state import MobaSimState
 
 from ...mobateam import MobaTeamSimulation
-from ..moba_event_base import MobaEvent, MobaEventBase, MobaEventPriority
+from ..moba_event_base import MobaEvent, MobaEventPriority
 from ..moba_event_type import MobaEventType
 
 
-class MobaEventJungle(MobaEvent, MobaEventBase):
+class MobaEventJungle(MobaEvent):
     def __init__(
         self,
+        event_type: MobaEventType,
         team1: MobaTeamSimulation,
         team2: MobaTeamSimulation,
-        event_time: timedelta,
+        event_time: float,
         points: float,
     ):
         super().__init__(
-            MobaEventType.JUNGLE,
+            event_type,
             team1,
             team2,
             MobaEventPriority.LOW,
@@ -37,5 +38,5 @@ class MobaEventJungle(MobaEvent, MobaEventBase):
             points,
         )
 
-    def calculate_event(self):
+    def calculate_event(self, sim_state: MobaSimState):
         pass

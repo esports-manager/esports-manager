@@ -111,5 +111,12 @@ def test_moba_event_jungle_grubs(moba_match_sim: MobaSimMatch):
 
     state = MobaSimState()
     state.void_grubs.alive = True
+    assert state.void_grubs.alive is True
     event.calculate_event(state)
     assert event.outcome in [MobaEventOutcome.TAKE_GRUBS, MobaEventOutcome.STEAL_GRUBS]
+    assert state.void_grubs.alive is False
+    assert state.void_grubs.respawn_timer > 0
+
+
+def test_moba_event_jungle_herald():
+    pass

@@ -123,18 +123,18 @@ class MobaSimState:
 
     def take_baron(self):
         self.baron.alive = False
-        self.dragon.respawn_timer = MOBA_EVENT_DEF[MobaEventType.JUNGLE_BARON][
+        self.baron.respawn_timer = MOBA_EVENT_DEF[MobaEventType.JUNGLE_BARON][
             "cooldown"
         ]
 
     def take_void_grubs(self):
         self.void_grubs.alive = False
-        self.dragon.respawn_timer = MOBA_EVENT_DEF[MobaEventType.JUNGLE_GRUBS][
+        self.void_grubs.respawn_timer = MOBA_EVENT_DEF[MobaEventType.JUNGLE_GRUBS][
             "cooldown"
         ]
 
     def take_herald(self):
         self.herald.alive = False
-        self.dragon.respawn_timer = MOBA_EVENT_DEF[MobaEventType.JUNGLE_HERALD][
+        self.herald.respawn_timer = MOBA_EVENT_DEF[MobaEventType.JUNGLE_HERALD][
             "cooldown"
         ]

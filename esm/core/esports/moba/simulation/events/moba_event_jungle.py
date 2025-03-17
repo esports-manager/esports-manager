@@ -96,7 +96,11 @@ class MobaEventJungle(MobaEvent):
 
         if self.outcome == MobaEventOutcome.TAKE_GRUBS:
             attacking_team.stats.grubs += 3
+            sim_state.take_void_grubs()
             for player in attacking_team.players:
                 player.points += self.points
         elif self.outcome == MobaEventOutcome.STEAL_GRUBS:
             defending_team.stats.grubs += 3
+            sim_state.take_void_grubs()
+            for player in defending_team.players:
+                player.points += self.points

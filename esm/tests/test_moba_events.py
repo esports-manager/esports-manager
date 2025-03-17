@@ -72,6 +72,25 @@ def test_moba_event_tower_assault_get_attacking_team(moba_match_sim: MobaSimMatc
     assert isinstance(team, MobaTeamSimulation)
 
 
+def test_moba_event_tower_assault_get_outcome(moba_match_sim: MobaSimMatch):
+    team1 = moba_match_sim.team1
+    team2 = moba_match_sim.team2
+    event = MobaEventTowerAssault(team1, team2, 0.0, 0.0)
+    team = event.get_attacking_team()
+    outcome = event.get_outcome(team)
+    assert outcome in [MobaEventOutcome.DEFEND_TOWER, MobaEventOutcome.TAKE_TOWER]
+
+
+def test_moba_event_tower_assault_get_tower(moba_match_sim: MobaSimMatch):
+    team1 = moba_match_sim.team1
+    team2 = moba_match_sim.team2
+    event = MobaEventTowerAssault(team1, team2, 0.0, 0.0)
+    attacking_team = event.get_attacking_team()
+    tower = event.get_tower(attacking_team, event.get_towers())
+    assert tower is not None
+    assert tower != ""
+
+
 def test_moba_event_tower_assault(moba_match_sim: MobaSimMatch):
     team1 = moba_match_sim.team1
     team2 = moba_match_sim.team2

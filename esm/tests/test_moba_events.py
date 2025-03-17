@@ -118,5 +118,17 @@ def test_moba_event_jungle_grubs(moba_match_sim: MobaSimMatch):
     assert state.void_grubs.respawn_timer > 0
 
 
-def test_moba_event_jungle_herald():
-    pass
+def test_moba_event_jungle_herald(moba_match_sim: MobaSimMatch):
+    team1 = moba_match_sim.team1
+    team2 = moba_match_sim.team2
+    event = MobaEventJungle(MobaEventType.JUNGLE_HERALD, team1, team2, 0.0, 0.0)
+
+    state = MobaSimState()
+    state.herald.alive = True
+    event.calculate_event(state)
+    assert event.outcome in [
+        MobaEventOutcome.TAKE_HERALD,
+        MobaEventOutcome.STEAL_HERALD,
+    ]
+    assert state.herald.alive is False
+    assert state.herald.respawn_timer > 0

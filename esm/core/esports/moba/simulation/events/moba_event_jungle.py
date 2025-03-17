@@ -83,11 +83,25 @@ class MobaEventJungle(MobaEvent):
         if team == attacking_team:
             if self.event_type == MobaEventType.JUNGLE_GRUBS:
                 return MobaEventOutcome.TAKE_GRUBS
+            elif self.event_type == MobaEventType.JUNGLE_HERALD:
+                return MobaEventOutcome.TAKE_HERALD
         else:
             if self.event_type == MobaEventType.JUNGLE_GRUBS:
                 return MobaEventOutcome.STEAL_GRUBS
+            elif self.event_type == MobaEventType.JUNGLE_HERALD:
+                return MobaEventOutcome.STEAL_HERALD
 
         return MobaEventOutcome.NOTHING
+
+    def is_elder_drake(self) -> bool:
+        return self.team1.stats.dragons == 4 or self.team2.stats.dragons == 4
+
+    def award_points(self, team: MobaTeamSimulation):
+        if self.is_elder_drake():
+            self.points += 10
+
+        for player in team.players:
+            player.points += self.points
 
     def calculate_event(self, sim_state: MobaSimState):
         attacking_team = self.get_attacking_team()
@@ -97,10 +111,30 @@ class MobaEventJungle(MobaEvent):
         if self.outcome == MobaEventOutcome.TAKE_GRUBS:
             attacking_team.stats.grubs += 3
             sim_state.take_void_grubs()
-            for player in attacking_team.players:
-                player.points += self.points
+            self.award_points(attacking_team)
         elif self.outcome == MobaEventOutcome.STEAL_GRUBS:
             defending_team.stats.grubs += 3
             sim_state.take_void_grubs()
-            for player in defending_team.players:
-                player.points += self.points
+            self.award_points(defending_team)
+        elif self.outcome == MobaEventOutcome.TAKE_HERALD:
+            sim_state.take_herald()
+            self.award_points(attacking_team)
+        elif self.outcome == MobaEventOutcome.STEAL_HERALD:
+            sim_state.take_herald()
+            self.award_points(defending_team)
+        elif self.outcome == MobaEventOutcome.TAKE_DRAKE:
+            sim_state.take_drake()
+            if not self.is_elder_drake():
+                attacking_team.stats.dragons += 1
+            self.award_points(attacking_team)
+        elif self.outcome == MobaEventOutcome.STEAL_DRAKE:
+            sim_state.take_drake()
+            if not self.is_elder_drake():
+                defending_team.stats.dragons += 1
+            self.award_points(defending_team)
+        elif self.outcome == MobaEventOutcome.TAKE_BARON:
+            sim_state.take_baron()
+            self.award_points(attacking_team)
+        elif self.outcome == MobaEventOutcome.STEAL_BARON:
+            sim_state.take_baron()
+            self.award_points(defending_team)

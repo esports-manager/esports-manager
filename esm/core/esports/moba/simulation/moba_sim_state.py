@@ -115,7 +115,7 @@ class MobaSimState:
     def is_herald_alive(self):
         return self.herald.alive
 
-    def take_dragon(self):
+    def take_drake(self):
         self.dragon.alive = False
         self.dragon.respawn_timer = MOBA_EVENT_DEF[MobaEventType.JUNGLE_DRAKE][
             "cooldown"

@@ -54,3 +54,29 @@ def test_moba_event_nothing(moba_match_sim: MobaSimMatch):
     state = MobaSimState()
     event.calculate_event(state)
     assert event.outcome == MobaEventOutcome.NOTHING
+
+
+def test_moba_event_tower_assault_get_towers(moba_match_sim: MobaSimMatch):
+    team1 = moba_match_sim.team1
+    team2 = moba_match_sim.team2
+    event = MobaEventTowerAssault(team1, team2, 0.0, 0.0)
+    towers = event.get_towers()
+    assert len(towers) == 6
+
+
+def test_moba_event_tower_assault_get_attacking_team(moba_match_sim: MobaSimMatch):
+    team1 = moba_match_sim.team1
+    team2 = moba_match_sim.team2
+    event = MobaEventTowerAssault(team1, team2, 0.0, 0.0)
+    team = event.get_attacking_team()
+    assert isinstance(team, MobaTeamSimulation)
+
+
+def test_moba_event_tower_assault(moba_match_sim: MobaSimMatch):
+    team1 = moba_match_sim.team1
+    team2 = moba_match_sim.team2
+    event = MobaEventTowerAssault(team1, team2, 0.0, 0.0)
+
+    state = MobaSimState()
+    event.calculate_event(state)
+    assert event.outcome in [MobaEventOutcome.DEFEND_TOWER, MobaEventOutcome.TAKE_TOWER]

@@ -135,6 +135,19 @@ class MobaTeamSimulation:
         self._total_skill: int = 0
         self._points: int = 0
 
+    def remove_tower(self, tower: str):
+        tower = tower.replace("team1_", "").strip()
+        tower = tower.replace("team2_", "").strip()
+
+        if tower == "top":
+            self.towers.top -= 1
+        elif tower == "mid":
+            self.towers.mid -= 1
+        elif tower == "bot":
+            self.towers.bot -= 1
+        elif tower == "base":
+            self.towers.base -= 1
+
     def are_all_towers_down(self) -> bool:
         return self.towers.all_down()
 

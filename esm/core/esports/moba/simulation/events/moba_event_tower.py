@@ -54,7 +54,7 @@ class MobaEventTowerAssault(MobaEvent):
         for player in self.team1.players:
             team1_attributes += (
                 player.player.attributes.utility.map_control
-                + player.player.attributes.utility.vision_control
+                + player.player.attributes.offensive.lane_pressure
                 + player.player.attributes.knowledge.map_awareness
                 + player.player.attributes.communication.team_work
                 + player.player.attributes.communication.decisioning
@@ -63,7 +63,7 @@ class MobaEventTowerAssault(MobaEvent):
         for player in self.team2.players:
             team2_attributes += (
                 player.player.attributes.utility.map_control
-                + player.player.attributes.utility.vision_control
+                + player.player.attributes.offensive.lane_pressure
                 + player.player.attributes.knowledge.map_awareness
                 + player.player.attributes.communication.team_work
                 + player.player.attributes.communication.decisioning
@@ -115,3 +115,5 @@ class MobaEventTowerAssault(MobaEvent):
 
         if self.outcome == MobaEventOutcome.TAKE_TOWER:
             defending_team.remove_tower(tower)
+            for player in attacking_team.players:
+                player.points += self.points

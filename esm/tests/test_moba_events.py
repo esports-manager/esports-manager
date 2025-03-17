@@ -28,7 +28,10 @@ from esm.core.esports.moba.simulation.events import (
     MobaEventNothing,
     MobaEventTowerAssault,
 )
-from esm.core.esports.moba.simulation.moba_event_type import MobaEventOutcome
+from esm.core.esports.moba.simulation.moba_event_type import (
+    MobaEventOutcome,
+    MobaEventType,
+)
 from esm.core.esports.moba.simulation.moba_sim_engine import MobaSimEngine
 from esm.core.esports.moba.simulation.moba_sim_match import MobaMatch, MobaSimMatch
 from esm.core.esports.moba.simulation.moba_sim_state import MobaSimState
@@ -99,3 +102,14 @@ def test_moba_event_tower_assault(moba_match_sim: MobaSimMatch):
     state = MobaSimState()
     event.calculate_event(state)
     assert event.outcome in [MobaEventOutcome.DEFEND_TOWER, MobaEventOutcome.TAKE_TOWER]
+
+
+def test_moba_event_jungle_grubs(moba_match_sim: MobaSimMatch):
+    team1 = moba_match_sim.team1
+    team2 = moba_match_sim.team2
+    event = MobaEventJungle(MobaEventType.JUNGLE_GRUBS, team1, team2, 0.0, 0.0)
+
+    state = MobaSimState()
+    state.void_grubs.alive = True
+    event.calculate_event(state)
+    assert event.outcome in [MobaEventOutcome.TAKE_GRUBS, MobaEventOutcome.STEAL_GRUBS]

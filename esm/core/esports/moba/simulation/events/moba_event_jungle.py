@@ -22,6 +22,10 @@ from ..moba_event_base import MobaEvent, MobaEventPriority
 from ..moba_event_type import MobaEventOutcome, MobaEventType
 
 
+class MobaEventJungleError(Exception):
+    pass
+
+
 class MobaEventJungle(MobaEvent):
     def __init__(
         self,
@@ -49,11 +53,8 @@ class MobaEventJungle(MobaEvent):
         )[0]
 
     def get_outcome(self, attacking_team: MobaTeamSimulation) -> MobaEventOutcome:
-        team1_attributes = 0
-        team2_attributes = 0
-
-        for player in self.team1.players:
-            team1_attributes += (
+        team1_attributes = sum(
+            (
                 player.player.attributes.utility.map_control
                 + player.player.attributes.utility.vision_control
                 + player.player.attributes.utility.objective_control
@@ -63,9 +64,10 @@ class MobaEventJungle(MobaEvent):
                 + player.player.attributes.communication.shot_calling
                 + player.player.attributes.knowledge.timing
             )
-
-        for player in self.team2.players:
-            team2_attributes = (
+            for player in self.team1.players
+        )
+        team2_attributes = sum(
+            (
                 player.player.attributes.utility.map_control
                 + player.player.attributes.utility.vision_control
                 + player.player.attributes.utility.objective_control
@@ -75,6 +77,8 @@ class MobaEventJungle(MobaEvent):
                 + player.player.attributes.communication.shot_calling
                 + player.player.attributes.knowledge.timing
             )
+            for player in self.team2.players
+        )
 
         team = random.choices(
             [self.team1, self.team2], [team1_attributes, team2_attributes], k=1
@@ -85,11 +89,19 @@ class MobaEventJungle(MobaEvent):
                 return MobaEventOutcome.TAKE_GRUBS
             elif self.event_type == MobaEventType.JUNGLE_HERALD:
                 return MobaEventOutcome.TAKE_HERALD
+            elif self.event_type == MobaEventType.JUNGLE_DRAKE:
+                return MobaEventOutcome.TAKE_DRAKE
+            elif self.event_type == MobaEventType.JUNGLE_BARON:
+                return MobaEventOutcome.TAKE_BARON
         else:
             if self.event_type == MobaEventType.JUNGLE_GRUBS:
                 return MobaEventOutcome.STEAL_GRUBS
             elif self.event_type == MobaEventType.JUNGLE_HERALD:
                 return MobaEventOutcome.STEAL_HERALD
+            elif self.event_type == MobaEventType.JUNGLE_DRAKE:
+                return MobaEventOutcome.STEAL_DRAKE
+            elif self.event_type == MobaEventType.JUNGLE_BARON:
+                return MobaEventOutcome.STEAL_BARON
 
         return MobaEventOutcome.NOTHING
 
@@ -103,7 +115,22 @@ class MobaEventJungle(MobaEvent):
         for player in team.players:
             player.points += self.points
 
+    def check_state(self, sim_state: MobaSimState):
+        if self.event_type == MobaEventType.JUNGLE_GRUBS:
+            if not sim_state.void_grubs.alive:
+                raise MobaEventJungleError("Void Grubs cannot be generated")
+        elif self.event_type == MobaEventType.JUNGLE_HERALD:
+            if not sim_state.herald.alive:
+                raise MobaEventJungleError("Herald cannot be generated")
+        elif self.event_type == MobaEventType.JUNGLE_DRAKE:
+            if not sim_state.dragon.alive:
+                raise MobaEventJungleError("Drake cannot be generated")
+        elif self.event_type == MobaEventType.JUNGLE_BARON:
+            if not sim_state.baron.alive:
+                raise MobaEventJungleError("Baron cannot be generated")
+
     def calculate_event(self, sim_state: MobaSimState):
+        self.check_state(sim_state)
         attacking_team = self.get_attacking_team()
         self.outcome = self.get_outcome(attacking_team)
         defending_team = self.team1 if attacking_team == self.team2 else self.team2

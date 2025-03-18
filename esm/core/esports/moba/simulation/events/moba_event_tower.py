@@ -48,26 +48,26 @@ class MobaEventTowerAssault(MobaEvent):
         return towers
 
     def get_outcome(self, attacking_team: MobaTeamSimulation) -> MobaEventOutcome:
-        team1_attributes = 0
-        team2_attributes = 0
-
-        for player in self.team1.players:
-            team1_attributes += (
+        team1_attributes = sum(
+            (
                 player.player.attributes.utility.map_control
                 + player.player.attributes.offensive.lane_pressure
                 + player.player.attributes.knowledge.map_awareness
                 + player.player.attributes.communication.team_work
                 + player.player.attributes.communication.decisioning
             )
-
-        for player in self.team2.players:
-            team2_attributes += (
+            for player in self.team1.players
+        )
+        team2_attributes = sum(
+            (
                 player.player.attributes.utility.map_control
                 + player.player.attributes.offensive.lane_pressure
                 + player.player.attributes.knowledge.map_awareness
                 + player.player.attributes.communication.team_work
                 + player.player.attributes.communication.decisioning
             )
+            for player in self.team1.players
+        )
 
         team = random.choices(
             [self.team1, self.team2], [team1_attributes, team2_attributes], k=1

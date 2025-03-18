@@ -28,6 +28,9 @@ from esm.core.esports.moba.simulation.events import (
     MobaEventNothing,
     MobaEventTowerAssault,
 )
+from esm.core.esports.moba.simulation.events.moba_event_jungle import (
+    MobaEventJungleError,
+)
 from esm.core.esports.moba.simulation.moba_event_type import (
     MobaEventOutcome,
     MobaEventType,
@@ -118,6 +121,18 @@ def test_moba_event_jungle_grubs(moba_match_sim: MobaSimMatch):
     assert state.void_grubs.respawn_timer > 0
 
 
+def test_moba_event_jungle_grubs_not_alive(moba_match_sim: MobaSimMatch):
+    team1 = moba_match_sim.team1
+    team2 = moba_match_sim.team2
+    event = MobaEventJungle(MobaEventType.JUNGLE_GRUBS, team1, team2, 0.0, 0.0)
+
+    state = MobaSimState()
+    state.void_grubs.alive = False
+    assert state.void_grubs.alive is False
+    with pytest.raises(MobaEventJungleError):
+        event.calculate_event(state)
+
+
 def test_moba_event_jungle_herald(moba_match_sim: MobaSimMatch):
     team1 = moba_match_sim.team1
     team2 = moba_match_sim.team2
@@ -132,3 +147,65 @@ def test_moba_event_jungle_herald(moba_match_sim: MobaSimMatch):
     ]
     assert state.herald.alive is False
     assert state.herald.respawn_timer > 0
+
+
+def test_moba_event_jungle_herald_not_alive(moba_match_sim: MobaSimMatch):
+    team1 = moba_match_sim.team1
+    team2 = moba_match_sim.team2
+    event = MobaEventJungle(MobaEventType.JUNGLE_HERALD, team1, team2, 0.0, 0.0)
+
+    state = MobaSimState()
+    state.herald.alive = False
+    with pytest.raises(MobaEventJungleError):
+        event.calculate_event(state)
+
+
+def test_moba_event_jungle_drake(moba_match_sim: MobaSimMatch):
+    team1 = moba_match_sim.team1
+    team2 = moba_match_sim.team2
+    event = MobaEventJungle(MobaEventType.JUNGLE_DRAKE, team1, team2, 0.0, 0.0)
+
+    state = MobaSimState()
+    state.dragon.alive = True
+    event.calculate_event(state)
+    assert event.outcome in [
+        MobaEventOutcome.TAKE_DRAKE,
+        MobaEventOutcome.STEAL_DRAKE,
+    ]
+    assert state.dragon.alive is False
+    assert state.dragon.respawn_timer > 0
+
+
+def test_moba_event_jungle_drake_not_alive(moba_match_sim: MobaSimMatch):
+    team1 = moba_match_sim.team1
+    team2 = moba_match_sim.team2
+    event = MobaEventJungle(MobaEventType.JUNGLE_DRAKE, team1, team2, 0.0, 0.0)
+
+    state = MobaSimState()
+    state.dragon.alive = False
+    with pytest.raises(MobaEventJungleError):
+        event.calculate_event(state)
+
+
+def test_moba_event_jungle_baron(moba_match_sim: MobaSimMatch):
+    team1 = moba_match_sim.team1
+    team2 = moba_match_sim.team2
+    event = MobaEventJungle(MobaEventType.JUNGLE_BARON, team1, team2, 0.0, 0.0)
+
+    state = MobaSimState()
+    state.baron.alive = True
+    event.calculate_event(state)
+    assert event.outcome in [MobaEventOutcome.TAKE_BARON, MobaEventOutcome.STEAL_BARON]
+    assert state.baron.alive is False
+    assert state.baron.respawn_timer > 0
+
+
+def test_moba_event_jungle_baron_not_alive(moba_match_sim: MobaSimMatch):
+    team1 = moba_match_sim.team1
+    team2 = moba_match_sim.team2
+    event = MobaEventJungle(MobaEventType.JUNGLE_BARON, team1, team2, 0.0, 0.0)
+
+    state = MobaSimState()
+    state.baron.alive = False
+    with pytest.raises(MobaEventJungleError):
+        event.calculate_event(state)

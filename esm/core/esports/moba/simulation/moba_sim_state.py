@@ -49,6 +49,27 @@ class MobaSimState:
             events.append(MobaEventType.JUNGLE_GRUBS)
         return events
 
+    def _tick_objective(
+        self,
+        objective: MapObjective,
+        event_type: MobaEventType,
+        event_time: float,
+        enforce_end_time: bool = False,
+    ):
+        event_def = MOBA_EVENT_DEF[event_type]
+        start_time = event_def["start_time"]
+        end_time = event_def.get("end_time", float("inf"))
+        if (
+            not objective.alive
+            and self.match_time >= start_time
+            and (not enforce_end_time or self.match_time < end_time)
+        ):
+            if objective.respawn_timer > 0.0:
+                objective.respawn_timer -= self.match_time - event_time
+            else:
+                objective.respawn_timer = 0.0
+                objective.alive = True
+
     def tick(self, time: float):
         self.match_time += time
 
@@ -57,51 +78,10 @@ class MobaSimState:
         self.dragon.alive = False
         self.herald.alive = False
 
-        if (
-            not self.void_grubs.alive
-            and MOBA_EVENT_DEF[MobaEventType.JUNGLE_GRUBS]["start_time"]
-            <= self.match_time
-            < MOBA_EVENT_DEF[MobaEventType.JUNGLE_GRUBS]["end_time"]
-        ):
-            if self.void_grubs.respawn_timer > 0.0:
-                self.void_grubs.respawn_timer -= time
-            else:
-                self.void_grubs.respawn_timer = 0.0
-                self.void_grubs.alive = True
-
-        if (
-            not self.herald.alive
-            and MOBA_EVENT_DEF[MobaEventType.JUNGLE_HERALD]["start_time"]
-            <= self.match_time
-            < MOBA_EVENT_DEF[MobaEventType.JUNGLE_HERALD]["end_time"]
-        ):
-            if self.herald.respawn_timer > 0.0:
-                self.herald.respawn_timer -= time
-            else:
-                self.herald.respawn_timer = 0.0
-                self.herald.alive = True
-
-        if (
-            not self.dragon.alive
-            and self.match_time
-            >= MOBA_EVENT_DEF[MobaEventType.JUNGLE_DRAKE]["start_time"]
-        ):
-            if self.dragon.respawn_timer > 0.0:
-                self.dragon.respawn_timer -= time
-            else:
-                self.dragon.respawn_timer = 0.0
-                self.dragon.alive = True
-
-        if (
-            not self.baron.alive
-            and self.match_time
-            >= MOBA_EVENT_DEF[MobaEventType.JUNGLE_BARON]["start_time"]
-        ):
-            if self.baron.respawn_timer > 0.0:
-                self.baron.respawn_timer -= time
-            else:
-                self.baron.respawn_timer = 0.0
-                self.baron.alive = True
+        self._tick_objective(self.void_grubs, MobaEventType.JUNGLE_GRUBS, time, True)
+        self._tick_objective(self.herald, MobaEventType.JUNGLE_HERALD, time, True)
+        self._tick_objective(self.dragon, MobaEventType.JUNGLE_DRAKE, time)
+        self._tick_objective(self.baron, MobaEventType.JUNGLE_BARON, time)
 
     def is_dragon_alive(self):
         return self.dragon.alive

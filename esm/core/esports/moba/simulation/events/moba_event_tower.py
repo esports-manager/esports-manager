@@ -93,17 +93,9 @@ class MobaEventTowerAssault(MobaEvent):
         return team
 
     def get_tower(self, attacking_team, towers) -> str:
-        twers = []
-        if attacking_team == self.team1:
-            for tower in towers:
-                if "team2" in tower:
-                    twers.append(tower)
-        else:
-            for tower in towers:
-                if "team1" in tower:
-                    twers.append(tower)
-
-        return random.choice(twers)
+        opponent_tag = "team2" if attacking_team == self.team1 else "team1"
+        target_towers = [tower for tower in towers if opponent_tag in tower]
+        return random.choice(target_towers)
 
     def calculate_event(self, sim_state: MobaSimState):
         towers = self.get_towers()

@@ -52,11 +52,7 @@ class MobaSimEngine:
         return events
 
     def get_event_probability(self, events: list[MobaEventType]) -> list[int]:
-        probabilities = []
-        for event in events:
-            probabilities.append(MOBA_EVENT_DEF[event]["probability"])
-
-        return probabilities
+        return [MOBA_EVENT_DEF[event]["probability"] for event in events]
 
     def run(self):
         events = self.get_events()

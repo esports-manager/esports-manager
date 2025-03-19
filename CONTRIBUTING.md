@@ -40,21 +40,109 @@ The most traditional way to contribute is to submit new code. **eSports Manager*
 
 Once you understand that concept, you're welcome to submit new code.
 
-### Understanding the code
-
-I'll soon write a very brief explanatory documentation on the project's architecture, so you can understand how the project works without having to look every file up first. For now, you'll have to look at the code and try to understand how it works, sorry.
-
 ### Fork and Pull
 
 We work with a [Fork & Pull](https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests#fork--pull) method. Fork this repo, write your code in a feature branch (make sure it is up to date with the project's `develop` branch) and open a **Pull Request** to the `develop` repository, describing your changes or even referencing the **Issue** that inspired your code.
 
 If you're working on a new feature that has no prior **Issue** related to it, please open an **Issue** describing the feature and then reference it in your new **Pull Request**.
 
+### How do I install the dependencies and start developing?
+
+This is primarily a Python project. Usually, some developers like to install the dependencies from a `requirements.txt` file. I don't like to maintain a separate `requirements.txt` file for that, and I resort to virtualenv managers to manage my dependencies.
+
+If you're not familiar with the concept of Virtual environments, see [this documentation](https://docs.python.org/3/library/venv.html) from the official Python documentation.
+
+Like I said, I like to use virtualenv and dependency managers to develop my projects. This project supports [Pipenv](https://pipenv.pypa.io/en/latest/) and [Poetry](https://python-poetry.org/). You can pick either one, you don't need both at the same time.
+
+I started this project using **Pipenv** and I'm quite comfortable using it, but **Poetry** is becoming more of a standard for Python projects lately, because it relies on the [**pyproject.toml**](pyproject.toml) file, which is a new standard proposed on [PEP 518](https://peps.python.org/pep-0518/) and [PEP 621](https://peps.python.org/pep-0621/). If you don't know what a PEP is, see [PEP 1 – PEP Purpose and Guidelines](https://peps.python.org/pep-0001/).
+
+So if you use **Pipenv** on a daily basis, you can keep using it. If you use **Poetry**, you can safely use it here.
+
+**How do I set up my environment then?**
+
+It's pretty simple, actually. An important requirement here is that you have the standard Python package manager installed: **pip**. To learn how to install **pip**, see [Installing pip](https://pip.pypa.io/en/stable/installation/).
+
+Then you can install either **Pipenv** or **Poetry**:
+
+**Pipenv:**
+
+```bash
+pip install pipenv
+```
+
+**Poetry:**
+
+```bash
+pip install poetry
+```
+
+You can [fork this repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) and clone it:
+
+```bash
+git clone https://github.com/<your-user-name>/esports-manager.git
+```
+
+And you then enter the repository directory:
+
+```bash
+cd esports-manager
+```
+
+And you just run the install the project with all the development dependencies:
+
+**Pipenv:**
+
+```bash
+pipenv install --dev
+```
+
+**Poetry:**
+
+```bash
+poetry install
+```
+
+This installs all of the game's dependencies, with all that you need to develop the project. This includes the testing framework we use: [**pytest**](https://docs.pytest.org/en/stable/), the tool to run git hooks called [**pre-commit**](https://pre-commit.com/), the [**black**](https://black.readthedocs.io/en/stable/index.html) code formatter, and other tools like [**isort**](https://pypi.org/project/isort/), [**flake8**](https://flake8.pycqa.org/en/latest/), and [**hypothesis**](https://hypothesis.readthedocs.io/en/latest/).
+
+To contribute code, you must install the **pre-commit** package:
+
+**Pipenv:**
+
+```
+pipenv run pre-commit install
+```
+
+**Poetry:**
+
+```
+poetry run pre-commit install
+```
+
+This will run the pre-commit hooks before every commit. The hooks will format your code and check for [PEP 8](https://peps.python.org/pep-0008/) compliance. The reason why I use these pre-commit hooks and auto formatters is to avoid discussions regarding formatting or standard programming practices in Python. We can just focus on code that works.
+
+A good practice is to also run tests before submitting code:
+
+**Pipenv:**
+
+```
+pipenv run pytest
+```
+
+**Poetry:**
+
+```
+poetry run pytest
+```
+
+Just to make sure you didn't break anything. Once you submit a PR, GitHub Actions will run these automated tests too, just in case you forgot to run the tests.
+
 ### Code conventions
 
-- Follow [PEP 8](https://www.python.org/dev/peps/pep-0008/). It's a must.
-- I'm still studying a way to make the entire code uniform, and I'm inclined to only accepting [Black](https://github.com/psf/black) formatted code.
+- Follow [PEP 8](https://www.python.org/dev/peps/pep-0008/). I use **flake8** to check for PEP 8 compliance.
+- Use the **pre-commit** package to auto format your code with **Black** and **isort**.
 - Make descriptive variable names, as best as you can.
+- I usually separate my work in classes rather than just using functions. I don't enforce the use of OOP in code, but it's a good way to encapsulate behavior.
+- Unit tests are great. Use **pytest** to write your tests.
 
 ### Python versions
 
@@ -64,8 +152,4 @@ I'll soon implement [tox](https://github.com/tox-dev/tox) to test all features.
 
 ### Tests
 
-If you're writing new features, it is always a good idea to include tests with your code. I know the current code is not filled with tests (it soon will be), but make sure to add tests with your PR, and if you're changing some feature, make sure to pass all tests before submitting code.
-
-We'll also soon be using CI/CD to make development go faster, and tests are an essential part of that.
-
-
+If you're writing new features, it is always a good idea to include tests with your code. If you're changing some feature, make sure to pass all tests before submitting code.

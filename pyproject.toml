@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "esports-manager"
+version = "0.1.0"
+description = "A free and open source eSports Management game"
+authors = ["sturdy-robot <pedrenriquegg@hotmail.com>"]
+license = "GPLv3"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+PyYAML = "^6.0.1"
+cbor2 = "^5.6.4"
+setuptools = "^70.1.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.4.2"
+pre-commit = "^3.7.1"
+isort = "^5.13.2"
+flake8 = "^7.1.0"
+pytest = "^8.2.2"
+hypothesis = "^6.103.2"
+doq = "^0.10.0"
+docutils = "^0.21.2"
+coverage = "^7.5.3"
+autopep8 = "^2.3.0"
+pylint = "^3.2.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

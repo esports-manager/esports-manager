@@ -15,6 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import uuid
 from dataclasses import dataclass
+from datetime import timedelta
 
 from ...serializable import Serializable
 from .mobaplayer import Lanes, MobaPlayer, MobaPlayerSimulation
@@ -97,6 +98,62 @@ class MobaTowers:
         return exposed
 
 
+@dataclass
+class MobaInhibitors:
+    top: int = 1
+    mid: int = 1
+    bot: int = 1
+    top_respawn: timedelta = timedelta(0)
+    mid_respawn: timedelta = timedelta(0)
+    bot_respawn: timedelta = timedelta(0)
+
+    def reset(self):
+        self.top = 1
+        self.mid = 1
+        self.bot = 1
+        self.top_respawn = timedelta(0)
+        self.mid_respawn = timedelta(0)
+        self.bot_respawn = timedelta(0)
+
+    def are_all_inhibitors_up(self) -> bool:
+        return self.top == 1 and self.mid == 1 and self.bot == 1
+
+    def is_inhibitor_up(self, lane: str):
+        if lane == "top":
+            return self.top == 1
+        elif lane == "mid":
+            return self.mid == 1
+        elif lane == "bot":
+            return self.bot == 1
+
+    def take_down_inhib(self, lane: str, time_taken: timedelta, cooldown: timedelta):
+        if lane == "top":
+            self.top = 0
+            self.top_respawn = time_taken + cooldown
+        elif lane == "mid":
+            self.mid = 0
+            self.mid_respawn = time_taken + cooldown
+        elif lane == "bot":
+            self.bot = 0
+            self.bot_respawn = time_taken + cooldown
+
+    def update_cooldown(self, time: timedelta):
+        if self.top_respawn != timedelta(0):
+            if time >= self.top_respawn:
+                self.top = 1
+                self.top_respawn = timedelta(0)
+
+        if self.mid_respawn != timedelta(0):
+            if time >= self.mid_respawn:
+                self.mid = 1
+                self.mid_respawn = timedelta(0)
+
+        if self.bot_respawn != timedelta(0):
+            if time >= self.bot_respawn:
+                self.bot = 1
+                self.bot_respawn = timedelta(0)
+
+
 class MobaTeamSimulation:
     def __init__(
         self, team: MobaTeam, players: list[MobaPlayerSimulation], is_players_team: bool
@@ -105,18 +162,13 @@ class MobaTeamSimulation:
         self.towers: MobaTowers = MobaTowers()
         self.picks = []
         self.bans = []
-        self.inhibitors: dict[str, int] = {
-            "top": 1,
-            "mid": 1,
-            "bot": 1,
-        }
-        self.inhibitors_cooldown: dict[str, float] = {
-            "top": 0.0,
-            "mid": 0.0,
-            "bot": 0.0,
-        }
+        self.inhibitors: MobaInhibitors = MobaInhibitors()
         self.is_players_team: bool = is_players_team
         self.players: list[MobaPlayerSimulation] = players
+        self.dragons = []
+        self.grubs = 0
+        self.herald = 0
+        self.ancient_drake = False
         self.player_lanes = {
             Lanes.TOP: None,
             Lanes.JNG: None,
@@ -152,10 +204,10 @@ class MobaTeamSimulation:
         return self.towers.all_down()
 
     def is_inhibitor_up(self, lane: str) -> bool:
-        return self.inhibitors[lane] != 0
+        return self.inhibitors.is_inhibitor_up(lane)
 
     def are_all_inhibitors_up(self) -> bool:
-        return 0 not in self.inhibitors.values()
+        return self.inhibitors.are_all_inhibitors_up()
 
     def are_inhibs_exposed(self) -> bool:
         return (
@@ -178,12 +230,16 @@ class MobaTeamSimulation:
 
         return exposed
 
-    def get_exposed_inhibs(self):
-        return [
-            lane
-            for lane in self.towers.get_exposed_inhibs()
-            if self.inhibitors[lane] != 0
-        ]
+    def get_exposed_inhibs(self) -> list[str]:
+        exposed = []
+        if self.towers.top == 0 and self.inhibitors.top == 1:
+            exposed.append("top")
+        if self.towers.mid == 0 and self.inhibitors.mid == 1:
+            exposed.append("mid")
+        if self.towers.bot == 0 and self.inhibitors.bot == 1:
+            exposed.append("bot")
+
+        return exposed
 
     def is_nexus_exposed(self) -> bool:
         return self.towers.base == 0 and not self.are_all_inhibitors_up()
@@ -201,18 +257,9 @@ class MobaTeamSimulation:
 
         self.stats = TeamStats()
         self.towers.reset()
-        self.inhibitors.update(
-            {
-                "top": 1,
-                "mid": 1,
-                "bot": 1,
-            }
-        )
-        self.inhibitors_cooldown: dict[str, float] = {
-            "top": 0.0,
-            "mid": 0.0,
-            "bot": 0.0,
-        }
+        self.inhibitors.reset()
+        self.dragons = 0
+        self.ancient_drake = False
 
         self.win_prob = 0.0
         self.nexus = True

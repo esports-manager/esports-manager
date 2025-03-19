@@ -128,7 +128,7 @@ class MobaTeamSimulation:
             self.player_lanes[lane] = player
             player.lane = lane
         self.stats: TeamStats = TeamStats()
-        self.nexus: int = 1
+        self.nexus: bool = True
         self.win_prob: float = 0.00
         self._player_overall: int = 0
         self._champion_overall: int = 0
@@ -215,7 +215,7 @@ class MobaTeamSimulation:
         }
 
         self.win_prob = 0.0
-        self.nexus = 1
+        self.nexus = True
 
     @property
     def kills(self) -> int:

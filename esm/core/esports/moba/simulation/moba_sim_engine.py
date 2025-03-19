@@ -29,6 +29,10 @@ class MobaSimEngine:
         self.event_history = []
         self.event_factory = MobaEventFactory()
         self.sim_state = MobaSimState()
+        self.running = True
+
+    def is_game_over(self) -> bool:
+        return not self.team1.nexus or not self.team2.nexus
 
     def get_events(self) -> list[MobaEventType]:
         events = [MobaEventType.NOTHING, MobaEventType.FIGHT]

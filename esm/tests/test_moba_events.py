@@ -209,3 +209,24 @@ def test_moba_event_jungle_baron_not_alive(moba_match_sim: MobaSimMatch):
     state.baron.alive = False
     with pytest.raises(MobaEventJungleError):
         event.calculate_event(state)
+
+
+def test_moba_event_nexus_assault(moba_match_sim: MobaSimMatch):
+    team1 = moba_match_sim.team1
+    team2 = moba_match_sim.team2
+    team1.towers.top = 0
+    team1.inhibitors["top"] = 0
+    team1.towers.base = 0
+    assert team1.is_nexus_exposed()
+    event = MobaEventNexusAssault(team1, team2, 0.0, 0.0)
+
+    state = MobaSimState()
+    event.calculate_event(state)
+    assert event.outcome in [
+        MobaEventOutcome.DEFEND_NEXUS,
+        MobaEventOutcome.TAKE_NEXUS,
+    ]
+    if event.outcome == MobaEventOutcome.TAKE_NEXUS:
+        assert not team1.nexus
+    else:
+        assert team1.nexus

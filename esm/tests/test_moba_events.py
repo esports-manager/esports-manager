@@ -215,7 +215,7 @@ def test_moba_event_nexus_assault(moba_match_sim: MobaSimMatch):
     team1 = moba_match_sim.team1
     team2 = moba_match_sim.team2
     team1.towers.top = 0
-    team1.inhibitors["top"] = 0
+    team1.inhibitors.top = 0
     team1.towers.base = 0
     assert team1.is_nexus_exposed()
     event = MobaEventNexusAssault(team1, team2, 0.0, 0.0)

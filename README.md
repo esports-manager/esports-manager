@@ -14,11 +14,11 @@ In this game, you will be able to set up your team, get them to play in whatever
 
 ## INSTALLATION
 
-The game is still not ready to be played. Many features are yet to be implemented, and a lot of things are missing. There's no gameplay experience, only testing material here.
+I don't have a release build yet, but you can follow the instructions in [CONTRIBUTING](CONTRIBUTING.md#how-do-i-install-the-dependencies-and-start-developing) to learn how to install the project dependencies and run the tests.
 
 ## SCREENSHOTS
 
-The UI is being reworked.
+The UI is being reworked. You can check the `pywebview-ui` branch to see how the work is going.
 
 ## HOW TO RUN THE DEBUG VERSION
 

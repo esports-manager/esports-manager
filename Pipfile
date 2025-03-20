@@ -16,6 +16,7 @@ pyinstaller = "*"
 doq = "*"
 coverage = "*"
 docutils = "*"
+pytailwindcss = "*"
 
 [packages]
 setuptools = "*"
@@ -23,6 +24,10 @@ cbor = "*"
 cbor2 = "*"
 pyyaml = "*"
 pillow = "*"
+pywebview = "*"
+qtpy = "*"
+pyside6 = "*"
+flask = "*"
 
 [requires]
 python_version = "3"

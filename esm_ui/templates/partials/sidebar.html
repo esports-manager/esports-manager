@@ -1,0 +1,103 @@
+<!--
+  ~ eSports Manager - free and open source eSports Management game
+  ~ Copyright (C) 2020-2024  Pedrenrique G. Guimarães
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<aside
+  class="fixed left-0 justify-between inset-y-0 min-h-screen bg-gray-300 dark:bg-slate-800 text-black dark:text-white shadow-md border-r border-slate-300 dark:border-slate-600 transition-all"
+  :class="{ 'w-64': expanded, 'w-16': !expanded }">
+  <div class="p-3 pb-2 flex justify-between items-center">
+    <img src="{{ url_for('static', filename='img/trophy.svg') }}" alt="eSports Manager"
+      class="pb-2 overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-16': expanded }" />
+    <button @click="expanded = !expanded"
+      class="p-1.5 bg-gray-100 hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600">
+      <span x-show="expanded">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+          class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+      </span>
+      <span x-show="!expanded">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+          class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </span>
+    </button>
+  </div>
+
+  <ul class="px-3 flex flex-col flex-grow mt-4">
+    <li hx-get="/page/home" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'home'"
+      class="relative flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'home', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'home' }">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-house-door-fill"
+        viewBox="0 0 16 16">
+        <path
+          d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5" />
+      </svg>
+
+      <span class="overflow-hidden transition-all"
+        :class="{'absolute left-full px-3 py-1 ml-4 bg-gray-500 text-white dark:bg-gray-700 text-sm invisible opacity-20 -translate-x-4 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0': !expanded, 'w-52 ml-3': expanded }">
+        Home
+      </span>
+    </li>
+    <hr class="h-px my-2 border-0 bg-gray-400 transition-all" :class="{ 'w-54': expanded, 'w-10': !expanded }" />
+    <li hx-get="/page/inbox" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'inbox'"
+      class="relative flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'inbox', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'inbox' }">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-inbox-fill"
+        viewBox="0 0 16 16">
+        <path
+          d="M4.98 4a.5.5 0 0 0-.39.188L1.54 8H6a.5.5 0 0 1 .5.5 1.5 1.5 0 1 0 3 0A.5.5 0 0 1 10 8h4.46l-3.05-3.812A.5.5 0 0 0 11.02 4zm-1.17-.437A1.5 1.5 0 0 1 4.98 3h6.04a1.5 1.5 0 0 1 1.17.563l3.7 4.625a.5.5 0 0 1 .106.374l-.39 3.124A1.5 1.5 0 0 1 14.117 13H1.883a1.5 1.5 0 0 1-1.489-1.314l-.39-3.124a.5.5 0 0 1 .106-.374z" />
+      </svg>
+      <span class="overflow-hidden transition-all"
+        :class="{ 'absolute left-full px-3 py-1 ml-4 bg-gray-500 text-white dark:bg-gray-700 text-sm invisible opacity-20 -translate-x-4 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0': !expanded, 'w-52 ml-3': expanded }">
+        Inbox
+      </span>
+    </li>
+    <li hx-get="/page/roster" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'roster'"
+      class="relative flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'roster', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'roster' }">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-people-fill"
+        viewBox="0 0 16 16">
+        <path
+          d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
+      </svg>
+
+      <span class="overflow-hidden transition-all"
+        :class="{ 'absolute left-full px-3 py-1 ml-4 bg-gray-500 text-white dark:bg-gray-700 text-sm invisible opacity-20 -translate-x-4 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0': !expanded, 'w-52 ml-3': expanded }">
+        Roster
+      </span>
+    </li>
+    <li hx-get="/page/calendar" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'calendar'"
+      class="relative flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'calendar', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'calendar' }">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-calendar-fill"
+        viewBox="0 0 16 16">
+        <path
+          d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5h16V4H0V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5" />
+      </svg>
+      <span class="overflow-hidden transition-all"
+        :class="{ 'absolute left-full px-3 py-1 ml-4 bg-gray-500 text-white dark:bg-gray-700 text-sm invisible opacity-20 -translate-x-4 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0': !expanded, 'w-52 ml-3': expanded }">
+        Calendar
+      </span>
+
+    </li>
+  </ul>
+
+  <div class="bottom-5 px-3 my-9">
+    <hr clas="h-px my-2 border-0 bg-gray-400 transition-all" />
+  </div>
+</aside>

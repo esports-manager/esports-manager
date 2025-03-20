@@ -14,80 +14,55 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import random
-from datetime import timedelta
 
 from ..mobateam import MobaTeamSimulation
-from .events import MobaEvent, MobaEventFactory, get_event_definitions
-from .moba_event_type import MobaEventType
+from .events import MobaEventFactory
+from .moba_event_def import MOBA_EVENT_DEF
+from .moba_event_type import MobaEventOutcome, MobaEventType
+from .moba_sim_state import MobaSimState
 
 
 class MobaSimEngine:
     def __init__(self, team1: MobaTeamSimulation, team2: MobaTeamSimulation):
         self.team1 = team1
         self.team2 = team2
-        self.event_definitions = get_event_definitions()
-        self.enabled_events = []
         self.event_history = []
         self.event_factory = MobaEventFactory()
-        self.match_time: timedelta = timedelta(0)
+        self.sim_state = MobaSimState()
+        self.running = True
 
-    def is_match_over(self) -> bool:
-        if self.team1.nexus == 0 or self.team2.nexus == 0:
-            return True
+    def is_game_over(self) -> bool:
+        return not self.team1.nexus or not self.team2.nexus
 
-        return False
+    def get_events(self) -> list[MobaEventType]:
+        events = [MobaEventType.NOTHING, MobaEventType.FIGHT]
 
-    def update_cooldowns(self):
-        self.team1.inhibitors.update_cooldown(self.match_time)
-        self.team2.inhibitors.update_cooldown(self.match_time)
+        if ev := self.sim_state.get_event_types():
+            events.extend(ev)
 
-    def get_enabled_events(self) -> None:
-        self.enabled_events = []
+        if (
+            self.team1.get_exposed_towers() or self.team2.get_exposed_towers()
+        ) and self.sim_state.match_time >= MOBA_EVENT_DEF[MobaEventType.TOWER_ASSAULT][
+            "start_time"
+        ]:
+            events.append(MobaEventType.TOWER_ASSAULT)
 
-        for event_type in self.event_definitions:
-            match_time = int(self.match_time.seconds / 60)
-            if event_type == MobaEventType.INHIB_ASSAULT:
-                if self.team1.are_inhibs_exposed() or self.team2.are_inhibs_exposed():
-                    exposed = self.team1.get_exposed_inhibs()
-                    exposed += self.team2.get_exposed_inhibs()
-                    if exposed != []:
-                        self.enabled_events.append(event_type)
-                        continue
-            elif event_type == MobaEventType.NEXUS_ASSAULT:
-                if self.team1.is_nexus_exposed() or self.team2.is_nexus_exposed():
-                    self.enabled_events.append(event_type)
-                    continue
-            elif self.event_definitions[event_type]["end_time"] != 0:
-                if (
-                    self.event_definitions[event_type]["start_time"]
-                    <= match_time
-                    < self.event_definitions[event_type]["end_time"]
-                ):
-                    self.enabled_events.append(event_type)
-            else:
-                if match_time >= self.event_definitions[event_type]["start_time"]:
-                    self.enabled_events.append(event_type)
+        if self.team1.get_exposed_inhibs() or self.team2.get_exposed_inhibs():
+            events.append(MobaEventType.INHIB_ASSAULT)
 
-    def get_event(self) -> MobaEvent:
-        self.priorities = []
-        for event in self.enabled_events:
-            for ev in self.event_definitions:
-                if event == ev:
-                    self.priorities.append(self.event_definitions[event]["priority"])
+        if self.team1.is_nexus_exposed() or self.team2.is_nexus_exposed():
+            events.append(MobaEventType.NEXUS_ASSAULT)
 
-        chosen_event_type = random.choices(
-            self.enabled_events, weights=self.priorities
-        )[0]
-        event = self.event_factory.create_event(
-            chosen_event_type, self.team1, self.team2, self.match_time
-        )
-        self.event_history.append(event)
-        return event
+        return events
+
+    def get_event_probability(self, events: list[MobaEventType]) -> list[int]:
+        return [MOBA_EVENT_DEF[event]["probability"] for event in events]
 
     def run(self):
-        while not self.is_match_over():
-            self.update_cooldowns()
-            self.get_enabled_events()
-            event = self.get_event()
-            event.calculate_event()
-            self.match_time += event.duration
+        events = self.get_events()
+        probabilities = self.get_event_probability(events)
+        event_type = random.choices(events, probabilities, k=1)[0]
+        event = self.event_factory.create_event(
+            event_type, self.team1, self.team2, self.sim_state.match_time
+        )
+        event.calculate_event(self.sim_state)

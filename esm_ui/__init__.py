@@ -13,35 +13,3 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from enum import Enum, auto
-
-
-class MobaEventType(Enum):
-    NOTHING = auto()
-    FIGHT = auto()
-    JUNGLE_GRUBS = auto()
-    JUNGLE_HERALD = auto()
-    JUNGLE_DRAKE = auto()
-    JUNGLE_BARON = auto()
-    INHIB_ASSAULT = auto()
-    TOWER_ASSAULT = auto()
-    NEXUS_ASSAULT = auto()
-
-
-class MobaEventOutcome(Enum):
-    NOTHING = auto()
-    KILL = auto()
-    DEFEND_INHIB = auto()
-    DEFEND_TOWER = auto()
-    DEFEND_NEXUS = auto()
-    TAKE_GRUBS = auto()
-    STEAL_GRUBS = auto()
-    TAKE_HERALD = auto()
-    STEAL_HERALD = auto()
-    TAKE_DRAKE = auto()
-    STEAL_DRAKE = auto()
-    TAKE_BARON = auto()
-    STEAL_BARON = auto()
-    TAKE_INHIB = auto()
-    TAKE_TOWER = auto()
-    TAKE_NEXUS = auto()

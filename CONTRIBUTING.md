@@ -139,17 +139,13 @@ Just to make sure you didn't break anything. Once you submit a PR, GitHub Action
 ### Code conventions
 
 - Follow [PEP 8](https://www.python.org/dev/peps/pep-0008/). I use **flake8** to check for PEP 8 compliance.
-- Use the **pre-commit** package to auto format your code with **Black** and **isort**.
+- Use the **pre-commit** package to auto format your code with **Black** and **isort**. I don't like to spend time talking about formatting, and styling issues, so using autoformatters to take care of these issues is a way to settle the styling debate.
 - Make descriptive variable names, as best as you can.
-- I usually separate my work in classes rather than just using functions. I don't enforce the use of OOP in code, but it's a good way to encapsulate behavior.
-- Unit tests are great. Use **pytest** to write your tests.
+- Whenever you can, use typehints. Typehints help me and other devs to understand how a function or class should be used. I learned to love typehints, you should embrace them as your friend as well.
+- I usually separate my work in classes rather than just using functions. I don't enforce the use of OOP in code, but I use it very often to encapsulate behavior.
+- Unit testing is what kept my sanity while writing this project. I like simple tests, and you should write them when adding functionality to the project. I prefer using **pytest** because it's way simpler to write than **unittest**.
 
 ### Python versions
 
-Python is rapidly changing, and I plan to adjust to Python's changes as we go. Currently supported Python version is 3.10.
+I'm currently using Python 3.11, but it should be compatible with Python 3.10+.
 
-I'll soon implement [tox](https://github.com/tox-dev/tox) to test all features.
-
-### Tests
-
-If you're writing new features, it is always a good idea to include tests with your code. If you're changing some feature, make sure to pass all tests before submitting code.

@@ -1,0 +1,317 @@
+<div class="m-8" x-data="{
+  activeTab: 'all',
+  selectedMessage: null,
+  showMessageDetail: false,
+  loading: true,
+  error: null,
+  messages: [],
+  
+  // Fetch messages from the API
+  async fetchMessages() {
+    try {
+      this.loading = true;
+      const response = await fetch('/api/messages/');
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      this.messages = await response.json();
+      this.loading = false;
+    } catch (err) {
+      this.error = `Failed to load messages: ${err.message}`;
+      this.loading = false;
+    }
+  },
+  
+  // Mark a message as read
+  async markAsRead(messageId) {
+    try {
+      const response = await fetch(`/api/messages/${messageId}/read`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      // Update the local message
+      const message = this.messages.find(m => m.id === messageId);
+      if (message) {
+        message.read = true;
+      }
+    } catch (err) {
+      console.error(`Error marking message as read: ${err.message}`);
+    }
+  }
+}" x-init="fetchMessages()">
+  <!-- Page Header -->
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Inbox</h1>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Manage your messages, notifications, and alerts</p>
+    </div>
+    <div>
+      <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150">
+        <i class="bi bi-envelope-plus mr-1"></i> Compose
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div x-show="loading" class="bg-white dark:bg-slate-800 rounded-lg shadow p-10 text-center">
+    <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-slate-200 dark:border-slate-700 border-t-blue-500 mb-4"></div>
+    <p class="text-gray-600 dark:text-gray-300">Loading messages...</p>
+  </div>
+
+  <!-- Error State -->
+  <div x-show="error" class="bg-white dark:bg-slate-800 rounded-lg shadow p-10 text-center">
+    <div class="text-red-500 mb-4">
+      <i class="bi bi-exclamation-triangle text-5xl"></i>
+    </div>
+    <p class="text-red-500 mb-4" x-text="error"></p>
+    <button @click="fetchMessages()" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
+      <i class="bi bi-arrow-clockwise mr-2"></i>Try Again
+    </button>
+  </div>
+
+  <!-- Main Content Area -->
+  <div x-show="!loading && !error" class="bg-white dark:bg-slate-800 rounded-lg shadow overflow-hidden">
+    <!-- Inbox Tabs -->
+    <div class="border-b border-gray-200 dark:border-slate-700">
+      <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
+        <li class="mr-2">
+          <button @click="activeTab = 'all'" :class="{'border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400': activeTab === 'all', 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'all'}" class="inline-block p-4 border-b-2 transition-colors duration-200">
+            All <span class="ml-1 px-2 py-0.5 bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-gray-200 rounded-full text-xs" x-text="messages.length"></span>
+          </button>
+        </li>
+        <li class="mr-2">
+          <button @click="activeTab = 'notification'" :class="{'border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400': activeTab === 'notification', 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'notification'}" class="inline-block p-4 border-b-2 transition-colors duration-200">
+            Notifications <span class="ml-1 px-2 py-0.5 bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-gray-200 rounded-full text-xs" x-text="messages.filter(m => m.type === 'notification').length"></span>
+          </button>
+        </li>
+        <li class="mr-2">
+          <button @click="activeTab = 'message'" :class="{'border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400': activeTab === 'message', 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'message'}" class="inline-block p-4 border-b-2 transition-colors duration-200">
+            Messages <span class="ml-1 px-2 py-0.5 bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-gray-200 rounded-full text-xs" x-text="messages.filter(m => m.type === 'message').length"></span>
+          </button>
+        </li>
+        <li class="mr-2">
+          <button @click="activeTab = 'contract'" :class="{'border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400': activeTab === 'contract', 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'contract'}" class="inline-block p-4 border-b-2 transition-colors duration-200">
+            Contracts <span class="ml-1 px-2 py-0.5 bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-gray-200 rounded-full text-xs" x-text="messages.filter(m => m.type === 'contract').length"></span>
+          </button>
+        </li>
+        <li class="mr-2">
+          <button @click="activeTab = 'transfer'" :class="{'border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400': activeTab === 'transfer', 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'transfer'}" class="inline-block p-4 border-b-2 transition-colors duration-200">
+            Transfers <span class="ml-1 px-2 py-0.5 bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-gray-200 rounded-full text-xs" x-text="messages.filter(m => m.type === 'transfer').length"></span>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="flex" style="min-height: 600px;">
+      <!-- Message List -->
+      <div class="w-full md:w-2/5 lg:w-1/3 border-r border-gray-200 dark:border-slate-700" x-show="!showMessageDetail || window.innerWidth >= 768">
+        <!-- Search and Sort -->
+        <div class="p-3 border-b border-gray-200 dark:border-slate-700">
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="bi bi-search text-gray-500 dark:text-gray-400"></i>
+            </div>
+            <input type="text" placeholder="Search messages..." class="pl-10 pr-4 py-2 w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+        <!-- Message List -->
+        <div class="overflow-y-auto" style="max-height: 550px;">
+          <template x-for="message in messages.filter(m => activeTab === 'all' || m.type === activeTab)" :key="message.id">
+            <div @click="selectedMessage = message; showMessageDetail = true; if(!message.read) markAsRead(message.id)"
+                class="p-4 border-b border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer transition-colors duration-150"
+                :class="{'bg-blue-50 dark:bg-blue-900/10': selectedMessage && selectedMessage.id === message.id, 'font-semibold': !message.read}">
+              
+              <div class="flex justify-between items-start">
+                <!-- Priority Indicator -->
+                <div class="mr-3">
+                  <span x-show="message.priority === 'high'" class="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
+                  <span x-show="message.priority === 'medium'" class="inline-block w-3 h-3 bg-yellow-500 rounded-full"></span>
+                  <span x-show="message.priority === 'low'" class="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
+                </div>
+                
+                <!-- Message Content -->
+                <div class="flex-1">
+                  <div class="flex items-center">
+                    <!-- Message Type Icon -->
+                    <div class="mr-2">
+                      <i x-show="message.type === 'notification'" class="bi bi-bell text-blue-500"></i>
+                      <i x-show="message.type === 'message'" class="bi bi-chat-left-text text-green-500"></i>
+                      <i x-show="message.type === 'contract'" class="bi bi-file-earmark-text text-amber-500"></i>
+                      <i x-show="message.type === 'transfer'" class="bi bi-arrow-left-right text-purple-500"></i>
+                    </div>
+                    
+                    <!-- Sender -->
+                    <p class="font-semibold text-gray-800 dark:text-gray-200" x-text="message.sender"></p>
+                  </div>
+                  
+                  <!-- Subject -->
+                  <p class="text-gray-900 dark:text-gray-100 font-medium mt-1" x-text="message.subject"></p>
+                  
+                  <!-- Preview -->
+                  <p class="text-gray-600 dark:text-gray-400 text-sm mt-1 line-clamp-2" x-text="message.preview"></p>
+                </div>
+                
+                <!-- Date/Time -->
+                <div class="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap ml-2">
+                  <p x-text="message.date"></p>
+                  <p x-text="message.time"></p>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+      
+      <!-- Message Detail Panel -->
+      <div class="w-full md:w-3/5 lg:w-2/3" x-show="showMessageDetail">
+        <template x-if="selectedMessage">
+          <div class="h-full flex flex-col">
+            <!-- Message Header -->
+            <div class="p-4 border-b border-gray-200 dark:border-slate-700 flex justify-between items-center sticky top-0 bg-white dark:bg-slate-800 z-10">
+              <div>
+                <div class="flex items-center">
+                  <!-- Back button (mobile only) -->
+                  <button @click="showMessageDetail = false" class="mr-3 md:hidden">
+                    <i class="bi bi-arrow-left text-gray-600 dark:text-gray-300"></i>
+                  </button>
+                  
+                  <!-- Message Type Badge -->
+                  <span x-show="selectedMessage.type === 'notification'" class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded mr-2">
+                    <i class="bi bi-bell mr-1"></i> Notification
+                  </span>
+                  <span x-show="selectedMessage.type === 'message'" class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded mr-2">
+                    <i class="bi bi-chat-left-text mr-1"></i> Message
+                  </span>
+                  <span x-show="selectedMessage.type === 'contract'" class="bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 text-xs px-2 py-1 rounded mr-2">
+                    <i class="bi bi-file-earmark-text mr-1"></i> Contract
+                  </span>
+                  <span x-show="selectedMessage.type === 'transfer'" class="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs px-2 py-1 rounded mr-2">
+                    <i class="bi bi-arrow-left-right mr-1"></i> Transfer
+                  </span>
+                  
+                  <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100" x-text="selectedMessage.subject"></h2>
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  From: <span class="font-medium" x-text="selectedMessage.sender"></span> • <span x-text="selectedMessage.date + ' ' + selectedMessage.time"></span>
+                </div>
+              </div>
+              
+              <div class="flex space-x-2">
+                <!-- Priority Badge -->
+                <span x-show="selectedMessage.priority === 'high'" class="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 text-xs px-2 py-1 rounded">
+                  <i class="bi bi-exclamation-circle mr-1"></i> High Priority
+                </span>
+                <span x-show="selectedMessage.priority === 'medium'" class="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-xs px-2 py-1 rounded">
+                  <i class="bi bi-dash-circle mr-1"></i> Medium Priority
+                </span>
+                <span x-show="selectedMessage.priority === 'low'" class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded">
+                  <i class="bi bi-check-circle mr-1"></i> Low Priority
+                </span>
+                
+                <!-- Actions Dropdown -->
+                <div x-data="{open: false}" class="relative">
+                  <button @click="open = !open" class="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full">
+                    <i class="bi bi-three-dots-vertical text-gray-600 dark:text-gray-300"></i>
+                  </button>
+                  <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-700 rounded-md shadow-lg z-20">
+                    <div class="py-1">
+                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600">
+                        <i class="bi bi-reply mr-2"></i> Reply
+                      </a>
+                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600">
+                        <i class="bi bi-archive mr-2"></i> Archive
+                      </a>
+                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600">
+                        <i class="bi bi-trash mr-2"></i> Delete
+                      </a>
+                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600">
+                        <i class="bi bi-tag mr-2"></i> Mark as unread
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Message Content -->
+            <div class="p-6 overflow-y-auto flex-grow">
+              <div class="prose dark:prose-invert max-w-none" x-html="selectedMessage.content"></div>
+              
+              <!-- Action Buttons (context-aware) -->
+              <div class="mt-8 pt-4 border-t border-gray-200 dark:border-slate-700">
+                <!-- Contract Actions -->
+                <div x-show="selectedMessage.type === 'contract'" class="flex flex-wrap gap-2">
+                  <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">
+                    <i class="bi bi-calendar-event mr-1"></i> Schedule Meeting
+                  </button>
+                  <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm">
+                    <i class="bi bi-check-circle mr-1"></i> Approve 2-Year Option
+                  </button>
+                  <button class="bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-800 dark:text-gray-200 px-4 py-2 rounded text-sm">
+                    <i class="bi bi-x-circle mr-1"></i> Reject
+                  </button>
+                </div>
+                
+                <!-- Transfer Actions -->
+                <div x-show="selectedMessage.type === 'transfer'" class="flex flex-wrap gap-2">
+                  <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">
+                    <i class="bi bi-envelope mr-1"></i> Contact MAD Lions
+                  </button>
+                  <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm">
+                    <i class="bi bi-currency-euro mr-1"></i> Make Offer (€240,000)
+                  </button>
+                  <button class="bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-800 dark:text-gray-200 px-4 py-2 rounded text-sm">
+                    <i class="bi bi-x-circle mr-1"></i> Not Interested
+                  </button>
+                </div>
+                
+                <!-- Message Actions -->
+                <div x-show="selectedMessage.type === 'message'" class="flex flex-wrap gap-2">
+                  <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">
+                    <i class="bi bi-reply mr-1"></i> Reply
+                  </button>
+                  <button class="bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-800 dark:text-gray-200 px-4 py-2 rounded text-sm">
+                    <i class="bi bi-calendar-check mr-1"></i> Confirm Schedule
+                  </button>
+                </div>
+                
+                <!-- Notification Actions -->
+                <div x-show="selectedMessage.type === 'notification'" class="flex flex-wrap gap-2">
+                  <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">
+                    <i class="bi bi-check-circle mr-1"></i> Acknowledge
+                  </button>
+                  <button class="bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-800 dark:text-gray-200 px-4 py-2 rounded text-sm">
+                    <i class="bi bi-clock-history mr-1"></i> Remind Later
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+        
+        <!-- No message selected state -->
+        <div x-show="!selectedMessage" class="h-full flex flex-col items-center justify-center text-center p-8">
+          <div class="text-gray-400 dark:text-gray-500 mb-4">
+            <i class="bi bi-envelope-open text-6xl"></i>
+          </div>
+          <h3 class="text-xl font-medium text-gray-700 dark:text-gray-300 mb-2">No message selected</h3>
+          <p class="text-gray-500 dark:text-gray-400">Select a message from the list to view its contents</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Empty State (when no messages in the selected tab) -->
+    <div x-show="messages.filter(m => activeTab === 'all' || m.type === activeTab).length === 0" class="p-8 text-center">
+      <div class="text-gray-400 dark:text-gray-500 mb-4">
+        <i class="bi bi-inbox text-6xl"></i>
+      </div>
+      <h3 class="text-xl font-medium text-gray-700 dark:text-gray-300 mb-2">No messages</h3>
+      <p class="text-gray-500 dark:text-gray-400" x-text="activeTab === 'all' ? 'Your inbox is empty' : 'No messages in this category'"></p>
+    </div>
+  </div>
+</div>

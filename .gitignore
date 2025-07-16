@@ -170,3 +170,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+uv.lock

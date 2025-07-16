@@ -1,0 +1,907 @@
+<div class="m-8" x-data="{
+  view: 'grid',
+  searchQuery: '',
+  selectedRole: 'all',
+  selectedDifficulty: 'all',
+  selectedMetaTier: 'all',
+  selectedPatch: 'current',
+  sortBy: 'name',
+  sortDirection: 'asc',
+  metaTab: 'overview'
+}">
+  <!-- Page Header -->
+  <!-- Page Header with Quick Meta Stats -->
+  <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Champions</h1>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Browse champions and current meta trends</p>
+    </div>
+    
+    <!-- Quick Meta Stats -->
+    <div class="flex flex-wrap gap-3">
+      <!-- Patch Info -->
+      <div class="bg-blue-50 dark:bg-blue-900/30 px-3 py-2 rounded-md text-sm hover:shadow transition-shadow duration-150">
+        <span class="block text-blue-800 dark:text-blue-300 font-medium">Patch 13.4</span>
+        <span class="text-xs text-blue-600 dark:text-blue-400">Current Version</span>
+      </div>
+      
+      <!-- Strongest Class -->
+      <div class="bg-green-50 dark:bg-green-900/30 px-3 py-2 rounded-md text-sm hover:shadow transition-shadow duration-150">
+        <span class="block text-green-800 dark:text-green-300 font-medium">Assassin</span>
+        <span class="text-xs text-green-600 dark:text-green-400">Strongest Class</span>
+      </div>
+      
+      <!-- Most Banned -->
+      <div class="bg-purple-50 dark:bg-purple-900/30 px-3 py-2 rounded-md text-sm hover:shadow transition-shadow duration-150">
+        <span class="block text-purple-800 dark:text-purple-300 font-medium">Akali</span>
+        <span class="text-xs text-purple-600 dark:text-purple-400">Most Banned</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Meta Overview Section -->
+  <!-- Meta Analysis Section with Role Tabs -->
+  <div class="bg-white dark:bg-slate-700 rounded-lg shadow mb-6 overflow-hidden">
+    <div class="border-b border-gray-200 dark:border-gray-600">
+      <div class="flex overflow-x-auto scrollbar-hide" aria-label="Role tabs">
+        <button 
+          @click="metaTab = 'overview'" 
+          :class="{'border-blue-500 text-blue-600 dark:text-blue-400': metaTab === 'overview', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': metaTab !== 'overview'}"
+          class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+          <i class="bi bi-graph-up mr-2"></i>
+          Meta Overview
+        </button>
+        <button 
+          @click="metaTab = 'top'" 
+          :class="{'border-blue-500 text-blue-600 dark:text-blue-400': metaTab === 'top', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': metaTab !== 'top'}"
+          class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+          <i class="bi bi-shield mr-2"></i>
+          Top Lane
+        </button>
+        <button 
+          @click="metaTab = 'jungle'" 
+          :class="{'border-blue-500 text-blue-600 dark:text-blue-400': metaTab === 'jungle', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': metaTab !== 'jungle'}"
+          class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+          <i class="bi bi-tree mr-2"></i>
+          Jungle
+        </button>
+        <button 
+          @click="metaTab = 'mid'" 
+          :class="{'border-blue-500 text-blue-600 dark:text-blue-400': metaTab === 'mid', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': metaTab !== 'mid'}"
+          class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+          <i class="bi bi-lightning mr-2"></i>
+          Mid Lane
+        </button>
+        <button 
+          @click="metaTab = 'bot'" 
+          :class="{'border-blue-500 text-blue-600 dark:text-blue-400': metaTab === 'bot', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': metaTab !== 'bot'}"
+          class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+          <i class="bi bi-bullseye mr-2"></i>
+          Bot Lane
+        </button>
+        <button 
+          @click="metaTab = 'support'" 
+          :class="{'border-blue-500 text-blue-600 dark:text-blue-400': metaTab === 'support', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': metaTab !== 'support'}"
+          class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+          <i class="bi bi-heart mr-2"></i>
+          Support
+        </button>
+      </div>
+    </div>
+
+    <!-- Meta Overview Tab Content -->
+    <div class="p-4" x-show="metaTab === 'overview'">
+      <div class="flex flex-col lg:flex-row gap-6">
+        <div class="flex-1">
+          <h3 class="font-semibold text-gray-800 dark:text-gray-100 mb-3">Current Meta Trends</h3>
+          <div class="text-sm text-gray-600 dark:text-gray-300 space-y-2">
+            <p>The current meta favors <span class="font-medium text-gray-800 dark:text-gray-100">high mobility assassins</span> and <span class="font-medium text-gray-800 dark:text-gray-100">early game junglers</span> who can secure objectives quickly.</p>
+            <p>With recent changes to Baron and Dragon buffs, teams are prioritizing objective control more heavily, leading to more skirmishes around these areas.</p>
+            <p>Lane priority has shifted, with mid-jungle synergy being crucial for successful teams.</p>
+          </div>
+          
+          <div class="mt-4 grid grid-cols-2 gap-3">
+            <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-lg">
+              <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">Average Game Time</div>
+              <div class="text-lg font-bold text-gray-800 dark:text-gray-100">28:47</div>
+              <div class="flex items-center text-xs text-red-500 dark:text-red-400">
+                <i class="bi bi-arrow-up"></i>
+                <span class="ml-1">+1:23 from last patch</span>
+              </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-lg">
+              <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">First Baron Win Rate</div>
+              <div class="text-lg font-bold text-gray-800 dark:text-gray-100">78.3%</div>
+              <div class="flex items-center text-xs text-green-500 dark:text-green-400">
+                <i class="bi bi-arrow-up"></i>
+                <span class="ml-1">+4.7% from last patch</span>
+              </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-lg">
+              <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">Average Kills per Game</div>
+              <div class="text-lg font-bold text-gray-800 dark:text-gray-100">26.5</div>
+              <div class="flex items-center text-xs text-green-500 dark:text-green-400">
+                <i class="bi bi-arrow-up"></i>
+                <span class="ml-1">+3.2 from last patch</span>
+              </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-lg">
+              <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">Blue Side Win Rate</div>
+              <div class="text-lg font-bold text-gray-800 dark:text-gray-100">51.4%</div>
+              <div class="flex items-center text-xs text-red-500 dark:text-red-400">
+                <i class="bi bi-arrow-down"></i>
+                <span class="ml-1">-0.8% from last patch</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex-1">
+          <h3 class="font-semibold text-gray-800 dark:text-gray-100 mb-3">Top Meta Champions</h3>
+          <div class="space-y-3">
+            <!-- Top Meta Champion 1 -->
+            <div class="flex items-center bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="relative">
+                <div class="h-12 w-12 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+                  <img src="https://placehold.co/200x200/7c3aed/FFFFFF/webp?text=Akali&font=montserrat" class="h-full w-full object-cover" alt="Akali">
+                </div>
+                <div class="absolute -bottom-1 -right-1 bg-blue-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                  M
+                </div>
+              </div>
+              <div class="ml-3">
+                <div class="font-medium text-gray-900 dark:text-gray-100">Akali</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">Mid • Assassin</div>
+              </div>
+              <div class="ml-auto flex items-center">
+                <div class="text-right mr-4">
+                  <div class="text-xs text-gray-500 dark:text-gray-400">Pick Rate</div>
+                  <div class="text-sm font-semibold text-gray-800 dark:text-gray-200">24.7%</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-xs text-gray-500 dark:text-gray-400">Win Rate</div>
+                  <div class="text-sm font-semibold text-green-600 dark:text-green-400">53.2%</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Top Meta Champion 2 -->
+            <div class="flex items-center bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="relative">
+                <div class="h-12 w-12 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+                  <img src="https://placehold.co/200x200/16a34a/FFFFFF/webp?text=Jarvan+IV&font=montserrat" class="h-full w-full object-cover" alt="Jarvan IV">
+                </div>
+                <div class="absolute -bottom-1 -right-1 bg-green-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                  J
+                </div>
+              </div>
+              <div class="ml-3">
+                <div class="font-medium text-gray-900 dark:text-gray-100">Jarvan IV</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">Jungle • Fighter</div>
+              </div>
+              <div class="ml-auto flex items-center">
+                <div class="text-right mr-4">
+                  <div class="text-xs text-gray-500 dark:text-gray-400">Pick Rate</div>
+                  <div class="text-sm font-semibold text-gray-800 dark:text-gray-200">18.5%</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-xs text-gray-500 dark:text-gray-400">Win Rate</div>
+                  <div class="text-sm font-semibold text-green-600 dark:text-green-400">52.8%</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Top Meta Champion 3 -->
+            <div class="flex items-center bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="relative">
+                <div class="h-12 w-12 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+                  <img src="https://placehold.co/200x200/dc2626/FFFFFF/webp?text=Jinx&font=montserrat" class="h-full w-full object-cover" alt="Jinx">
+                </div>
+                <div class="absolute -bottom-1 -right-1 bg-purple-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                  B
+                </div>
+              </div>
+              <div class="ml-3">
+                <div class="font-medium text-gray-900 dark:text-gray-100">Jinx</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">Bot • Marksman</div>
+              </div>
+              <div class="ml-auto flex items-center">
+                <div class="text-right mr-4">
+                  <div class="text-xs text-gray-500 dark:text-gray-400">Pick Rate</div>
+                  <div class="text-sm font-semibold text-gray-800 dark:text-gray-200">23.1%</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-xs text-gray-500 dark:text-gray-400">Win Rate</div>
+                  <div class="text-sm font-semibold text-green-600 dark:text-green-400">51.9%</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Top Meta Champion 4 -->
+            <div class="flex items-center bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="relative">
+                <div class="h-12 w-12 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+                  <img src="https://placehold.co/200x200/ca8a04/FFFFFF/webp?text=Nautilus&font=montserrat" class="h-full w-full object-cover" alt="Nautilus">
+                </div>
+                <div class="absolute -bottom-1 -right-1 bg-yellow-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                  S
+                </div>
+              </div>
+              <div class="ml-3">
+                <div class="font-medium text-gray-900 dark:text-gray-100">Nautilus</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">Support • Tank</div>
+              </div>
+              <div class="ml-auto flex items-center">
+                <div class="text-right mr-4">
+                  <div class="text-xs text-gray-500 dark:text-gray-400">Pick Rate</div>
+                  <div class="text-sm font-semibold text-gray-800 dark:text-gray-200">19.8%</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-xs text-gray-500 dark:text-gray-400">Win Rate</div>
+                  <div class="text-sm font-semibold text-green-600 dark:text-green-400">50.7%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-4">
+            <h3 class="font-semibold text-gray-800 dark:text-gray-100 mb-2">Meta Changes</h3>
+            <div class="flex items-center justify-between text-xs text-gray-600 dark:text-gray-300 mb-1">
+              <div>Champions Rising in Meta</div>
+              <div>Change</div>
+            </div>
+            <div class="space-y-1">
+              <div class="flex items-center justify-between bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">
+                <div class="flex items-center">
+                  <img src="https://placehold.co/40x40/6366f1/FFFFFF/webp?text=Y&font=montserrat" class="h-5 w-5 rounded-full mr-2" alt="Yone">
+                  <span class="text-sm text-gray-800 dark:text-gray-200">Yone</span>
+                </div>
+                <div class="text-green-600 dark:text-green-400 text-xs font-medium">+12 positions</div>
+              </div>
+              <div class="flex items-center justify-between bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">
+                <div class="flex items-center">
+                  <img src="https://placehold.co/40x40/0f766e/FFFFFF/webp?text=G&font=montserrat" class="h-5 w-5 rounded-full mr-2" alt="Garen">
+                  <span class="text-sm text-gray-800 dark:text-gray-200">Garen</span>
+                </div>
+                <div class="text-green-600 dark:text-green-400 text-xs font-medium">+8 positions</div>
+              </div>
+              <div class="flex items-center justify-between bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded">
+                <div class="flex items-center">
+                  <img src="https://placehold.co/40x40/4c1d95/FFFFFF/webp?text=S&font=montserrat" class="h-5 w-5 rounded-full mr-2" alt="Syndra">
+                  <span class="text-sm text-gray-800 dark:text-gray-200">Syndra</span>
+                </div>
+                <div class="text-red-600 dark:text-red-400 text-xs font-medium">-7 positions</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Role-specific Meta Tabs (placeholder) -->
+    <div class="p-4 text-center text-gray-500 dark:text-gray-400" x-show="metaTab !== 'overview'">
+      <p x-text="`${metaTab.charAt(0).toUpperCase() + metaTab.slice(1)} Lane Meta Analysis`" class="font-medium mb-2"></p>
+      <p class="text-sm">Detailed meta information for this role will appear here.</p>
+    </div>
+  </div>
+  <!-- Filters and Search -->
+  <!-- Filters and Search Section -->
+  <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4 mb-6">
+    <div class="flex flex-col lg:flex-row gap-4 items-start">
+      <!-- Search -->
+      <div class="relative flex-grow">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <i class="bi bi-search text-gray-500 dark:text-gray-400"></i>
+        </div>
+        <input 
+          type="text" 
+          x-model="searchQuery" 
+          placeholder="Search champions..." 
+          class="pl-10 pr-4 py-2 w-full rounded-lg bg-gray-100 dark:bg-slate-600 border-0 focus:ring-2 focus:ring-blue-500"
+        >
+      </div>
+      
+      <!-- Filter Dropdowns -->
+      <div class="flex flex-wrap gap-2">
+        <!-- Role Filter -->
+        <select 
+          x-model="selectedRole" 
+          aria-label="Filter by role"
+          class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <option value="all">All Roles</option>
+          <option value="top">Top Lane</option>
+          <option value="jungle">Jungle</option>
+          <option value="mid">Mid Lane</option>
+          <option value="bot">Bot Lane</option>
+          <option value="support">Support</option>
+        </select>
+        
+        <!-- Difficulty Filter -->
+        <select 
+          x-model="selectedDifficulty" 
+          class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2">
+          <option value="all">All Difficulties</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+        
+        <!-- Meta Tier Filter -->
+        <select 
+          x-model="selectedMetaTier" 
+          class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2">
+          <option value="all">All Meta Tiers</option>
+          <option value="s">S Tier (OP)</option>
+          <option value="a">A Tier (Strong)</option>
+          <option value="b">B Tier (Balanced)</option>
+          <option value="c">C Tier (Weak)</option>
+          <option value="d">D Tier (Poor)</option>
+        </select>
+        
+        <!-- Patch Version -->
+        <select 
+          x-model="selectedPatch" 
+          class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2">
+          <option value="current">Patch 13.4 (Current)</option>
+          <option value="previous">Patch 13.3</option>
+          <option value="old">Patch 13.2</option>
+        </select>
+        
+        <!-- Sorting -->
+        <select 
+          x-model="sortBy" 
+          class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2">
+          <option value="name">Sort by Name</option>
+          <option value="winrate">Sort by Win Rate</option>
+          <option value="pickrate">Sort by Pick Rate</option>
+          <option value="banrate">Sort by Ban Rate</option>
+        </select>
+        
+        <!-- Sort Direction Toggle -->
+        <button 
+          @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'" 
+          class="bg-gray-100 hover:bg-gray-200 dark:bg-slate-600 dark:hover:bg-slate-500 rounded-lg px-3 py-2 text-sm">
+          <i :class="sortDirection === 'asc' ? 'bi bi-sort-alpha-down' : 'bi bi-sort-alpha-up'"></i>
+        </button>
+
+        <!-- View Toggle -->
+        <div class="flex items-center bg-gray-100 dark:bg-slate-600 rounded-lg p-1 ml-auto" role="group" aria-label="View toggle">
+          <button 
+            @click="view = 'grid'" 
+            :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'grid'}" 
+            class="px-2 py-1 rounded-md text-sm transition-colors duration-150"
+            aria-label="Grid view">
+            <i class="bi bi-grid"></i>
+          </button>
+          <button 
+            @click="view = 'list'" 
+            :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'list'}" 
+            class="px-2 py-1 rounded-md text-sm transition-colors duration-150"
+            aria-label="List view">
+            <i class="bi bi-list-ul"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Active Filters Display -->
+    <div class="mt-3 flex flex-wrap gap-2" x-show="selectedRole !== 'all' || selectedDifficulty !== 'all' || selectedMetaTier !== 'all' || searchQuery !== ''">
+      <span class="text-xs text-gray-500 dark:text-gray-400 self-center">Active filters:</span>
+      
+      <!-- Role Filter Tag -->
+      <div x-show="selectedRole !== 'all'" class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full flex items-center">
+        Role: <span x-text="selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)" class="font-medium mx-1"></span>
+        <button @click="selectedRole = 'all'" class="ml-1 hover:text-blue-600 dark:hover:text-blue-100">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      </div>
+      
+      <!-- Difficulty Filter Tag -->
+      <div x-show="selectedDifficulty !== 'all'" class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full flex items-center">
+        Difficulty: <span x-text="selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)" class="font-medium mx-1"></span>
+        <button @click="selectedDifficulty = 'all'" class="ml-1 hover:text-green-600 dark:hover:text-green-100">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      </div>
+      
+      <!-- Meta Tier Filter Tag -->
+      <div x-show="selectedMetaTier !== 'all'" class="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs px-2 py-1 rounded-full flex items-center">
+        Meta Tier: <span x-text="selectedMetaTier.toUpperCase() + ' Tier'" class="font-medium mx-1"></span>
+        <button @click="selectedMetaTier = 'all'" class="ml-1 hover:text-purple-600 dark:hover:text-purple-100">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      </div>
+      
+      <!-- Search Query Tag -->
+      <div x-show="searchQuery !== ''" class="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-xs px-2 py-1 rounded-full flex items-center">
+        Search: <span x-text="searchQuery" class="font-medium mx-1"></span>
+        <button @click="searchQuery = ''" class="ml-1 hover:text-yellow-600 dark:hover:text-yellow-100">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      </div>
+      
+      <!-- Clear All Filters -->
+      <button 
+        @click="selectedRole = 'all'; selectedDifficulty = 'all'; selectedMetaTier = 'all'; searchQuery = '';" 
+        class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 underline ml-2">
+        Clear all
+      </button>
+    </div>
+  </div>
+
+  <!-- Results Count -->
+  <div class="flex justify-between items-center mb-4 text-sm bg-white dark:bg-slate-700 rounded-lg p-3 shadow-sm">
+    <div class="text-gray-600 dark:text-gray-400">
+      <span class="font-medium">162</span> champions available
+    </div>
+  </div>
+
+  <!-- Grid View -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4" x-show="view === 'grid'">
+    
+    <!-- Champion Card 1 - Akali -->
+    <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300">
+      <div class="relative">
+        <img src="https://placehold.co/800x400/7c3aed/FFFFFF/webp?text=Akali+Splash&font=montserrat" alt="Akali" class="w-full h-28 object-cover object-top">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+        <div class="absolute bottom-2 left-2 text-white">
+          <h3 class="font-bold text-lg">Akali</h3>
+          <div class="text-xs opacity-90">The Rogue Assassin</div>
+        </div>
+        <div class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+          Mid
+        </div>
+        <div class="absolute top-2 right-2 bg-yellow-400 text-gray-900 text-xs px-2 py-1 rounded-full font-medium">
+          S TIER
+        </div>
+      </div>
+      
+      <div class="p-3">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center">
+            <span class="text-xs text-gray-600 dark:text-gray-400">Type:</span>
+            <span class="ml-1 text-xs font-medium text-gray-800 dark:text-gray-200">Assassin</span>
+          </div>
+          <div class="flex items-center">
+            <span class="text-xs text-gray-600 dark:text-gray-400">Difficulty:</span>
+            <div class="ml-1 flex">
+              <i class="bi bi-star-fill text-yellow-500 text-xs"></i>
+              <i class="bi bi-star-fill text-yellow-500 text-xs"></i>
+              <i class="bi bi-star-fill text-yellow-500 text-xs"></i>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Champion Stats -->
+        <div class="grid grid-cols-2 gap-1 text-xs mb-2">
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 dark:text-gray-400">Win Rate:</span>
+            <span class="font-medium text-green-600 dark:text-green-400">53.2%</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 dark:text-gray-400">Pick Rate:</span>
+            <span class="font-medium text-blue-600 dark:text-blue-400">24.7%</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 dark:text-gray-400">Ban Rate:</span>
+            <span class="font-medium text-red-600 dark:text-red-400">39.5%</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 dark:text-gray-400">KDA:</span>
+            <span class="font-medium text-gray-800 dark:text-gray-200">2.74</span>
+          </div>
+        </div>
+        
+        <div class="flex justify-between items-center">
+          <div class="flex space-x-1">
+            <div class="h-5 w-5 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+              <i class="bi bi-lightning text-blue-600 dark:text-blue-400 text-xs"></i>
+            </div>
+            <div class="h-5 w-5 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+              <i class="bi bi-arrow-up text-green-600 dark:text-green-400 text-xs"></i>
+            </div>
+          </div>
+          <a href="#" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">Details</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Champion Card 2 - Jarvan IV -->
+    <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300">
+      <div class="relative">
+        <img src="https://placehold.co/800x400/16a34a/FFFFFF/webp?text=Jarvan+IV+Splash&font=montserrat" alt="Jarvan IV" class="w-full h-28 object-cover object-top">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+        <div class="absolute bottom-2 left-2 text-white">
+          <h3 class="font-bold text-lg">Jarvan IV</h3>
+          <div class="text-xs opacity-90">The Exemplar of Demacia</div>
+        </div>
+        <div class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+          Jungle
+        </div>
+        <div class="absolute top-2 right-2 bg-yellow-400 text-gray-900 text-xs px-2 py-1 rounded-full font-medium">
+          S TIER
+        </div>
+      </div>
+      
+      <div class="p-3">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center">
+            <span class="text-xs text-gray-600 dark:text-gray-400">Type:</span>
+            <span class="ml-1 text-xs font-medium text-gray-800 dark:text-gray-200">Fighter/Tank</span>
+          </div>
+          <div class="flex items-center">
+            <span class="text-xs text-gray-600 dark:text-gray-400">Difficulty:</span>
+            <div class="ml-1 flex">
+              <i class="bi bi-star-fill text-yellow-500 text-xs"></i>
+              <i class="bi bi-star-fill text-yellow-500 text-xs"></i>
+              <i class="bi bi-star text-yellow-500 text-xs"></i>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Champion Stats -->
+        <div class="grid grid-cols-2 gap-1 text-xs mb-2">
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 dark:text-gray-400">Win Rate:</span>
+            <span class="font-medium text-green-600 dark:text-green-400">52.8%</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 dark:text-gray-400">Pick Rate:</span>
+            <span class="font-medium text-blue-600 dark:text-blue-400">18.5%</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 dark:text-gray-400">Ban Rate:</span>
+            <span class="font-medium text-red-600 dark:text-red-400">14.2%</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 dark:text-gray-400">KDA:</span>
+            <span class="font-medium text-gray-800 dark:text-gray-200">3.15</span>
+          </div>
+        </div>
+        
+        <div class="flex justify-between items-center">
+          <div class="flex space-x-1">
+            <div class="h-5 w-5 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+              <i class="bi bi-shield text-blue-600 dark:text-blue-400 text-xs"></i>
+            </div>
+            <div class="h-5 w-5 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+              <i class="bi bi-arrow-up text-green-600 dark:text-green-400 text-xs"></i>
+            </div>
+          </div>
+          <a href="#" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">Details</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Champion Card 3 - Jinx -->
+    <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300">
+      <div class="relative">
+        <img src="https://placehold.co/800x400/dc2626/FFFFFF/webp?text=Jinx+Splash&font=montserrat" alt="Jinx" class="w-full h-28 object-cover object-top">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+        <div class="absolute bottom-2 left-2 text-white">
+          <h3 class="font-bold text-lg">Jinx</h3>
+          <div class="text-xs opacity-90">The Loose Cannon</div>
+        </div>
+        <div class="absolute top-2 left-2 bg-purple-500 text-white text-xs px-2 py-1 rounded-full">
+          Bot
+        </div>
+        <div class="absolute top-2 right-2 bg-yellow-400 text-gray-900 text-xs px-2 py-1 rounded-full font-medium">
+          S TIER
+        </div>
+      </div>
+      
+      <div class="p-3">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center">
+            <span class="text-xs text-gray-600 dark:text-gray-400">Type:</span>
+            <span class="ml-1 text-xs font-medium text-gray-800 dark:text-gray-200">Marksman</span>
+          </div>
+          <div class="flex items-center">
+            <span class="text-xs text-gray-600 dark:text-gray-400">Difficulty:</span>
+            <div class="ml-1 flex">
+              <i class="bi bi-star-fill text-yellow-500 text-xs"></i>
+              <i class="bi bi-star-fill text-yellow-500 text-xs"></i>
+              <i class="bi bi-star text-yellow-500 text-xs"></i>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Champion Stats -->
+        <div class="grid grid-cols-2 gap-1 text-xs mb-2">
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 dark:text-gray-400">Win Rate:</span>
+            <span class="font-medium text-green-600 dark:text-green-400">51.9%</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 dark:text-gray-400">Pick Rate:</span>
+            <span class="font-medium text-blue-600 dark:text-blue-400">23.1%</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 dark:text-gray-400">Ban Rate:</span>
+            <span class="font-medium text-red-600 dark:text-red-400">17.3%</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 dark:text-gray-400">KDA:</span>
+            <span class="font-medium text-gray-800 dark:text-gray-200">2.91</span>
+          </div>
+        </div>
+        
+        <div class="flex justify-between items-center">
+          <div class="flex space-x-1">
+            <div class="h-5 w-5 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
+              <i class="bi bi-bullseye text-red-600 dark:text-red-400 text-xs"></i>
+            </div>
+            <div class="h-5 w-5 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+              <i class="bi bi-dash text-blue-600 dark:text-blue-400 text-xs"></i>
+            </div>
+          </div>
+          <a href="#" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- List View -->
+  <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-x-auto" x-show="view === 'list'">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+      <thead>
+        <tr class="bg-gray-50 dark:bg-slate-800">
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            Champion
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            Role
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            Type
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            Meta Tier
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            Win Rate
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            Pick Rate
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            Ban Rate
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            KDA
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            Difficulty
+          </th>
+        </tr>
+      </thead>
+      <tbody class="bg-white dark:bg-slate-700 divide-y divide-gray-200 dark:divide-gray-600">
+        <!-- Champion 1 - Akali -->
+        <tr class="hover:bg-gray-50 dark:hover:bg-slate-600">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10">
+                <img class="h-10 w-10 rounded-full object-cover" src="https://placehold.co/200x200/7c3aed/FFFFFF/webp?text=A&font=montserrat" alt="Akali">
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">Akali</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">The Rogue Assassin</div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+              Mid
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+            Assassin
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
+              S TIER
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <span class="text-green-600 dark:text-green-400 font-medium">53.2%</span>
+              <i class="bi bi-arrow-up text-green-600 dark:text-green-400 ml-1 text-xs"></i>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 dark:text-blue-400 font-medium">
+            24.7%
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 dark:text-red-400 font-medium">
+            39.5%
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 font-medium">
+            2.74
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">
+            <div class="flex">
+              <i class="bi bi-star-fill text-yellow-500"></i>
+              <i class="bi bi-star-fill text-yellow-500"></i>
+              <i class="bi bi-star-fill text-yellow-500"></i>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Champion 2 - Jarvan IV -->
+        <tr class="hover:bg-gray-50 dark:hover:bg-slate-600">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10">
+                <img class="h-10 w-10 rounded-full object-cover" src="https://placehold.co/200x200/16a34a/FFFFFF/webp?text=J&font=montserrat" alt="Jarvan IV">
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">Jarvan IV</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">The Exemplar of Demacia</div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+              Jungle
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+            Fighter/Tank
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
+              S TIER
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <span class="text-green-600 dark:text-green-400 font-medium">52.8%</span>
+              <i class="bi bi-arrow-up text-green-600 dark:text-green-400 ml-1 text-xs"></i>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 dark:text-blue-400 font-medium">
+            18.5%
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 dark:text-red-400 font-medium">
+            14.2%
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 font-medium">
+            3.15
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">
+            <div class="flex">
+              <i class="bi bi-star-fill text-yellow-500"></i>
+              <i class="bi bi-star-fill text-yellow-500"></i>
+              <i class="bi bi-star text-yellow-500"></i>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Champion 3 - Jinx -->
+        <tr class="hover:bg-gray-50 dark:hover:bg-slate-600">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10">
+                <img class="h-10 w-10 rounded-full object-cover" src="https://placehold.co/200x200/dc2626/FFFFFF/webp?text=J&font=montserrat" alt="Jinx">
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">Jinx</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">The Loose Cannon</div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200">
+              Bot
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+            Marksman
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
+              S TIER
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <span class="text-green-600 dark:text-green-400 font-medium">51.9%</span>
+              <i class="bi bi-arrow-up text-green-600 dark:text-green-400 ml-1 text-xs"></i>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 dark:text-blue-400 font-medium">
+            23.1%
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 dark:text-red-400 font-medium">
+            17.3%
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 font-medium">
+            2.91
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">
+            <div class="flex">
+              <i class="bi bi-star-fill text-yellow-500"></i>
+              <i class="bi bi-star-fill text-yellow-500"></i>
+              <i class="bi bi-star text-yellow-500"></i>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Champion 4 - Nautilus -->
+        <tr class="hover:bg-gray-50 dark:hover:bg-slate-600">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10">
+                <img class="h-10 w-10 rounded-full object-cover" src="{{ url_for('static', path='img/champions/nautilus.webp') }}" alt="Nautilus">
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">Nautilus</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">The Titan of the Depths</div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
+              Support
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+            Tank
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+              A TIER
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <span class="text-green-600 dark:text-green-400 font-medium">50.7%</span>
+              <i class="bi bi-dash text-blue-600 dark:text-blue-400 ml-1 text-xs"></i>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 dark:text-blue-400 font-medium">
+            19.8%
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 dark:text-red-400 font-medium">
+            12.4%
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 font-medium">
+            2.87
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">
+            <div class="flex">
+              <i class="bi bi-star-fill text-yellow-500"></i>
+              <i class="bi bi-star text-yellow-500"></i>
+              <i class="bi bi-star text-yellow-500"></i>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-between items-center mt-6">
+    <div class="text-sm text-gray-600 dark:text-gray-400">
+      Showing <span class="font-medium">1-20</span> of <span class="font-medium">162</span> champions
+    </div>
+    <div class="flex space-x-1">
+      <button class="px-3 py-1 rounded-md bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-300 text-sm">
+        Previous
+      </button>
+      <button class="px-3 py-1 rounded-md bg-blue-500 text-white text-sm">
+        1
+      </button>
+      <button class="px-3 py-1 rounded-md bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-300 text-sm">
+        2
+      </button>
+      <button class="px-3 py-1 rounded-md bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-300 text-sm">
+        3
+      </button>
+      <button class="px-3 py-1 rounded-md bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-300 text-sm">
+        4
+      </button>
+      <button class="px-3 py-1 rounded-md bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-300 text-sm">
+        Next
+      </button>
+    </div>
+  </div>
+</div>

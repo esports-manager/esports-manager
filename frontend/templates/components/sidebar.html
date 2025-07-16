@@ -1,0 +1,132 @@
+<!--
+  ~ eSports Manager - free and open source eSports Management game
+  ~ Copyright (C) 2020-2024  Pedrenrique G. Guimarães
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<aside
+  class="fixed left-0 items-stretch inset-y-0 min-h-screen h-full bg-slate-50 dark:bg-slate-900 text-black dark:text-white shadow-md border-r border-slate-300 dark:border-slate-600 transition-all overflow-y-auto"
+  :class="{ 'w-64': expanded, 'w-16': !expanded }">
+  <div class="p-3 pb-2 flex justify-between items-center">
+    <img src="{{ url_for('static', path='img/trophy.svg') }}" alt="eSports Manager"
+      class="pb-2 overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-16': expanded }" />
+    <button @click="expanded = !expanded"
+      class="p-1.5 rounded-xl bg-slate-200 hover:bg-slate-100 dark:bg-gray-700 dark:hover:bg-gray-600 px-2">
+      <span x-show="expanded">
+        <i class="bi bi-chevron-left text-xl"></i>
+      </span>
+      <span x-show="!expanded">
+        <i class="bi bi-chevron-right text-xl"></i>
+      </span>
+    </button>
+  </div>
+
+  <ul class="px-3">
+    <li hx-get="/page/home" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'home'"
+      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'home', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'home' }">
+      <i class="bi bi-house-door-fill text-xl"></i>
+
+      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded }">
+        Home
+      </span>
+    </li>
+    <li hx-get="/page/inbox" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'inbox'"
+      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'inbox', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'inbox' }">
+      <i class="bi bi-inbox-fill text-xl"></i>
+      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded }">
+        Inbox
+      </span>
+    </li>
+    <li hx-get="/page/news" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'news'"
+      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'news', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'news' }">
+      <i class="bi bi-newspaper text-xl"></i>
+      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded }">
+        News
+      </span>
+    </li>
+    <li hx-get="/page/practice" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'practice'"
+      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'practice', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'practice' }">
+      <i class="bi bi-cone-striped text-xl"></i>
+      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded}">
+        Practice
+      </span>
+    </li>
+    <li hx-get="/page/roster" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'roster'"
+      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'roster', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'roster' }">
+      <i class="bi bi-people-fill text-xl"></i>
+
+      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded}">
+        Roster
+      </span>
+    </li>
+    <li hx-get="/page/staff" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'staff'"
+      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'staff', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'staff' }">
+      <i class="bi bi-briefcase-fill text-xl"></i>
+
+      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded}">
+        Staff
+      </span>
+    </li>
+    <li hx-get="/page/scout" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'scout'"
+      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'scout', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'scout' }">
+      <i class="bi bi-binoculars-fill text-xl"></i>
+
+      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded}">
+        Scout
+      </span>
+    </li>
+    <li hx-get="/page/players" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'players'"
+      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'players', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'players' }">
+      <i class="bi bi-person-fill text-xl"></i>
+
+      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded}">
+        Players
+      </span>
+    </li>
+    <li hx-get="/page/champions" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'champions'"
+      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'champions', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'champions' }">
+      <i class="bi bi-star-fill text-xl"></i>
+
+      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded}">
+        Champions
+      </span>
+    </li>
+    <li hx-get="/page/teams" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'teams'"
+      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'teams', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'teams' }">
+      <i class="bi bi-shield-fill text-xl"></i>
+
+      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded}">
+        Teams
+      </span>
+    </li>
+    <li hx-get="/page/championships" hx-target="#maincontent" hx-swap="innerHTML" x-on:click="page = 'championships'"
+      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700"
+      :class="{ 'bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500': page === 'championships', 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white font-normal': page !== 'championships' }">
+      <i class="bi bi-trophy-fill text-xl"></i>
+      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded}">
+        Championships
+      </span>
+    </li>
+  </ul>
+</aside>

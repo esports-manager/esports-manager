@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scout - Esports Manager</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            // Custom colors can be defined here
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-gray-200 min-h-screen">
+  <div x-data="{
+    activeTab: 'reports',
+    view: 'cards',
+    searchQuery: '',
+    roleFilter: 'all',
+    regionFilter: 'all',
+    sortBy: 'potential',
+    sortDirection: 'desc'
+  }">
+    
+    <!-- Page Header -->
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Scout</h1>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Discover new talent, track free agents, and monitor the transfer market</p>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="flex flex-wrap gap-3 mt-4 md:mt-0">
+          <!-- Scouts -->
+          <div class="bg-blue-50 dark:bg-blue-900/30 px-3 py-2 rounded-md text-sm hover:shadow transition-shadow duration-150">
+            <span class="block text-blue-800 dark:text-blue-300 font-medium">3</span>
+            <span class="text-xs text-blue-600 dark:text-blue-400">Active Scouts</span>
+          </div>
+          
+          <!-- Prospects -->
+          <div class="bg-green-50 dark:bg-green-900/30 px-3 py-2 rounded-md text-sm hover:shadow transition-shadow duration-150">
+            <span class="block text-green-800 dark:text-green-300 font-medium">24</span>
+            <span class="text-xs text-green-600 dark:text-green-400">Tracked Prospects</span>
+          </div>
+          
+          <!-- Free Agents -->
+          <div class="bg-purple-50 dark:bg-purple-900/30 px-3 py-2 rounded-md text-sm hover:shadow transition-shadow duration-150">
+            <span class="block text-purple-800 dark:text-purple-300 font-medium">15</span>
+            <span class="text-xs text-purple-600 dark:text-purple-400">Free Agents</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Filters -->
+      <div class="space-y-4">
+        <!-- Search and Filters Row -->
+        <div class="flex flex-wrap gap-3 items-center">
+          <!-- Search Box -->
+          <div class="relative w-full md:w-72">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="bi bi-search text-gray-500 dark:text-gray-400"></i>
+            </div>
+            <input type="text" x-model="searchQuery" placeholder="Search players..." 
+              class="pl-10 pr-4 py-2 w-full rounded-lg bg-gray-100 dark:bg-slate-600 border-0 focus:ring-2 focus:ring-blue-500">
+          </div>
+          
+          <!-- Filter Dropdowns -->
+          <div class="flex flex-wrap gap-2">
+            <!-- Role Filter -->
+            <select x-model="roleFilter"
+              class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <option value="all">All Roles</option>
+              <option value="top">Top</option>
+              <option value="jungle">Jungle</option>
+              <option value="mid">Mid</option>
+              <option value="adc">ADC</option>
+              <option value="support">Support</option>
+            </select>
+            
+            <!-- Region Filter -->
+            <select x-model="regionFilter"
+              class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <option value="all">All Regions</option>
+              <option value="kr">Korea</option>
+              <option value="cn">China</option>
+              <option value="eu">Europe</option>
+              <option value="na">North America</option>
+            </select>
+            
+            <!-- Sort By -->
+            <select x-model="sortBy"
+              class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <option value="potential">Sort by Potential</option>
+              <option value="skill">Sort by Current Skill</option>
+              <option value="age">Sort by Age</option>
+              <option value="value">Sort by Value</option>
+            </select>
+            
+            <!-- Sort Direction Toggle -->
+            <button @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'" 
+              class="bg-gray-100 hover:bg-gray-200 dark:bg-slate-600 dark:hover:bg-slate-500 rounded-lg px-3 py-2 text-sm">
+              <i :class="sortDirection === 'asc' ? 'bi bi-sort-down' : 'bi bi-sort-up'"></i>
+            </button>
+            
+            <!-- View Toggle -->
+            <div class="flex items-center bg-gray-100 dark:bg-slate-600 rounded-lg p-1 ml-auto" role="group" aria-label="View toggle">
+              <button @click="view = 'cards'" 
+                :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'cards'}" 
+                class="px-2 py-1 rounded-md text-sm transition-colors duration-150"
+                aria-label="Cards view">
+                <i class="bi bi-grid"></i>
+              </button>
+              <button @click="view = 'list'" 
+                :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'list'}" 
+                class="px-2 py-1 rounded-md text-sm transition-colors duration-150"
+                aria-label="List view">
+                <i class="bi bi-list-ul"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Active Filters Display -->
+        <div class="flex flex-wrap gap-2" x-show="roleFilter !== 'all' || regionFilter !== 'all' || searchQuery !== ''">
+          <span class="text-xs text-gray-500 dark:text-gray-400 self-center">Active filters:</span>
+          
+          <!-- Role Filter Tag -->
+          <div x-show="roleFilter !== 'all'" class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full flex items-center">
+            Role: <span x-text="roleFilter" class="font-medium mx-1"></span>
+            <button @click="roleFilter = 'all'" class="ml-1 hover:text-blue-600 dark:hover:text-blue-100">
+              <i class="bi bi-x-circle-fill"></i>
+            </button>
+          </div>
+          
+          <!-- Region Filter Tag -->
+          <div x-show="regionFilter !== 'all'" class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full flex items-center">
+            Region: <span x-text="regionFilter.toUpperCase()" class="font-medium mx-1"></span>
+            <button @click="regionFilter = 'all'" class="ml-1 hover:text-green-600 dark:hover:text-green-100">
+              <i class="bi bi-x-circle-fill"></i>
+            </button>
+          </div>
+          
+          <!-- Search Query Tag -->
+          <div x-show="searchQuery !== ''" class="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs px-2 py-1 rounded-full flex items-center">
+            Search: <span x-text="searchQuery" class="font-medium mx-1"></span>
+            <button @click="searchQuery = ''" class="ml-1 hover:text-purple-600 dark:hover:text-purple-100">
+              <i class="bi bi-x-circle-fill"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main Navigation Tabs -->
+    <div class="mb-6 border-b border-gray-200 dark:border-gray-600">
+      <div class="flex overflow-x-auto scrollbar-hide">
+        <button @click="activeTab = 'reports'" 
+          :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'reports', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'reports'}"
+          class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+          <i class="bi bi-file-earmark-text mr-2"></i>
+          Scout Reports
+        </button>
+        <button @click="activeTab = 'soloqueue'" 
+          :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'soloqueue', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'soloqueue'}"
+          class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+          <i class="bi bi-lightning mr-2"></i>
+          Solo Queue
+        </button>
+        <button @click="activeTab = 'freeagents'" 
+          :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'freeagents', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'freeagents'}"
+          class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+          <i class="bi bi-person-check mr-2"></i>
+          Free Agents
+        </button>
+        <button @click="activeTab = 'market'" 
+          :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'market', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'market'}"
+          class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+          <i class="bi bi-cash-coin mr-2"></i>
+          Market
+        </button>
+      </div>
+    </div>
+    
+    <!-- Tab Contents Container -->
+    <div class="p-6">
+      <!-- Scout Reports Tab -->
+      <div x-show="activeTab === 'reports'" class="space-y-6">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-bold">Scout Reports</h2>
+          <button class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-sm transition-colors duration-150">
+            <i class="bi bi-plus-circle"></i>
+            Assign Scout
+          </button>
+        </div>
+        
+        <!-- Scout Assignment Section -->
+        <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden">
+          <div class="px-4 py-3 bg-gray-50 dark:bg-slate-600 border-b border-gray-200 dark:border-gray-600">
+            <h3 class="font-medium">Scout Assignments</h3>
+          </div>
+          <div class="p-4">
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+                <thead>
+                  <tr class="text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th class="px-4 py-2">Scout</th>
+                    <th class="px-4 py-2">Region</th>
+                    <th class="px-4 py-2">Focus</th>
+                    <th class="px-4 py-2">Status</th>
+                    <th class="px-4 py-2">Due Date</th>
+                    <th class="px-4 py-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
+                  <!-- Scout Assignment 1 -->
+                  <tr class="hover:bg-gray-50 dark:hover:bg-slate-600/50">
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <div class="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-800 dark:text-blue-200 font-medium text-sm mr-3">JS</div>
+                        <span>Jin Sung</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">Korea</td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        <i class="bi bi-controller mr-1"></i> Mid
+                      </span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <div class="h-2 w-2 rounded-full bg-yellow-400 mr-2"></div>
+                        <span class="text-sm">In Progress</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 text-sm">Jul 22, 2025</td>
+                    <td class="px-4 py-3">
+                      <div class="flex space-x-2">
+                        <button class="text-gray-400 hover:text-blue-500 dark:hover:text-blue-400">
+                          <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="text-gray-400 hover:text-yellow-500 dark:hover:text-yellow-400">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="text-gray-400 hover:text-red-500 dark:hover:text-red-400">
+                          <i class="bi bi-x-circle"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Scout Assignment 2 -->
+                  <tr class="hover:bg-gray-50 dark:hover:bg-slate-600/50">
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <div class="h-8 w-8 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-purple-800 dark:text-purple-200 font-medium text-sm mr-3">LW</div>
+                        <span>Liu Wei</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">China</td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                        <i class="bi bi-controller mr-1"></i> Jungle
+                      </span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <div class="h-2 w-2 rounded-full bg-green-400 mr-2"></div>
+                        <span class="text-sm">Completed</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 text-sm">Jul 10, 2025</td>
+                    <td class="px-4 py-3">
+                      <div class="flex space-x-2">
+                        <button class="text-gray-400 hover:text-blue-500 dark:hover:text-blue-400">
+                          <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="text-gray-400 hover:text-yellow-500 dark:hover:text-yellow-400">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="text-gray-400 hover:text-red-500 dark:hover:text-red-400">
+                          <i class="bi bi-x-circle"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Scout Assignment 3 -->
+                  <tr class="hover:bg-gray-50 dark:hover:bg-slate-600/50">
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <div class="h-8 w-8 rounded-full bg-orange-100 dark:bg-orange-900 flex items-center justify-center text-orange-800 dark:text-orange-200 font-medium text-sm mr-3">MH</div>
+                        <span>Michael Hubert</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">Europe</td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                        <i class="bi bi-controller mr-1"></i> ADC
+                      </span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <div class="h-2 w-2 rounded-full bg-blue-400 mr-2"></div>
+                        <span class="text-sm">Planned</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 text-sm">Jul 30, 2025</td>
+                    <td class="px-4 py-3">
+                      <div class="flex space-x-2">
+                        <button class="text-gray-400 hover:text-blue-500 dark:hover:text-blue-400">
+                          <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="text-gray-400 hover:text-yellow-500 dark:hover:text-yellow-400">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="text-gray-400 hover:text-red-500 dark:hover:text-red-400">
+                          <i class="bi bi-x-circle"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Recent Reports Section -->
+        <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden">
+          <div class="px-4 py-3 bg-gray-50 dark:bg-slate-600 border-b border-gray-200 dark:border-gray-600">
+            <h3 class="font-medium">Recent Reports</h3>
+          </div>
+          <div class="p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <!-- Report Card 1 -->
+              <div class="border border-gray-200 dark:border-gray-600 rounded-md p-4 hover:shadow-md transition-shadow duration-150">
+                <div class="flex justify-between items-start mb-3">
+                  <div>
+                    <h4 class="font-bold text-lg">Kim "Chovy" Jeong-hoon</h4>
+                    <div class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                        <i class="bi bi-controller mr-1"></i> Mid
+                      </span>
+                      <span class="inline-flex items-center">
+                        <img src="https://flagcdn.com/16x12/kr.png" class="mr-1" alt="South Korea" width="16" height="12">
+                        Korea
+                      </span>
+                    </div>
+                  </div>
+                  <div class="flex">
+                    <!-- Potential Stars -->
+                    <div class="flex">
+                      <i class="bi bi-star-fill text-yellow-400"></i>
+                      <i class="bi bi-star-fill text-yellow-400"></i>
+                      <i class="bi bi-star-fill text-yellow-400"></i>
+                      <i class="bi bi-star-fill text-yellow-400"></i>
+                      <i class="bi bi-star-half text-yellow-400"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Skills Preview -->
+                <div class="space-y-2 mb-3">
+                  <div class="flex items-center">
+                    <span class="text-xs w-24 text-gray-600 dark:text-gray-400">Mechanics</span>
+                    <div class="flex-grow bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                      <div class="bg-blue-500 h-2 rounded-full" style="width: 95%"></div>
+                    </div>
+                    <span class="text-xs font-medium ml-2">95</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-xs w-24 text-gray-600 dark:text-gray-400">Game Sense</span>
+                    <div class="flex-grow bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                      <div class="bg-blue-500 h-2 rounded-full" style="width: 92%"></div>
+                    </div>
+                    <span class="text-xs font-medium ml-2">92</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-xs w-24 text-gray-600 dark:text-gray-400">Consistency</span>
+                    <div class="flex-grow bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                      <div class="bg-blue-500 h-2 rounded-full" style="width: 88%"></div>
+                    </div>
+                    <span class="text-xs font-medium ml-2">88</span>
+                  </div>
+                </div>
+                
+                <div class="flex justify-between items-center text-sm">
+                  <span class="text-gray-500 dark:text-gray-400">Reported by: Jin Sung</span>
+                  <span class="text-gray-500 dark:text-gray-400">July 10, 2025</span>
+                </div>
+                
+                <div class="mt-3 flex justify-end space-x-2">
+                  <button class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                    View Full Report
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Report Card 2 -->
+              <div class="border border-gray-200 dark:border-gray-600 rounded-md p-4 hover:shadow-md transition-shadow duration-150">
+                <div class="flex justify-between items-start mb-3">
+                  <div>
+                    <h4 class="font-bold text-lg">Zhou "Knight" Ding</h4>
+                    <div class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                        <i class="bi bi-controller mr-1"></i> Mid
+                      </span>
+                      <span class="inline-flex items-center">
+                        <img src="https://flagcdn.com/16x12/cn.png" class="mr-1" alt="China" width="16" height="12">
+                        China
+                      </span>
+                    </div>
+                  </div>
+                  <div class="flex">
+                    <!-- Potential Stars -->
+                    <div class="flex">
+                      <i class="bi bi-star-fill text-yellow-400"></i>
+                      <i class="bi bi-star-fill text-yellow-400"></i>
+                      <i class="bi bi-star-fill text-yellow-400"></i>
+                      <i class="bi bi-star-fill text-yellow-400"></i>
+                      <i class="bi bi-star text-yellow-400"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Skills Preview -->
+                <div class="space-y-2 mb-3">
+                  <div class="flex items-center">
+                    <span class="text-xs w-24 text-gray-600 dark:text-gray-400">Mechanics</span>
+                    <div class="flex-grow bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                      <div class="bg-blue-500 h-2 rounded-full" style="width: 91%"></div>
+                    </div>
+                    <span class="text-xs font-medium ml-2">91</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-xs w-24 text-gray-600 dark:text-gray-400">Game Sense</span>
+                    <div class="flex-grow bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                      <div class="bg-blue-500 h-2 rounded-full" style="width: 89%"></div>
+                    </div>
+                    <span class="text-xs font-medium ml-2">89</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-xs w-24 text-gray-600 dark:text-gray-400">Consistency</span>
+                    <div class="flex-grow bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                      <div class="bg-blue-500 h-2 rounded-full" style="width: 85%"></div>
+                    </div>
+                    <span class="text-xs font-medium ml-2">85</span>
+                  </div>
+                </div>
+                
+                <div class="flex justify-between items-center text-sm">
+                  <span class="text-gray-500 dark:text-gray-400">Reported by: Liu Wei</span>
+                  <span class="text-gray-500 dark:text-gray-400">July 7, 2025</span>
+                </div>
+                
+                <div class="mt-3 flex justify-end space-x-2">
+                  <button class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                    View Full Report
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Report Card 3 -->
+              <div class="border border-gray-200 dark:border-gray-600 rounded-md p-4 hover:shadow-md transition-shadow duration-150">
+                <div class="flex justify-between items-start mb-3">
+                  <div>
+                    <h4 class="font-bold text-lg">Li "Xiaohu" Yuan-Hao</h4>
+                    <div class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        <i class="bi bi-controller mr-1"></i> Top
+                      </span>
+                      <span class="inline-flex items-center">
+                        <img src="https://flagcdn.com/16x12/cn.png" class="mr-1" alt="China" width="16" height="12">
+                        China
+                      </span>
+                    </div>
+                  </div>
+                  <div class="flex">
+                    <!-- Potential Stars -->
+                    <div class="flex">
+                      <i class="bi bi-star-fill text-yellow-400"></i>
+                      <i class="bi bi-star-fill text-yellow-400"></i>
+                      <i class="bi bi-star-fill text-yellow-400"></i>
+                      <i class="bi bi-star-fill text-yellow-400"></i>
+                      <i class="bi bi-star text-yellow-400"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Skills Preview -->
+                <div class="space-y-2 mb-3">
+                  <div class="flex items-center">
+                    <span class="text-xs w-24 text-gray-600 dark:text-gray-400">Mechanics</span>
+                    <div class="flex-grow bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                      <div class="bg-blue-500 h-2 rounded-full" style="width: 89%"></div>
+                    </div>
+                    <span class="text-xs font-medium ml-2">89</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-xs w-24 text-gray-600 dark:text-gray-400">Game Sense</span>
+                    <div class="flex-grow bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                      <div class="bg-blue-500 h-2 rounded-full" style="width: 94%"></div>
+                    </div>
+                    <span class="text-xs font-medium ml-2">94</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-xs w-24 text-gray-600 dark:text-gray-400">Consistency</span>
+                    <div class="flex-grow bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                      <div class="bg-blue-500 h-2 rounded-full" style="width: 90%"></div>
+                    </div>
+                    <span class="text-xs font-medium ml-2">90</span>
+                  </div>
+                </div>
+                
+                <div class="flex justify-between items-center text-sm">
+                  <span class="text-gray-500 dark:text-gray-400">Reported by: Liu Wei</span>
+                  <span class="text-gray-500 dark:text-gray-400">July 5, 2025</span>
+                </div>
+                
+                <div class="mt-3 flex justify-end space-x-2">
+                  <button class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                    View Full Report
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Solo Queue Tab -->
+      <div x-show="activeTab === 'soloqueue'" class="space-y-6">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-bold">Solo Queue</h2>
+          <div class="flex gap-2">
+            <button class="bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/30 dark:hover:bg-purple-800/50 text-purple-800 dark:text-purple-300 px-3 py-2 rounded-md text-sm transition-colors duration-150">
+              <i class="bi bi-arrow-repeat mr-1"></i>
+              Refresh Data
+            </button>
+            <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-sm transition-colors duration-150">
+              <i class="bi bi-plus-circle mr-1"></i>
+              Add Player
+            </button>
+          </div>
+        </div>
+        
+        <!-- Solo Queue Rankings -->
+        <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden">
+          <div class="px-4 py-3 bg-gray-50 dark:bg-slate-600 border-b border-gray-200 dark:border-gray-600">
+            <h3 class="font-medium">Top Solo Queue Players</h3>
+          </div>
+          <div class="p-4">
+            <!-- Server selector -->
+            <div class="flex flex-wrap gap-3 mb-4">
+              <button class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm">
+                Korea
+              </button>
+              <button class="bg-gray-200 dark:bg-slate-600 hover:bg-gray-300 dark:hover:bg-slate-500 px-3 py-1 rounded-md text-sm">
+                China
+              </button>
+              <button class="bg-gray-200 dark:bg-slate-600 hover:bg-gray-300 dark:hover:bg-slate-500 px-3 py-1 rounded-md text-sm">
+                EUW
+              </button>
+              <button class="bg-gray-200 dark:bg-slate-600 hover:bg-gray-300 dark:hover:bg-slate-500 px-3 py-1 rounded-md text-sm">
+                NA
+              </button>
+            </div>
+            
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+                <thead>
+                  <tr class="text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th class="px-4 py-2">Rank</th>
+                    <th class="px-4 py-2">Player</th>
+                    <th class="px-4 py-2">Role</th>
+                    <th class="px-4 py-2">LP</th>
+                    <th class="px-4 py-2">Winrate</th>
+                    <th class="px-4 py-2">KDA</th>
+                    <th class="px-4 py-2">Games</th>
+                    <th class="px-4 py-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
+                  <!-- Player 1 -->
+                  <tr class="hover:bg-gray-50 dark:hover:bg-slate-600/50">
+                    <td class="px-4 py-3 font-bold">#1</td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <div class="h-8 w-8 rounded-full overflow-hidden mr-3">
+                          <img src="https://via.placeholder.com/32" alt="Player avatar" class="h-full w-full object-cover">
+                        </div>
+                        <div>
+                          <span class="block font-medium">T1 Keria</span>
+                          <span class="text-xs text-gray-500 dark:text-gray-400">Ryu Min-seok</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                        <i class="bi bi-controller mr-1"></i> Support
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 font-medium">1,254</td>
+                    <td class="px-4 py-3">
+                      <span class="text-green-600 dark:text-green-400 font-medium">67.3%</span>
+                      <span class="text-xs text-gray-500 dark:text-gray-400">(101W/49L)</span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="font-medium">4.8</span>
+                      <span class="text-xs text-gray-500 dark:text-gray-400">(3.1/1.8/7.3)</span>
+                    </td>
+                    <td class="px-4 py-3">150</td>
+                    <td class="px-4 py-3">
+                      <div class="flex space-x-2">
+                        <button class="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">
+                          <i class="bi bi-graph-up"></i>
+                        </button>
+                        <button class="text-purple-500 hover:text-purple-600 dark:hover:text-purple-400">
+                          <i class="bi bi-clipboard-data"></i>
+                        </button>
+                        <button class="text-green-500 hover:text-green-600 dark:hover:text-green-400">
+                          <i class="bi bi-star"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Player 2 -->
+                  <tr class="hover:bg-gray-50 dark:hover:bg-slate-600/50">
+                    <td class="px-4 py-3 font-bold">#2</td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <div class="h-8 w-8 rounded-full overflow-hidden mr-3">
+                          <img src="https://via.placeholder.com/32" alt="Player avatar" class="h-full w-full object-cover">
+                        </div>
+                        <div>
+                          <span class="block font-medium">Unknown Talent</span>
+                          <span class="text-xs text-gray-500 dark:text-gray-400">Top Lane Prodigy</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        <i class="bi bi-controller mr-1"></i> Top
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 font-medium">1,156</td>
+                    <td class="px-4 py-3">
+                      <span class="text-green-600 dark:text-green-400 font-medium">63.5%</span>
+                      <span class="text-xs text-gray-500 dark:text-gray-400">(108W/62L)</span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="font-medium">3.6</span>
+                      <span class="text-xs text-gray-500 dark:text-gray-400">(6.2/2.4/4.8)</span>
+                    </td>
+                    <td class="px-4 py-3">170</td>
+                    <td class="px-4 py-3">
+                      <div class="flex space-x-2">
+                        <button class="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">
+                          <i class="bi bi-graph-up"></i>
+                        </button>
+                        <button class="text-purple-500 hover:text-purple-600 dark:hover:text-purple-400">
+                          <i class="bi bi-clipboard-data"></i>
+                        </button>
+                        <button class="text-green-500 hover:text-green-600 dark:hover:text-green-400">
+                          <i class="bi bi-star"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Player 3 -->
+                  <tr class="hover:bg-gray-50 dark:hover:bg-slate-600/50">
+                    <td class="px-4 py-3 font-bold">#3</td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <div class="h-8 w-8 rounded-full overflow-hidden mr-3">
+                          <img src="https://via.placeholder.com/32" alt="Player avatar" class="h-full w-full object-cover">
+                        </div>
+                        <div>
+                          <span class="block font-medium">DRX Zeka</span>
+                          <span class="text-xs text-gray-500 dark:text-gray-400">Kim Geon-woo</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                        <i class="bi bi-controller mr-1"></i> Mid
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 font-medium">1,132</td>
+                    <td class="px-4 py-3">
+                      <span class="text-green-600 dark:text-green-400 font-medium">61.8%</span>
+                      <span class="text-xs text-gray-500 dark:text-gray-400">(94W/58L)</span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="font-medium">4.2</span>
+                      <span class="text-xs text-gray-500 dark:text-gray-400">(7.3/2.1/5.6)</span>
+                    </td>
+                    <td class="px-4 py-3">152</td>
+                    <td class="px-4 py-3">
+                      <div class="flex space-x-2">
+                        <button class="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">
+                          <i class="bi bi-graph-up"></i>
+                        </button>
+                        <button class="text-purple-500 hover:text-purple-600 dark:hover:text-purple-400">
+                          <i class="bi bi-clipboard-data"></i>
+                        </button>
+                        <button class="text-green-500 hover:text-green-600 dark:hover:text-green-400">
+                          <i class="bi bi-star"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Player 4 -->
+                  <tr class="hover:bg-gray-50 dark:hover:bg-slate-600/50 bg-blue-50 dark:bg-blue-900/20">
+                    <td class="px-4 py-3 font-bold">#4</td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <div class="h-8 w-8 rounded-full overflow-hidden mr-3">
+                          <img src="https://via.placeholder.com/32" alt="Player avatar" class="h-full w-full object-cover">
+                        </div>
+                        <div>
+                          <span class="block font-medium">Rising Star</span>
+                          <span class="text-xs text-gray-500 dark:text-gray-400">Jung Min-ho</span>
+                          <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 mt-1">
+                            <i class="bi bi-gem mr-1"></i> Prospect
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                        <i class="bi bi-controller mr-1"></i> Jungle
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 font-medium">1,089</td>
+                    <td class="px-4 py-3">
+                      <span class="text-green-600 dark:text-green-400 font-medium">70.3%</span>
+                      <span class="text-xs text-gray-500 dark:text-gray-400">(71W/30L)</span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="font-medium">5.2</span>
+                      <span class="text-xs text-gray-500 dark:text-gray-400">(4.8/1.5/8.5)</span>
+                    </td>
+                    <td class="px-4 py-3">101</td>
+                    <td class="px-4 py-3">
+                      <div class="flex space-x-2">
+                        <button class="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">
+                          <i class="bi bi-graph-up"></i>
+                        </button>
+                        <button class="text-purple-500 hover:text-purple-600 dark:hover:text-purple-400">
+                          <i class="bi bi-clipboard-data"></i>
+                        </button>
+                        <button class="text-yellow-500 hover:text-yellow-600 dark:hover:text-yellow-400">
+                          <i class="bi bi-star-fill"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Player 5 -->
+                  <tr class="hover:bg-gray-50 dark:hover:bg-slate-600/50">
+                    <td class="px-4 py-3 font-bold">#5</td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <div class="h-8 w-8 rounded-full overflow-hidden mr-3">
+                          <img src="https://via.placeholder.com/32" alt="Player avatar" class="h-full w-full object-cover">
+                        </div>
+                        <div>
+                          <span class="block font-medium">GenG Ruler</span>
+                          <span class="text-xs text-gray-500 dark:text-gray-400">Park Jae-hyuk</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                        <i class="bi bi-controller mr-1"></i> ADC
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 font-medium">1,056</td>
+                    <td class="px-4 py-3">
+                      <span class="text-green-600 dark:text-green-400 font-medium">58.9%</span>
+                      <span class="text-xs text-gray-500 dark:text-gray-400">(86W/60L)</span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="font-medium">4.7</span>
+                      <span class="text-xs text-gray-500 dark:text-gray-400">(6.9/1.9/5.8)</span>
+                    </td>
+                    <td class="px-4 py-3">146</td>
+                    <td class="px-4 py-3">
+                      <div class="flex space-x-2">
+                        <button class="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">
+                          <i class="bi bi-graph-up"></i>
+                        </button>
+                        <button class="text-purple-500 hover:text-purple-600 dark:hover:text-purple-400">
+                          <i class="bi bi-clipboard-data"></i>
+                        </button>
+                        <button class="text-green-500 hover:text-green-600 dark:hover:text-green-400">
+                          <i class="bi bi-star"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Solo Queue Performance Charts -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Champion Pool Analysis -->
+          <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden">
+            <div class="px-4 py-3 bg-gray-50 dark:bg-slate-600 border-b border-gray-200 dark:border-gray-600">
+              <h3 class="font-medium">Champion Pool Analysis</h3>
+            </div>
+            <div class="p-4">
+              <div class="h-64 flex items-center justify-center text-center">
+                <div class="text-gray-500 dark:text-gray-400">
+                  <i class="bi bi-pie-chart text-4xl"></i>
+                  <p class="mt-2">Select a player to view champion pool analysis</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Performance Metrics -->
+          <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden">
+            <div class="px-4 py-3 bg-gray-50 dark:bg-slate-600 border-b border-gray-200 dark:border-gray-600">
+              <h3 class="font-medium">Performance Metrics</h3>
+            </div>
+            <div class="p-4">
+              <div class="h-64 flex items-center justify-center text-center">
+                <div class="text-gray-500 dark:text-gray-400">
+                  <i class="bi bi-graph-up text-4xl"></i>
+                  <p class="mt-2">Select a player to view performance metrics</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Free Agents Tab -->
+      <div x-show="activeTab === 'freeagents'" class="space-y-6">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-bold">Free Agents</h2>
+          <div class="flex gap-2">
+            <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-sm transition-colors duration-150">
+              <i class="bi bi-chat-left-text mr-1"></i>
+              Contact Agent
+            </button>
+          </div>
+        </div>
+        
+        <!-- Free Agents Overview Stats -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
+            <div class="flex items-center">
+              <div class="rounded-full bg-blue-100 dark:bg-blue-900/50 p-3 mr-4">
+                <i class="bi bi-people text-blue-600 dark:text-blue-400 text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Total Free Agents</p>
+                <p class="text-2xl font-bold">15</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
+            <div class="flex items-center">
+              <div class="rounded-full bg-purple-100 dark:bg-purple-900/50 p-3 mr-4">
+                <i class="bi bi-star text-purple-600 dark:text-purple-400 text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Avg. Potential</p>
+                <p class="text-2xl font-bold">87</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
+            <div class="flex items-center">
+              <div class="rounded-full bg-green-100 dark:bg-green-900/50 p-3 mr-4">
+                <i class="bi bi-currency-dollar text-green-600 dark:text-green-400 text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Avg. Salary Expectation</p>
+                <p class="text-2xl font-bold">$210K</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
+            <div class="flex items-center">
+              <div class="rounded-full bg-amber-100 dark:bg-amber-900/50 p-3 mr-4">
+                <i class="bi bi-flag text-amber-600 dark:text-amber-400 text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Most Common Region</p>
+                <p class="text-2xl font-bold">Korea</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Free Agents List -->
+        <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden">
+          <div class="px-4 py-3 bg-gray-50 dark:bg-slate-600 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center">
+            <h3 class="font-medium">Available Free Agents</h3>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-gray-500 dark:text-gray-400">View:</span>
+              <div class="flex items-center bg-gray-100 dark:bg-slate-600 rounded-lg p-1" role="group">
+                <button @click="view = 'cards'" 
+                  :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'cards'}" 
+                  class="px-2 py-1 rounded-md text-sm transition-colors duration-150"
+                  aria-label="Cards view">
+                  <i class="bi bi-grid"></i>
+                </button>
+                <button @click="view = 'list'" 
+                  :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'list'}" 
+                  class="px-2 py-1 rounded-md text-sm transition-colors duration-150"
+                  aria-label="List view">
+                  <i class="bi bi-list-ul"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="p-4">
+            <!-- Grid View -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" x-show="view === 'cards'">
+              <!-- Player Card 1 -->
+              <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col">
+                <div class="relative">
+                  <!-- Player Image -->
+                  <img src="https://via.placeholder.com/300x180?text=Player" alt="Free Agent" class="w-full h-48 object-cover">
+                  
+                  <!-- Role Badge -->
+                  <div class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+                    Mid
+                  </div>
+                  
+                  <!-- Free Agent Badge -->
+                  <div class="absolute top-2 right-2 px-2 py-1 bg-purple-500 text-white text-xs rounded-full">
+                    Free Agent
+                  </div>
+                  
+                  <!-- Rating Badge -->
+                  <div class="absolute bottom-2 right-2 bg-yellow-400 text-gray-900 text-sm font-bold px-2 py-1 rounded-md">
+                    85
+                  </div>
+                </div>
+                
+                <div class="p-4">
+                  <!-- Player Name and Nationality -->
+                  <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-bold text-gray-800 dark:text-gray-100">SoloMid</h3>
+                    <div class="flex items-center">
+                      <span class="fi fi-kr mr-2"></span>
+                      <span class="text-xs text-gray-600 dark:text-gray-400">Korea</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Player Details -->
+                  <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+                    <div class="flex items-center">
+                      <i class="bi bi-person-fill text-gray-500 mr-1"></i>
+                      <span class="text-gray-600 dark:text-gray-400">Kim Min-su</span>
+                    </div>
+                    <div class="flex items-center">
+                      <i class="bi bi-calendar3 text-gray-500 mr-1"></i>
+                      <span class="text-gray-600 dark:text-gray-400">Age: 22</span>
+                    </div>
+                    <div class="flex items-center">
+                      <i class="bi bi-trophy-fill text-gray-500 mr-1"></i>
+                      <span class="text-gray-600 dark:text-gray-400">Experience: 4</span>
+                    </div>
+                    <div class="flex items-center">
+                      <i class="bi bi-currency-dollar text-gray-500 mr-1"></i>
+                      <span class="text-gray-600 dark:text-gray-400">Value: $850K</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Stats Bars -->
+                  <div class="space-y-1.5 mb-3">
+                    <div class="flex items-center justify-between text-xs">
+                      <span class="text-gray-500 dark:text-gray-400 w-16">Mechanics</span>
+                      <div class="flex-grow mx-2 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
+                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: 85%"></div>
+                      </div>
+                      <span class="text-gray-700 dark:text-gray-300 font-medium">85</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                      <span class="text-gray-500 dark:text-gray-400 w-16">Game IQ</span>
+                      <div class="flex-grow mx-2 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
+                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: 82%"></div>
+                      </div>
+                      <span class="text-gray-700 dark:text-gray-300 font-medium">82</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                      <span class="text-gray-500 dark:text-gray-400 w-16">Teamwork</span>
+                      <div class="flex-grow mx-2 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
+                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: 87%"></div>
+                      </div>
+                      <span class="text-gray-700 dark:text-gray-300 font-medium">87</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Contract Expectation -->
+                  <div class="text-xs text-gray-600 dark:text-gray-400 mb-3">
+                    <span class="font-medium">Contract Expectation:</span>
+                    <span class="ml-1">$180K - $220K/year, 2-3 years</span>
+                  </div>
+                  
+                  <div class="flex justify-between">
+                    <!-- View Profile Button -->
+                    <a href="#" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm">
+                      <i class="bi bi-info-circle mr-1"></i> Profile
+                    </a>
+                    
+                    <!-- Last Team -->
+                    <span class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full">
+                      Ex DRX
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- List View -->
+            <div class="overflow-x-auto" x-show="view === 'list'">
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+                <thead>
+                  <tr class="text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th class="px-4 py-2">Player</th>
+                    <th class="px-4 py-2">Role</th>
+                    <th class="px-4 py-2">Age</th>
+                    <th class="px-4 py-2">Rating</th>
+                    <th class="px-4 py-2">Region</th>
+                    <th class="px-4 py-2">Exp.</th>
+                    <th class="px-4 py-2">Last Team</th>
+                    <th class="px-4 py-2">Salary Exp.</th>
+                    <th class="px-4 py-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
+                  <!-- Player 1 -->
+                  <tr class="hover:bg-gray-50 dark:hover:bg-slate-600/50">
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <div class="h-10 w-10 rounded-full overflow-hidden mr-3">
+                          <img src="https://via.placeholder.com/40?text=FA" alt="Player" class="h-full w-full object-cover">
+                        </div>
+                        <div>
+                          <div class="font-medium">SoloMid</div>
+                          <div class="text-xs text-gray-500 dark:text-gray-400">Kim Min-su</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                        <i class="bi bi-controller mr-1"></i> Mid
+                      </span>
+                    </td>
+                    <td class="px-4 py-3">22</td>
+                    <td class="px-4 py-3 font-medium">85</td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <span class="fi fi-kr mr-1"></span>
+                        <span>Korea</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">4 years</td>
+                    <td class="px-4 py-3">DRX</td>
+                    <td class="px-4 py-3">
+                      <span class="text-green-600 dark:text-green-400">$180K - $220K</span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <div class="flex space-x-2">
+                        <button class="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">
+                          <i class="bi bi-file-text"></i>
+                        </button>
+                        <button class="text-purple-500 hover:text-purple-600 dark:hover:text-purple-400">
+                          <i class="bi bi-chat-left-text"></i>
+                        </button>
+                        <button class="text-green-500 hover:text-green-600 dark:hover:text-green-400">
+                          <i class="bi bi-plus-circle"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Market Tab -->
+      <div x-show="activeTab === 'market'" class="space-y-6">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-bold">Transfer Market</h2>
+          <div class="flex gap-2">
+            <button class="bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/30 dark:hover:bg-purple-800/50 text-purple-800 dark:text-purple-300 px-3 py-2 rounded-md text-sm transition-colors duration-150">
+              <i class="bi bi-arrow-repeat mr-1"></i>
+              Refresh Market
+            </button>
+            <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-sm transition-colors duration-150">
+              <i class="bi bi-envelope mr-1"></i>
+              Contact Team
+            </button>
+          </div>
+        </div>
+        
+        <!-- Market Overview Stats -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
+            <div class="flex items-center">
+              <div class="rounded-full bg-amber-100 dark:bg-amber-900/50 p-3 mr-4">
+                <i class="bi bi-shop text-amber-600 dark:text-amber-400 text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Listed Players</p>
+                <p class="text-2xl font-bold">28</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
+            <div class="flex items-center">
+              <div class="rounded-full bg-green-100 dark:bg-green-900/50 p-3 mr-4">
+                <i class="bi bi-cash-stack text-green-600 dark:text-green-400 text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Avg. Buyout</p>
+                <p class="text-2xl font-bold">$1.2M</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
+            <div class="flex items-center">
+              <div class="rounded-full bg-blue-100 dark:bg-blue-900/50 p-3 mr-4">
+                <i class="bi bi-award text-blue-600 dark:text-blue-400 text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Avg. Rating</p>
+                <p class="text-2xl font-bold">86</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
+            <div class="flex items-center">
+              <div class="rounded-full bg-red-100 dark:bg-red-900/50 p-3 mr-4">
+                <i class="bi bi-alarm text-red-600 dark:text-red-400 text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Avg. Contract Left</p>
+                <p class="text-2xl font-bold">1.5 yrs</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Market Players List -->
+        <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden">
+          <div class="px-4 py-3 bg-gray-50 dark:bg-slate-600 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center">
+            <h3 class="font-medium">Players on Transfer List</h3>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-gray-500 dark:text-gray-400">View:</span>
+              <div class="flex items-center bg-gray-100 dark:bg-slate-600 rounded-lg p-1" role="group">
+                <button @click="view = 'cards'" 
+                  :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'cards'}" 
+                  class="px-2 py-1 rounded-md text-sm transition-colors duration-150"
+                  aria-label="Cards view">
+                  <i class="bi bi-grid"></i>
+                </button>
+                <button @click="view = 'list'" 
+                  :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'list'}" 
+                  class="px-2 py-1 rounded-md text-sm transition-colors duration-150"
+                  aria-label="List view">
+                  <i class="bi bi-list-ul"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="p-4">
+            <!-- Grid View -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" x-show="view === 'cards'">
+              <!-- Player Card 1 -->
+              <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col">
+                <div class="relative">
+                  <!-- Player Image -->
+                  <img src="https://via.placeholder.com/300x180?text=Market" alt="Market Player" class="w-full h-48 object-cover">
+                  
+                  <!-- Role Badge -->
+                  <div class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                    Top
+                  </div>
+                  
+                  <!-- Team Badge -->
+                  <div class="absolute top-2 right-2 bg-white dark:bg-slate-800 rounded-full h-8 w-8 flex items-center justify-center shadow">
+                    <img class="w-16 h-16 md:w-20 md:h-20 object-contain"
+                          src="https://via.placeholder.com/32?text=T1" alt="Team Logo" />
+                  </div>
+                  
+                  <!-- Rating Badge -->
+                  <div class="absolute bottom-2 right-2 bg-yellow-400 text-gray-900 text-sm font-bold px-2 py-1 rounded-md">
+                    88
+                  </div>
+                  
+                  <!-- For Sale Badge -->
+                  <div class="absolute bottom-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-md flex items-center">
+                    <i class="bi bi-tag-fill mr-1"></i> For Sale
+                  </div>
+                </div>
+                
+                <div class="p-4">
+                  <!-- Player Name and Nationality -->
+                  <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-bold text-gray-800 dark:text-gray-100">Zeus</h3>
+                    <div class="flex items-center">
+                      <span class="fi fi-kr mr-2"></span>
+                      <span class="text-xs text-gray-600 dark:text-gray-400">Korea</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Player Details -->
+                  <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+                    <div class="flex items-center">
+                      <i class="bi bi-person-fill text-gray-500 mr-1"></i>
+                      <span class="text-gray-600 dark:text-gray-400">Choi Woo-je</span>
+                    </div>
+                    <div class="flex items-center">
+                      <i class="bi bi-calendar3 text-gray-500 mr-1"></i>
+                      <span class="text-gray-600 dark:text-gray-400">Age: 20</span>
+                    </div>
+                    <div class="flex items-center">
+                      <i class="bi bi-trophy-fill text-gray-500 mr-1"></i>
+                      <span class="text-gray-600 dark:text-gray-400">Experience: 3</span>
+                    </div>
+                    <div class="flex items-center">
+                      <i class="bi bi-currency-dollar text-gray-500 mr-1"></i>
+                      <span class="text-gray-600 dark:text-gray-400">Value: $1.8M</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Contract Details -->
+                  <div class="bg-gray-50 dark:bg-slate-800 p-2 rounded-md mb-3">
+                    <div class="flex justify-between text-xs mb-1">
+                      <span class="text-gray-500 dark:text-gray-400">Team:</span>
+                      <span class="font-medium text-gray-700 dark:text-gray-300">T1</span>
+                    </div>
+                    <div class="flex justify-between text-xs mb-1">
+                      <span class="text-gray-500 dark:text-gray-400">Contract:</span>
+                      <span class="font-medium text-gray-700 dark:text-gray-300">Until Dec 2026</span>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                      <span class="text-gray-500 dark:text-gray-400">Buyout:</span>
+                      <span class="font-medium text-red-600 dark:text-red-400">$1.2M</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Stats Preview -->
+                  <div class="space-y-1.5 mb-3">
+                    <div class="flex items-center justify-between text-xs">
+                      <span class="text-gray-500 dark:text-gray-400 w-16">Mechanics</span>
+                      <div class="flex-grow mx-2 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
+                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: 89%"></div>
+                      </div>
+                      <span class="text-gray-700 dark:text-gray-300 font-medium">89</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                      <span class="text-gray-500 dark:text-gray-400 w-16">Game IQ</span>
+                      <div class="flex-grow mx-2 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
+                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: 86%"></div>
+                      </div>
+                      <span class="text-gray-700 dark:text-gray-300 font-medium">86</span>
+                    </div>
+                  </div>
+                  
+                  <div class="flex justify-between">
+                    <!-- View Profile Button -->
+                    <a href="#" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm">
+                      <i class="bi bi-info-circle mr-1"></i> Profile
+                    </a>
+                    
+                    <!-- Make Offer Button -->
+                    <a href="#" class="text-green-500 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 text-sm">
+                      <i class="bi bi-cash mr-1"></i> Make Offer
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- List View -->
+            <div class="overflow-x-auto" x-show="view === 'list'">
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+                <thead>
+                  <tr class="text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th class="px-4 py-2">Player</th>
+                    <th class="px-4 py-2">Role</th>
+                    <th class="px-4 py-2">Team</th>
+                    <th class="px-4 py-2">Rating</th>
+                    <th class="px-4 py-2">Region</th>
+                    <th class="px-4 py-2">Contract</th>
+                    <th class="px-4 py-2">Buyout</th>
+                    <th class="px-4 py-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
+                  <!-- Player 1 -->
+                  <tr class="hover:bg-gray-50 dark:hover:bg-slate-600/50">
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <div class="h-10 w-10 rounded-full overflow-hidden mr-3">
+                          <img src="https://via.placeholder.com/40?text=Z" alt="Player" class="h-full w-full object-cover">
+                        </div>
+                        <div>
+                          <div class="font-medium">Zeus</div>
+                          <div class="text-xs text-gray-500 dark:text-gray-400">Choi Woo-je</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                        <i class="bi bi-controller mr-1"></i> Top
+                      </span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <div class="h-6 w-6 rounded-full overflow-hidden mr-1">
+                          <img src="https://via.placeholder.com/24?text=T1" alt="Team Logo" class="h-full w-full object-cover">
+                        </div>
+                        <span>T1</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 font-medium">88</td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center">
+                        <span class="fi fi-kr mr-1"></span>
+                        <span>Korea</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">Until Dec 2026</td>
+                    <td class="px-4 py-3 font-medium text-red-600 dark:text-red-400">$1.2M</td>
+                    <td class="px-4 py-3">
+                      <div class="flex space-x-2">
+                        <button class="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">
+                          <i class="bi bi-file-text"></i>
+                        </button>
+                        <button class="text-purple-500 hover:text-purple-600 dark:hover:text-purple-400">
+                          <i class="bi bi-envelope"></i>
+                        </button>
+                        <button class="text-green-500 hover:text-green-600 dark:hover:text-green-400">
+                          <i class="bi bi-cash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

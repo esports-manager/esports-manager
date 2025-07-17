@@ -12,11 +12,7 @@ from sqlmodel.pool import StaticPool
 
 from esm.models.moba_player import (
     MobaPlayer,
-    ROLE_MID,
-    ROLE_TOP,
-    ROLE_JUNGLE,
-    ROLE_ADC,
-    ROLE_SUPPORT,
+    PlayerRole,
 )
 from esm.models.champion import Champion
 from esm.models.champion_mastery import ChampionMastery
@@ -61,7 +57,7 @@ def player_with_champions(session):
         full_name="Lee Sang-hyeok",
         nationality="South Korea",
         date_of_birth=date(1996, 5, 7),
-        role=ROLE_MID,
+        role=PlayerRole.MID,
         mechanics=95,
         game_knowledge=98,
         team_fighting=94,
@@ -73,52 +69,52 @@ def player_with_champions(session):
 
     # Create champions for different roles
     champions = {
-        ROLE_MID: [
+        PlayerRole.MID: [
             Champion(
                 name="Zed",
                 title="The Master of Shadows",
-                primary_role=ROLE_MID,
+                primary_role=PlayerRole.MID,
                 difficulty=8,
                 release_date=date(2012, 11, 13),
             ),
             Champion(
                 name="Ahri",
                 title="The Nine-Tailed Fox",
-                primary_role=ROLE_MID,
+                primary_role=PlayerRole.MID,
                 difficulty=6,
                 release_date=date(2011, 12, 14),
             ),
             Champion(
                 name="Syndra",
                 title="The Dark Sovereign",
-                primary_role=ROLE_MID,
+                primary_role=PlayerRole.MID,
                 difficulty=7,
                 release_date=date(2012, 9, 13),
             ),
         ],
-        ROLE_TOP: [
+        PlayerRole.TOP: [
             Champion(
                 name="Darius",
                 title="The Hand of Noxus",
-                primary_role=ROLE_TOP,
+                primary_role=PlayerRole.TOP,
                 difficulty=5,
                 release_date=date(2012, 5, 23),
             )
         ],
-        ROLE_JUNGLE: [
+        PlayerRole.JUNGLE: [
             Champion(
                 name="Lee Sin",
                 title="The Blind Monk",
-                primary_role=ROLE_JUNGLE,
+                primary_role=PlayerRole.JUNGLE,
                 difficulty=9,
                 release_date=date(2011, 4, 1),
             )
         ],
-        ROLE_ADC: [
+        PlayerRole.ADC: [
             Champion(
                 name="Ezreal",
                 title="The Prodigal Explorer",
-                primary_role=ROLE_ADC,
+                primary_role=PlayerRole.ADC,
                 difficulty=7,
                 release_date=date(2010, 3, 16),
             )
@@ -137,7 +133,7 @@ def player_with_champions(session):
         # High mastery champions (should be in effective pool)
         ChampionMastery(
             player_id=player.id,
-            champion_id=champions[ROLE_MID][0].id,  # Zed
+            champion_id=champions[PlayerRole.MID][0].id,  # Zed
             mastery_level=95,
             games_played=150,
             wins=95,
@@ -147,7 +143,7 @@ def player_with_champions(session):
         ),
         ChampionMastery(
             player_id=player.id,
-            champion_id=champions[ROLE_MID][1].id,  # Ahri
+            champion_id=champions[PlayerRole.MID][1].id,  # Ahri
             mastery_level=85,
             games_played=120,
             wins=70,
@@ -158,7 +154,7 @@ def player_with_champions(session):
         # Medium mastery (slightly above threshold)
         ChampionMastery(
             player_id=player.id,
-            champion_id=champions[ROLE_JUNGLE][0].id,  # Lee Sin
+            champion_id=champions[PlayerRole.JUNGLE][0].id,  # Lee Sin
             mastery_level=75,
             games_played=50,
             wins=28,
@@ -169,7 +165,7 @@ def player_with_champions(session):
         # At threshold
         ChampionMastery(
             player_id=player.id,
-            champion_id=champions[ROLE_TOP][0].id,  # Darius
+            champion_id=champions[PlayerRole.TOP][0].id,  # Darius
             mastery_level=70,
             games_played=30,
             wins=15,
@@ -180,7 +176,7 @@ def player_with_champions(session):
         # Below threshold champions (shouldn't be in effective pool)
         ChampionMastery(
             player_id=player.id,
-            champion_id=champions[ROLE_MID][2].id,  # Syndra
+            champion_id=champions[PlayerRole.MID][2].id,  # Syndra
             mastery_level=65,
             games_played=20,
             wins=10,
@@ -190,7 +186,7 @@ def player_with_champions(session):
         ),
         ChampionMastery(
             player_id=player.id,
-            champion_id=champions[ROLE_ADC][0].id,  # Ezreal
+            champion_id=champions[PlayerRole.ADC][0].id,  # Ezreal
             mastery_level=50,
             games_played=15,
             wins=6,
@@ -262,11 +258,11 @@ def test_role_champion_pool(session, player_with_champions):
     player, _, _ = player_with_champions
 
     # Test for different roles
-    mid_pool = player.get_role_champion_pool(ROLE_MID)
-    top_pool = player.get_role_champion_pool(ROLE_TOP)
-    jungle_pool = player.get_role_champion_pool(ROLE_JUNGLE)
-    adc_pool = player.get_role_champion_pool(ROLE_ADC)
-    support_pool = player.get_role_champion_pool(ROLE_SUPPORT)
+    mid_pool = player.get_role_champion_pool(PlayerRole.MID)
+    top_pool = player.get_role_champion_pool(PlayerRole.TOP)
+    jungle_pool = player.get_role_champion_pool(PlayerRole.JUNGLE)
+    adc_pool = player.get_role_champion_pool(PlayerRole.ADC)
+    support_pool = player.get_role_champion_pool(PlayerRole.SUPPORT)
 
     # Verify counts
     assert len(mid_pool) == 2  # Zed and Ahri (Syndra below threshold)
@@ -276,7 +272,7 @@ def test_role_champion_pool(session, player_with_champions):
     assert len(support_pool) == 0  # No support champions
 
     # Test with different threshold
-    mid_pool_low = player.get_role_champion_pool(ROLE_MID, min_mastery_level=60)
+    mid_pool_low = player.get_role_champion_pool(PlayerRole.MID, min_mastery_level=60)
     assert len(mid_pool_low) == 3  # Now includes Syndra
 
 
@@ -298,14 +294,14 @@ def test_static_vs_dynamic_champion_pool(session, player_with_champions):
         Champion(
             name="Orianna",
             title="The Lady of Clockwork",
-            primary_role=ROLE_MID,
+            primary_role=PlayerRole.MID,
             difficulty=7,
             release_date=date(2011, 6, 1),
         ),
         Champion(
             name="Fizz",
             title="The Tidal Trickster",
-            primary_role=ROLE_MID,
+            primary_role=PlayerRole.MID,
             difficulty=6,
             release_date=date(2011, 11, 15),
         ),
@@ -346,7 +342,7 @@ def test_empty_champion_pool(session):
         name="Rookie",
         nationality="China",
         date_of_birth=date(2000, 1, 1),
-        role=ROLE_MID,
+        role=PlayerRole.MID,
     )
     session.add(player)
     session.commit()
@@ -354,4 +350,4 @@ def test_empty_champion_pool(session):
     # Test the methods with empty data
     assert player.get_effective_champion_pool() == []
     assert player.get_champion_pool_size() == 0
-    assert player.get_role_champion_pool(ROLE_MID) == []
+    assert player.get_role_champion_pool(PlayerRole.MID) == []

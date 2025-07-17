@@ -52,7 +52,7 @@ class Person(SQLModel):
 
     # Optional biography/profile
     bio: Optional[str] = Field(default=None)
-    image_url: Optional[str] = Field(default=None)  # URL to profile picture
+    image_path: Optional[str] = Field(default=None)  # Local path to profile picture
 
     # Common metadata
     created_at: Optional[date] = Field(default_factory=date.today)

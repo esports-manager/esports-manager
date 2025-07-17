@@ -13,42 +13,37 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from sqlmodel import Field, Relationship
+from sqlmodel import Field, Relationship, Column
+from sqlalchemy import Enum as SQLAlchemyEnum
 from typing import Optional, Dict, List, TYPE_CHECKING
 import json
+import enum
 from datetime import date
 
 from .person import Person
 
 if TYPE_CHECKING:
     from .champion_mastery import ChampionMastery
+    from .moba_team import MobaTeam
 
 
-# Define role values as constants instead of using an enum
-# This avoids SQLModel enum compatibility issues
-ROLE_TOP = "top"
-ROLE_JUNGLE = "jungle"
-ROLE_MID = "mid"
-ROLE_ADC = "adc"
-ROLE_SUPPORT = "support"
+class PlayerRole(enum.Enum):
+    """Enumeration of player roles in a MOBA game"""
 
-# List of valid roles for validation
-VALID_ROLES = [ROLE_TOP, ROLE_JUNGLE, ROLE_MID, ROLE_ADC, ROLE_SUPPORT]
+    TOP = "top"
+    JUNGLE = "jungle"
+    MID = "mid"
+    ADC = "adc"
+    SUPPORT = "support"
 
 
-# Contract status constants
-CONTRACT_STATUS_SIGNED = "signed"
-CONTRACT_STATUS_FREE_AGENT = "free_agent"
-CONTRACT_STATUS_TRANSFER_LISTED = "transfer_listed"
-CONTRACT_STATUS_RETIRED = "retired"
+class ContractStatus(enum.Enum):
+    """Enumeration of player contract statuses"""
 
-# List of valid contract statuses for validation
-VALID_CONTRACT_STATUSES = [
-    CONTRACT_STATUS_SIGNED,
-    CONTRACT_STATUS_FREE_AGENT,
-    CONTRACT_STATUS_TRANSFER_LISTED,
-    CONTRACT_STATUS_RETIRED,
-]
+    SIGNED = "signed"
+    FREE_AGENT = "free_agent"
+    TRANSFER_LISTED = "transfer_listed"
+    RETIRED = "retired"
 
 
 class MobaPlayer(Person, table=True):
@@ -58,7 +53,9 @@ class MobaPlayer(Person, table=True):
 
     __tablename__ = "moba_player"
 
-    role: str = Field(default=ROLE_MID)
+    role: PlayerRole = Field(
+        sa_column=Column(SQLAlchemyEnum(PlayerRole)), default=PlayerRole.MID
+    )
 
     # Player skills (0-100 scale)
     mechanics: int = Field(
@@ -77,10 +74,12 @@ class MobaPlayer(Person, table=True):
     champion_mastery: Optional[str] = Field(default=None)
 
     # Contract information
-    contract_status: str = Field(default=CONTRACT_STATUS_FREE_AGENT)
-    team_id: Optional[int] = Field(
-        default=None
-    )  # We'll add foreign key later when MobaTeam is created
+    contract_status: ContractStatus = Field(
+        sa_column=Column(SQLAlchemyEnum(ContractStatus)),
+        default=ContractStatus.FREE_AGENT,
+        description="Contract status",
+    )
+    team_id: Optional[int] = Field(default=None, foreign_key="moba_team.id")
     salary: Optional[float] = Field(default=None)
     contract_start_date: Optional[date] = Field(default=None)
     contract_end_date: Optional[date] = Field(default=None)
@@ -97,6 +96,7 @@ class MobaPlayer(Person, table=True):
 
     # Relationships
     champion_masteries: List["ChampionMastery"] = Relationship(back_populates="player")
+    team: Optional["MobaTeam"] = Relationship(back_populates="players")
 
     # No relationship to Person needed since we inherit directly
 

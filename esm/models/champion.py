@@ -4,24 +4,18 @@ Champions model for the Esports Manager.
 This module defines the Champion model for representing playable characters in MOBAs.
 """
 
-from sqlmodel import Field, SQLModel, Relationship
+from sqlmodel import Field, SQLModel, Relationship, Column
+from sqlalchemy import Enum as SQLAlchemyEnum
 from typing import Optional, Dict, Any, List, TYPE_CHECKING
 import json
 from datetime import date
+from .moba_player import PlayerRole
 
 if TYPE_CHECKING:
     from .champion_mastery import ChampionMastery
 
 
-# Define primary role values as constants
-ROLE_TOP = "top"
-ROLE_JUNGLE = "jungle"
-ROLE_MID = "mid"
-ROLE_ADC = "adc"
-ROLE_SUPPORT = "support"
-
-# List of valid primary roles for validation
-VALID_ROLES = [ROLE_TOP, ROLE_JUNGLE, ROLE_MID, ROLE_ADC, ROLE_SUPPORT]
+# Valid roles are now defined in the PlayerRole enum in moba_player.py
 
 
 class Champion(SQLModel, table=True):
@@ -40,7 +34,7 @@ class Champion(SQLModel, table=True):
         abilities: JSON string storing abilities data
         stats: JSON string storing base and scaling stats
         description: Lore or gameplay description
-        image_url: URL to champion splash art
+        image_path: Local path to champion splash art image file
     """
 
     __tablename__ = "champion"
@@ -48,8 +42,12 @@ class Champion(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True)
     title: str
-    primary_role: str = Field(index=True)
-    secondary_role: Optional[str] = Field(default=None)
+    primary_role: PlayerRole = Field(
+        sa_column=Column(SQLAlchemyEnum(PlayerRole), index=True)
+    )
+    secondary_role: Optional[PlayerRole] = Field(
+        sa_column=Column(SQLAlchemyEnum(PlayerRole), nullable=True), default=None
+    )
     difficulty: int = Field(ge=1, le=10)
     release_date: date
     rework_date: Optional[date] = Field(default=None)
@@ -60,7 +58,7 @@ class Champion(SQLModel, table=True):
 
     # Additional fields
     description: Optional[str] = Field(default=None)
-    image_url: Optional[str] = Field(default=None)
+    image_path: Optional[str] = Field(default=None)  # Path to local image file
 
     # Relationships
     player_masteries: List["ChampionMastery"] = Relationship(back_populates="champion")
@@ -128,4 +126,4 @@ class Champion(SQLModel, table=True):
         Returns:
             String containing champion name, title, and primary role
         """
-        return f"<Champion: {self.name} ({self.title}, {self.primary_role})>"
+        return f"<Champion: {self.name} ({self.title}, {self.primary_role.value})>"

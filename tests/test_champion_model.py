@@ -9,7 +9,8 @@ from datetime import date, timedelta
 from sqlmodel import SQLModel, Session, create_engine
 from sqlmodel.pool import StaticPool
 
-from esm.models.champion import Champion, ROLE_TOP, ROLE_JUNGLE, ROLE_MID, VALID_ROLES
+from esm.models.champion import Champion
+from esm.models.moba_player import PlayerRole
 
 
 @pytest.fixture
@@ -35,7 +36,7 @@ def create_champion():
     champion = Champion(
         name="Ahri",
         title="The Nine-Tailed Fox",
-        primary_role=ROLE_MID,
+        primary_role=PlayerRole.MID,
         secondary_role=None,
         difficulty=5,
         release_date=date(2011, 12, 14),
@@ -49,22 +50,28 @@ def test_champion_creation(create_champion):
 
     assert champion.name == "Ahri"
     assert champion.title == "The Nine-Tailed Fox"
-    assert champion.primary_role == ROLE_MID
+    assert champion.primary_role == PlayerRole.MID
     assert champion.secondary_role is None
     assert champion.difficulty == 5
     assert champion.release_date == date(2011, 12, 14)
     assert champion.abilities is None
     assert champion.stats is None
     assert champion.description is None
-    assert champion.image_url is None
+    assert champion.image_path is None
 
 
 def test_champion_roles():
     """Test champion role assignments and validation."""
     # Test all valid roles as primary role
-    for role in VALID_ROLES:
+    for role in [
+        PlayerRole.TOP,
+        PlayerRole.JUNGLE,
+        PlayerRole.MID,
+        PlayerRole.ADC,
+        PlayerRole.SUPPORT,
+    ]:
         champion = Champion(
-            name=f"Test Champion {role}",
+            name=f"Test Champion {role.value}",
             title="Test Champion",
             primary_role=role,
             difficulty=3,
@@ -76,13 +83,13 @@ def test_champion_roles():
     champion = Champion(
         name="Flex Champion",
         title="The Flexible One",
-        primary_role=ROLE_TOP,
-        secondary_role=ROLE_MID,
+        primary_role=PlayerRole.TOP,
+        secondary_role=PlayerRole.MID,
         difficulty=7,
         release_date=date.today(),
     )
-    assert champion.primary_role == ROLE_TOP
-    assert champion.secondary_role == ROLE_MID
+    assert champion.primary_role == PlayerRole.TOP
+    assert champion.secondary_role == PlayerRole.MID
 
 
 def test_champion_abilities(create_champion):
@@ -162,8 +169,8 @@ def test_champion_database_operations(session):
     champion = Champion(
         name="Lee Sin",
         title="The Blind Monk",
-        primary_role=ROLE_JUNGLE,
-        secondary_role=ROLE_TOP,
+        primary_role=PlayerRole.JUNGLE,
+        secondary_role=PlayerRole.TOP,
         difficulty=8,
         release_date=date(2011, 4, 1),
         description="A martial arts expert who channels spirit energy",
@@ -177,8 +184,8 @@ def test_champion_database_operations(session):
     # Query from database
     retrieved_champion = session.get(Champion, champion.id)
     assert retrieved_champion.name == "Lee Sin"
-    assert retrieved_champion.primary_role == ROLE_JUNGLE
-    assert retrieved_champion.secondary_role == ROLE_TOP
+    assert retrieved_champion.primary_role == PlayerRole.JUNGLE
+    assert retrieved_champion.secondary_role == PlayerRole.TOP
 
     # Update champion
     retrieved_champion.difficulty = 9
@@ -213,7 +220,7 @@ def test_years_since_release():
     champion = Champion(
         name="Test Champion",
         title="The Test",
-        primary_role=ROLE_MID,
+        primary_role=PlayerRole.MID,
         difficulty=1,
         release_date=release_date,
     )

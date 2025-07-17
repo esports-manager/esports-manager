@@ -43,7 +43,7 @@ def test_person_creation():
     assert person.nationality == "South Korea"
     assert person.date_of_birth == date(1996, 5, 7)
     assert person.bio is None
-    assert person.image_url is None
+    assert person.image_path is None
 
     # Test default values
     assert person.created_at is not None

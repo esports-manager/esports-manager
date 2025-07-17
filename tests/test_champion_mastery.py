@@ -10,7 +10,7 @@ from datetime import date
 from sqlmodel import SQLModel, Session, create_engine, select
 from sqlmodel.pool import StaticPool
 
-from esm.models.moba_player import MobaPlayer, ROLE_MID
+from esm.models.moba_player import MobaPlayer, PlayerRole
 from esm.models.champion import Champion
 from esm.models.champion_mastery import ChampionMastery
 
@@ -40,7 +40,7 @@ def setup_player_and_champions(session):
         name="Faker",
         nationality="South Korea",
         date_of_birth=date(1996, 5, 7),
-        role=ROLE_MID,
+        role=PlayerRole.MID,
         mechanics=95,
         game_knowledge=98,
         team_fighting=94,
@@ -54,21 +54,21 @@ def setup_player_and_champions(session):
         Champion(
             name="Zed",
             title="The Master of Shadows",
-            primary_role=ROLE_MID,
+            primary_role=PlayerRole.MID,
             difficulty=8,
             release_date=date(2012, 11, 13),
         ),
         Champion(
             name="Ryze",
             title="The Rune Mage",
-            primary_role=ROLE_MID,
+            primary_role=PlayerRole.MID,
             difficulty=7,
             release_date=date(2009, 2, 21),
         ),
         Champion(
             name="LeBlanc",
             title="The Deceiver",
-            primary_role=ROLE_MID,
+            primary_role=PlayerRole.MID,
             difficulty=9,
             release_date=date(2010, 11, 2),
         ),

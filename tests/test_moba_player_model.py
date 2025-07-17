@@ -4,14 +4,7 @@ from sqlmodel import SQLModel, Session, create_engine, select
 from sqlmodel.pool import StaticPool
 
 # Import the models we're testing
-from esm.models.moba_player import (
-    MobaPlayer,
-    ROLE_MID,
-    ROLE_ADC,
-    ROLE_JUNGLE,
-    ROLE_TOP,
-    ROLE_SUPPORT,
-)
+from esm.models.moba_player import MobaPlayer, PlayerRole, ContractStatus
 
 
 @pytest.fixture
@@ -40,13 +33,13 @@ def create_player(session) -> MobaPlayer:
         full_name="Lee Sang-hyeok",
         nationality="South Korea",
         date_of_birth=date(1996, 5, 7),
-        role=ROLE_MID,
+        role=PlayerRole.MID,
         mechanics=95,
         game_knowledge=98,
         team_fighting=94,
         champion_pool_size=90,
         laning=92,
-        contract_status="signed",
+        contract_status=ContractStatus.SIGNED,
     )
     session.add(player)
     session.commit()
@@ -67,7 +60,7 @@ def test_moba_player_creation(create_player):
     assert player.nationality == "South Korea"
 
     # MOBA-specific attributes
-    assert player.role == ROLE_MID
+    assert player.role == PlayerRole.MID
     assert player.mechanics == 95
     assert player.game_knowledge == 98
     assert player.team_fighting == 94
@@ -75,14 +68,20 @@ def test_moba_player_creation(create_player):
     assert player.laning == 92
 
     # Contract information
-    assert player.contract_status == "signed"
+    assert player.contract_status == ContractStatus.SIGNED
     assert player.team_id is None  # No team assigned by default
 
 
 def test_moba_player_role_assignment(session):
     """Test setting different roles for MobaPlayer"""
     # Create players with different roles
-    roles = [ROLE_TOP, ROLE_JUNGLE, ROLE_MID, ROLE_ADC, ROLE_SUPPORT]
+    roles = [
+        PlayerRole.TOP,
+        PlayerRole.JUNGLE,
+        PlayerRole.MID,
+        PlayerRole.ADC,
+        PlayerRole.SUPPORT,
+    ]
 
     players = []
     for i, role in enumerate(roles):
@@ -110,7 +109,7 @@ def test_inheritance_model(session):
         name="Rookie",
         nationality="China",
         date_of_birth=date(1998, 4, 23),
-        role=ROLE_MID,
+        role=PlayerRole.MID,
         mechanics=93,
         game_knowledge=91,
     )
@@ -128,7 +127,7 @@ def test_inheritance_model(session):
     assert queried_player.date_of_birth == date(1998, 4, 23)
 
     # Test MobaPlayer attributes
-    assert queried_player.role == ROLE_MID
+    assert queried_player.role == PlayerRole.MID
     assert queried_player.mechanics == 93
     assert queried_player.game_knowledge == 91
 
@@ -154,13 +153,13 @@ def test_moba_player_database_operations(session):
         name="Bjergsen",
         nationality="Denmark",
         date_of_birth=date(1996, 2, 21),
-        role=ROLE_MID,
+        role=PlayerRole.MID,
         mechanics=90,
         game_knowledge=92,
         champion_pool_size=89,
         team_fighting=87,
         laning=91,
-        contract_status="signed",
+        contract_status=ContractStatus.SIGNED,
         salary=400000.0,
     )
     session.add(player)
@@ -169,7 +168,7 @@ def test_moba_player_database_operations(session):
 
     # Read
     db_player = session.get(MobaPlayer, player_id)
-    assert db_player.role == ROLE_MID
+    assert db_player.role == PlayerRole.MID
     assert db_player.mechanics == 90
     assert db_player.name == "Bjergsen"
 
@@ -180,14 +179,14 @@ def test_moba_player_database_operations(session):
     assert db_player2.id == player_id
 
     # Update
-    db_player.role = ROLE_SUPPORT
+    db_player.role = PlayerRole.SUPPORT
     db_player.mechanics = 85
     session.add(db_player)
     session.commit()
     session.refresh(db_player)
 
     updated_player = session.get(MobaPlayer, player_id)
-    assert updated_player.role == ROLE_SUPPORT
+    assert updated_player.role == PlayerRole.SUPPORT
     assert updated_player.mechanics == 85
 
     # Delete
@@ -203,7 +202,7 @@ def test_champion_mastery(session):
         name="ShowMaker",
         nationality="South Korea",
         date_of_birth=date(2000, 7, 22),
-        role=ROLE_MID,
+        role=PlayerRole.MID,
         mechanics=93,
     )
     session.add(player)

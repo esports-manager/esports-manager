@@ -16,6 +16,7 @@
 from fastapi import FastAPI
 from sqlmodel import SQLModel, create_engine, Session
 from contextlib import asynccontextmanager
+from typing import Optional, Callable
 from .config import Config
 
 # Global engine variable
@@ -41,7 +42,7 @@ async def lifespan(app: FastAPI):
     pass
 
 
-def create_api():
+def create_api(lifespan: Optional[Callable] = lifespan):
     app = FastAPI(
         title="eSports Manager API",
         description="A free and open source eSports manager game API",
@@ -50,14 +51,16 @@ def create_api():
     )
 
     # Register the API Routes here
-    # from .apis.players import player_routes
-    # from .apis.teams import team_routes
-    # from .apis.matches import match_routes
-    # from .apis.messages import messages_routes
+    from .apis.players import player_routes
+    from .apis.teams import team_routes
+    from .apis.matches import match_routes
+    from .apis.staff import staff_routes
+    from .apis.tournaments import tournament_routes
 
-    # app.include_router(player_routes)
-    # app.include_router(team_routes)
-    # app.include_router(match_routes)
-    # app.include_router(messages_routes)
+    app.include_router(player_routes)
+    app.include_router(team_routes)
+    app.include_router(match_routes)
+    app.include_router(staff_routes)
+    app.include_router(tournament_routes)
 
     return app

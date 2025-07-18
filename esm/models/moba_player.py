@@ -13,12 +13,12 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from sqlmodel import Field, Relationship, Column
+from sqlmodel import Field, Relationship, Column, SQLModel
 from sqlalchemy import Enum as SQLAlchemyEnum
 from typing import Optional, Dict, List, TYPE_CHECKING
 import json
 import enum
-from datetime import date
+from datetime import date, datetime
 
 from .person import Person
 
@@ -27,7 +27,7 @@ if TYPE_CHECKING:
     from .moba_team import MobaTeam
 
 
-class PlayerRole(enum.Enum):
+class PlayerRole(str, enum.Enum):
     """Enumeration of player roles in a MOBA game"""
 
     TOP = "top"
@@ -37,7 +37,7 @@ class PlayerRole(enum.Enum):
     SUPPORT = "support"
 
 
-class ContractStatus(enum.Enum):
+class ContractStatus(str, enum.Enum):
     """Enumeration of player contract statuses"""
 
     SIGNED = "signed"
@@ -46,8 +46,33 @@ class ContractStatus(enum.Enum):
     RETIRED = "retired"
 
 
+# Base class for shared player attributes
+class MobaPlayerBase(SQLModel):
+    """Base model for player API operations with common attributes"""
+
+    # Basic information
+    name: str  # In-game name/nickname
+    full_name: Optional[str] = None
+    nationality: str
+    bio: Optional[str] = None
+    image_path: Optional[str] = None
+
+    # Role and skills
+    role: PlayerRole = PlayerRole.MID
+    mechanics: int = 50
+    game_knowledge: int = 50
+    team_fighting: int = 50
+    champion_pool_size: int = 50
+    laning: int = 50
+
+    # Performance stats
+    form: int = Field(default=75)
+    morale: int = Field(default=75)
+
+
+# Database model inheriting from Person
 class MobaPlayer(Person, table=True):
-    """Model representing a MOBA (League of Legends) player.
+    """Database model representing a MOBA (League of Legends) player.
     Inherits from Person base model using SQLModel inheritance.
     """
 
@@ -243,9 +268,82 @@ class MobaPlayer(Person, table=True):
                 and cm.champion.primary_role == role
             ]
 
-    def __repr__(self) -> str:
-        """
-        String representation of a MOBA player
-        Now uses direct inheritance from Person
-        """
-        return f"<MobaPlayer: {self.name} ({self.nationality}, {self.role}, Rating: {self.overall_rating})>"
+    def __repr__(self):
+        return f"<Player {self.name} ({self.role.value})>"
+
+    def __str__(self):
+        return self.name
+
+
+# API Models for Player
+class MobaPlayerCreate(MobaPlayerBase):
+    """Model for creating players via API - handles string dates"""
+
+    # Required date fields from Person parent class
+    date_of_birth: str  # Accept string date (YYYY-MM-DD) instead of date object
+
+    # Optional contract fields
+    contract_status: Optional[ContractStatus] = ContractStatus.FREE_AGENT
+    team_id: Optional[int] = None
+    salary: Optional[float] = None
+    contract_start_date: Optional[str] = None  # String date format
+    contract_end_date: Optional[str] = None  # String date format
+
+
+class MobaPlayerRead(MobaPlayerBase):
+    """Model for reading players from API"""
+
+    # ID and metadata
+    id: int
+    date_of_birth: date
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+    # Contract information
+    contract_status: ContractStatus = ContractStatus.FREE_AGENT
+    team_id: Optional[int] = None
+    salary: Optional[float] = None
+    contract_start_date: Optional[date] = None
+    contract_end_date: Optional[date] = None
+
+    # Performance stats
+    matches_played: int
+    wins: int
+    losses: int
+    kda_ratio: float
+
+    # Champion mastery as parsed dictionary
+    champion_mastery: Optional[Dict[str, int]] = None
+
+    model_config = {"from_attributes": True}
+
+
+class MobaPlayerUpdate(SQLModel):
+    """Model for updating players via API - all fields optional"""
+
+    # Basic information
+    name: Optional[str] = None
+    full_name: Optional[str] = None
+    nationality: Optional[str] = None
+    date_of_birth: Optional[str] = None  # String date format
+    bio: Optional[str] = None
+    image_path: Optional[str] = None
+
+    # Role and skills
+    role: Optional[PlayerRole] = None
+    mechanics: Optional[int] = None
+    game_knowledge: Optional[int] = None
+    team_fighting: Optional[int] = None
+    champion_pool_size: Optional[int] = None
+    laning: Optional[int] = None
+
+    # Contract information
+    contract_status: Optional[ContractStatus] = None
+    team_id: Optional[int] = None
+    salary: Optional[float] = None
+    contract_start_date: Optional[str] = None  # String date format
+    contract_end_date: Optional[str] = None  # String date format
+
+    # Performance stats
+    form: Optional[int] = None
+    morale: Optional[int] = None

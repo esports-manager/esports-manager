@@ -2,8 +2,8 @@
 name = "esports-manager"
 version = "0.1.0"
 description = "A free and open source eSports manager game"
-authors = ["sturdy-robot <admin@esportsmanager.net>"]
-license = "GPLv3"
+authors = [{name = "sturdy-robot", email = "admin@esportsmanager.net"}]
+license = "GPL-3.0-or-later"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -15,11 +15,8 @@ dependencies = [
     "pywebview[qt]>=5.4",
     "jinja2>=3.1.6",
     "pytailwindcss>=0.2.0",
+    "httpx>=0.26.1",
 ]
 
 [dependency-groups]
-dev = [
-    "pre-commit>=4.2.0",
-    "pytest>=8.3.5",
-    "ruff>=0.11.11",
-]
+dev = ["pre-commit>=4.2.0", "pytest>=8.3.5", "ruff>=0.11.11"]

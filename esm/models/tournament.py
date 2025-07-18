@@ -16,8 +16,9 @@
 from sqlmodel import SQLModel, Field, Relationship, Column
 from sqlalchemy import Enum as SQLAlchemyEnum
 from typing import Optional, Dict, Any, List, TYPE_CHECKING
-from datetime import date
+from datetime import date, datetime
 from enum import Enum
+import json
 
 from .moba_team import TeamRegion
 
@@ -93,6 +94,7 @@ class Tournament(SQLModel, table=True):
     description: Optional[str] = Field(default=None)
     logo_path: Optional[str] = Field(default=None)  # Path to local logo image file
     season_id: Optional[int] = Field(default=None, foreign_key="season.id")
+    teams_data: Optional[str] = Field(default=None)  # JSON string storing team metadata
 
     # Relationships
     teams: List["MobaTeam"] = Relationship(
@@ -105,6 +107,16 @@ class Tournament(SQLModel, table=True):
         back_populates="tournament", sa_relationship_kwargs={"cascade": "all, delete"}
     )
     season: Optional["Season"] = Relationship(back_populates="tournaments")
+
+    def get_teams_data(self) -> Optional[List[Dict[str, Any]]]:
+        """Get the teams data from JSON field."""
+        if not self.teams_data:
+            return None
+        return json.loads(self.teams_data)
+
+    def set_teams_data(self, data: List[Dict[str, Any]]) -> None:
+        """Set the teams data as JSON string."""
+        self.teams_data = json.dumps(data) if data else None
 
     def generate_standings(self) -> List[Dict[str, Any]]:
         """
@@ -234,3 +246,85 @@ class Season(SQLModel, table=True):
     def __str__(self) -> str:
         """String representation of a season."""
         return f"Season: {self.name} ({self.start_date} to {self.end_date})"
+
+
+# API Models
+class TournamentBase(SQLModel):
+    """Base model for Tournament API operations"""
+
+    name: str
+    tournament_type: TournamentType
+    tournament_format: TournamentFormat
+    region: TeamRegion
+    prize_pool: float = 0.0
+    description: Optional[str] = None
+    logo_path: Optional[str] = None
+
+
+class TournamentCreate(TournamentBase):
+    """Model for creating tournaments via API"""
+
+    start_date: str  # Accept string dates from API
+    end_date: str  # Accept string dates from API
+    season_id: Optional[int] = None
+
+
+class TournamentRead(TournamentBase):
+    """Model for reading tournaments from API"""
+
+    id: int
+    start_date: date
+    end_date: date
+    season_id: Optional[int] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+    model_config = {"from_attributes": True}
+
+
+class TournamentUpdate(SQLModel):
+    """Model for updating tournaments via API"""
+
+    name: Optional[str] = None
+    tournament_type: Optional[TournamentType] = None
+    tournament_format: Optional[TournamentFormat] = None
+    start_date: Optional[str] = None  # Accept string dates from API
+    end_date: Optional[str] = None  # Accept string dates from API
+    region: Optional[TeamRegion] = None
+    prize_pool: Optional[float] = None
+    description: Optional[str] = None
+    logo_path: Optional[str] = None
+    season_id: Optional[int] = None
+
+
+class SeasonBase(SQLModel):
+    """Base model for Season API operations"""
+
+    name: str
+    description: Optional[str] = None
+
+
+class SeasonCreate(SeasonBase):
+    """Model for creating seasons via API"""
+
+    start_date: str  # Accept string dates from API
+    end_date: str  # Accept string dates from API
+
+
+class SeasonRead(SeasonBase):
+    """Model for reading seasons from API"""
+
+    id: int
+    start_date: date
+    end_date: date
+
+    model_config = {"from_attributes": True}
+
+
+class SeasonUpdate(SQLModel):
+    """Model for updating seasons via API"""
+
+    name: Optional[str] = None
+    start_date: Optional[str] = None  # Accept string dates from API
+    end_date: Optional[str] = None  # Accept string dates from API
+    description: Optional[str] = None

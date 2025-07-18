@@ -47,7 +47,7 @@ def test_person_creation():
 
     # Test default values
     assert person.created_at is not None
-    assert person.updated_at is not None
+    assert person.updated_at is None
 
 
 def test_person_age_calculation():

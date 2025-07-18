@@ -15,7 +15,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from sqlmodel import SQLModel, Field
 from typing import Optional
-from datetime import date
+from datetime import date, datetime
 
 
 class Person(SQLModel):
@@ -55,8 +55,8 @@ class Person(SQLModel):
     image_path: Optional[str] = Field(default=None)  # Local path to profile picture
 
     # Common metadata
-    created_at: Optional[date] = Field(default_factory=date.today)
-    updated_at: Optional[date] = Field(default_factory=date.today)
+    created_at: Optional[datetime] = Field(default_factory=datetime.now)
+    updated_at: Optional[datetime] = Field(default=None)
 
     def __repr__(self) -> str:
         """String representation of a person"""

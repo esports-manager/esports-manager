@@ -13,12 +13,12 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from sqlmodel import Field, Relationship, Column
+from sqlmodel import SQLModel, Field, Relationship, Column
 from sqlalchemy import Enum as SQLAlchemyEnum
 from typing import Optional, Dict, List, Any, TYPE_CHECKING
 import json
 import enum
-from datetime import date
+from datetime import date, datetime
 
 from .person import Person
 
@@ -26,14 +26,14 @@ if TYPE_CHECKING:
     from .moba_team import MobaTeam
 
 
-class CoachType(enum.Enum):
+class CoachType(str, enum.Enum):
     HEAD_COACH = "head_coach"
     ASSISTANT_COACH = "assistant_coach"
     STRATEGIC_COACH = "strategic_coach"
     POSITIONAL_COACH = "positional_coach"
 
 
-class Department(enum.Enum):
+class Department(str, enum.Enum):
     """Enumeration of staff departments"""
 
     COACHING = "coaching"
@@ -45,7 +45,7 @@ class Department(enum.Enum):
     OTHER = "other"
 
 
-class CoachingStyle(enum.Enum):
+class CoachingStyle(str, enum.Enum):
     """Enumeration of coaching styles"""
 
     OFFENSIVE = "offensive"
@@ -56,7 +56,7 @@ class CoachingStyle(enum.Enum):
     ADAPTIVE = "adaptive"
 
 
-class JobTitle(enum.Enum):
+class JobTitle(str, enum.Enum):
     """Enumeration of staff job titles"""
 
     # Coaching department
@@ -92,7 +92,7 @@ class JobTitle(enum.Enum):
 
 
 # Contract status constants (same as other models for consistency)
-class ContractStatus(enum.Enum):
+class ContractStatus(str, enum.Enum):
     SIGNED = "signed"
     FREE_AGENT = "free_agent"
     TRANSFER_LISTED = "transfer_listed"
@@ -478,3 +478,106 @@ class Staff(Person, table=True):
         String representation, same as __repr__
         """
         return self.__repr__()
+
+
+# API Models
+class StaffBase(SQLModel):
+    """Base model for Staff API operations"""
+
+    name: str
+    full_name: Optional[str] = None
+    nationality: str
+    staff_type: CoachType
+    department: Department
+    job_title: JobTitle
+    years_experience: int = 0
+    former_player: bool = False
+    coaching_style: Optional[CoachingStyle] = None
+    tactics: int = 50
+    player_development: int = 50
+    motivation: int = 50
+    game_knowledge: int = 50
+    draft_skill: int = 50
+    knowledge: int = 50
+    work_rate: int = 50
+    communication: int = 50
+    adaptability: int = 50
+    management: int = 50
+    technical_skill: int = 50
+    innovation: int = 50
+    contract_status: ContractStatus = ContractStatus.FREE_AGENT
+    salary: Optional[float] = None
+    bio: Optional[str] = None
+    image_path: Optional[str] = None
+    achievements: Optional[Dict[str, Any]] = None
+    specializations: Optional[List[str]] = None
+    education: Optional[List[Dict[str, Any]]] = None
+    certifications: Optional[List[Dict[str, Any]]] = None
+    previous_experience: Optional[List[Dict[str, Any]]] = None
+    previous_teams: Optional[List[Dict[str, Any]]] = None
+    team_id: Optional[int] = None
+    is_head_coach: bool = False
+
+
+class StaffCreate(StaffBase):
+    """Model for creating staff via API"""
+
+    date_of_birth: str  # Accept string dates from API
+    contract_start_date: Optional[str] = None  # Accept string dates from API
+    contract_end_date: Optional[str] = None  # Accept string dates from API
+
+
+class StaffRead(StaffBase):
+    """Model for reading staff from API"""
+
+    id: int
+    date_of_birth: date
+    contract_start_date: Optional[date] = None
+    contract_end_date: Optional[date] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    model_config = {
+        "from_attributes": True,
+        "json_schema_extra": {"examples": [{"id": 1}]},
+    }
+
+
+class StaffUpdate(SQLModel):
+    """Model for updating staff via API"""
+
+    name: Optional[str] = None
+    full_name: Optional[str] = None
+    nationality: Optional[str] = None
+    date_of_birth: Optional[str] = None  # Accept string dates from API
+    staff_type: Optional[CoachType] = None
+    department: Optional[Department] = None
+    job_title: Optional[JobTitle] = None
+    years_experience: Optional[int] = None
+    former_player: Optional[bool] = None
+    coaching_style: Optional[CoachingStyle] = None
+    tactics: Optional[int] = None
+    player_development: Optional[int] = None
+    motivation: Optional[int] = None
+    game_knowledge: Optional[int] = None
+    draft_skill: Optional[int] = None
+    knowledge: Optional[int] = None
+    work_rate: Optional[int] = None
+    communication: Optional[int] = None
+    adaptability: Optional[int] = None
+    management: Optional[int] = None
+    technical_skill: Optional[int] = None
+    innovation: Optional[int] = None
+    contract_status: Optional[ContractStatus] = None
+    salary: Optional[float] = None
+    contract_start_date: Optional[str] = None  # Accept string dates from API
+    contract_end_date: Optional[str] = None  # Accept string dates from API
+    bio: Optional[str] = None
+    image_path: Optional[str] = None
+    achievements: Optional[Dict[str, Any]] = None
+    specializations: Optional[List[str]] = None
+    education: Optional[List[Dict[str, Any]]] = None
+    certifications: Optional[List[Dict[str, Any]]] = None
+    previous_experience: Optional[List[Dict[str, Any]]] = None
+    previous_teams: Optional[List[Dict[str, Any]]] = None
+    team_id: Optional[int] = None
+    is_head_coach: Optional[bool] = None

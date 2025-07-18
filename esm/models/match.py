@@ -16,6 +16,7 @@
 from sqlmodel import SQLModel, Field, Relationship, Column
 from sqlalchemy import Enum as SQLAlchemyEnum
 from typing import Optional, Dict, Any, List, TYPE_CHECKING
+from pydantic import field_serializer
 from datetime import datetime
 import json
 from enum import Enum, auto
@@ -311,3 +312,61 @@ class Match(SQLModel, table=True):
         return (
             f"<Match: {self.home_team_id} vs {self.away_team_id}, status={self.status}>"
         )
+
+
+# API Models
+class MatchBase(SQLModel):
+    """Base model for Match API operations"""
+
+    home_team_id: int
+    away_team_id: int
+    match_type: MatchType = MatchType.REGULAR_SEASON
+    match_format: MatchFormat = MatchFormat.BO3
+    venue: Optional[str] = None
+    status: MatchStatus = MatchStatus.SCHEDULED
+    home_team_score: int = 0
+    away_team_score: int = 0
+    tournament_id: Optional[int] = None
+    tournament_stage_id: Optional[int] = None
+
+
+class MatchCreate(MatchBase):
+    """Model for creating match via API"""
+
+    scheduled_date: str  # Accept string datetime from API
+    completed_date: Optional[str] = None  # Accept string datetime from API
+    match_data: Optional[Dict[str, Any]] = None
+
+
+class MatchRead(MatchBase):
+    """Model for reading match from API"""
+
+    id: int
+    scheduled_date: datetime
+    completed_date: Optional[datetime] = None
+    match_data: Optional[Dict[str, Any]] = None
+
+    model_config = {"from_attributes": True}
+
+    @field_serializer("scheduled_date", "completed_date")
+    def serialize_datetime(self, dt: Optional[datetime]) -> Optional[str]:
+        """Serialize datetime fields to ISO format strings"""
+        return dt.isoformat() if dt else None
+
+
+class MatchUpdate(SQLModel):
+    """Model for updating match via API"""
+
+    home_team_id: Optional[int] = None
+    away_team_id: Optional[int] = None
+    scheduled_date: Optional[str] = None  # Accept string datetime from API
+    completed_date: Optional[str] = None  # Accept string datetime from API
+    match_type: Optional[MatchType] = None
+    match_format: Optional[MatchFormat] = None
+    venue: Optional[str] = None
+    status: Optional[MatchStatus] = None
+    home_team_score: Optional[int] = None
+    away_team_score: Optional[int] = None
+    match_data: Optional[Dict[str, Any]] = None
+    tournament_id: Optional[int] = None
+    tournament_stage_id: Optional[int] = None

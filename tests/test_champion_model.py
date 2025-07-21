@@ -6,28 +6,9 @@ This module contains tests for the Champion model validation and database operat
 
 import pytest
 from datetime import date, timedelta
-from sqlmodel import SQLModel, Session, create_engine
-from sqlmodel.pool import StaticPool
-
+from sqlmodel import Session
 from esm.models.champion import Champion
 from esm.models.moba_player import PlayerRole
-
-
-@pytest.fixture
-def in_memory_db():
-    """Create an in-memory SQLite database for testing."""
-    engine = create_engine(
-        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
-    )
-    SQLModel.metadata.create_all(engine)
-    return engine
-
-
-@pytest.fixture
-def session(in_memory_db):
-    """Create a new database session for a test."""
-    with Session(in_memory_db) as session:
-        yield session
 
 
 @pytest.fixture
@@ -163,7 +144,7 @@ def test_champion_stats(create_champion):
     assert stored_stats["scaling"]["health_per_level"] == 92
 
 
-def test_champion_database_operations(session):
+def test_champion_database_operations(session_fixture: Session):
     """Test CRUD operations with Champion model."""
     # Create champion
     champion = Champion(
@@ -175,14 +156,14 @@ def test_champion_database_operations(session):
         release_date=date(2011, 4, 1),
         description="A martial arts expert who channels spirit energy",
     )
-    session.add(champion)
-    session.commit()
+    session_fixture.add(champion)
+    session_fixture.commit()
 
     # Verify ID was assigned
     assert champion.id is not None
 
     # Query from database
-    retrieved_champion = session.get(Champion, champion.id)
+    retrieved_champion = session_fixture.get(Champion, champion.id)
     assert retrieved_champion.name == "Lee Sin"
     assert retrieved_champion.primary_role == PlayerRole.JUNGLE
     assert retrieved_champion.secondary_role == PlayerRole.TOP
@@ -192,11 +173,11 @@ def test_champion_database_operations(session):
     retrieved_champion.description = (
         "A masterful blind monk who unleashes devastating kicks"
     )
-    session.add(retrieved_champion)
-    session.commit()
+    session_fixture.add(retrieved_champion)
+    session_fixture.commit()
 
     # Verify update
-    updated_champion = session.get(Champion, champion.id)
+    updated_champion = session_fixture.get(Champion, champion.id)
     assert updated_champion.difficulty == 9
     assert (
         updated_champion.description
@@ -204,11 +185,11 @@ def test_champion_database_operations(session):
     )
 
     # Delete champion
-    session.delete(updated_champion)
-    session.commit()
+    session_fixture.delete(updated_champion)
+    session_fixture.commit()
 
     # Verify deletion
-    assert session.get(Champion, champion.id) is None
+    assert session_fixture.get(Champion, champion.id) is None
 
 
 def test_years_since_release():

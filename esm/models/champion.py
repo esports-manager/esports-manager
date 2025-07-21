@@ -1,9 +1,18 @@
-"""
-Champions model for the Esports Manager.
-
-This module defines the Champion model for representing playable characters in MOBAs.
-"""
-
+#      eSports Manager - A free and open source eSports management simulation game
+#      Copyright (C) 2020-2025  Pedrenrique G. Guimarães
+#
+#      This program is free software: you can redistribute it and/or modify
+#      it under the terms of the GNU General Public License as published by
+#      the Free Software Foundation, either version 3 of the License, or
+#      (at your option) any later version.
+#
+#      This program is distributed in the hope that it will be useful,
+#      but WITHOUT ANY WARRANTY; without even the implied warranty of
+#      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#      GNU General Public License for more details.
+#
+#      You should have received a copy of the GNU General Public License
+#      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from sqlmodel import Field, SQLModel, Relationship, Column
 from sqlalchemy import Enum as SQLAlchemyEnum
 from typing import Optional, Dict, Any, List, TYPE_CHECKING
@@ -15,7 +24,49 @@ if TYPE_CHECKING:
     from .champion_mastery import ChampionMastery
 
 
-# Valid roles are now defined in the PlayerRole enum in moba_player.py
+class ChampionBase(SQLModel):
+    """Base model for Champion API operations"""
+
+    name: str
+    title: str
+    primary_role: PlayerRole
+    secondary_role: Optional[PlayerRole] = None
+    difficulty: int
+    release_date: date
+    rework_date: Optional[date] = None
+    description: Optional[str] = None
+    image_path: Optional[str] = None
+
+
+class ChampionCreate(ChampionBase):
+    """Model for creating a Champion"""
+
+    abilities: Optional[Dict[str, Any]] = None
+    stats: Optional[Dict[str, Any]] = None
+
+
+class ChampionRead(ChampionBase):
+    """Model for reading a Champion"""
+
+    id: int
+    abilities: Optional[Dict[str, Any]] = None
+    stats: Optional[Dict[str, Any]] = None
+
+
+class ChampionUpdate(SQLModel):
+    """Model for updating a Champion"""
+
+    name: Optional[str] = None
+    title: Optional[str] = None
+    primary_role: Optional[PlayerRole] = None
+    secondary_role: Optional[PlayerRole] = None
+    difficulty: Optional[int] = None
+    release_date: Optional[date] = None
+    rework_date: Optional[date] = None
+    description: Optional[str] = None
+    image_path: Optional[str] = None
+    abilities: Optional[Dict[str, Any]] = None
+    stats: Optional[Dict[str, Any]] = None
 
 
 class Champion(SQLModel, table=True):

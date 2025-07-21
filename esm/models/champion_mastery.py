@@ -1,16 +1,55 @@
-"""
-Champion mastery model for the Esports Manager.
-
-This module defines the relationship between MobaPlayers and Champions,
-tracking their proficiency with specific champions.
-"""
-
+#      eSports Manager - A free and open source eSports management simulation game
+#      Copyright (C) 2020-2025  Pedrenrique G. Guimarães
+#
+#      This program is free software: you can redistribute it and/or modify
+#      it under the terms of the GNU General Public License as published by
+#      the Free Software Foundation, either version 3 of the License, or
+#      (at your option) any later version.
+#
+#      This program is distributed in the hope that it will be useful,
+#      but WITHOUT ANY WARRANTY; without even the implied warranty of
+#      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#      GNU General Public License for more details.
+#
+#      You should have received a copy of the GNU General Public License
+#      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from sqlmodel import Field, SQLModel, Relationship
 from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .moba_player import MobaPlayer
     from .champion import Champion
+
+
+class ChampionMasteryBase(SQLModel):
+    player_id: int
+    champion_id: int
+    mastery_level: int = 0
+    games_played: int = 0
+    wins: int = 0
+    losses: int = 0
+    kda_ratio: float = 0.0
+    is_comfort_pick: bool = False
+    notes: Optional[str] = None
+
+
+class ChampionMasteryCreate(ChampionMasteryBase):
+    pass
+
+
+class ChampionMasteryRead(ChampionMasteryBase):
+    id: int
+    win_rate: float
+
+
+class ChampionMasteryUpdate(SQLModel):
+    mastery_level: Optional[int] = None
+    games_played: Optional[int] = None
+    wins: Optional[int] = None
+    losses: Optional[int] = None
+    kda_ratio: Optional[float] = None
+    is_comfort_pick: Optional[bool] = None
+    notes: Optional[str] = None
 
 
 class ChampionMastery(SQLModel, table=True):

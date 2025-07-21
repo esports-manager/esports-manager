@@ -1,7 +1,6 @@
 import pytest
 from datetime import date, datetime
-from sqlmodel import SQLModel, Session, create_engine, select
-from sqlmodel.pool import StaticPool
+from sqlmodel import Session, select
 
 # Import the models we'll be testing
 from esm.models.moba_team import MobaTeam, TeamRegion
@@ -22,26 +21,7 @@ from esm.models.match import (
 
 
 @pytest.fixture
-def in_memory_db():
-    """Create an in-memory SQLite database for testing."""
-    engine = create_engine(
-        "sqlite://",
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,
-    )
-    SQLModel.metadata.create_all(engine)
-    return engine
-
-
-@pytest.fixture
-def session(in_memory_db):
-    """Create a new database session for a test."""
-    with Session(in_memory_db) as session:
-        yield session
-
-
-@pytest.fixture
-def create_teams(session):
+def create_teams(session_fixture: Session) -> list[MobaTeam]:
     """Create sample teams for testing tournament relationships."""
     teams = []
     team_data = [
@@ -58,18 +38,18 @@ def create_teams(session):
             region=region,
             founded_date=founded_date,
         )
-        session.add(team)
+        session_fixture.add(team)
         teams.append(team)
 
-    session.commit()
+    session_fixture.commit()
     for team in teams:
-        session.refresh(team)
+        session_fixture.refresh(team)
 
     return teams
 
 
 @pytest.fixture
-def create_season(session):
+def create_season(session_fixture: Session) -> Season:
     """Create a sample season for testing."""
     season = Season(
         name="2025 Season",
@@ -77,14 +57,16 @@ def create_season(session):
         end_date=date(2025, 11, 15),
         description="The 2025 professional esports season",
     )
-    session.add(season)
-    session.commit()
-    session.refresh(season)
+    session_fixture.add(season)
+    session_fixture.commit()
+    session_fixture.refresh(season)
     return season
 
 
 @pytest.fixture
-def create_tournament(session, create_teams, create_season):
+def create_tournament(
+    session_fixture: Session, create_teams, create_season
+) -> Tournament:
     """Create a sample tournament for testing."""
     teams = create_teams
     season = create_season
@@ -101,17 +83,17 @@ def create_tournament(session, create_teams, create_season):
         logo_path="assets/images/tournaments/lck_logo.png",
         season_id=season.id,
     )
-    session.add(tournament)
-    session.commit()
-    session.refresh(tournament)
+    session_fixture.add(tournament)
+    session_fixture.commit()
+    session_fixture.refresh(tournament)
 
     # Add teams to the tournament
     for team in teams[:2]:  # Just add first two teams
         tournament.teams.append(team)
 
-    session.add(tournament)
-    session.commit()
-    session.refresh(tournament)
+    session_fixture.add(tournament)
+    session_fixture.commit()
+    session_fixture.refresh(tournament)
 
     # Create tournament stages
     regular_season = TournamentStage(
@@ -130,9 +112,9 @@ def create_tournament(session, create_teams, create_season):
         tournament_id=tournament.id,
     )
 
-    session.add(regular_season)
-    session.add(playoffs)
-    session.commit()
+    session_fixture.add(regular_season)
+    session_fixture.add(playoffs)
+    session_fixture.commit()
 
     # Create a match in the tournament
     match = Match(
@@ -147,13 +129,13 @@ def create_tournament(session, create_teams, create_season):
         tournament_stage_id=regular_season.id,
     )
 
-    session.add(match)
-    session.commit()
+    session_fixture.add(match)
+    session_fixture.commit()
 
     return tournament
 
 
-def test_tournament_creation(create_tournament):
+def test_tournament_creation(create_tournament: Tournament):
     """Test creating a Tournament instance."""
     tournament = create_tournament
 
@@ -177,7 +159,7 @@ def test_tournament_creation(create_tournament):
     assert tournament.season.name == "2025 Season"
 
 
-def test_tournament_stages(create_tournament):
+def test_tournament_stages(create_tournament: Tournament):
     """Test tournament stages."""
     tournament = create_tournament
 
@@ -211,13 +193,13 @@ def test_tournament_stages(create_tournament):
     assert playoffs.end_date == date(2025, 8, 15)
 
 
-def test_tournament_matches(create_tournament, session):
+def test_tournament_matches(create_tournament: Tournament, session_fixture: Session):
     """Test matches in a tournament."""
     tournament = create_tournament
 
     # Query for matches in this tournament
     statement = select(Match).where(Match.tournament_id == tournament.id)
-    matches = session.exec(statement).all()
+    matches = session_fixture.exec(statement).all()
 
     # Check match details
     assert len(matches) == 1
@@ -233,7 +215,7 @@ def test_tournament_matches(create_tournament, session):
             assert match.tournament_stage_id == stage.id
 
 
-def test_season(create_season, create_tournament):
+def test_season(create_season: Season, create_tournament: Tournament):
     """Test the Season model and its relationship with tournaments."""
     season = create_season
     tournament = create_tournament
@@ -250,7 +232,7 @@ def test_season(create_season, create_tournament):
     assert season.tournaments[0].name == "LCK Summer 2025"
 
 
-def test_tournament_standings(session, create_tournament):
+def test_tournament_standings(session_fixture: Session, create_tournament: Tournament):
     """Test generating tournament standings."""
     tournament = create_tournament
 
@@ -284,9 +266,9 @@ def test_tournament_standings(session, create_tournament):
         tournament_id=tournament.id,
     )
 
-    session.add(match1)
-    session.add(match2)
-    session.commit()
+    session_fixture.add(match1)
+    session_fixture.add(match2)
+    session_fixture.commit()
 
     # Generate standings
     standings = tournament.generate_standings()
@@ -312,7 +294,7 @@ def test_tournament_standings(session, create_tournament):
             assert team_standing["maps_lost"] == 2
 
 
-def test_str_representation(create_tournament, create_season):
+def test_str_representation(create_tournament: Tournament, create_season: Season):
     """Test string representation of Tournament and Season."""
     tournament = create_tournament
     season = create_season

@@ -29,8 +29,6 @@ if TYPE_CHECKING:
 
 # Match status enum
 class MatchStatus(str, Enum):
-    """Enum representing possible match statuses"""
-
     SCHEDULED = "scheduled"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
@@ -40,8 +38,6 @@ class MatchStatus(str, Enum):
 
 # Match type enum
 class MatchType(str, Enum):
-    """Enum representing match types"""
-
     REGULAR_SEASON = "regular_season"
     PLAYOFFS = "playoffs"
     FINALS = "finals"
@@ -51,17 +47,14 @@ class MatchType(str, Enum):
 
 # Match format enum
 class MatchFormat(str, Enum):
-    """Enum representing match formats"""
-
-    BO1 = "bo1"  # Best of 1
-    BO3 = "bo3"  # Best of 3
-    BO5 = "bo5"  # Best of 5
+    BO1 = "bo1"
+    BO2 = "bo2"
+    BO3 = "bo3"
+    BO5 = "bo5"
 
 
 # Match result enum
 class MatchResult(Enum):
-    """Enum representing possible match results"""
-
     HOME_WIN = auto()
     AWAY_WIN = auto()
     DRAW = auto()
@@ -333,8 +326,8 @@ class MatchBase(SQLModel):
 class MatchCreate(MatchBase):
     """Model for creating match via API"""
 
-    scheduled_date: str  # Accept string datetime from API
-    completed_date: Optional[str] = None  # Accept string datetime from API
+    scheduled_date: str
+    completed_date: Optional[str] = None
     match_data: Optional[Dict[str, Any]] = None
 
 
@@ -359,8 +352,8 @@ class MatchUpdate(SQLModel):
 
     home_team_id: Optional[int] = None
     away_team_id: Optional[int] = None
-    scheduled_date: Optional[str] = None  # Accept string datetime from API
-    completed_date: Optional[str] = None  # Accept string datetime from API
+    scheduled_date: Optional[str] = None
+    completed_date: Optional[str] = None
     match_type: Optional[MatchType] = None
     match_format: Optional[MatchFormat] = None
     venue: Optional[str] = None

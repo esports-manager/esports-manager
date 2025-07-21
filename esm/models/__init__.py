@@ -1,21 +1,31 @@
-# Import models here to make them available when importing from the models module
-# Order is important to avoid circular imports
-from .person import Person  # Base model (not a table)
+#      eSports Manager - A free and open source eSports management simulation game
+#      Copyright (C) 2020-2025  Pedrenrique G. Guimarães
+#
+#      This program is free software: you can redistribute it and/or modify
+#      it under the terms of the GNU General Public License as published by
+#      the Free Software Foundation, either version 3 of the License, or
+#      (at your option) any later version.
+#
+#      This program is distributed in the hope that it will be useful,
+#      but WITHOUT ANY WARRANTY; without even the implied warranty of
+#      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#      GNU General Public License for more details.
+#
+#      You should have received a copy of the GNU General Public License
+#      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from .person import Person
 from .champion import Champion
 from .staff import (
     Staff,
-    # Enums
     CoachType,
     CoachingStyle,
     Department,
     JobTitle,
-    # Legacy constants may be defined in staff.py for backward compatibility
-    # We're importing the enums now instead of individual constants
 )
 from .moba_team import MobaTeam, TeamRegion
 from .champion_mastery import ChampionMastery
 from .moba_player import (
-    MobaPlayer,  # Inherits from Person
+    MobaPlayer,
     PlayerRole,
     ContractStatus,
 )

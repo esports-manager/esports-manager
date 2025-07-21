@@ -28,8 +28,6 @@ if TYPE_CHECKING:
 
 
 class PlayerRole(str, enum.Enum):
-    """Enumeration of player roles in a MOBA game"""
-
     TOP = "top"
     JUNGLE = "jungle"
     MID = "mid"
@@ -38,8 +36,6 @@ class PlayerRole(str, enum.Enum):
 
 
 class ContractStatus(str, enum.Enum):
-    """Enumeration of player contract statuses"""
-
     SIGNED = "signed"
     FREE_AGENT = "free_agent"
     TRANSFER_LISTED = "transfer_listed"
@@ -48,10 +44,7 @@ class ContractStatus(str, enum.Enum):
 
 # Base class for shared player attributes
 class MobaPlayerBase(SQLModel):
-    """Base model for player API operations with common attributes"""
-
-    # Basic information
-    name: str  # In-game name/nickname
+    name: str
     full_name: Optional[str] = None
     nationality: str
     bio: Optional[str] = None
@@ -238,11 +231,8 @@ class MobaPlayer(Person, table=True):
         from sqlmodel import select
         from sqlalchemy.orm import selectinload
 
-        # We need to perform a join query to filter by champion role
-        # This requires a database session
         session = getattr(self, "_sa_instance_state", None)
         if session and session.session:
-            # Use the session attached to this instance
             from .champion import Champion
             from .champion_mastery import ChampionMastery
 
@@ -259,7 +249,6 @@ class MobaPlayer(Person, table=True):
 
             return session.session.exec(stmt).all()
         else:
-            # Fallback if no session is available (less efficient)
             return [
                 cm
                 for cm in self.champion_masteries
@@ -277,23 +266,15 @@ class MobaPlayer(Person, table=True):
 
 # API Models for Player
 class MobaPlayerCreate(MobaPlayerBase):
-    """Model for creating players via API - handles string dates"""
-
-    # Required date fields from Person parent class
-    date_of_birth: str  # Accept string date (YYYY-MM-DD) instead of date object
-
-    # Optional contract fields
+    date_of_birth: str
     contract_status: Optional[ContractStatus] = ContractStatus.FREE_AGENT
     team_id: Optional[int] = None
     salary: Optional[float] = None
-    contract_start_date: Optional[str] = None  # String date format
-    contract_end_date: Optional[str] = None  # String date format
+    contract_start_date: Optional[str] = None
+    contract_end_date: Optional[str] = None
 
 
 class MobaPlayerRead(MobaPlayerBase):
-    """Model for reading players from API"""
-
-    # ID and metadata
     id: int
     date_of_birth: date
     created_at: datetime
@@ -319,13 +300,10 @@ class MobaPlayerRead(MobaPlayerBase):
 
 
 class MobaPlayerUpdate(SQLModel):
-    """Model for updating players via API - all fields optional"""
-
-    # Basic information
     name: Optional[str] = None
     full_name: Optional[str] = None
     nationality: Optional[str] = None
-    date_of_birth: Optional[str] = None  # String date format
+    date_of_birth: Optional[str] = None
     bio: Optional[str] = None
     image_path: Optional[str] = None
 
@@ -341,8 +319,8 @@ class MobaPlayerUpdate(SQLModel):
     contract_status: Optional[ContractStatus] = None
     team_id: Optional[int] = None
     salary: Optional[float] = None
-    contract_start_date: Optional[str] = None  # String date format
-    contract_end_date: Optional[str] = None  # String date format
+    contract_start_date: Optional[str] = None
+    contract_end_date: Optional[str] = None
 
     # Performance stats
     form: Optional[int] = None

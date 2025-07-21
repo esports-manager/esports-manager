@@ -6,34 +6,18 @@ relationships with MobaPlayer and Champion.
 """
 
 import pytest
+from typing import Tuple, List
+from sqlmodel import Session, select
 from datetime import date
-from sqlmodel import SQLModel, Session, create_engine, select
-from sqlmodel.pool import StaticPool
-
 from esm.models.moba_player import MobaPlayer, PlayerRole
 from esm.models.champion import Champion
 from esm.models.champion_mastery import ChampionMastery
 
 
 @pytest.fixture
-def in_memory_db():
-    """Create an in-memory SQLite database for testing."""
-    engine = create_engine(
-        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
-    )
-    SQLModel.metadata.create_all(engine)
-    return engine
-
-
-@pytest.fixture
-def session(in_memory_db):
-    """Create a new database session for a test."""
-    with Session(in_memory_db) as session:
-        yield session
-
-
-@pytest.fixture
-def setup_player_and_champions(session):
+def setup_player_and_champions(
+    session_fixture: Session,
+) -> Tuple[MobaPlayer, List[Champion]]:
     """Set up player and champions for testing champion mastery."""
     # Create a player
     player = MobaPlayer(
@@ -47,7 +31,7 @@ def setup_player_and_champions(session):
         champion_pool_size=90,
         laning=92,
     )
-    session.add(player)
+    session_fixture.add(player)
 
     # Create champions
     champions = [
@@ -75,14 +59,17 @@ def setup_player_and_champions(session):
     ]
 
     for champion in champions:
-        session.add(champion)
+        session_fixture.add(champion)
 
-    session.commit()
+    session_fixture.commit()
 
     return player, champions
 
 
-def test_champion_mastery_creation(session, setup_player_and_champions):
+def test_champion_mastery_creation(
+    session_fixture: Session,
+    setup_player_and_champions: Tuple[MobaPlayer, List[Champion]],
+):
     """Test creating champion mastery entries."""
     player, champions = setup_player_and_champions
 
@@ -111,11 +98,11 @@ def test_champion_mastery_creation(session, setup_player_and_champions):
     ]
 
     for mastery in masteries:
-        session.add(mastery)
-    session.commit()
+        session_fixture.add(mastery)
+    session_fixture.commit()
 
     # Verify mastery entries were created
-    db_masteries = session.exec(
+    db_masteries = session_fixture.exec(
         select(ChampionMastery).where(ChampionMastery.player_id == player.id)
     ).all()
 
@@ -124,7 +111,10 @@ def test_champion_mastery_creation(session, setup_player_and_champions):
     assert db_masteries[1].mastery_level == 85
 
 
-def test_champion_mastery_relationships(session, setup_player_and_champions):
+def test_champion_mastery_relationships(
+    session_fixture: Session,
+    setup_player_and_champions: Tuple[MobaPlayer, List[Champion]],
+):
     """Test relationships between Player, Champion, and ChampionMastery."""
     player, champions = setup_player_and_champions
 
@@ -139,12 +129,12 @@ def test_champion_mastery_relationships(session, setup_player_and_champions):
         kda_ratio=3.2,
         is_comfort_pick=True,
     )
-    session.add(zed_mastery)
-    session.commit()
+    session_fixture.add(zed_mastery)
+    session_fixture.commit()
 
     # Refresh objects to load relationships
-    session.refresh(player)
-    session.refresh(champions[0])
+    session_fixture.refresh(player)
+    session_fixture.refresh(champions[0])
 
     # Test player -> mastery -> champion relationship
     assert len(player.champion_masteries) == 1
@@ -157,7 +147,7 @@ def test_champion_mastery_relationships(session, setup_player_and_champions):
     assert champions[0].player_masteries[0].player_id == player.id
 
 
-def test_win_rate_calculation(session):
+def test_win_rate_calculation():
     """Test win rate calculation property."""
     # Create a ChampionMastery instance with known win/loss values
     mastery = ChampionMastery(
@@ -176,15 +166,18 @@ def test_win_rate_calculation(session):
     assert mastery.win_rate == 0.0
 
 
-def test_legacy_mastery_compatibility(session, setup_player_and_champions):
+def test_legacy_mastery_compatibility(
+    session_fixture: Session,
+    setup_player_and_champions: Tuple[MobaPlayer, List[Champion]],
+):
     """Test backward compatibility with the legacy JSON-based champion mastery."""
     player, champions = setup_player_and_champions
 
     # Use the legacy JSON-based mastery system
     legacy_mastery = {"Zed": 95, "Ryze": 85, "LeBlanc": 90}
     player.set_champion_mastery(legacy_mastery)
-    session.add(player)
-    session.commit()
+    session_fixture.add(player)
+    session_fixture.commit()
 
     # Test retrieving the legacy mastery
     retrieved_mastery = player.get_champion_mastery()
@@ -201,9 +194,9 @@ def test_legacy_mastery_compatibility(session, setup_player_and_champions):
         wins=35,
         losses=15,
     )
-    session.add(zed_mastery)
-    session.commit()
-    session.refresh(player)
+    session_fixture.add(zed_mastery)
+    session_fixture.commit()
+    session_fixture.refresh(player)
 
     # Verify both systems work in parallel
     assert player.get_champion_mastery()["Zed"] == 95  # Legacy system

@@ -1,15 +1,6 @@
-"""
-Unit tests for MobaPlayer's champion pool methods.
-
-This module tests the functionality of MobaPlayer's champion pool-related methods
-including get_effective_champion_pool, get_champion_pool_size, and get_role_champion_pool.
-"""
-
 import pytest
 from datetime import date
-from sqlmodel import SQLModel, Session, create_engine
-from sqlmodel.pool import StaticPool
-
+from sqlmodel import Session
 from esm.models.moba_player import (
     MobaPlayer,
     PlayerRole,
@@ -19,24 +10,7 @@ from esm.models.champion_mastery import ChampionMastery
 
 
 @pytest.fixture
-def in_memory_db():
-    """Create an in-memory SQLite database for testing"""
-    engine = create_engine(
-        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
-    )
-    SQLModel.metadata.create_all(engine)
-    return engine
-
-
-@pytest.fixture
-def session(in_memory_db):
-    """Create a new database session for a test"""
-    with Session(in_memory_db) as session:
-        yield session
-
-
-@pytest.fixture
-def player_with_champions(session):
+def player_with_champions(session_fixture: Session):
     """
     Create a player with champion masteries for testing the champion pool methods.
 
@@ -64,8 +38,8 @@ def player_with_champions(session):
         champion_pool_size=90,  # Static attribute
         laning=92,
     )
-    session.add(player)
-    session.commit()
+    session_fixture.add(player)
+    session_fixture.commit()
 
     # Create champions for different roles
     champions = {
@@ -122,11 +96,11 @@ def player_with_champions(session):
     }
 
     # Add champions to database
-    for role, champs in champions.items():
+    for _, champs in champions.items():
         for champ in champs:
-            session.add(champ)
+            session_fixture.add(champ)
 
-    session.commit()
+    session_fixture.commit()
 
     # Create champion masteries with different levels
     masteries = [
@@ -198,16 +172,16 @@ def player_with_champions(session):
 
     # Add masteries to database
     for mastery in masteries:
-        session.add(mastery)
+        session_fixture.add(mastery)
 
-    session.commit()
-    session.refresh(player)
+    session_fixture.commit()
+    session_fixture.refresh(player)
 
     # Return everything needed for testing
     return player, champions, masteries
 
 
-def test_effective_champion_pool(session, player_with_champions):
+def test_effective_champion_pool(session_fixture: Session, player_with_champions):
     """Test getting a player's effective champion pool based on mastery level."""
     player, champions, _ = player_with_champions
 
@@ -217,7 +191,8 @@ def test_effective_champion_pool(session, player_with_champions):
 
     # Get champion names for easier assertions
     champion_names = [
-        session.get(Champion, mastery.champion_id).name for mastery in effective_pool
+        session_fixture.get(Champion, mastery.champion_id).name
+        for mastery in effective_pool
     ]
 
     # Verify specific champions
@@ -232,14 +207,16 @@ def test_effective_champion_pool(session, player_with_champions):
     # Higher threshold - only include top champions
     high_threshold_pool = player.get_effective_champion_pool(min_mastery_level=90)
     assert len(high_threshold_pool) == 1
-    assert session.get(Champion, high_threshold_pool[0].champion_id).name == "Zed"
+    assert (
+        session_fixture.get(Champion, high_threshold_pool[0].champion_id).name == "Zed"
+    )
 
     # Lower threshold - include more champions
     low_threshold_pool = player.get_effective_champion_pool(min_mastery_level=60)
     assert len(low_threshold_pool) == 5  # Now includes Syndra
 
 
-def test_champion_pool_size(session, player_with_champions):
+def test_champion_pool_size(player_with_champions):
     """Test getting the size of a player's champion pool."""
     player, _, _ = player_with_champions
 
@@ -253,7 +230,7 @@ def test_champion_pool_size(session, player_with_champions):
     assert player.get_champion_pool_size(min_mastery_level=0) == 6  # All champions
 
 
-def test_role_champion_pool(session, player_with_champions):
+def test_role_champion_pool(player_with_champions):
     """Test getting a player's champion pool for a specific role."""
     player, _, _ = player_with_champions
 
@@ -276,12 +253,14 @@ def test_role_champion_pool(session, player_with_champions):
     assert len(mid_pool_low) == 3  # Now includes Syndra
 
 
-def test_static_vs_dynamic_champion_pool(session, player_with_champions):
+def test_static_vs_dynamic_champion_pool(
+    session_fixture: Session, player_with_champions
+):
     """
     Test the relationship between static champion_pool_size attribute and
     dynamic champion pool methods.
     """
-    player, champions, masteries = player_with_champions
+    player, _, __ = player_with_champions
 
     # Static value is set in fixture
     assert player.champion_pool_size == 90
@@ -308,8 +287,8 @@ def test_static_vs_dynamic_champion_pool(session, player_with_champions):
     ]
 
     for champ in new_champions:
-        session.add(champ)
-    session.commit()
+        session_fixture.add(champ)
+    session_fixture.commit()
 
     # Add masteries for new champions
     for champ in new_champions:
@@ -323,10 +302,10 @@ def test_static_vs_dynamic_champion_pool(session, player_with_champions):
             kda_ratio=3.0,
             is_comfort_pick=True,
         )
-        session.add(mastery)
+        session_fixture.add(mastery)
 
-    session.commit()
-    session.refresh(player)
+    session_fixture.commit()
+    session_fixture.refresh(player)
 
     # Dynamic count should now be increased
     assert player.get_champion_pool_size() == 6
@@ -335,7 +314,7 @@ def test_static_vs_dynamic_champion_pool(session, player_with_champions):
     assert player.champion_pool_size == 90
 
 
-def test_empty_champion_pool(session):
+def test_empty_champion_pool(session_fixture: Session):
     """Test champion pool methods on a player with no masteries."""
     # Create a player without any champion masteries
     player = MobaPlayer(
@@ -344,8 +323,8 @@ def test_empty_champion_pool(session):
         date_of_birth=date(2000, 1, 1),
         role=PlayerRole.MID,
     )
-    session.add(player)
-    session.commit()
+    session_fixture.add(player)
+    session_fixture.commit()
 
     # Test the methods with empty data
     assert player.get_effective_champion_pool() == []

@@ -72,8 +72,9 @@ def test_create_champion(client_fixture: TestClient):
     assert get_response.status_code == 200
 
 
-def test_get_champions(client_fixture: TestClient):
+def test_get_champions(client_fixture: TestClient, champion):
     """Test retrieving champions."""
+    # Use the champion fixture to ensure there's at least one champion in the database
     response = client_fixture.get("/api/champions/")
     assert response.status_code == 200
     data = response.json()
@@ -142,8 +143,10 @@ def test_get_champion_roles(client_fixture: TestClient):
     assert sorted(data) == sorted(expected_roles)
 
 
-def test_filter_champions_by_role(client_fixture: TestClient):
+def test_filter_champions_by_role(client_fixture: TestClient, champion):
     """Test filtering champions by primary role."""
+    # Use the champion fixture to ensure there's a mid-lane champion
+
     # Add a champion with different role for testing filtering
     client_fixture.post(
         "/api/champions/",
@@ -176,8 +179,10 @@ def test_filter_champions_by_role(client_fixture: TestClient):
     assert not any(champ["name"] == "Test Champion" for champ in data)
 
 
-def test_filter_champions_by_difficulty(client_fixture: TestClient):
+def test_filter_champions_by_difficulty(client_fixture: TestClient, champion):
     """Test filtering champions by difficulty range."""
+    # Use the champion fixture to ensure there's a champion with difficulty 7
+
     # Add champions with different difficulties
     client_fixture.post(
         "/api/champions/",

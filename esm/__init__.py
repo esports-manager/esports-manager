@@ -58,6 +58,7 @@ def create_api(lifespan: Optional[Callable] = lifespan):
     from .apis.tournaments import tournament_routes
     from .apis.champions import champion_routes
     from .apis.champion_masteries import champion_mastery_routes
+    from .apis.pick_ban import pick_ban_routes
 
     app.include_router(player_routes)
     app.include_router(team_routes)
@@ -66,5 +67,6 @@ def create_api(lifespan: Optional[Callable] = lifespan):
     app.include_router(tournament_routes)
     app.include_router(champion_routes)
     app.include_router(champion_mastery_routes)
+    app.include_router(pick_ban_routes)
 
     return app

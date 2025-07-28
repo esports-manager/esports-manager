@@ -178,7 +178,7 @@ def update_champion(
             )
 
     # Update champion fields if provided
-    update_data = champion_update.dict(exclude_unset=True)
+    update_data = champion_update.model_dump(exclude_unset=True)
 
     # Handle abilities and stats specially
     abilities = update_data.pop("abilities", None)

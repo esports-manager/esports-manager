@@ -243,7 +243,10 @@ def test_get_player_champion_masteries(
 
 
 def test_get_champion_player_masteries(
-    client_fixture: TestClient, test_player: MobaPlayer, test_champion: Champion
+    client_fixture: TestClient,
+    test_player: MobaPlayer,
+    test_champion: Champion,
+    test_mastery: ChampionMastery,
 ):
     """Test getting player masteries for a specific champion."""
     # Create another player and mastery for the same champion
@@ -293,9 +296,13 @@ def test_get_champion_player_masteries(
 
 
 def test_get_specific_player_champion_mastery(
-    client_fixture: TestClient, test_player: MobaPlayer, test_champion: Champion
+    client_fixture: TestClient,
+    test_player: MobaPlayer,
+    test_champion: Champion,
+    test_mastery: ChampionMastery,
 ):
     """Test getting specific player-champion mastery."""
+    # Ensure the test_mastery fixture is used to create the relationship
     response = client_fixture.get(
         f"/api/champion-masteries/player/{test_player.id}/champion/{test_champion.id}"
     )

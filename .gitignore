@@ -172,3 +172,4 @@ dist-ssr
 *.sw?
 
 uv.lock
+memory

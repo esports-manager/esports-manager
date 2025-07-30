@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
-from fastapi import APIRouter
+from fastapi import APIRouter, status
 from typing import Optional
 from esm.db import get_session
 from esm.models.moba.player import (
@@ -39,7 +39,9 @@ def get_players(
     return session.exec(query.offset(skip).limit(limit)).all()
 
 
-@player_routes.post("/", response_model=MobaPlayerPublic)
+@player_routes.post(
+    "/", response_model=MobaPlayerPublic, status_code=status.HTTP_201_CREATED
+)
 def create_player(*, session: Session = Depends(get_session), player: MobaPlayerCreate):
     db_player = MobaPlayer.model_validate(player)
     session.add(db_player)

@@ -66,7 +66,7 @@ def test_create_player(client: TestClient, session: Session):
             "role": "top",
         },
     )
-    assert response.status_code == 200
+    assert response.status_code == 201
     player = session.get(MobaPlayer, response.json()["id"])
     assert isinstance(player, MobaPlayer)
     assert player.first_name == "Test"

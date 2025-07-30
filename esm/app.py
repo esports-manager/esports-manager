@@ -8,6 +8,7 @@ from typing import Callable, Optional
 from .config import Config
 
 from .routes.moba.player import player_routes
+from .routes.moba.team import team_routes
 
 
 @asynccontextmanager
@@ -32,5 +33,6 @@ def create_api(lifespan: Optional[Callable] = lifespan):
     )
 
     app.include_router(player_routes, prefix="/api/moba")
+    app.include_router(team_routes, prefix="/api/moba")
 
     return app

@@ -36,6 +36,20 @@ class MobaTeam(MobaTeamBase, table=True):
     def current_players(self) -> list["MobaPlayer"]:
         return [contract.player for contract in self.contracts if contract.is_active]
 
+    def add_player(self, player: "MobaPlayer", contract: "MobaPlayerContract") -> None:
+        if contract.team_id != self.id:
+            raise ValueError("Contract is not for this team")
+        player.add_contract(contract)
+        self.contracts.append(contract)
+
+    def remove_player(self, player: "MobaPlayer") -> None:
+        contract = player.current_contract
+        if not contract:
+            raise ValueError("Player has no active contract")
+        if contract.team_id != self.id:
+            raise ValueError("Contract is not for this team")
+        player.remove_contract(contract)
+
 
 class MobaTeamCreate(MobaTeamBase):
     pass

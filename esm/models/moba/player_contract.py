@@ -29,6 +29,7 @@ class MobaPlayerContract(MobaPlayerContractBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     team_id: int = Field(foreign_key="moba_teams.id")
     player_id: int = Field(foreign_key="moba_players.id")
+    leave_date: Optional[date] = None
     player: "MobaPlayer" = Relationship(back_populates="contracts")
     team: "MobaTeam" = Relationship(back_populates="contracts")
     created_at: datetime = Field(default_factory=datetime.now)
@@ -51,4 +52,5 @@ class MobaPlayerContractUpdate(SQLModel):
     end_date: Optional[date] = None
     salary: Optional[int] = None
     is_active: Optional[bool] = None
+    leave_date: Optional[date] = None
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)

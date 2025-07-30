@@ -105,3 +105,20 @@ def test_update_player(client: TestClient, session: Session):
     assert player.date_of_birth == date(2005, 1, 1)
     assert player.nationality == "Test"
     assert player.role == MobaPlayerRole.TOP
+
+
+def test_delete_player(client: TestClient, session: Session):
+    player = MobaPlayer(
+        first_name="Test",
+        last_name="Player",
+        date_of_birth=date(2005, 1, 1),
+        nationality="Test",
+        role=MobaPlayerRole.TOP,
+    )
+    session.add(player)
+    session.commit()
+    session.refresh(player)
+    response = client.delete(f"/api/moba/players/{player.id}")
+    assert response.status_code == 200
+    player = session.get(MobaPlayer, player.id)
+    assert player is None

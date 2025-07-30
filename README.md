@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+SPDX-License-Identifier: GPL-3.0-or-later
+License-Filename: LICENSES/GPL-3.0-or-later
+-->
+
 **NOTE:** *THIS PROJECT IS STILL UNDER DEVELOPMENT, AND IS NOT READY FOR GAMEPLAY YET.*
 
 **This project is going through a rework. Lots of things are broken and might not even compile right now. If you want to try out the last working Debug version, check out the master branch.**
@@ -36,7 +42,7 @@ Check our [CONTRIBUTING.md](CONTRIBUTING.md) to get more information on how to c
 ## LICENSE
 
     eSports Manager - A free and open source eSports management game
-    Copyright (C) 2020-2024  Pedrenrique G. Guimarães
+    Copyright (C) 2020-2025  Pedrenrique G. Guimarães
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

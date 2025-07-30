@@ -1,3 +1,9 @@
+<!---
+SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+SPDX-License-Identifier: GPL-3.0-or-later
+License-Filename: LICENSES/GPL-3.0-or-later
+--->
+
 # eSports Manager ROADMAP
 
 This document describes the Roadmap for the eSports Manager game, the list of main features that should be

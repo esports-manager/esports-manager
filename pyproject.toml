@@ -1,8 +1,12 @@
+# SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+# SPDX-License-Identifier: GPL-3.0-or-later
+# License-Filename: LICENSES/GPL-3.0-or-later
+
 [project]
 name = "esports-manager"
 version = "0.1.0"
 description = "A free and open source eSports manager game"
-authors = [{name = "sturdy-robot", email = "admin@esportsmanager.net"}]
+authors = [{ name = "sturdy-robot", email = "admin@esportsmanager.net" }]
 license = "GPL-3.0-or-later"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -11,7 +15,7 @@ dependencies = [
     "uvicorn[standard]>=0.35.0",
     "sqlmodel>=0.0.22",
     "python-dotenv>=1.1.1",
-    "sqlalchemy>=2.0.41",
+    "sqlalchemy>=2.0.42",
     "pywebview[qt]>=5.4",
     "jinja2>=3.1.6",
     "pytailwindcss>=0.2.0",

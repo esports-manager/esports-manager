@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+SPDX-License-Identifier: GPL-3.0-or-later
+License-Filename: LICENSES/GPL-3.0-or-later
+-->
+
 # CONTRIBUTING
 
 Thank your for taking the time to read this, and for showing your interest in supporting us!
@@ -52,86 +58,37 @@ This is primarily a Python project. Usually, some developers like to install the
 
 If you're not familiar with the concept of Virtual environments, see [this documentation](https://docs.python.org/3/library/venv.html) from the official Python documentation.
 
-Like I said, I like to use virtualenv and dependency managers to develop my projects. This project supports [Pipenv](https://pipenv.pypa.io/en/latest/) and [Poetry](https://python-poetry.org/). You can pick either one, you don't need both at the same time.
+Like I said, I like to use virtualenv and dependency managers to develop my projects. This project uses [`uv`](https://docs.astral.sh/uv/) as a dependency and virtualenv manager.
 
-I started this project using **Pipenv** and I'm quite comfortable using it, but **Poetry** is becoming more of a standard for Python projects lately, because it relies on the [**pyproject.toml**](pyproject.toml) file, which is a new standard proposed on [PEP 518](https://peps.python.org/pep-0518/) and [PEP 621](https://peps.python.org/pep-0621/). If you don't know what a PEP is, see [PEP 1 – PEP Purpose and Guidelines](https://peps.python.org/pep-0001/).
-
-So if you use **Pipenv** on a daily basis, you can keep using it. If you use **Poetry**, you can safely use it here.
-
-**How do I set up my environment then?**
-
-It's pretty simple, actually. An important requirement here is that you have the standard Python package manager installed: **pip**. To learn how to install **pip**, see [Installing pip](https://pip.pypa.io/en/stable/installation/).
-
-Then you can install either **Pipenv** or **Poetry**:
-
-**Pipenv:**
+To start the virtualenv and install the dependencies, run:
 
 ```bash
-pip install pipenv
+uv venv
+uv sync
 ```
 
-**Poetry:**
+To activate the virtualenv, run:
 
 ```bash
-pip install poetry
+source .venv/bin/activate
 ```
 
-You can [fork this repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) and clone it:
+To run the project, run:
 
 ```bash
-git clone https://github.com/<your-user-name>/esports-manager.git
+uv run python esm
 ```
 
-And you then enter the repository directory:
+To run the development server, run:
 
 ```bash
-cd esports-manager
+uv run uvicorn dev:app --reload
 ```
 
-And you just run the install the project with all the development dependencies:
-
-**Pipenv:**
+To run the tests, run:
 
 ```bash
-pipenv install --dev
-```
-
-**Poetry:**
-
-```bash
-poetry install
-```
-
-This installs all of the game's dependencies, with all that you need to develop the project. This includes the testing framework we use: [**pytest**](https://docs.pytest.org/en/stable/), the tool to run git hooks called [**pre-commit**](https://pre-commit.com/), the [**black**](https://black.readthedocs.io/en/stable/index.html) code formatter, and other tools like [**isort**](https://pypi.org/project/isort/), [**flake8**](https://flake8.pycqa.org/en/latest/), and [**hypothesis**](https://hypothesis.readthedocs.io/en/latest/).
-
-To contribute code, you must install the **pre-commit** package:
-
-**Pipenv:**
-
-```
-pipenv run pre-commit install
-```
-
-**Poetry:**
-
-```
-poetry run pre-commit install
-```
-
-This will run the pre-commit hooks before every commit. The hooks will format your code and check for [PEP 8](https://peps.python.org/pep-0008/) compliance. The reason why I use these pre-commit hooks and auto formatters is to avoid discussions regarding formatting or standard programming practices in Python. We can just focus on code that works.
-
-A good practice is to also run tests before submitting code:
-
-**Pipenv:**
-
-```
-pipenv run pytest
-```
-
-**Poetry:**
-
-```
-poetry run pytest
+uv run pytest
 ```
 
 Just to make sure you didn't break anything. Once you submit a PR, GitHub Actions will run these automated tests too, just in case you forgot to run the tests.

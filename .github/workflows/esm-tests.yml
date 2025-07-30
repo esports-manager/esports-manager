@@ -30,11 +30,10 @@ jobs:
           uv sync
           uv sync --dev
           uv venv
-          source .venv/bin/activate
       - name: Lint with ruff
         run: |
           # stop the build if there are Python syntax errors or undefined names
-          ruff check
+          uv run ruff check
       - name: Test with pytest
         run: |
-          pytest
+          uv run pytest

@@ -40,7 +40,7 @@ class MobaChampionTier(enum.Enum):
     B = "b"
     C = "c"
     D = "d"
-    E = "e"
+    F = "f"
 
 
 class MobaChampionBase(SQLModel):
@@ -75,7 +75,7 @@ class MobaChampionBase(SQLModel):
         elif self.strength >= 70:
             return MobaChampionTier.D
         else:
-            return MobaChampionTier.E
+            return MobaChampionTier.F
 
 
 class MobaChampion(MobaChampionBase, table=True):
@@ -99,21 +99,21 @@ class MobaChampionUpdate(SQLModel):
     name: Optional[str] = None
     release_date: Optional[date] = None
     primary_role: Optional[MobaChampionRole] = Field(
-        sa_column=Column(Enum(MobaChampionRole))
+        default=None, sa_column=Column(Enum(MobaChampionRole))
     )
     secondary_role: Optional[MobaChampionRole] = Field(
         default=None, sa_column=Column(Enum(MobaChampionRole))
     )
     champion_type1: Optional[MobaChampionType] = Field(
-        sa_column=Column(Enum(MobaChampionType))
+        default=None, sa_column=Column(Enum(MobaChampionType))
     )
     champion_type2: Optional[MobaChampionType] = Field(
         default=None, sa_column=Column(Enum(MobaChampionType))
     )
     difficulty: Optional[MobaChampionDifficulty] = Field(
-        sa_column=Column(Enum(MobaChampionDifficulty))
+        default=None, sa_column=Column(Enum(MobaChampionDifficulty))
     )
-    strength: Optional[int] = Field(gt=0, lt=100, default=50)
+    strength: Optional[int] = Field(gt=0, lt=100, default=None)
     image_path: Optional[str] = Field(default=None)
     description: Optional[str] = Field(default=None)
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)

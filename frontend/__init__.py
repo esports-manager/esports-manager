@@ -36,7 +36,7 @@ sidebar = {
     },
     "roster": {
         "name": "Roster",
-        "icon": "bi bi-people",
+        "icon": "bi bi-people-fill",
         "url": "roster",
     },
     "staff": {

@@ -1,495 +1,261 @@
 <div class="m-8" x-data="{
-    view: 'grid',
+    playersActiveTab: $persist('players').using(sessionStorage),
+    view: $persist('grid').using(sessionStorage),
     searchQuery: '',
     selectedTeam: 'all',
     selectedRegion: 'all',
     selectedRole: 'all',
+    selectedStatus: 'all',
     sortBy: 'name',
-    sortDirection: 'asc'
+    sortDirection: 'asc',
+    metaTab: 'overview',
+    perPage: '20',
+    showFilters: false,
+    updatePlayersList() {
+      document.getElementById('per-page-input').value = this.perPage;
+      document.getElementById('player-filters-form').dispatchEvent(new Event('submit'));
+    }
   }">
   <!-- Page Header -->
-  <div class="flex justify-between items-center mb-6">
+  <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Players</h1>
-      <p class="text-sm text-gray-500 dark:text-gray-400">Browse and filter all available players</p>
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">Players</h1>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Browse players and performance metrics</p>
     </div>
-    
+
     <!-- View Toggle -->
     <div class="flex items-center bg-gray-100 dark:bg-slate-700 rounded-lg p-1">
-      <button @click="view = 'grid'" :class="{'bg-white dark:bg-slate-600 shadow': view === 'grid'}" class="px-3 py-1 rounded-md text-sm font-medium transition-colors duration-150">
+      <button @click="view = 'grid'" :class="{'bg-white dark:bg-slate-600 shadow': view === 'grid'}"
+        class="px-3 py-1 rounded-md text-sm font-medium transition-colors duration-150">
         <i class="bi bi-grid mr-1"></i> Grid
       </button>
-      <button @click="view = 'list'" :class="{'bg-white dark:bg-slate-600 shadow': view === 'list'}" class="px-3 py-1 rounded-md text-sm font-medium transition-colors duration-150">
+      <button @click="view = 'list'" :class="{'bg-white dark:bg-slate-600 shadow': view === 'list'}"
+        class="px-3 py-1 rounded-md text-sm font-medium transition-colors duration-150">
         <i class="bi bi-list-ul mr-1"></i> List
       </button>
     </div>
   </div>
-  
-  <!-- Filters and Search -->
-  <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4 mb-6">
-    <div class="flex flex-col lg:flex-row gap-4">
-      <!-- Search -->
-      <div class="relative flex-grow">
-        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <i class="bi bi-search text-gray-500 dark:text-gray-400"></i>
-        </div>
-        <input 
-          type="text" 
-          x-model="searchQuery" 
-          placeholder="Search players..." 
-          class="pl-10 pr-4 py-2 w-full rounded-lg bg-gray-100 dark:bg-slate-600 border-0 focus:ring-2 focus:ring-blue-500"
-        >
-      </div>
-      
-      <!-- Filter Dropdowns -->
-      <div class="flex flex-wrap gap-2">
-        <!-- Team Filter -->
-        <select 
-          x-model="selectedTeam" 
-          class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2">
-          <option value="all">All Teams</option>
-          <option value="g2">G2 Esports</option>
-          <option value="fnc">Fnatic</option>
-          <option value="mad">MAD Lions</option>
-          <option value="rge">Rogue</option>
-          <option value="sk">SK Gaming</option>
-          <option value="vit">Team Vitality</option>
-          <option value="msf">Misfits</option>
-          <option value="ast">Astralis</option>
-          <option value="xl">Excel</option>
-          <option value="bds">Team BDS</option>
-        </select>
-        
-        <!-- Region Filter -->
-        <select 
-          x-model="selectedRegion" 
-          class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2">
-          <option value="all">All Regions</option>
-          <option value="eu">Europe</option>
-          <option value="na">North America</option>
-          <option value="kr">Korea</option>
-          <option value="cn">China</option>
-          <option value="other">Other</option>
-        </select>
-        
-        <!-- Role Filter -->
-        <select 
-          x-model="selectedRole" 
-          class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2">
-          <option value="all">All Roles</option>
-          <option value="top">Top</option>
-          <option value="jungle">Jungle</option>
-          <option value="mid">Mid</option>
-          <option value="adc">ADC</option>
-          <option value="support">Support</option>
-        </select>
-        
-        <!-- Sorting -->
-        <select 
-          x-model="sortBy" 
-          class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2">
-          <option value="name">Sort by Name</option>
-          <option value="rating">Sort by Rating</option>
-          <option value="experience">Sort by Experience</option>
-          <option value="age">Sort by Age</option>
-        </select>
-        
-        <!-- Sort Direction Toggle -->
-        <button 
-          @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'" 
-          class="bg-gray-100 hover:bg-gray-200 dark:bg-slate-600 dark:hover:bg-slate-500 rounded-lg px-3 py-2 text-sm">
-          <i :class="sortDirection === 'asc' ? 'bi bi-sort-alpha-down' : 'bi bi-sort-alpha-up'"></i>
-        </button>
-      </div>
-    </div>
-    
-    <!-- Active Filters Display -->
-    <div class="mt-3 flex flex-wrap gap-2" x-show="selectedTeam !== 'all' || selectedRegion !== 'all' || selectedRole !== 'all' || searchQuery !== ''">
-      <span class="text-xs text-gray-500 dark:text-gray-400 self-center">Active filters:</span>
-      
-      <!-- Team Filter Tag -->
-      <div x-show="selectedTeam !== 'all'" class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full flex items-center">
-        Team: <span x-text="selectedTeam.toUpperCase()" class="font-medium mx-1"></span>
-        <button @click="selectedTeam = 'all'" class="ml-1 hover:text-blue-600 dark:hover:text-blue-100">
-          <i class="bi bi-x-circle-fill"></i>
-        </button>
-      </div>
-      
-      <!-- Region Filter Tag -->
-      <div x-show="selectedRegion !== 'all'" class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full flex items-center">
-        Region: <span x-text="selectedRegion.toUpperCase()" class="font-medium mx-1"></span>
-        <button @click="selectedRegion = 'all'" class="ml-1 hover:text-green-600 dark:hover:text-green-100">
-          <i class="bi bi-x-circle-fill"></i>
-        </button>
-      </div>
-      
-      <!-- Role Filter Tag -->
-      <div x-show="selectedRole !== 'all'" class="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs px-2 py-1 rounded-full flex items-center">
-        Role: <span x-text="selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)" class="font-medium mx-1"></span>
-        <button @click="selectedRole = 'all'" class="ml-1 hover:text-purple-600 dark:hover:text-purple-100">
-          <i class="bi bi-x-circle-fill"></i>
-        </button>
-      </div>
-      
-      <!-- Search Query Tag -->
-      <div x-show="searchQuery !== ''" class="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-xs px-2 py-1 rounded-full flex items-center">
-        Search: <span x-text="searchQuery" class="font-medium mx-1"></span>
-        <button @click="searchQuery = ''" class="ml-1 hover:text-yellow-600 dark:hover:text-yellow-100">
-          <i class="bi bi-x-circle-fill"></i>
-        </button>
-      </div>
-      
-      <!-- Clear All Filters -->
-      <button 
-        @click="selectedTeam = 'all'; selectedRegion = 'all'; selectedRole = 'all'; searchQuery = '';" 
-        class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 underline ml-2">
-        Clear all
+
+  <!-- Main Navigation Tabs -->
+  <div class="mb-6 border-b border-gray-200 dark:border-gray-600">
+    <div class="flex overflow-x-auto overflow-y-hidden">
+      <button @click="playersActiveTab = 'players'"
+        :class="{'border-blue-500 text-blue-600 dark:text-blue-400': playersActiveTab === 'players', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': playersActiveTab !== 'players'}"
+        class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+        <i class="bi bi-people mr-2"></i>
+        Players
+      </button>
+      <button @click="playersActiveTab = 'meta'"
+        :class="{'border-blue-500 text-blue-600 dark:text-blue-400': playersActiveTab === 'meta', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': playersActiveTab !== 'meta'}"
+        class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+        <i class="bi bi-bar-chart mr-2"></i>
+        Performance
       </button>
     </div>
   </div>
 
-  <!-- Results Count and Stats -->
-  <div class="flex justify-between items-center mb-4 text-sm">
-    <div class="text-gray-600 dark:text-gray-400">
-      <span class="font-medium">87</span> players found
-    </div>
-    <div class="text-gray-500 dark:text-gray-400">
-      Average Rating: <span class="font-medium text-gray-800 dark:text-gray-200">78.4</span>
-    </div>
-  </div>
-  <!-- Grid View -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" x-show="view === 'grid'">
-    
-    <!-- Player Card 1 - Caps -->
-    <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col">
-      <div class="relative">
-        <!-- Player Image -->
-        <img src="{{ url_for('static', path='img/players/g2_caps.webp') }}" alt="Caps" class="w-full h-48 object-cover">
-        
-        <!-- Role Badge -->
-        <div class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
-          Mid
-        </div>
-        
-        <!-- Team Badge -->
-        <div class="absolute top-2 right-2 bg-white dark:bg-slate-800 rounded-full h-8 w-8 flex items-center justify-center shadow">
-          <img class="w-16 h-16 md:w-20 md:h-20 object-contain"
-                src="{{ url_for('static', path='img/g2-logo-clear.webp') }}" alt="Opponent Logo" />
-        </div>
-        
-        <!-- Rating Badge -->
-        <div class="absolute bottom-2 right-2 bg-yellow-400 text-gray-900 text-sm font-bold px-2 py-1 rounded-md">
-          92
-        </div>
-      </div>
-      
-      <div class="p-4">
-        <!-- Player Name and Nationality -->
-        <div class="flex justify-between items-center mb-2">
-          <h3 class="font-bold text-gray-800 dark:text-gray-100">Caps</h3>
-          <div class="flex items-center">
-            <span class="fi fi-dk mr-2"></span>
-            <span class="text-xs text-gray-600 dark:text-gray-400">Denmark</span>
-          </div>
-        </div>
-        
-        <!-- Player Details -->
-        <div class="grid grid-cols-2 gap-2 text-xs mb-3">
-          <div class="flex items-center">
-            <i class="bi bi-person-fill text-gray-500 mr-1"></i>
-            <span class="text-gray-600 dark:text-gray-400">Rasmus Winther</span>
-          </div>
-          <div class="flex items-center">
-            <i class="bi bi-calendar3 text-gray-500 mr-1"></i>
-            <span class="text-gray-600 dark:text-gray-400">Age: 25</span>
-          </div>
-          <div class="flex items-center">
-            <i class="bi bi-trophy-fill text-gray-500 mr-1"></i>
-            <span class="text-gray-600 dark:text-gray-400">Experience: 8</span>
-          </div>
-          <div class="flex items-center">
-            <i class="bi bi-currency-dollar text-gray-500 mr-1"></i>
-            <span class="text-gray-600 dark:text-gray-400">Value: $2.7M</span>
-          </div>
-        </div>
-        
-        <!-- Stats Bars -->
-        <div class="space-y-1.5 mb-3">
-          <div class="flex items-center justify-between text-xs">
-            <span class="text-gray-500 dark:text-gray-400 w-16">Mechanics</span>
-            <div class="flex-grow mx-2 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
-              <div class="bg-blue-500 h-1.5 rounded-full" style="width: 94%"></div>
-            </div>
-            <span class="text-gray-700 dark:text-gray-300 font-medium">94</span>
-          </div>
-          <div class="flex items-center justify-between text-xs">
-            <span class="text-gray-500 dark:text-gray-400 w-16">Game IQ</span>
-            <div class="flex-grow mx-2 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
-              <div class="bg-blue-500 h-1.5 rounded-full" style="width: 91%"></div>
-            </div>
-            <span class="text-gray-700 dark:text-gray-300 font-medium">91</span>
-          </div>
-          <div class="flex items-center justify-between text-xs">
-            <span class="text-gray-500 dark:text-gray-400 w-16">Teamwork</span>
-            <div class="flex-grow mx-2 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
-              <div class="bg-blue-500 h-1.5 rounded-full" style="width: 88%"></div>
-            </div>
-            <span class="text-gray-700 dark:text-gray-300 font-medium">88</span>
-          </div>
-        </div>
-        
-        <div class="flex justify-between">
-          <!-- View Profile Button -->
-          <a href="#" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm">
-            <i class="bi bi-info-circle mr-1"></i> Profile
-          </a>
-          
-          <!-- Contract Status -->
-          <span class="text-xs px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full">
-            Under Contract
-          </span>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Player Card 2 - BrokenBlade -->
-    <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col">
-      <div class="relative">
-        <img src="{{ url_for('static', path='img/players/g2_brokenblade.webp') }}" alt="BrokenBlade" class="w-full h-48 object-cover">
-        <div class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">Top</div>
-        <div class="absolute top-2 right-2 bg-white dark:bg-slate-800 rounded-full h-8 w-8 flex items-center justify-center shadow">
-          <img class="w-16 h-16 md:w-20 md:h-20 object-contain"
-                src="{{ url_for('static', path='img/g2-logo-clear.webp') }}" alt="Opponent Logo" />
-        </div>
-        <div class="absolute bottom-2 right-2 bg-yellow-400 text-gray-900 text-sm font-bold px-2 py-1 rounded-md">89</div>
-      </div>
-      
-      <div class="p-4">
-        <div class="flex justify-between items-center mb-2">
-          <h3 class="font-bold text-gray-800 dark:text-gray-100">BrokenBlade</h3>
-          <div class="flex items-center">
-            <span class="fi fi-de mr-2"></span>
-            <span class="text-xs text-gray-600 dark:text-gray-400">Germany</span>
-          </div>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-2 text-xs mb-3">
-          <div class="flex items-center">
-            <i class="bi bi-person-fill text-gray-500 mr-1"></i>
-            <span class="text-gray-600 dark:text-gray-400">Sergen Çelik</span>
-          </div>
-          <div class="flex items-center">
-            <i class="bi bi-calendar3 text-gray-500 mr-1"></i>
-            <span class="text-gray-600 dark:text-gray-400">Age: 23</span>
-          </div>
-          <div class="flex items-center">
-            <i class="bi bi-trophy-fill text-gray-500 mr-1"></i>
-            <span class="text-gray-600 dark:text-gray-400">Experience: 6</span>
-          </div>
-          <div class="flex items-center">
-            <i class="bi bi-currency-dollar text-gray-500 mr-1"></i>
-            <span class="text-gray-600 dark:text-gray-400">Value: $1.9M</span>
-          </div>
-        </div>
-        
-        <div class="space-y-1.5 mb-3">
-          <div class="flex items-center justify-between text-xs">
-            <span class="text-gray-500 dark:text-gray-400 w-16">Mechanics</span>
-            <div class="flex-grow mx-2 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
-              <div class="bg-blue-500 h-1.5 rounded-full" style="width: 87%"></div>
-            </div>
-            <span class="text-gray-700 dark:text-gray-300 font-medium">87</span>
-          </div>
-          <div class="flex items-center justify-between text-xs">
-            <span class="text-gray-500 dark:text-gray-400 w-16">Game IQ</span>
-            <div class="flex-grow mx-2 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
-              <div class="bg-blue-500 h-1.5 rounded-full" style="width: 90%"></div>
-            </div>
-            <span class="text-gray-700 dark:text-gray-300 font-medium">90</span>
-          </div>
-          <div class="flex items-center justify-between text-xs">
-            <span class="text-gray-500 dark:text-gray-400 w-16">Teamwork</span>
-            <div class="flex-grow mx-2 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
-              <div class="bg-blue-500 h-1.5 rounded-full" style="width: 85%"></div>
-            </div>
-            <span class="text-gray-700 dark:text-gray-300 font-medium">85</span>
-          </div>
-        </div>
-        
-        <div class="flex justify-between">
-          <a href="#" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm">
-            <i class="bi bi-info-circle mr-1"></i> Profile
-          </a>
-          <span class="text-xs px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full">Under Contract</span>
-        </div>
-      </div>
-    </div>
+  <!-- Player Performance Meta Section -->
+  <div x-show="playersActiveTab === 'meta'" class="bg-white dark:bg-slate-700 rounded-lg shadow mb-6 overflow-hidden">
+    <!-- We'll create this component later -->
+    {% include "components/players_meta.html" %}
   </div>
 
-  <!-- List View -->
-  <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-x-auto" x-show="view === 'list'">
-    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
-      <thead>
-        <tr class="bg-gray-50 dark:bg-slate-800">
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-            Player
-          </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-            Team
-          </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-            Role
-          </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-            Age
-          </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-            Nationality
-          </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-            Rating
-          </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-            Status
-          </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-            Action
-          </th>
-        </tr>
-      </thead>
-      <tbody class="bg-white dark:bg-slate-700 divide-y divide-gray-200 dark:divide-gray-600">
-        <!-- Player 1 -->
-        <tr>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <div class="flex items-center">
-              <div class="flex-shrink-0 h-10 w-10 relative">
-                <img class="h-10 w-10 rounded-full object-cover" src="{{ url_for('static', path='img/players/g2_caps.webp') }}" alt="">
-              </div>
-              <div class="ml-4">
-                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">Caps</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">Rasmus Winther</div>
-              </div>
-            </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <div class="flex items-center">
-              <div class="h-5 w-5 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-2">
-                <img class="w-16 h-16 md:w-20 md:h-20 object-contain"
-                src="{{ url_for('static', path='img/g2-logo-clear.webp') }}" alt="Opponent Logo" />
-              </div>
-              <span class="text-sm text-gray-900 dark:text-gray-100">G2 Esports</span>
-            </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-              Mid
-            </span>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-            25
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <div class="flex items-center">
-              <span class="fi fi-dk mr-2"></span>
-              <span class="text-sm text-gray-900 dark:text-gray-100">Denmark</span>
-            </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-            <div class="flex items-center">
-              <span class="font-medium text-gray-900 dark:text-gray-100 mr-2">92</span>
-              <div class="w-16 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
-                <div class="bg-blue-500 h-1.5 rounded-full" style="width: 92%"></div>
-              </div>
-            </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
-              Under Contract
-            </span>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-            <a href="#" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">Profile</a>
-          </td>
-        </tr>
+  <div x-show="playersActiveTab === 'players'">
+    <!-- Filters and Search -->
+    <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4 mb-6">
+      <!-- Search & Filters Form -->
+      <form id="player-filters-form" hx-get="/api/players"
+        hx-trigger="input delay:300ms from:#search-input, change from:#team-filter, change from:#region-filter, change from:#role-filter, change from:#status-filter, change from:#sort-filter, change from:#sort-direction-toggle, change from:#per-page-input, submit"
+        hx-include="#player-filters-form" hx-swap="innerHTML" hx-target="#players-list">
 
-        <!-- Player 2 -->
-        <tr>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <div class="flex items-center">
-              <div class="flex-shrink-0 h-10 w-10 relative">
-                <img class="h-10 w-10 rounded-full object-cover" src="{{ url_for('static', path='img/players/g2_brokenblade.webp') }}" alt="">
-              </div>
-              <div class="ml-4">
-                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">BrokenBlade</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">Sergen Çelik</div>
-              </div>
-            </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <div class="flex items-center">
-              <div class="h-5 w-5 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-2">
-                <img class="w-16 h-16 md:w-20 md:h-20 object-contain"
-                src="{{ url_for('static', path='img/g2-logo-clear.webp') }}" alt="Opponent Logo" />
-              </div>
-              <span class="text-sm text-gray-900 dark:text-gray-100">G2 Esports</span>
-            </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
-              Top
-            </span>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-            23
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <div class="flex items-center">
-              <span class="fi fi-de mr-2"></span>
-              <span class="text-sm text-gray-900 dark:text-gray-100">Germany</span>
-            </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-            <div class="flex items-center">
-              <span class="font-medium text-gray-900 dark:text-gray-100 mr-2">89</span>
-              <div class="w-16 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
-                <div class="bg-blue-500 h-1.5 rounded-full" style="width: 89%"></div>
-              </div>
-            </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
-              Under Contract
-            </span>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-            <a href="#" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">Profile</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+        <!-- Search Bar (Full Width) with Filter Toggle -->
+        <div class="relative w-full mb-3">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="bi bi-search text-gray-500 dark:text-gray-400"></i>
+          </div>
+          <input id="search-input" type="text" name="search" x-model="searchQuery" placeholder="Search players..."
+            class="pl-10 pr-12 py-2 w-full rounded-lg bg-gray-100 dark:bg-slate-600 border-0 focus:ring-2 focus:ring-blue-500 text-sm shadow-sm">
 
-  <!-- Pagination -->
-  <div class="flex justify-between items-center mt-6">
-    <div class="text-sm text-gray-600 dark:text-gray-400">
-      Showing <span class="font-medium">1-20</span> of <span class="font-medium">87</span> players
+          <!-- Filter Toggle Button -->
+          <button type="button" @click="showFilters = !showFilters"
+            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors">
+            <i class="bi" :class="showFilters ? 'bi-funnel-fill' : 'bi-funnel'"></i>
+            <span class="text-xs ml-1" x-text="showFilters ? 'Hide Filters' : 'Show Filters'"></span>
+          </button>
+        </div>
+
+        <!-- Filter Dropdowns (Collapsible) -->
+        <div x-show="showFilters" x-transition:enter="transition ease-out duration-200"
+          x-transition:enter-start="opacity-0 transform -translate-y-2"
+          x-transition:enter-end="opacity-100 transform translate-y-0">
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mt-2">
+            <!-- Team Filter -->
+            <div class="col-span-1">
+              <label for="team-filter"
+                class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 ml-1">Team</label>
+              <select id="team-filter" name="team" x-model="selectedTeam" aria-label="Filter by team"
+                @change="updatePlayersList()"
+                class="w-full bg-gray-100 dark:bg-slate-600 border-0 rounded-md text-gray-800 dark:text-gray-200 text-xs px-2 py-1.5 focus:ring-1 focus:ring-blue-500 focus:outline-none shadow-sm">
+                <option value="all">All Teams</option>
+                <option value="g2">G2 Esports</option>
+                <option value="fnc">Fnatic</option>
+                <option value="mad">MAD Lions</option>
+                <option value="rge">Rogue</option>
+                <option value="sk">SK Gaming</option>
+                <option value="vit">Team Vitality</option>
+                <option value="msf">Misfits</option>
+                <option value="ast">Astralis</option>
+                <option value="xl">Excel</option>
+                <option value="bds">Team BDS</option>
+              </select>
+            </div>
+
+            <!-- Region Filter -->
+            <div class="col-span-1">
+              <label for="region-filter"
+                class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 ml-1">Region</label>
+              <select id="region-filter" name="region" x-model="selectedRegion" @change="updatePlayersList()"
+                class="w-full bg-gray-100 dark:bg-slate-600 border-0 rounded-md text-gray-800 dark:text-gray-200 text-xs px-2 py-1.5 focus:ring-1 focus:ring-blue-500 focus:outline-none shadow-sm">
+                <option value="all">All Regions</option>
+                <option value="eu">Europe</option>
+                <option value="na">North America</option>
+                <option value="kr">Korea</option>
+                <option value="cn">China</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <!-- Role Filter -->
+            <div class="col-span-1">
+              <label for="role-filter"
+                class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 ml-1">Role</label>
+              <select id="role-filter" name="role" x-model="selectedRole" @change="updatePlayersList()"
+                class="w-full bg-gray-100 dark:bg-slate-600 border-0 rounded-md text-gray-800 dark:text-gray-200 text-xs px-2 py-1.5 focus:ring-1 focus:ring-blue-500 focus:outline-none shadow-sm">
+                <option value="all">All Roles</option>
+                <option value="top">Top</option>
+                <option value="jungle">Jungle</option>
+                <option value="mid">Mid</option>
+                <option value="adc">ADC</option>
+                <option value="support">Support</option>
+              </select>
+            </div>
+
+            <!-- Contract Status Filter -->
+            <div class="col-span-1">
+              <label for="status-filter"
+                class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 ml-1">Status</label>
+              <select id="status-filter" name="status" x-model="selectedStatus" @change="updatePlayersList()"
+                class="w-full bg-gray-100 dark:bg-slate-600 border-0 rounded-md text-gray-800 dark:text-gray-200 text-xs px-2 py-1.5 focus:ring-1 focus:ring-blue-500 focus:outline-none shadow-sm">
+                <option value="all">All Status</option>
+                <option value="signed">Under Contract</option>
+                <option value="free">Free Agent</option>
+                <option value="transfer">Transfer Listed</option>
+              </select>
+            </div>
+
+            <!-- Sort By -->
+            <div class="col-span-1">
+              <label for="sort-filter"
+                class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 ml-1">Sort By</label>
+              <select id="sort-filter" name="sort" x-model="sortBy" @change="updatePlayersList()"
+                class="w-full bg-gray-100 dark:bg-slate-600 border-0 rounded-md text-gray-800 dark:text-gray-200 text-xs px-2 py-1.5 focus:ring-1 focus:ring-blue-500 focus:outline-none shadow-sm">
+                <option value="name">Name</option>
+                <option value="rating">Rating</option>
+                <option value="experience">Experience</option>
+                <option value="age">Age</option>
+                <option value="value">Market Value</option>
+              </select>
+            </div>
+          </div>
+        </div> <!-- End of collapsible filters section -->
+
+        <!-- View Controls - Always Visible -->
+        <div class="flex flex-wrap items-center justify-between mt-3 mb-1">
+          <!-- Per page selector -->
+          <div class="flex items-center">
+            <label for="per-page-select" class="text-xs font-medium text-gray-600 dark:text-gray-400 mr-2">Per
+              page:</label>
+            <select id="per-page-select" x-model="perPage" @change="updatePlayersList()"
+              class="text-xs bg-gray-100 dark:bg-slate-600 border-0 rounded-md text-gray-700 dark:text-gray-300 px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-sm">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+
+          <!-- Sort Direction & Hidden Input -->
+          <div class="flex items-center">
+            <label class="text-xs font-medium text-gray-600 dark:text-gray-400 mr-2">Order:</label>
+            <button id="sort-direction-toggle"
+              @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'; updatePlayersList();" type="button"
+              class="text-xs bg-gray-100 hover:bg-gray-200 dark:bg-slate-600 dark:hover:bg-slate-500 rounded-md px-2 py-1 flex items-center justify-center shadow-sm">
+              <i :class="sortDirection === 'asc' ? 'bi bi-sort-alpha-down' : 'bi bi-sort-alpha-up'" class="mr-1"></i>
+              <span x-text="sortDirection === 'asc' ? 'Asc' : 'Desc'"></span>
+            </button>
+          </div>
+
+          <!-- Hidden inputs -->
+          <input id="per-page-input" type="hidden" name="per_page" :value="perPage">
+          <input type="hidden" name="direction" :value="sortDirection">
+        </div>
+      </form>
+
+      <!-- Active Filters Display -->
+      <div class="mt-3 flex flex-wrap gap-2"
+        x-show="selectedTeam !== 'all' || selectedRegion !== 'all' || selectedRole !== 'all' || searchQuery !== ''">
+        <span class="text-xs text-gray-500 dark:text-gray-400 self-center">Active filters:</span>
+
+        <!-- Team Filter Tag -->
+        <div x-show="selectedTeam !== 'all'"
+          class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full flex items-center">
+          Team: <span x-text="selectedTeam.toUpperCase()" class="font-medium mx-1"></span>
+          <button @click="selectedTeam = 'all'" class="ml-1 hover:text-blue-600 dark:hover:text-blue-100">
+            <i class="bi bi-x-circle-fill"></i>
+          </button>
+        </div>
+
+        <!-- Region Filter Tag -->
+        <div x-show="selectedRegion !== 'all'"
+          class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full flex items-center">
+          Region: <span x-text="selectedRegion.toUpperCase()" class="font-medium mx-1"></span>
+          <button @click="selectedRegion = 'all'" class="ml-1 hover:text-green-600 dark:hover:text-green-100">
+            <i class="bi bi-x-circle-fill"></i>
+          </button>
+        </div>
+
+        <!-- Role Filter Tag -->
+        <div x-show="selectedRole !== 'all'"
+          class="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs px-2 py-1 rounded-full flex items-center">
+          Role: <span x-text="selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)"
+            class="font-medium mx-1"></span>
+          <button @click="selectedRole = 'all'" class="ml-1 hover:text-purple-600 dark:hover:text-purple-100">
+            <i class="bi bi-x-circle-fill"></i>
+          </button>
+        </div>
+
+        <!-- Search Query Tag -->
+        <div x-show="searchQuery !== ''"
+          class="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-xs px-2 py-1 rounded-full flex items-center">
+          Search: <span x-text="searchQuery" class="font-medium mx-1"></span>
+          <button @click="searchQuery = ''" class="ml-1 hover:text-yellow-600 dark:hover:text-yellow-100">
+            <i class="bi bi-x-circle-fill"></i>
+          </button>
+        </div>
+
+        <!-- Clear All Filters -->
+        <button @click="selectedTeam = 'all'; selectedRegion = 'all'; selectedRole = 'all'; searchQuery = '';"
+          class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 underline ml-2">
+          Clear all
+        </button>
+      </div>
     </div>
-    <div class="flex space-x-1">
-      <button class="px-3 py-1 rounded-md bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-300 text-sm">
-        Previous
-      </button>
-      <button class="px-3 py-1 rounded-md bg-blue-500 text-white text-sm">
-        1
-      </button>
-      <button class="px-3 py-1 rounded-md bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-300 text-sm">
-        2
-      </button>
-      <button class="px-3 py-1 rounded-md bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-300 text-sm">
-        3
-      </button>
-      <button class="px-3 py-1 rounded-md bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-300 text-sm">
-        Next
-      </button>
+
+    <div id="players-list" class="relative">
+      <div hx-get="/api/moba/players" hx-trigger="load" hx-target="#players-list" hx-swap="innerHTML" class="hidden">
+        {% include "components/players_skeleton.html" %}
+      </div>
     </div>
   </div>
 </div>

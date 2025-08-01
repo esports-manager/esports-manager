@@ -17,9 +17,9 @@
   -->
 <!DOCTYPE html>
 <html lang="en" x-data="{
-    darkMode: localStorage.getItem('darkMode')
+    darkMode: $persist(localStorage.getItem('darkMode')
       ? JSON.parse(localStorage.getItem('darkMode'))
-      : window.matchMedia('(prefers-color-scheme: dark)').matches,
+      : window.matchMedia('(prefers-color-scheme: dark)').matches).using(sessionStorage),
   }" x-init="$watch('darkMode', value => document.documentElement.classList.toggle('dark', value))"
   :class="{ 'dark' : darkMode }">
 
@@ -34,6 +34,7 @@
   <link rel="stylesheet" href="{{ url_for('static', path='css/tailwind.css') }}" />
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', path='img/trophy.svg') }}" />
   <script src="{{ url_for('static', path='js/htmx.min.js') }}"></script>
+  <script defer src="{{ url_for('static', path='js/alpine.persist.min.js') }}"></script>
   <script defer src="{{ url_for('static', path='js/alpine.min.js') }}"></script>
 </head>
 

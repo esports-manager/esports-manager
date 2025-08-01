@@ -1,0 +1,21 @@
+<!-- Champions Empty State -->
+<div class="text-center py-12 bg-white dark:bg-slate-700 rounded-lg shadow mb-8">
+  <div class="flex justify-center">
+    <div class="h-24 w-24 bg-gray-100 dark:bg-slate-600 rounded-full flex items-center justify-center mb-8 mt-8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400 dark:text-gray-500" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+          d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+    </div>
+  </div>
+  <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No Champions Found</h3>
+  <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-6">
+    No champions match your current filters. Try adjusting your search criteria or clear filters to see all available
+    champions.
+  </p>
+  <button hx-get="/api/champions-partials" hx-trigger="click" hx-target="#champions-container" hx-swap="innerHTML"
+    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-150 mb-8">
+    Reset Filters
+  </button>
+</div>

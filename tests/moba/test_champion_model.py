@@ -90,7 +90,7 @@ def test_moba_champion_difficulty_assignment(champion: MobaChampionBase):
 
 
 def test_moba_champion_get_tier(champion: MobaChampionBase):
-    assert champion.get_champion_tier() == MobaChampionTier.F
+    assert champion.champion_tier == MobaChampionTier.D
 
 
 def test_moba_champion_instance(session: Session, champion_instance: MobaChampion):
@@ -100,4 +100,4 @@ def test_moba_champion_instance(session: Session, champion_instance: MobaChampio
     assert champion_instance.id is not None
     assert champion_instance.created_at is not None
     assert session.get(MobaChampion, champion_instance.id) == champion_instance
-    assert champion_instance.get_champion_tier() == MobaChampionTier.F
+    assert champion_instance.champion_tier == MobaChampionTier.D

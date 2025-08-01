@@ -20,7 +20,7 @@ class MobaChampionRole(enum.Enum):
 
 class MobaChampionType(enum.Enum):
     ASSASSIN = "assassin"
-    HEALER = "healer"
+    SUPPORT = "support"
     TANK = "tank"
     MAGE = "mage"
     FIGHTER = "fighter"
@@ -60,19 +60,23 @@ class MobaChampionBase(SQLModel):
     strength: int = Field(gt=0, lt=100, default=50)
     image_path: Optional[str] = Field(default=None)
     description: Optional[str] = Field(default=None)
+    win_rate: Optional[float] = Field(default=None)
+    pick_rate: Optional[float] = Field(default=None)
+    ban_rate: Optional[float] = Field(default=None)
 
-    def get_champion_tier(self) -> MobaChampionTier:
+    @property
+    def champion_tier(self) -> MobaChampionTier:
         if self.strength >= 95:
             return MobaChampionTier.SP
         elif self.strength >= 90:
             return MobaChampionTier.S
-        elif self.strength >= 85:
-            return MobaChampionTier.A
         elif self.strength >= 80:
-            return MobaChampionTier.B
-        elif self.strength >= 75:
-            return MobaChampionTier.C
+            return MobaChampionTier.A
         elif self.strength >= 70:
+            return MobaChampionTier.B
+        elif self.strength >= 60:
+            return MobaChampionTier.C
+        elif self.strength >= 50:
             return MobaChampionTier.D
         else:
             return MobaChampionTier.F
@@ -116,4 +120,7 @@ class MobaChampionUpdate(SQLModel):
     strength: Optional[int] = Field(gt=0, lt=100, default=None)
     image_path: Optional[str] = Field(default=None)
     description: Optional[str] = Field(default=None)
+    win_rate: Optional[float] = Field(default=None)
+    pick_rate: Optional[float] = Field(default=None)
+    ban_rate: Optional[float] = Field(default=None)
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)

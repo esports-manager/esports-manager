@@ -152,7 +152,7 @@ def test_get_champion_tier(client: TestClient, session: Session):
     session.refresh(champion)
     response = client.get(f"/api/moba/champions/{champion.id}/tier")
     assert response.status_code == 200
-    assert response.json() == champion.get_champion_tier().value
+    assert response.json() == champion.champion_tier.value
 
 
 def test_delete_champion(client: TestClient, session: Session):

@@ -22,7 +22,7 @@ player_routes = APIRouter(
 
 
 @player_routes.get("/", response_model=list[MobaPlayerPublic])
-def get_players(
+async def get_players(
     session: Session = Depends(get_session),
     skip: int = 0,
     limit: int = 100,
@@ -42,7 +42,9 @@ def get_players(
 @player_routes.post(
     "/", response_model=MobaPlayerPublic, status_code=status.HTTP_201_CREATED
 )
-def create_player(*, session: Session = Depends(get_session), player: MobaPlayerCreate):
+async def create_player(
+    *, session: Session = Depends(get_session), player: MobaPlayerCreate
+):
     db_player = MobaPlayer.model_validate(player)
     session.add(db_player)
     session.commit()
@@ -51,7 +53,7 @@ def create_player(*, session: Session = Depends(get_session), player: MobaPlayer
 
 
 @player_routes.get("/{id}", response_model=MobaPlayerPublic)
-def get_player(*, session: Session = Depends(get_session), id: int):
+async def get_player(*, session: Session = Depends(get_session), id: int):
     player = session.get(MobaPlayer, id)
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")
@@ -59,7 +61,7 @@ def get_player(*, session: Session = Depends(get_session), id: int):
 
 
 @player_routes.patch("/{id}", response_model=MobaPlayerPublic)
-def update_player(
+async def update_player(
     *, session: Session = Depends(get_session), id: int, player: MobaPlayerUpdate
 ):
     db_player = session.get(MobaPlayer, id)
@@ -74,7 +76,7 @@ def update_player(
 
 
 @player_routes.delete("/{id}")
-def delete_player(*, session: Session = Depends(get_session), id: int):
+async def delete_player(*, session: Session = Depends(get_session), id: int):
     player = session.get(MobaPlayer, id)
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")

@@ -13,6 +13,67 @@ static_dir = root_dir / "static"
 templates_dir = root_dir / "templates"
 
 
+sidebar = {
+    "home": {
+        "name": "Home",
+        "icon": "bi bi-house-door-fill",
+        "url": "home",
+    },
+    "inbox": {
+        "name": "Inbox",
+        "icon": "bi bi-inbox-fill",
+        "url": "inbox",
+    },
+    "news": {
+        "name": "News",
+        "icon": "bi bi-newspaper",
+        "url": "news",
+    },
+    "practice": {
+        "name": "Practice",
+        "icon": "bi bi-cone-striped",
+        "url": "practice",
+    },
+    "roster": {
+        "name": "Roster",
+        "icon": "bi bi-people",
+        "url": "roster",
+    },
+    "staff": {
+        "name": "Staff",
+        "icon": "bi bi-briefcase-fill",
+        "url": "staff",
+    },
+    "scout": {
+        "name": "Scout",
+        "icon": "bi bi-binoculars-fill",
+        "url": "scout",
+    },
+    "champions": {
+        "name": "Champions",
+        "icon": "bi bi-star-fill",
+        "url": "champions",
+    },
+    "players": {
+        "name": "Players",
+        "icon": "bi bi-person-fill",
+        "url": "players",
+    },
+    "teams": {
+        "name": "Teams",
+        "icon": "bi bi-shield-fill",
+        "url": "teams",
+    },
+    "championships": {
+        "name": "Championships",
+        "icon": "bi bi-trophy-fill",
+        "url": "championships",
+    },
+}
+
+current_page = "home"
+
+
 def create_frontend(app: FastAPI) -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
@@ -30,10 +91,34 @@ def create_frontend(app: FastAPI) -> FastAPI:
 
     @app.get("/home")
     async def home(request: Request):
-        return templates.TemplateResponse("layout.html", {"request": request})
+        global current_page
+        global sidebar
+        current_page = "home"
+        contentview = "pages/home.html"
+        return templates.TemplateResponse(
+            "layout.html",
+            {
+                "request": request,
+                "content": contentview,
+                "sidebar": sidebar,
+                "current_page": current_page,
+            },
+        )
 
     @app.get("/page/{page}")
     async def page(request: Request, page: str):
-        return templates.TemplateResponse(f"pages/{page}.html", {"request": request})
+        global current_page
+        global sidebar
+        current_page = page
+        contentview = f"pages/{page}.html"
+        return templates.TemplateResponse(
+            "layout.html",
+            {
+                "request": request,
+                "content": contentview,
+                "sidebar": sidebar,
+                "current_page": current_page,
+            },
+        )
 
     return app

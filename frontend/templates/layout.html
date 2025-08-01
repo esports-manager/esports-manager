@@ -17,7 +17,7 @@
   -->
 
 {% extends "base.html" %} {% block content %}
-<div x-data="{expanded: true, page: 'home'}">
+<div x-data="{expanded: $persist(true).using(sessionStorage)}">
   {% block sidebar %}{% include "components/sidebar.html" %}{% endblock %}
 
   <div class="flex flex-col w-full h-full">
@@ -28,9 +28,9 @@
       :class="{ 'ml-64': expanded, 'ml-16 sm:ml-20': !expanded }"
     >
       <div class="px-2">
-        <div id="maincontent">
+        <div class="container mx-auto px-4" id="maincontent">
             {% block contentview %}
-            {% include "pages/home.html" %}
+            {% include content %}
             {% endblock %}
         </div>
       </div>

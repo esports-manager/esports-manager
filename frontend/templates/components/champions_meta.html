@@ -1,0 +1,55 @@
+<div class="border-b border-gray-200 dark:border-gray-600" x-init="$nextTick(() => { metaTab = 'overview'; $dispatch('htmx:trigger', { id: 'meta-content', target: '#meta-content', url: '/api/moba/champions/meta', values: { role: null } }) })">
+    <div class="flex overflow-x-auto overflow-y-hidden" aria-label="Role tabs">
+        <button @click="metaTab = 'overview'; $dispatch('htmx:trigger', { id: 'meta-content', target: '#meta-content', url: '/api/moba/champions/meta', values: { role: null } })"
+            :class="{'border-blue-500 text-blue-600 dark:text-blue-400': metaTab === 'overview', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': metaTab !== 'overview'}"
+            class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+            <i class="bi bi-graph-up mr-2"></i>
+            Meta Overview
+        </button>
+        <button @click="metaTab = 'top'; $dispatch('htmx:trigger', { id: 'meta-content', target: '#meta-content', url: '/api/moba/champions/meta', values: { role: 'top' } })"
+            :class="{'border-blue-500 text-blue-600 dark:text-blue-400': metaTab === 'top', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': metaTab !== 'top'}"
+            class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+            <i class="bi bi-shield mr-2"></i>
+            Top Lane
+        </button>
+        <button @click="metaTab = 'jungle'; $dispatch('htmx:trigger', { id: 'meta-content', target: '#meta-content', url: '/api/moba/champions/meta', values: { role: 'jungle' } })"
+            :class="{'border-blue-500 text-blue-600 dark:text-blue-400': metaTab === 'jungle', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': metaTab !== 'jungle'}"
+            class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+            <i class="bi bi-tree mr-2"></i>
+            Jungle
+        </button>
+        <button @click="metaTab = 'mid'; $dispatch('htmx:trigger', { id: 'meta-content', target: '#meta-content', url: '/api/moba/champions/meta', values: { role: 'mid' } })"
+            :class="{'border-blue-500 text-blue-600 dark:text-blue-400': metaTab === 'mid', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': metaTab !== 'mid'}"
+            class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+            <i class="bi bi-lightning mr-2"></i>
+            Mid Lane
+        </button>
+        <button @click="metaTab = 'bot'; $dispatch('htmx:trigger', { id: 'meta-content', target: '#meta-content', url: '/api/moba/champions/meta', values: { role: 'bot' } })"
+            :class="{'border-blue-500 text-blue-600 dark:text-blue-400': metaTab === 'bot', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': metaTab !== 'bot'}"
+            class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+            <i class="bi bi-bullseye mr-2"></i>
+            Bot Lane
+        </button>
+        <button @click="metaTab = 'support'; $dispatch('htmx:trigger', { id: 'meta-content', target: '#meta-content', url: '/api/moba/champions/meta', values: { role: 'support' } })"
+            :class="{'border-blue-500 text-blue-600 dark:text-blue-400': metaTab === 'support', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': metaTab !== 'support'}"
+            class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+            <i class="bi bi-heart mr-2"></i>
+            Support
+        </button>
+    </div>
+</div>
+
+<div id="meta-content" hx-get="/api/moba/champions/meta" hx-trigger="load" hx-swap="innerHTML">
+    <!-- Placeholder loading state -->
+    <div class="flex items-center justify-center p-12 text-gray-500 dark:text-gray-400">
+        <i class="bi bi-arrow-clockwise animate-spin text-xl mr-2"></i>
+        <span>Loading meta data...</span>
+    </div>
+</div>
+
+<!-- Role-specific Meta Tabs (placeholder) -->
+<div class="p-4 text-center text-gray-500 dark:text-gray-400" x-show="metaTab !== 'overview'">
+    <p x-text="`${metaTab.charAt(0).toUpperCase() + metaTab.slice(1)} Lane Meta Analysis`" class="font-medium mb-2">
+    </p>
+    <p class="text-sm">Detailed meta information for this role will appear here.</p>
+</div>

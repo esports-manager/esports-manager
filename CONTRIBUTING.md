@@ -46,60 +46,57 @@ The most traditional way to contribute is to submit new code. **eSports Manager*
 
 Once you understand that concept, you're welcome to submit new code.
 
-### Fork and Pull
+### Code of Conduct
 
-We work with a [Fork & Pull](https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests#fork--pull) method. Fork this repo, write your code in a feature branch (make sure it is up to date with the project's `develop` branch) and open a **Pull Request** to the `develop` repository, describing your changes or even referencing the **Issue** that inspired your code.
+We are committed to fostering an open and welcoming environment for all contributors. We expect everyone participating in the eSports Manager project to adhere to our [Code of Conduct](CODE_OF_CONDUCT.md), which promotes respect, inclusivity, and positive interactions within our community.
+
+**Core Principles:**
+- Be respectful and inclusive of differing viewpoints and experiences
+- Use welcoming and inclusive language
+- Focus on constructive criticism and feedback
+- Show empathy towards other community members
+
+Inappropriate behavior will not be tolerated. If you witness or experience unacceptable behavior, please report it to the project maintainers at admin@esportsmanager.net.
+
+### Fork and Pull Process
+
+We work with a [Fork & Pull](https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests#fork--pull) method. Here's the detailed process:
+
+1. **Fork the repository** to your own GitHub account
+2. **Clone your fork** locally on your machine
+3. **Create a feature branch** from the `develop` branch (not from `main`)
+4. **Make your changes** and commit them to your feature branch
+5. **Keep your branch updated** with the project's `develop` branch by regularly pulling and rebasing
+6. **Push your changes** to your fork on GitHub
+7. **Submit a Pull Request** to the original repository's `develop` branch
+
+Once submitted, your PR will be reviewed by the maintainers. You may be asked to make changes before your contribution is accepted. All PRs require at least one approval from a maintainer before being merged.
 
 If you're working on a new feature that has no prior **Issue** related to it, please open an **Issue** describing the feature and then reference it in your new **Pull Request**.
 
-### How do I install the dependencies and start developing?
+### Commit Message Conventions
 
-This is primarily a Python project. Usually, some developers like to install the dependencies from a `requirements.txt` file. I don't like to maintain a separate `requirements.txt` file for that, and I resort to virtualenv managers to manage my dependencies.
+We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification for our commit messages. This helps us automatically generate changelogs and makes the commit history more readable.
 
-If you're not familiar with the concept of Virtual environments, see [this documentation](https://docs.python.org/3/library/venv.html) from the official Python documentation.
+Format: `type(scope): subject`
 
-Like I said, I like to use virtualenv and dependency managers to develop my projects. This project uses [`uv`](https://docs.astral.sh/uv/) as a dependency and virtualenv manager.
+**Types:**
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, etc.)
+- `refactor`: Code refactoring without feature changes
+- `test`: Adding or updating tests
+- `chore`: Changes to build process or auxiliary tools
 
-To start the virtualenv and install the dependencies, run:
-
-```bash
-uv venv .venv
-uv sync
+**Examples:**
 ```
-
-To activate the virtualenv, run:
-
-```bash
-source .venv/bin/activate
+feat(player): add nationality to player profile
+fix(matches): resolve issue with match scheduling
+docs(README): update installation instructions
+refactor(database): optimize team queries
+test(models): add unit tests for Staff model
 ```
-
-To run the project, run:
-
-```bash
-uv run python esm.py
-```
-
-To run the development server, run:
-
-```bash
-uv run uvicorn dev:app --reload
-```
-
-You can connect to `http://localhost:8000` to access the frontend. The API docs is available at `http://localhost:8000/docs`.
-
-To commit to the repo, make sure to install pre-commit:
-
-```bash
-uv run pre-commit install
-```
-
-To run the tests, run:
-
-```bash
-uv run pytest
-```
-
-Just to make sure you didn't break anything. Once you submit a PR, GitHub Actions will run these automated tests too, just in case you forgot to run the tests.
 
 ### Code conventions
 
@@ -114,3 +111,220 @@ Just to make sure you didn't break anything. Once you submit a PR, GitHub Action
 
 I'm currently using Python 3.11, but it should be compatible with Python 3.10+.
 
+### Branching Strategy
+
+We use a modified version of the GitFlow workflow with the following branches:
+
+- `main`: Production-ready code, always stable and deployable
+- `develop`: Main development branch where features are integrated
+- `feature/*`: Feature branches (e.g., `feature/player-stats-page`)
+- `bugfix/*`: Bug fix branches (e.g., `bugfix/match-scheduling-error`)
+- `hotfix/*`: Urgent fixes for production (e.g., `hotfix/critical-crash-fix`)
+
+When creating a new branch, follow these naming conventions:
+- Use lowercase and hyphens for words
+- Include a descriptive but concise name
+- Prefix with the appropriate category (feature, bugfix, hotfix)
+
+### Project Structure Overview
+
+To help you get started quickly, here's a brief overview of the project structure:
+
+```
+esports-manager/
+├── esm/                # Main application code
+│   ├── models/         # SQLModel data models
+│   ├── routes/         # API route handlers
+│   ├── utils/          # Utility functions and helpers
+│   └── config.py       # Application configuration
+├── frontend/          # Frontend code
+│   ├── static/         # Static assets (CSS, JS, images)
+│   └── templates/      # HTML templates
+├── scripts/           # Utility scripts
+├── tests/             # Test suite
+└── esm.py            # Main application entry point
+```
+
+### Development Environment Setup
+
+Below is an expanded guide to setting up your development environment:
+
+#### Prerequisites
+
+- Python 3.10+ installed
+- Git installed
+- A GitHub account
+
+#### Setup Steps
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/esports-manager.git
+   cd esports-manager
+   ```
+
+2. **Set up the virtual environment and dependencies:**
+   ```bash
+   uv venv .venv
+   uv sync
+   ```
+
+3. **Activate the virtual environment:**
+   - On Linux/macOS:
+     ```bash
+     source .venv/bin/activate
+     ```
+   - On Windows:
+     ```bash
+     .venv\Scripts\activate
+     ```
+
+4. **Install pre-commit hooks:**
+   ```bash
+   uv run pre-commit install
+   ```
+
+5. **Populate the database:**
+  On Linux, you might need to give the permissions to these files:
+
+  ```bash
+  chmod +x ./scripts/add_champions_to_db.sh
+  chmod +x ./scripts/add_teams_to_db.sh
+  ```
+
+  Then run:
+
+   ```bash
+   ./scripts/add_champions_to_db.sh
+   ./scripts/add_teams_to_db.sh
+   ```
+
+#### Running the Application
+
+To run the main application:
+```bash
+uv run python esm.py
+```
+
+To run the development server with auto-reload:
+```bash
+uv run uvicorn dev:app --reload
+```
+
+#### Working on the frontend
+
+To stylize the frontend, you need to run tailwindcss:
+
+```bash
+uv run tailwindcss -i frontend/static/css/input.css -o frontend/static/css/tailwind.css --watch
+```
+
+And then you can run the development server. If you wish to minify the CSS, you can run:
+
+```bash
+uv run tailwindcss -i frontend/static/css/input.css -o frontend/static/css/tailwind.css --minify
+```
+
+#### Troubleshooting Common Issues
+
+- **Missing dependencies error**: Try running `uv sync --upgrade` to ensure all dependencies are up to date.
+- **Database connection error**: Check that your database file is created correctly. Start the development server, it should create the database file if it doesn't exist.
+- **Import errors**: Ensure you're running commands from the project root directory with the virtual environment activated.
+- **Pre-commit hooks failing**: Run `uv run pre-commit run --all-files` to identify and fix formatting issues.
+- **Windows-specific issues**: If you encounter path-related issues on Windows, try using forward slashes in configuration files.
+- **Error while committing**: This might be because the pre-commit has identified a few problems with your code. To check them individually, use `uv run ruff check` and `uv run ruff format` to see the messages that are returned by both services. Then you have to stage your changes properly and try to commit them again.
+
+### Testing
+
+Testing is crucial for maintaining code quality and preventing regressions. We use pytest for all tests.
+
+#### Running Tests
+
+To run all tests:
+```bash
+uv run pytest
+```
+
+To run specific tests:
+```bash
+uv run pytest tests/
+uv run pytest tests/test_player_model.py
+uv run pytest tests/test_player_model.py::test_create_moba_player
+```
+
+With coverage report:
+```bash
+uv run pytest --cov=esm tests/
+```
+
+#### Test Guidelines
+
+- All new features should include tests
+- Aim for at least 80% test coverage for new code
+- Focus on testing behavior rather than implementation details
+- Use fixtures for common test setups
+- Keep tests fast and isolated from each other
+
+### Issue Templates
+
+When creating an issue, please use the appropriate template:
+
+#### Bug Reports
+
+A good bug report should include:
+
+- Clear and descriptive title
+- Steps to reproduce the issue
+- Expected behavior vs. actual behavior
+- Screenshots or code examples if applicable
+- Game version and environment details
+- Any error messages or logs
+
+Example:
+```
+**Bug**: Match scores not updating after simulation
+
+**Steps to Reproduce**:
+1. Start a new match simulation
+2. Complete the simulation
+3. View the team standings page
+
+**Expected**: Updated scores in team standings
+**Actual**: Old scores still displayed
+
+**Environment**: eSports Manager v0.5.2, Windows 11
+```
+
+#### Feature Requests
+
+Feature requests should include:
+
+- Clear description of the proposed feature
+- Justification for why it's valuable
+- Any design ideas or implementation suggestions
+- Examples of similar features in other applications (if applicable)
+
+### Translation Guide
+
+The internationalization system is currently being developed. When complete, the translation workflow will be:
+
+1. Extraction of translatable strings from the codebase
+2. Translation files organized by language code in the `locales/` directory
+3. Web interface for translating strings (coming soon)
+
+If you're interested in helping with translations, please watch for updates on this feature.
+
+### Contact and Communication
+
+Have questions or need help? Reach out through one of these channels:
+
+- **Issue Tracker**: Best for bug reports and feature requests
+- **Discussions**: For general questions and ideas
+- **Email**: admin@esportsmanager.net for private inquiries
+- **Discord**: Join our [community server](https://discord.gg/esports-manager) for real-time discussion
+
+For security issues, please contact admin@esportsmanager.net directly instead of posting publicly.
+
+## Thank You!
+
+Thank you for contributing to eSports Manager. Your support helps make this project better for everyone in the community!

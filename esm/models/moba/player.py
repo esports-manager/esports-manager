@@ -3,13 +3,14 @@
 # License-Filename: LICENSES/GPL-3.0-or-later
 from sqlmodel import SQLModel, Field, Column, Enum
 from esm.models.person import Person
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 import enum
 from datetime import datetime, date
 from sqlmodel import Relationship
+from esm.services import get_country_code
 
-
-from esm.models.moba.player_contract import MobaPlayerContract
+if TYPE_CHECKING:
+    from esm.models.moba.player_contract import MobaPlayerContract
 
 
 class MobaPlayerRole(enum.Enum):
@@ -22,6 +23,7 @@ class MobaPlayerRole(enum.Enum):
 
 class MobaPlayerBase(Person):
     role: MobaPlayerRole = Field(sa_column=Column(Enum(MobaPlayerRole), index=True))
+    is_active: bool = Field(default=True)
 
     # Attributes
     mechanics: int = Field(gt=0, lt=100, default=50)
@@ -37,6 +39,30 @@ class MobaPlayerBase(Person):
     # Player's individual stats
     morale: int = Field(gt=0, lt=100, default=50)
     form: int = Field(gt=0, lt=100, default=50)
+
+    value: int = Field(default=1000000)
+
+    @property
+    def overall(self) -> int:
+        return (
+            sum(
+                [
+                    self.mechanics,
+                    self.knowledge,
+                    self.agility,
+                    self.reflexes,
+                    self.accuracy,
+                    self.aggressiveness,
+                    self.vision,
+                    self.farming,
+                    self.communication,
+                ]
+            )
+            // 9
+        )
+
+    def get_country_code(self) -> str:
+        return get_country_code(self.nationality)
 
 
 class MobaPlayer(MobaPlayerBase, table=True):
@@ -67,9 +93,9 @@ class MobaPlayer(MobaPlayerBase, table=True):
 
 
 class MobaPlayerPublic(MobaPlayerBase):
-    id: int
-    created_at: datetime
-    updated_at: Optional[datetime]
+    id: Optional[int] = Field(default=None)
+    created_at: Optional[datetime] = Field(default=None)
+    updated_at: Optional[datetime] = Field(default=None)
 
 
 class MobaPlayerCreate(MobaPlayerBase):
@@ -87,6 +113,7 @@ class MobaPlayerUpdate(SQLModel):
     role: Optional[MobaPlayerRole] = Field(
         default=None, sa_column=Column(Enum(MobaPlayerRole), index=True)
     )
+    is_active: Optional[bool] = None
     mechanics: Optional[int] = Field(default=None, gt=0, lt=100)
     knowledge: Optional[int] = Field(default=None, gt=0, lt=100)
     agility: Optional[int] = Field(default=None, gt=0, lt=100)
@@ -98,4 +125,5 @@ class MobaPlayerUpdate(SQLModel):
     communication: Optional[int] = Field(default=None, gt=0, lt=100)
     morale: Optional[int] = Field(default=None, gt=0, lt=100)
     form: Optional[int] = Field(default=None, gt=0, lt=100)
+    value: Optional[int] = Field(default=None, gt=0)
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)

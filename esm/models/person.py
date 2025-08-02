@@ -14,3 +14,13 @@ class Person(SQLModel):
     nationality: Optional[str] = None
     bio: Optional[str] = None
     image_path: Optional[str] = None
+
+    def get_age(self, today: date = date.today()) -> int:
+        return (
+            today.year
+            - self.date_of_birth.year
+            - (
+                (today.month, today.day)
+                < (self.date_of_birth.month, self.date_of_birth.day)
+            )
+        )

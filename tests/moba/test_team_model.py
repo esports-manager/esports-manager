@@ -2,7 +2,8 @@ import pytest
 from datetime import date
 from sqlmodel import Session
 from esm.models.moba.team import MobaTeam, MobaTeamBase
-from esm.models.moba.player import MobaPlayer, MobaPlayerContract, MobaPlayerRole
+from esm.models.moba.player import MobaPlayer, MobaPlayerRole
+from esm.models.moba.player_contract import MobaPlayerContract
 
 
 @pytest.fixture

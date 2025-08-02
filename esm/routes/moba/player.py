@@ -3,16 +3,20 @@
 # License-Filename: LICENSES/GPL-3.0-or-later
 from fastapi import APIRouter, status, Request
 from fastapi.templating import Jinja2Templates
-from esm.config import FRONTEND_DIR
+from esm.config import FRONTEND_DIR, ESM_DIR
 from esm.db import get_session
+from esm.services import serve_image
+from esm.models.moba import MobaPlayer, MobaTeam
+from pathlib import Path
 from esm.models.moba.player import (
-    MobaPlayer,
+    MobaPlayerPublic,
     MobaPlayerCreate,
     MobaPlayerUpdate,
-    MobaPlayerPublic,
 )
+from esm.models.moba.team import MobaTeamPublic
 from sqlmodel import Session, select
 from fastapi import Depends, HTTPException
+from typing import Optional
 
 player_routes = APIRouter(
     prefix="/players",
@@ -24,7 +28,12 @@ templates_dir = FRONTEND_DIR / "templates"
 templates = Jinja2Templates(directory=templates_dir)
 
 
-@player_routes.get("/", response_model=list[MobaPlayerPublic])
+class MobaPlayerWithTeam(MobaPlayerPublic):
+    team: Optional["MobaTeamPublic"] = None
+    image_url: Optional[str] = None
+
+
+@player_routes.get("/")
 async def get_players(
     request: Request,
     session: Session = Depends(get_session),
@@ -85,6 +94,32 @@ async def get_players(
 
     players = session.exec(query.offset(skip).limit(per_page)).all()
 
+    result = []
+    for player in players:
+        team_data = None
+        player_data = player.model_dump()
+        if player.current_contract and player.current_contract.team_id:
+            team_data = session.get(MobaTeam, player.current_contract.team_id)
+        player_with_team = MobaPlayerWithTeam.model_validate(player_data)
+
+        # Set the team data
+        player_with_team.team = team_data
+
+        # Generate image URL for the player
+        if player.image_path:
+            # If image_path is a URL, use it directly
+            if player.image_path.startswith("http"):
+                player_with_team.image_url = player.image_path
+            else:
+                # If it's a local path, extract the filename and create a URL to our endpoint
+                filename = Path(player.image_path).name
+                player_with_team.image_url = f"/api/moba/players/images/{filename}"
+        else:
+            # Use default image if no image path specified
+            player_with_team.image_url = "/static/img/default_player.png"
+
+        result.append(player_with_team)
+
     pagination = {
         "page": page,
         "per_page": per_page,
@@ -101,7 +136,7 @@ async def get_players(
             "components/players_list.html",
             {
                 "request": request,
-                "players": players,
+                "players": result,
                 "pagination": pagination,
                 "current_filters": {
                     "role": request.query_params.get("role", ""),
@@ -113,7 +148,7 @@ async def get_players(
             },
         )
 
-    return players
+    return result
 
 
 @player_routes.post(
@@ -160,3 +195,10 @@ async def delete_player(*, session: Session = Depends(get_session), id: int):
     session.delete(player)
     session.commit()
     return {"message": "Player deleted"}
+
+
+@player_routes.get("/images/{filename}")
+async def get_player_image(filename: str):
+    """Serve player images from the res/img/players directory"""
+    image_path = Path(ESM_DIR) / "res" / "img" / "players" / filename
+    return serve_image(image_path)

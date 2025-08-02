@@ -157,19 +157,21 @@ Below is an expanded guide to setting up your development environment:
 
 #### Setup Steps
 
+1. [Fork the repository](https://github.com/esports-manager/esports-manager/fork)
+
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/yourusername/esports-manager.git
    cd esports-manager
    ```
 
-2. **Set up the virtual environment and dependencies:**
+1. **Set up the virtual environment and dependencies:**
    ```bash
    uv venv .venv
    uv sync
    ```
 
-3. **Activate the virtual environment:**
+1. **Activate the virtual environment:**
    - On Linux/macOS:
      ```bash
      source .venv/bin/activate
@@ -179,12 +181,12 @@ Below is an expanded guide to setting up your development environment:
      .venv\Scripts\activate
      ```
 
-4. **Install pre-commit hooks:**
+1. **Install pre-commit hooks:**
    ```bash
    uv run pre-commit install
    ```
 
-5. **Populate the database:**
+1. **Populate the database:**
   On Linux, you might need to give the permissions to these files:
 
   ```bash
@@ -292,7 +294,7 @@ Example:
 **Expected**: Updated scores in team standings
 **Actual**: Old scores still displayed
 
-**Environment**: eSports Manager v0.5.2, Windows 11
+**Environment**: eSports Manager v0.1.0, Windows 11
 ```
 
 #### Feature Requests

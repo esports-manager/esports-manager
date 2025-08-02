@@ -63,7 +63,7 @@ Like I said, I like to use virtualenv and dependency managers to develop my proj
 To start the virtualenv and install the dependencies, run:
 
 ```bash
-uv venv
+uv venv .venv
 uv sync
 ```
 

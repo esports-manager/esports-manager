@@ -76,13 +76,21 @@ source .venv/bin/activate
 To run the project, run:
 
 ```bash
-uv run python esm
+uv run python esm.py
 ```
 
 To run the development server, run:
 
 ```bash
 uv run uvicorn dev:app --reload
+```
+
+You can connect to `http://localhost:8000` to access the frontend. The API docs is available at `http://localhost:8000/docs`.
+
+To commit to the repo, make sure to install pre-commit:
+
+```bash
+uv run pre-commit install
 ```
 
 To run the tests, run:

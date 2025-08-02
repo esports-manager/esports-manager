@@ -116,7 +116,7 @@ async def get_players(
                 player_with_team.image_url = f"/api/moba/players/images/{filename}"
         else:
             # Use default image if no image path specified
-            player_with_team.image_url = "/static/img/default_player.png"
+            player_with_team.image_url = "/api/moba/players/images/default_player.webp"
 
         result.append(player_with_team)
 
@@ -164,12 +164,45 @@ async def create_player(
     return db_player
 
 
-@player_routes.get("/{id}", response_model=MobaPlayerPublic)
-async def get_player(*, session: Session = Depends(get_session), id: int):
+@player_routes.get("/{id}")
+async def get_player(*, session: Session = Depends(get_session), request: Request):
+    id = int(request.path_params.get("id"))
     player = session.get(MobaPlayer, id)
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")
-    return player
+
+    player_data = player.model_dump()
+    team_data = None
+    if player.current_contract and player.current_contract.team_id:
+        team_data = session.get(MobaTeam, player.current_contract.team_id)
+    player_with_team = MobaPlayerWithTeam.model_validate(player_data)
+
+    # Set the team data
+    player_with_team.team = team_data
+
+    # Generate image URL for the player
+    if player.image_path:
+        # If image_path is a URL, use it directly
+        if player.image_path.startswith("http"):
+            player_with_team.image_url = player.image_path
+        else:
+            # If it's a local path, extract the filename and create a URL to our endpoint
+            filename = Path(player.image_path).name
+            player_with_team.image_url = f"/api/moba/players/images/{filename}"
+    else:
+        # Use default image if no image path specified
+        player_with_team.image_url = "/api/moba/players/images/default_player.webp"
+
+    if request.headers.get("HX-Request"):
+        return templates.TemplateResponse(
+            "components/player_info.html",
+            {
+                "request": request,
+                "player": player_with_team,
+            },
+        )
+
+    return player_with_team
 
 
 @player_routes.patch("/{id}", response_model=MobaPlayerPublic)

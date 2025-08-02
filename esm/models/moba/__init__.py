@@ -5,12 +5,12 @@ from .player_contract import MobaPlayerContract
 from .player import MobaPlayer
 from .team import MobaTeam
 from .champion import MobaChampion
-from .game import MobaGame
+from .moba_match import MobaMatch
 
 __all__ = [
     "MobaPlayerContract",
     "MobaPlayer",
     "MobaTeam",
     "MobaChampion",
-    "MobaGame",
+    "MobaMatch",
 ]

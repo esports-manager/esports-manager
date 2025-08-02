@@ -110,7 +110,24 @@ def create_frontend(app: FastAPI) -> FastAPI:
         global current_page
         global sidebar
         current_page = page
-        contentview = f"pages/{page}.html"
+        contentview = f"pages/{current_page}.html"
+        return templates.TemplateResponse(
+            "layout.html",
+            {
+                "request": request,
+                "content": contentview,
+                "sidebar": sidebar,
+                "current_page": current_page,
+            },
+        )
+
+    @app.get("/page/players/{player_id}")
+    async def player(request: Request, player_id: int):
+        global current_page
+        global sidebar
+        current_page = "players"
+        contentview = "pages/players.html"
+
         return templates.TemplateResponse(
             "layout.html",
             {

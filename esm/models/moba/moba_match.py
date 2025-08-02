@@ -12,40 +12,40 @@ if TYPE_CHECKING:
     from esm.models.moba.team import MobaTeam
 
 
-class MobaGameStatus(enum.Enum):
+class MobaMatchStatus(enum.Enum):
     NOT_STARTED = "not_started"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
 
 
-class MobaGameFormat(enum.Enum):
+class MobaMatchFormat(enum.Enum):
     BO1 = "bo1"
     BO2 = "bo2"
     BO3 = "bo3"
     BO5 = "bo5"
 
 
-class MobaGameResult(enum.Enum):
+class MobaMatchResult(enum.Enum):
     BLUE_WIN = "blue_win"
     RED_WIN = "red_win"
     DRAW = "draw"
 
 
-class MobaGameBase(SQLModel):
-    status: MobaGameStatus = Field(
-        sa_column=Column(Enum(MobaGameStatus)), default=MobaGameStatus.NOT_STARTED
+class MobaMatchBase(SQLModel):
+    status: MobaMatchStatus = Field(
+        sa_column=Column(Enum(MobaMatchStatus)), default=MobaMatchStatus.NOT_STARTED
     )
-    format: MobaGameFormat = Field(
-        sa_column=Column(Enum(MobaGameFormat)), default=MobaGameFormat.BO1
+    format: MobaMatchFormat = Field(
+        sa_column=Column(Enum(MobaMatchFormat)), default=MobaMatchFormat.BO1
     )
-    result: Optional[MobaGameResult] = Field(
-        sa_column=Column(Enum(MobaGameResult)), default=None
+    result: Optional[MobaMatchResult] = Field(
+        sa_column=Column(Enum(MobaMatchResult)), default=None
     )
     start_time: Optional[datetime] = Field(default=None)
     end_time: Optional[datetime] = Field(default=None)
 
 
-class MobaGame(MobaGameBase, table=True):
+class MobaMatch(MobaMatchBase, table=True):
     __tablename__ = "moba_games"
 
     id: int | None = Field(default=None, primary_key=True)
@@ -57,31 +57,31 @@ class MobaGame(MobaGameBase, table=True):
     updated_at: Optional[datetime] = Field(default=None)
 
     blue_team: "MobaTeam" = Relationship(
-        sa_relationship_kwargs={"foreign_keys": "MobaGame.blue_team_id"}
+        sa_relationship_kwargs={"foreign_keys": "MobaMatch.blue_team_id"}
     )
     red_team: "MobaTeam" = Relationship(
-        sa_relationship_kwargs={"foreign_keys": "MobaGame.red_team_id"}
+        sa_relationship_kwargs={"foreign_keys": "MobaMatch.red_team_id"}
     )
 
 
-class MobaGamePublic(MobaGameBase):
+class MobaMatchPublic(MobaMatchBase):
     id: int
 
 
-class MobaGameCreate(MobaGameBase):
+class MobaMatchCreate(MobaMatchBase):
     pass
 
 
-class MobaGameUpdate(SQLModel):
+class MobaMatchUpdate(SQLModel):
     blue_team_id: Optional[int] = Field(default=None, foreign_key="moba_teams.id")
     red_team_id: Optional[int] = Field(default=None, foreign_key="moba_teams.id")
-    status: Optional[MobaGameStatus] = Field(
-        default=None, sa_column=Column(Enum(MobaGameStatus))
+    status: Optional[MobaMatchStatus] = Field(
+        default=None, sa_column=Column(Enum(MobaMatchStatus))
     )
-    format: Optional[MobaGameFormat] = Field(
-        default=None, sa_column=Column(Enum(MobaGameFormat))
+    format: Optional[MobaMatchFormat] = Field(
+        default=None, sa_column=Column(Enum(MobaMatchFormat))
     )
-    result: Optional[MobaGameResult] = Field(
-        default=None, sa_column=Column(Enum(MobaGameResult))
+    result: Optional[MobaMatchResult] = Field(
+        default=None, sa_column=Column(Enum(MobaMatchResult))
     )
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)

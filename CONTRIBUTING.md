@@ -323,7 +323,6 @@ Have questions or need help? Reach out through one of these channels:
 - **Issue Tracker**: Best for bug reports and feature requests
 - **Discussions**: For general questions and ideas
 - **Email**: admin@esportsmanager.net for private inquiries
-- **Discord**: Join our [community server](https://discord.gg/esports-manager) for real-time discussion
 
 For security issues, please contact admin@esportsmanager.net directly instead of posting publicly.
 

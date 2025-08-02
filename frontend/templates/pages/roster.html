@@ -1,0 +1,979 @@
+<div class="m-8" x-data="{
+  view: 'cards',
+  searchQuery: '',
+  selectedRole: 'all',
+  sortBy: 'rating',
+  sortDirection: 'desc',
+  showReplaceModal: false,
+  selectedPlayer: null,
+  showScoutingModal: false
+}">
+  <!-- Page Header -->
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Your Team Roster</h1>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Manage your current lineup and substitutes</p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex space-x-3">
+      <button @click="showScoutingModal = true"
+        class="flex items-center bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150">
+        <i class="bi bi-binoculars mr-2"></i> Scout Players
+      </button>
+      <button
+        class="flex items-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150">
+        <i class="bi bi-person-plus mr-2"></i> Sign Free Agent
+      </button>
+    </div>
+  </div>
+
+  <!-- Team Summary -->
+  <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4 mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <!-- Team Info -->
+      <div class="flex items-center">
+        <div class="h-14 w-14 rounded-full bg-white dark:bg-slate-800 p-1 mr-4 shadow-md">
+          <img src="https://placehold.co/140x140/3b82f6/FFFFFF/webp?text=FNC&font=montserrat" alt="Your Team Logo"
+            class="w-full h-full object-contain rounded-full">
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100">Fnatic</h2>
+          <div class="flex items-center text-sm text-gray-600 dark:text-gray-300">
+            <span class="inline-block h-4 w-6 mr-2">
+              <img src="https://placehold.co/24x18/FFFFFF/3b82f6/webp?text=EU&font=montserrat" alt="EU"
+                class="h-full w-full object-cover">
+            </span>
+            European League (LEC)
+          </div>
+        </div>
+      </div>
+
+      <!-- Team Stats -->
+      <div class="grid grid-cols-3 gap-4 text-center">
+        <div class="px-4 py-2">
+          <div class="text-2xl font-bold text-gray-800 dark:text-gray-100">7-2</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400">Season Record</div>
+        </div>
+        <div class="px-4 py-2">
+          <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">2nd</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400">League Standing</div>
+        </div>
+        <div class="px-4 py-2">
+          <div class="text-2xl font-bold text-gray-800 dark:text-gray-100">86</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400">Team Rating</div>
+        </div>
+      </div>
+
+      <!-- Search & Filter -->
+      <div class="flex items-center space-x-2">
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="bi bi-search text-gray-500 dark:text-gray-400"></i>
+          </div>
+          <input type="text" x-model="searchQuery" placeholder="Search roster..."
+            class="pl-10 pr-4 py-2 w-48 rounded-lg bg-gray-100 dark:bg-slate-600 border-0 focus:ring-2 focus:ring-blue-500">
+        </div>
+        <select x-model="selectedRole"
+          class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2">
+          <option value="all">All Positions</option>
+          <option value="top">Top Lane</option>
+          <option value="jungle">Jungle</option>
+          <option value="mid">Mid Lane</option>
+          <option value="bot">Bot Lane</option>
+          <option value="support">Support</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Roster Tabs -->
+  <div class="mb-6 border-b border-gray-200 dark:border-slate-600">
+    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
+      <li class="mr-2">
+        <a href="#"
+          class="inline-block p-4 border-b-2 border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400 active">
+          Starting Lineup
+        </a>
+      </li>
+      <li class="mr-2">
+        <a href="#"
+          class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
+          Substitutes (3)
+        </a>
+      </li>
+      <li class="mr-2">
+        <a href="#"
+          class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
+          Academy (5)
+        </a>
+      </li>
+      <li class="mr-2">
+        <a href="#"
+          class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
+          Staff
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Starting Lineup -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+    <!-- Top Lane Player -->
+    <div
+      class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden border border-transparent hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300">
+      <div class="relative h-40 bg-gradient-to-b from-red-500 to-red-700">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <img src="https://placehold.co/300x300/d10a0a/FFFFFF/webp?text=WW&font=montserrat"
+            class="w-32 h-32 rounded-full border-4 border-white dark:border-slate-800 object-cover" alt="Wunder">
+        </div>
+        <div class="absolute top-2 left-2 bg-black bg-opacity-70 rounded px-2 py-0.5">
+          <span class="text-white text-xs font-semibold">TOP</span>
+        </div>
+        <div class="absolute top-2 right-2">
+          <span class="inline-block h-4 w-6">
+            <img src="https://placehold.co/24x18/FFFFFF/3b82f6/webp?text=DK&font=montserrat" alt="Denmark"
+              class="h-full w-full object-cover">
+          </span>
+        </div>
+      </div>
+      <div class="p-4">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">Wunder</h3>
+          <span
+            class="text-xs font-bold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 rounded-full px-2 py-0.5">86</span>
+        </div>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Martin Hansen</p>
+
+        <!-- Player Stats -->
+        <div class="grid grid-cols-3 gap-2 mb-3 text-center text-xs">
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">3.8</div>
+            <div class="text-gray-500 dark:text-gray-400">KDA</div>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">62.5%</div>
+            <div class="text-gray-500 dark:text-gray-400">Win Rate</div>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">4.8</div>
+            <div class="text-gray-500 dark:text-gray-400">CS/min</div>
+          </div>
+        </div>
+
+        <!-- Skill Bars -->
+        <div class="space-y-2 text-xs mb-4">
+          <div class="flex justify-between mb-1">
+            <span class="text-gray-600 dark:text-gray-400">Mechanics</span>
+            <span class="text-gray-700 dark:text-gray-300">8.5/10</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 85%"></div>
+          </div>
+
+          <div class="flex justify-between mb-1">
+            <span class="text-gray-600 dark:text-gray-400">Game Sense</span>
+            <span class="text-gray-700 dark:text-gray-300">9.0/10</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 90%"></div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-between">
+          <button @click="selectedPlayer = {id: 1, name: 'Wunder', role: 'top'}; showReplaceModal = true"
+            class="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 rounded">
+            <i class="bi bi-arrow-left-right mr-1"></i> Replace
+          </button>
+          <button
+            class="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 rounded">
+            <i class="bi bi-person-vcard mr-1"></i> Profile
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jungle Player -->
+    <div
+      class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden border border-transparent hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300">
+      <div class="relative h-40 bg-gradient-to-b from-green-500 to-green-700">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <img src="https://placehold.co/300x300/22aa22/FFFFFF/webp?text=RZ&font=montserrat"
+            class="w-32 h-32 rounded-full border-4 border-white dark:border-slate-800 object-cover" alt="Razork">
+        </div>
+        <div class="absolute top-2 left-2 bg-black bg-opacity-70 rounded px-2 py-0.5">
+          <span class="text-white text-xs font-semibold">JNG</span>
+        </div>
+        <div class="absolute top-2 right-2">
+          <span class="inline-block h-4 w-6">
+            <img src="https://placehold.co/24x18/FFFFFF/3b82f6/webp?text=ES&font=montserrat" alt="Spain"
+              class="h-full w-full object-cover">
+          </span>
+        </div>
+      </div>
+      <div class="p-4">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">Razork</h3>
+          <span
+            class="text-xs font-bold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 rounded-full px-2 py-0.5">85</span>
+        </div>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Iván Martín</p>
+
+        <!-- Player Stats -->
+        <div class="grid grid-cols-3 gap-2 mb-3 text-center text-xs">
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">4.2</div>
+            <div class="text-gray-500 dark:text-gray-400">KDA</div>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">71.4%</div>
+            <div class="text-gray-500 dark:text-gray-400">Win Rate</div>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">6.1</div>
+            <div class="text-gray-500 dark:text-gray-400">KP%</div>
+          </div>
+        </div>
+
+        <!-- Skill Bars -->
+        <div class="space-y-2 text-xs mb-4">
+          <div class="flex justify-between mb-1">
+            <span class="text-gray-600 dark:text-gray-400">Pathing</span>
+            <span class="text-gray-700 dark:text-gray-300">8.7/10</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 87%"></div>
+          </div>
+
+          <div class="flex justify-between mb-1">
+            <span class="text-gray-600 dark:text-gray-400">Ganking</span>
+            <span class="text-gray-700 dark:text-gray-300">8.4/10</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 84%"></div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-between">
+          <button @click="selectedPlayer = {id: 2, name: 'Razork', role: 'jungle'}; showReplaceModal = true"
+            class="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 rounded">
+            <i class="bi bi-arrow-left-right mr-1"></i> Replace
+          </button>
+          <button
+            class="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 rounded">
+            <i class="bi bi-person-vcard mr-1"></i> Profile
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mid Lane Player -->
+    <div
+      class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden border-2 border-yellow-500 dark:border-yellow-400">
+      <div class="relative h-40 bg-gradient-to-b from-blue-500 to-blue-700">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <img src="https://placehold.co/300x300/2061c3/FFFFFF/webp?text=HM&font=montserrat"
+            class="w-32 h-32 rounded-full border-4 border-white dark:border-slate-800 object-cover" alt="Humanoid">
+        </div>
+        <div class="absolute top-2 left-2 bg-black bg-opacity-70 rounded px-2 py-0.5">
+          <span class="text-white text-xs font-semibold">MID</span>
+        </div>
+        <div class="absolute top-2 right-2">
+          <span class="inline-block h-4 w-6">
+            <img src="https://placehold.co/24x18/FFFFFF/3b82f6/webp?text=CZ&font=montserrat" alt="Czech Republic"
+              class="h-full w-full object-cover">
+          </span>
+        </div>
+        <div
+          class="absolute top-10 -right-6 rotate-45 bg-yellow-500 text-yellow-900 text-xs font-bold py-1 px-8 shadow-md">
+          STAR
+        </div>
+      </div>
+      <div class="p-4">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">Humanoid</h3>
+          <span
+            class="text-xs font-bold bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 rounded-full px-2 py-0.5">92</span>
+        </div>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Marek Brázda</p>
+
+        <!-- Player Stats -->
+        <div class="grid grid-cols-3 gap-2 mb-3 text-center text-xs">
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">5.7</div>
+            <div class="text-gray-500 dark:text-gray-400">KDA</div>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">78.9%</div>
+            <div class="text-gray-500 dark:text-gray-400">Win Rate</div>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">9.5</div>
+            <div class="text-gray-500 dark:text-gray-400">CS/min</div>
+          </div>
+        </div>
+
+        <!-- Skill Bars -->
+        <div class="space-y-2 text-xs mb-4">
+          <div class="flex justify-between mb-1">
+            <span class="text-gray-600 dark:text-gray-400">Laning</span>
+            <span class="text-gray-700 dark:text-gray-300">9.4/10</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+            <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 94%"></div>
+          </div>
+
+          <div class="flex justify-between mb-1">
+            <span class="text-gray-600 dark:text-gray-400">Team Fighting</span>
+            <span class="text-gray-700 dark:text-gray-300">9.7/10</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+            <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 97%"></div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-between">
+          <button @click="selectedPlayer = {id: 3, name: 'Humanoid', role: 'mid'}; showReplaceModal = true"
+            class="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 rounded">
+            <i class="bi bi-arrow-left-right mr-1"></i> Replace
+          </button>
+          <button
+            class="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 rounded">
+            <i class="bi bi-person-vcard mr-1"></i> Profile
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bot Lane Player -->
+    <div
+      class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden border border-transparent hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300">
+      <div class="relative h-40 bg-gradient-to-b from-purple-500 to-purple-700">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <img src="https://placehold.co/300x300/8a2be2/FFFFFF/webp?text=UP&font=montserrat"
+            class="w-32 h-32 rounded-full border-4 border-white dark:border-slate-800 object-cover" alt="Upset">
+        </div>
+        <div class="absolute top-2 left-2 bg-black bg-opacity-70 rounded px-2 py-0.5">
+          <span class="text-white text-xs font-semibold">BOT</span>
+        </div>
+        <div class="absolute top-2 right-2">
+          <span class="inline-block h-4 w-6">
+            <img src="https://placehold.co/24x18/FFFFFF/3b82f6/webp?text=DE&font=montserrat" alt="Germany"
+              class="h-full w-full object-cover">
+          </span>
+        </div>
+      </div>
+      <div class="p-4">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">Upset</h3>
+          <span
+            class="text-xs font-bold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 rounded-full px-2 py-0.5">89</span>
+        </div>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Elias Lipp</p>
+
+        <!-- Player Stats -->
+        <div class="grid grid-cols-3 gap-2 mb-3 text-center text-xs">
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">6.2</div>
+            <div class="text-gray-500 dark:text-gray-400">KDA</div>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">74.2%</div>
+            <div class="text-gray-500 dark:text-gray-400">Win Rate</div>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">10.3</div>
+            <div class="text-gray-500 dark:text-gray-400">CS/min</div>
+          </div>
+        </div>
+
+        <!-- Skill Bars -->
+        <div class="space-y-2 text-xs mb-4">
+          <div class="flex justify-between mb-1">
+            <span class="text-gray-600 dark:text-gray-400">Laning</span>
+            <span class="text-gray-700 dark:text-gray-300">9.2/10</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 92%"></div>
+          </div>
+
+          <div class="flex justify-between mb-1">
+            <span class="text-gray-600 dark:text-gray-400">Positioning</span>
+            <span class="text-gray-700 dark:text-gray-300">8.8/10</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 88%"></div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-between">
+          <button @click="selectedPlayer = {id: 4, name: 'Upset', role: 'bot'}; showReplaceModal = true"
+            class="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 rounded">
+            <i class="bi bi-arrow-left-right mr-1"></i> Replace
+          </button>
+          <button
+            class="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 rounded">
+            <i class="bi bi-person-vcard mr-1"></i> Profile
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Support Player -->
+    <div
+      class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden border border-transparent hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300">
+      <div class="relative h-40 bg-gradient-to-b from-amber-500 to-amber-700">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <img src="https://placehold.co/300x300/f59e0b/FFFFFF/webp?text=HY&font=montserrat"
+            class="w-32 h-32 rounded-full border-4 border-white dark:border-slate-800 object-cover" alt="Hylissang">
+        </div>
+        <div class="absolute top-2 left-2 bg-black bg-opacity-70 rounded px-2 py-0.5">
+          <span class="text-white text-xs font-semibold">SUP</span>
+        </div>
+        <div class="absolute top-2 right-2">
+          <span class="inline-block h-4 w-6">
+            <img src="https://placehold.co/24x18/FFFFFF/3b82f6/webp?text=BG&font=montserrat" alt="Bulgaria"
+              class="h-full w-full object-cover">
+          </span>
+        </div>
+      </div>
+      <div class="p-4">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">Hylissang</h3>
+          <span
+            class="text-xs font-bold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 rounded-full px-2 py-0.5">87</span>
+        </div>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Zdravets Galabov</p>
+
+        <!-- Player Stats -->
+        <div class="grid grid-cols-3 gap-2 mb-3 text-center text-xs">
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">3.4</div>
+            <div class="text-gray-500 dark:text-gray-400">KDA</div>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">74.2%</div>
+            <div class="text-gray-500 dark:text-gray-400">Win Rate</div>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-700 dark:text-gray-300">78%</div>
+            <div class="text-gray-500 dark:text-gray-400">KP%</div>
+          </div>
+        </div>
+
+        <!-- Skill Bars -->
+        <div class="space-y-2 text-xs mb-4">
+          <div class="flex justify-between mb-1">
+            <span class="text-gray-600 dark:text-gray-400">Engage</span>
+            <span class="text-gray-700 dark:text-gray-300">9.5/10</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 95%"></div>
+          </div>
+
+          <div class="flex justify-between mb-1">
+            <span class="text-gray-600 dark:text-gray-400">Vision</span>
+            <span class="text-gray-700 dark:text-gray-300">8.9/10</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 89%"></div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-between">
+          <button @click="selectedPlayer = {id: 5, name: 'Hylissang', role: 'support'}; showReplaceModal = true"
+            class="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 rounded">
+            <i class="bi bi-arrow-left-right mr-1"></i> Replace
+          </button>
+          <button
+            class="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 rounded">
+            <i class="bi bi-person-vcard mr-1"></i> Profile
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" x-show="view === 'grid'">
+      <!-- Player Card 1: Faker -->
+      <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="relative">
+          <!-- Player Banner with Role Color -->
+          <div class="h-24 bg-blue-600 relative">
+            <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <div class="absolute bottom-2 left-4 text-white">
+              <div class="text-lg font-bold">Faker</div>
+              <div class="text-sm opacity-80">Lee Sang-hyeok</div>
+            </div>
+          </div>
+          <!-- Player Avatar -->
+          <div class="absolute -bottom-12 right-4">
+            <div class="h-20 w-20 rounded-full border-4 border-white dark:border-slate-800 overflow-hidden shadow-lg">
+              <img src="https://placehold.co/200x200/3b82f6/FFFFFF/webp?text=Faker&font=montserrat" alt="Faker"
+                class="w-full h-full object-cover">
+            </div>
+          </div>
+        </div>
+        <!-- Player Info -->
+        <div class="p-4 pt-14">
+          <!-- Team Info -->
+          <div class="flex items-center mb-3">
+            <div class="h-8 w-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center p-1 shadow-sm">
+              <img src="https://placehold.co/60x60/E6162E/FFFFFF/webp?text=T1&font=montserrat" alt="T1"
+                class="w-full h-full object-contain">
+            </div>
+            <span class="ml-2 text-gray-700 dark:text-gray-300 text-sm font-medium">T1</span>
+            <span class="ml-1 text-xs text-gray-500 dark:text-gray-400">(LCK)</span>
+            <!-- Role Indicator -->
+            <div
+              class="ml-auto bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 text-xs px-2 py-1 rounded-full">
+              Mid Lane
+            </div>
+          </div>
+          <!-- Stats -->
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="text-xs text-gray-500 dark:text-gray-400">KDA</div>
+              <div class="font-bold text-gray-800 dark:text-gray-200">5.2</div>
+            </div>
+            <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="text-xs text-gray-500 dark:text-gray-400">Win Rate</div>
+              <div class="font-bold text-gray-800 dark:text-gray-200">64%</div>
+            </div>
+            <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="text-xs text-gray-500 dark:text-gray-400">Rating</div>
+              <div class="font-bold text-gray-800 dark:text-gray-200">95</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Player Card 2: Caps -->
+      <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="relative">
+          <!-- Player Banner with Role Color -->
+          <div class="h-24 bg-blue-600 relative">
+            <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <div class="absolute bottom-2 left-4 text-white">
+              <div class="text-lg font-bold">Caps</div>
+              <div class="text-sm opacity-80">Rasmus Winther</div>
+            </div>
+          </div>
+          <!-- Player Avatar -->
+          <div class="absolute -bottom-12 right-4">
+            <div class="h-20 w-20 rounded-full border-4 border-white dark:border-slate-800 overflow-hidden shadow-lg">
+              <img src="https://placehold.co/200x200/3b82f6/FFFFFF/webp?text=Caps&font=montserrat" alt="Caps"
+                class="w-full h-full object-cover">
+            </div>
+          </div>
+        </div>
+        <!-- Player Info -->
+        <div class="p-4 pt-14">
+          <!-- Team Info -->
+          <div class="flex items-center mb-3">
+            <div class="h-8 w-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center p-1 shadow-sm">
+              <img src="https://placehold.co/60x60/3b82f6/FFFFFF/webp?text=G2&font=montserrat" alt="G2 Esports"
+                class="w-full h-full object-contain">
+            </div>
+            <span class="ml-2 text-gray-700 dark:text-gray-300 text-sm font-medium">G2 Esports</span>
+            <span class="ml-1 text-xs text-gray-500 dark:text-gray-400">(LEC)</span>
+            <!-- Role Indicator -->
+            <div
+              class="ml-auto bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 text-xs px-2 py-1 rounded-full">
+              Mid Lane
+            </div>
+          </div>
+          <!-- Stats -->
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="text-xs text-gray-500 dark:text-gray-400">KDA</div>
+              <div class="font-bold text-gray-800 dark:text-gray-200">4.7</div>
+            </div>
+            <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="text-xs text-gray-500 dark:text-gray-400">Win Rate</div>
+              <div class="font-bold text-gray-800 dark:text-gray-200">62%</div>
+            </div>
+            <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="text-xs text-gray-500 dark:text-gray-400">Rating</div>
+              <div class="font-bold text-gray-800 dark:text-gray-200">93</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Player Card 3: BrokenBlade -->
+      <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="relative">
+          <!-- Player Banner with Role Color -->
+          <div class="h-24 bg-red-600 relative">
+            <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <div class="absolute bottom-2 left-4 text-white">
+              <div class="text-lg font-bold">BrokenBlade</div>
+              <div class="text-sm opacity-80">Sergen Çelik</div>
+            </div>
+          </div>
+          <!-- Player Avatar -->
+          <div class="absolute -bottom-12 right-4">
+            <div class="h-20 w-20 rounded-full border-4 border-white dark:border-slate-800 overflow-hidden shadow-lg">
+              <img src="https://placehold.co/200x200/dc2626/FFFFFF/webp?text=BB&font=montserrat" alt="BrokenBlade"
+                class="w-full h-full object-cover">
+            </div>
+          </div>
+        </div>
+        <!-- Player Info -->
+        <div class="p-4 pt-14">
+          <!-- Team Info -->
+          <div class="flex items-center mb-3">
+            <div class="h-8 w-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center p-1 shadow-sm">
+              <img src="https://placehold.co/60x60/3b82f6/FFFFFF/webp?text=G2&font=montserrat" alt="G2 Esports"
+                class="w-full h-full object-contain">
+            </div>
+            <span class="ml-2 text-gray-700 dark:text-gray-300 text-sm font-medium">G2 Esports</span>
+            <span class="ml-1 text-xs text-gray-500 dark:text-gray-400">(LEC)</span>
+            <!-- Role Indicator -->
+            <div
+              class="ml-auto bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300 text-xs px-2 py-1 rounded-full">
+              Top Lane
+            </div>
+          </div>
+          <!-- Stats -->
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="text-xs text-gray-500 dark:text-gray-400">KDA</div>
+              <div class="font-bold text-gray-800 dark:text-gray-200">3.8</div>
+            </div>
+            <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="text-xs text-gray-500 dark:text-gray-400">Win Rate</div>
+              <div class="font-bold text-gray-800 dark:text-gray-200">58%</div>
+            </div>
+            <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="text-xs text-gray-500 dark:text-gray-400">Rating</div>
+              <div class="font-bold text-gray-800 dark:text-gray-200">88</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Player Card 4: Hans Sama -->
+      <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="relative">
+          <!-- Player Banner with Role Color -->
+          <div class="h-24 bg-purple-600 relative">
+            <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <div class="absolute bottom-2 left-4 text-white">
+              <div class="text-lg font-bold">Hans Sama</div>
+              <div class="text-sm opacity-80">Steven Liv</div>
+            </div>
+          </div>
+          <!-- Player Avatar -->
+          <div class="absolute -bottom-12 right-4">
+            <div class="h-20 w-20 rounded-full border-4 border-white dark:border-slate-800 overflow-hidden shadow-lg">
+              <img src="https://placehold.co/200x200/9333ea/FFFFFF/webp?text=HS&font=montserrat" alt="Hans Sama"
+                class="w-full h-full object-cover">
+            </div>
+          </div>
+        </div>
+        <!-- Player Info -->
+        <div class="p-4 pt-14">
+          <!-- Team Info -->
+          <div class="flex items-center mb-3">
+            <div class="h-8 w-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center p-1 shadow-sm">
+              <img src="https://placehold.co/60x60/3b82f6/FFFFFF/webp?text=G2&font=montserrat" alt="G2 Esports"
+                class="w-full h-full object-contain">
+            </div>
+            <span class="ml-2 text-gray-700 dark:text-gray-300 text-sm font-medium">G2 Esports</span>
+            <span class="ml-1 text-xs text-gray-500 dark:text-gray-400">(LEC)</span>
+            <!-- Role Indicator -->
+            <div
+              class="ml-auto bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300 text-xs px-2 py-1 rounded-full">
+              Bot Lane
+            </div>
+          </div>
+          <!-- Stats -->
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="text-xs text-gray-500 dark:text-gray-400">KDA</div>
+              <div class="font-bold text-gray-800 dark:text-gray-200">4.5</div>
+            </div>
+            <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="text-xs text-gray-500 dark:text-gray-400">Win Rate</div>
+              <div class="font-bold text-gray-800 dark:text-gray-200">61%</div>
+            </div>
+            <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-2">
+              <div class="text-xs text-gray-500 dark:text-gray-400">Rating</div>
+              <div class="font-bold text-gray-800 dark:text-gray-200">90</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Player Cards Would Continue Here -->
+    </div>
+
+    <!-- List View -->
+    <div class="bg-white dark:bg-slate-700 shadow overflow-hidden rounded-lg" x-show="view === 'list'">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-600">
+          <thead class="bg-gray-50 dark:bg-slate-800">
+            <tr>
+              <th scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Player
+              </th>
+              <th scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Role
+              </th>
+              <th scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Team
+              </th>
+              <th scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Region
+              </th>
+              <th scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                KDA
+              </th>
+              <th scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Win Rate
+              </th>
+              <th scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Rating
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-slate-700 divide-y divide-gray-200 dark:divide-slate-600">
+            <!-- Player Row: Faker -->
+            <tr class="hover:bg-gray-50 dark:hover:bg-slate-600">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10">
+                    <img class="h-10 w-10 rounded-full object-cover"
+                      src="https://placehold.co/100x100/3b82f6/FFFFFF/webp?text=Faker&font=montserrat" alt="Faker">
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">Faker</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Lee Sang-hyeok</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div
+                  class="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 text-xs inline-flex items-center px-2 py-1 rounded-full">
+                  Mid Lane
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-6 w-6">
+                    <img class="h-6 w-6 rounded-full object-contain"
+                      src="https://placehold.co/60x60/E6162E/FFFFFF/webp?text=T1&font=montserrat" alt="T1">
+                  </div>
+                  <div class="ml-2 text-sm text-gray-900 dark:text-gray-100">T1</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                LCK
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900 dark:text-gray-100">5.2</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900 dark:text-gray-100">64%</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                  95
+                </div>
+              </td>
+            </tr>
+
+            <!-- Player Row: Caps -->
+            <tr class="hover:bg-gray-50 dark:hover:bg-slate-600">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10">
+                    <img class="h-10 w-10 rounded-full object-cover"
+                      src="https://placehold.co/100x100/3b82f6/FFFFFF/webp?text=Caps&font=montserrat" alt="Caps">
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">Caps</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Rasmus Winther</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div
+                  class="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 text-xs inline-flex items-center px-2 py-1 rounded-full">
+                  Mid Lane
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-6 w-6">
+                    <img class="h-6 w-6 rounded-full object-contain"
+                      src="https://placehold.co/60x60/3b82f6/FFFFFF/webp?text=G2&font=montserrat" alt="G2 Esports">
+                  </div>
+                  <div class="ml-2 text-sm text-gray-900 dark:text-gray-100">G2 Esports</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                LEC
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900 dark:text-gray-100">4.7</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900 dark:text-gray-100">62%</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                  93
+                </div>
+              </td>
+            </tr>
+
+            <!-- Player Row: BrokenBlade -->
+            <tr class="hover:bg-gray-50 dark:hover:bg-slate-600">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10">
+                    <img class="h-10 w-10 rounded-full object-cover"
+                      src="https://placehold.co/100x100/dc2626/FFFFFF/webp?text=BB&font=montserrat" alt="BrokenBlade">
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">BrokenBlade</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Sergen Çelik</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div
+                  class="bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300 text-xs inline-flex items-center px-2 py-1 rounded-full">
+                  Top Lane
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-6 w-6">
+                    <img class="h-6 w-6 rounded-full object-contain"
+                      src="https://placehold.co/60x60/3b82f6/FFFFFF/webp?text=G2&font=montserrat" alt="G2 Esports">
+                  </div>
+                  <div class="ml-2 text-sm text-gray-900 dark:text-gray-100">G2 Esports</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                LEC
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900 dark:text-gray-100">3.8</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900 dark:text-gray-100">58%</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                  88
+                </div>
+              </td>
+            </tr>
+
+            <!-- Player Row: Hans Sama -->
+            <tr class="hover:bg-gray-50 dark:hover:bg-slate-600">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10">
+                    <img class="h-10 w-10 rounded-full object-cover"
+                      src="https://placehold.co/100x100/9333ea/FFFFFF/webp?text=HS&font=montserrat" alt="Hans Sama">
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">Hans Sama</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Steven Liv</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div
+                  class="bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300 text-xs inline-flex items-center px-2 py-1 rounded-full">
+                  Bot Lane
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-6 w-6">
+                    <img class="h-6 w-6 rounded-full object-contain"
+                      src="https://placehold.co/60x60/3b82f6/FFFFFF/webp?text=G2&font=montserrat" alt="G2 Esports">
+                  </div>
+                  <div class="ml-2 text-sm text-gray-900 dark:text-gray-100">G2 Esports</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                LEC
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900 dark:text-gray-100">4.5</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900 dark:text-gray-100">61%</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                  90
+                </div>
+              </td>
+            </tr>
+
+            <!-- Additional Player Rows Would Continue Here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="mt-6 flex justify-between items-center">
+      <div class="text-sm text-gray-500 dark:text-gray-400">
+        Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span
+          class="font-medium">87</span> players
+      </div>
+      <div class="flex space-x-2">
+        <button
+          class="bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-md px-3 py-1 text-sm"
+          disabled>
+          Previous
+        </button>
+        <button class="bg-blue-600 border border-blue-600 text-white rounded-md px-3 py-1 text-sm">
+          1
+        </button>
+        <button
+          class="bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-600 rounded-md px-3 py-1 text-sm">
+          2
+        </button>
+        <button
+          class="bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-600 rounded-md px-3 py-1 text-sm">
+          3
+        </button>
+        <button
+          class="bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-600 rounded-md px-3 py-1 text-sm">
+          ...
+        </button>
+        <button
+          class="bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-600 rounded-md px-3 py-1 text-sm">
+          9
+        </button>
+        <button
+          class="bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-600 rounded-md px-3 py-1 text-sm">
+          Next
+        </button>
+      </div>
+    </div>

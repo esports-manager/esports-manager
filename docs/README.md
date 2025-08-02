@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+SPDX-License-Identifier: GPL-3.0-or-later
+License-Filename: LICENSES/GPL-3.0-or-later
+-->
 # eSports Manager Docs
 
 Welcome to the eSports Manager Documentation. Here you will find information about the game, how to play, game design choices, and all the elements that you can find in the game. Every single piece of information: code API, installation process, FAQ, diagrams and mock-ups, code insights and feature brainstorms will be written here.

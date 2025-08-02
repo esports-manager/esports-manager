@@ -1,0 +1,16 @@
+version = 1
+
+[[annotations]]
+path = "esm/**"
+SPDX-FileCopyrightText = "Pedrenrique G. Guimarães"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+[[annotations]]
+path = "tests/**"
+SPDX-FileCopyrightText = "Pedrenrique G. Guimarães"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+[[annotations]]
+path = "frontend/**"
+SPDX-FileCopyrightText = "Pedrenrique G. Guimarães"
+SPDX-License-Identifier = "GPL-3.0-or-later"

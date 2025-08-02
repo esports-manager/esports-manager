@@ -1,0 +1,335 @@
+<!-- Champions List View Partial -->
+{% if champions %}
+<div x-show="view === 'list'" class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-x-auto mb-6">
+  <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+    <thead>
+      <tr class="bg-gray-50 dark:bg-slate-800">
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          Champion
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          Role
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          Type
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          Strength
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          Difficulty
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          Tier
+        </th>
+      </tr>
+    </thead>
+    <tbody class="bg-white dark:bg-slate-700 divide-y divide-gray-200 dark:divide-gray-600">
+      {% for champion in champions %}
+      <tr class="hover:bg-gray-50 dark:hover:bg-slate-600">
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 h-10 w-10">
+              {% if champion.image_path %}
+              <img class="h-10 w-10 rounded-full object-cover" src="{{ champion.image_path }}"
+                alt="{{ champion.name }}">
+              {% else %}
+              <img class="h-10 w-10 rounded-full object-cover"
+                src="{{ url_for('static', filename='img/placeholders/champion_default.webp') }}"
+                alt="{{ champion.name }}">
+              {% endif %}
+            </div>
+            <div class="ml-4">
+              <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ champion.name }}</div>
+              {% if champion.release_date %}
+              <div class="text-xs text-gray-500 dark:text-gray-400">Released: {{ champion.release_date }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="flex flex-col gap-1">
+            <span
+              class="text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded w-fit uppercase">
+              {{ champion.primary_role.value }}
+            </span>
+            {% if champion.secondary_role %}
+            <span
+              class="text-xs bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300 px-2 py-0.5 rounded w-fit uppercase">
+              {{ champion.secondary_role.value }}
+            </span>
+            {% endif %}
+          </div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="flex flex-col gap-1">
+            <span class="text-sm text-gray-700 dark:text-gray-300">{{ champion.champion_type1.value.capitalize()
+              }}</span>
+            {% if champion.champion_type2 %}
+            <span class="text-sm text-gray-700 dark:text-gray-300">{{ champion.champion_type2.value.capitalize()
+              }}</span>
+            {% endif %}
+          </div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div>
+            <div class="flex items-center text-xs mb-1">
+              <span class="text-gray-800 dark:text-gray-200 font-medium">{{ champion.strength }}</span>
+            </div>
+            <div class="h-1.5 w-24 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+              {% set strength = champion.strength %}
+              {% if strength > 95 %}
+              <div class="h-full transition-all duration-300 bg-green-500 dark:bg-green-400 rounded-full w-22"></div>
+              {% elif strength > 90 %}
+              <div class="h-full transition-all duration-300 bg-green-500 dark:bg-green-500 rounded-full w-20"></div>
+              {% elif strength > 85 %}
+              <div class="h-full transition-all duration-300 bg-green-500 dark:bg-green-500 rounded-full w-18"></div>
+              {% elif strength > 80 %}
+              <div class="h-full transition-all duration-300 bg-green-500 dark:bg-green-500 rounded-full w-16"></div>
+              {% elif strength > 75 %}
+              <div class="h-full transition-all duration-300 bg-green-500 dark:bg-green-500 rounded-full w-14"></div>
+              {% elif strength > 70 %}
+              <div class="h-full transition-all duration-300 bg-green-500 dark:bg-green-500 rounded-full w-12"></div>
+              {% elif strength > 65 %}
+              <div class="h-full transition-all duration-300 bg-green-500 dark:bg-green-500 rounded-full w-10"></div>
+              {% elif strength > 60 %}
+              <div class="h-full transition-all duration-300 bg-green-500 dark:bg-green-500 rounded-full w-8"></div>
+              {% elif strength > 55 %}
+              <div class="h-full transition-all duration-300 bg-green-500 dark:bg-green-500 rounded-full w-6"></div>
+              {% elif strength > 50 %}
+              <div class="h-full transition-all duration-300 bg-green-500 dark:bg-green-500 rounded-full w-4"></div>
+              {% else %}
+              <div class="h-full transition-all duration-300 bg-red-500 dark:bg-red-400 rounded-full w-2"></div>
+              {% endif %}
+            </div>
+          </div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+          {{ champion.difficulty.value.capitalize() }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          {% set tier = champion.champion_tier %}
+          {% if tier.value == "s+" %}
+          <span
+            class="px-2 py-1 text-xs font-medium rounded bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">S+</span>
+          {% elif tier.value == "s" %}
+          <span
+            class="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">S</span>
+          {% elif tier.value == "a" %}
+          <span
+            class="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">A</span>
+          {% elif tier.value == "b" %}
+          <span
+            class="px-2 py-1 text-xs font-medium rounded bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">B</span>
+          {% elif tier.value == "c" %}
+          <span
+            class="px-2 py-1 text-xs font-medium rounded bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">C</span>
+          {% elif tier.value == "d" %}
+          <span
+            class="px-2 py-1 text-xs font-medium rounded bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">D</span>
+          {% else %}
+          <span
+            class="px-2 py-1 text-xs font-medium rounded bg-rose-300 text-rose-800 dark:bg-rose-900 dark:text-gray-200">F</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Champions Grid View Partial -->
+<div x-show="view === 'grid'"
+  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-8 p-2">
+  {% for champion in champions %}
+  <div
+    class="group bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden border border-gray-100 dark:border-slate-600 transition-all duration-200 hover:shadow-xl hover:scale-[1.1] cursor-pointer">
+    <div class="relative">
+      {% if champion.image_path %}
+      <img src="{{ champion.image_path }}" alt="{{ champion.name }}" class="w-full h-48 object-cover object-center z-0">
+      {% else %}
+      <img src="/static/img/placeholders/champion_default.webp" alt="{{ champion.name }}"
+        class="w-full h-48 object-cover object-center">
+      {% endif %}
+      <div class="ml-4 mt-4 text-white mb-2 border-b border-gray-300 dark:border-gray-600 py-2">
+        <span class="text-xl font-semibold drop-shadow-md text-black dark:text-white text-center">{{ champion.name
+          }}</span>
+      </div>
+      <div class="absolute top-4 right-4">
+        {% set tier = champion.champion_tier %}
+        {% if tier.value == "s+" %}
+        <span
+          class="px-3 py-2 text-xs font-bold rounded-md shadow-sm bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 border border-purple-200 dark:border-purple-800">S+</span>
+        {% elif tier.value == "s" %}
+        <span
+          class="px-3 py-2 text-xs font-bold rounded-md shadow-sm bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border border-blue-200 dark:border-blue-800">S</span>
+        {% elif tier.value == "a" %}
+        <span
+          class="px-3 py-2 text-xs font-bold rounded-md shadow-sm bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border border-green-200 dark:border-green-800">A</span>
+        {% elif tier.value == "b" %}
+        <span
+          class="px-3 py-2 text-xs font-bold rounded-md shadow-sm bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 border border-yellow-200 dark:border-yellow-800">B</span>
+        {% elif tier.value == "c" %}
+        <span
+          class="px-3 py-2 text-xs font-bold rounded-md shadow-sm bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200 border border-orange-200 dark:border-orange-800">C</span>
+        {% elif tier.value == "d" %}
+        <span
+          class="px-3 py-2 text-xs font-bold rounded-md shadow-sm bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border border-red-200 dark:border-red-800">D</span>
+        {% else %}
+        <span
+          class="px-3 py-2 text-xs font-bold rounded-md shadow-sm bg-rose-300 text-rose-800 dark:bg-rose-900 dark:text-gray-200 border border-rose-400 dark:border-rose-800">F</span>
+        {% endif %}
+      </div>
+    </div>
+    <div class="p-5 space-y-4 bg-white dark:bg-slate-700">
+      <!-- Champion Role -->
+      <div class="flex justify-between space-x-2">
+        <span
+          class="text-xs font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-md uppercase">
+          {{ champion.primary_role.value }}
+        </span>
+        {% if champion.secondary_role %}
+        <span
+          class="text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-200 px-3 py-1 rounded-md uppercase">
+          {{ champion.secondary_role.value }}
+        </span>
+        {% endif %}
+      </div>
+
+      <!-- Champion Type -->
+      <div class="flex justify-between items-center">
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ champion.champion_type1.value.capitalize()
+          }}</span>
+        {% if champion.champion_type2 %}
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ champion.champion_type2.value.capitalize()
+          }}</span>
+        {% endif %}
+      </div>
+
+      <!-- Difficulty -->
+      <div class="flex justify-between items-center">
+        <span class="text-sm text-gray-600 dark:text-gray-400">Difficulty</span>
+        <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ champion.difficulty.value.capitalize()
+          }}</span>
+      </div>
+
+      <!-- Strength Bar -->
+      <div>
+        <div class="flex items-center text-sm mb-2">
+          <span class="text-gray-600 dark:text-gray-400">Strength</span>
+          <span class="ml-auto font-medium text-gray-800 dark:text-gray-200">{{ champion.strength }}</span>
+        </div>
+        <div class="h-2 w-full bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden"
+          x-data="{strength: {{ champion.strength }} }">
+          {% set strength = champion.strength %}
+          {% if strength > 95 %}
+          <div class="h-full transition-all duration-300 bg-purple-500 dark:bg-purple-400 rounded-full"
+            :style="`width: ${strength}%`"></div>
+          {% elif strength > 90 %}
+          <div class="h-full transition-all duration-300 bg-blue-500 dark:bg-blue-400 rounded-full"
+            :style="`width: ${strength}%`"></div>
+          {% elif strength > 80 %}
+          <div class="h-full transition-all duration-300 bg-green-500 dark:bg-green-400 rounded-full"
+            :style="`width: ${strength}%`"></div>
+          {% elif strength > 70 %}
+          <div class="h-full transition-all duration-300 bg-yellow-500 dark:bg-yellow-400 rounded-full"
+            :style="`width: ${strength}%`"></div>
+          {% elif strength > 60 %}
+          <div class="h-full transition-all duration-300 bg-orange-500 dark:bg-orange-400 rounded-full"
+            :style="`width: ${strength}%`"></div>
+          {% elif strength > 50 %}
+          <div class="h-full transition-all duration-300 bg-red-500 dark:bg-red-400 rounded-full"
+            :style="`width: ${strength}%`"></div>
+          {% else %}
+          <div class="h-full transition-all duration-300 bg-rose-500 dark:bg-rose-400 rounded-full"
+            :style="`width: ${strength}%`"></div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if pagination %}
+<div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
+  <div class="text-sm text-gray-600 dark:text-gray-400">
+    {% if pagination.total_champions > 0 %}
+    Showing <span class="font-medium">{{ pagination.showing_start }}-{{ pagination.showing_end }}</span> of <span
+      class="font-medium">{{ pagination.total_champions }}</span> champions
+    {% else %}
+    No champions found
+    {% endif %}
+  </div>
+
+  {% if pagination.total_pages > 1 %}
+  <div class="flex flex-wrap justify-center gap-1">
+    <!-- Previous Button -->
+    <button {% if pagination.has_prev %} hx-get="/api/moba/champions" hx-include="#champion-filters-form"
+      hx-vals='{"page": {{ pagination.page - 1 }}}' hx-target="#champ-list" hx-swap="innerHTML"
+      class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
+      {% else %} disabled
+      class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500 text-sm cursor-not-allowed"
+      {% endif %}>
+      Previous
+    </button>
+
+    <!-- First Page (if not near the beginning) -->
+    {% if pagination.page > 3 %}
+    <button hx-get="/api/moba/champions" hx-include="#champion-filters-form" hx-vals='{"page": 1}'
+      hx-target="#champ-list" hx-swap="innerHTML"
+      class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150">
+      1
+    </button>
+
+    <!-- Ellipsis if needed -->
+    {% if pagination.page > 4 %}
+    <span class="px-3 py-1 text-gray-500 dark:text-gray-400 text-sm">...</span>
+    {% endif %}
+    {% endif %}
+
+    <!-- Page Numbers -->
+    {% set start_page = [pagination.page - 2, 1]|max %}
+    {% set end_page = [pagination.page + 2, pagination.total_pages]|min %}
+
+    {% for page_num in range(start_page, end_page + 1) %}
+    <button {% if page_num==pagination.page %} class="px-3 py-1 rounded-md bg-blue-500 text-white text-sm" disabled {%
+      else %} hx-get="/api/moba/champions" hx-include="#champion-filters-form" hx-vals='{"page": {{ page_num }}}'
+      hx-target="#champ-list" hx-swap="innerHTML"
+      class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
+      {% endif %}>
+      {{ page_num }}
+    </button>
+    {% endfor %}
+
+    <!-- Ellipsis if needed -->
+    {% if pagination.page < pagination.total_pages - 3 %} <span
+      class="px-3 py-1 text-gray-500 dark:text-gray-400 text-sm">...</span>
+
+      <!-- Last Page -->
+      <button hx-get="/api/moba/champions" hx-include="#champion-filters-form"
+        hx-vals='{"page": {{ pagination.total_pages }}}' hx-target="#champ-list" hx-swap="innerHTML"
+        class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150">
+        {{ pagination.total_pages }}
+      </button>
+      {% endif %}
+
+      <!-- Next Button -->
+      <button {% if pagination.has_next %} hx-get="/api/moba/champions" hx-include="#champion-filters-form"
+        hx-vals='{"page": {{ pagination.page + 1 }}}' hx-target="#champ-list" hx-swap="innerHTML"
+        class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
+        {% else %} disabled
+        class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500 text-sm cursor-not-allowed"
+        {% endif %}>
+        Next
+      </button>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+{% else %}
+<!-- Include empty state -->
+{% include "components/champions_empty.html" %}
+{% endif %}

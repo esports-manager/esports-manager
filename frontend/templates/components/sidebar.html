@@ -1,0 +1,51 @@
+<!--
+  ~ eSports Manager - free and open source eSports Management game
+  ~ Copyright (C) 2020-2024  Pedrenrique G. Guimarães
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<aside
+  class="fixed left-0 items-stretch inset-y-0 min-h-screen h-full bg-slate-50 dark:bg-slate-900 text-black dark:text-white shadow-md border-r border-slate-300 dark:border-slate-600 transition-all overflow-y-auto"
+  :class="{ 'w-64': expanded, 'w-16': !expanded }">
+  <div class="p-3 pb-2 flex justify-between items-center">
+    <img src="{{ url_for('static', path='img/trophy.svg') }}" alt="eSports Manager"
+      class="pb-2 overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-16': expanded }" />
+    <button @click="expanded = !expanded"
+      class="p-1.5 rounded-xl bg-slate-200 hover:bg-slate-100 dark:bg-gray-700 dark:hover:bg-gray-600 px-2">
+      <span x-show="expanded">
+        <i class="bi bi-chevron-left text-xl"></i>
+      </span>
+      <span x-show="!expanded">
+        <i class="bi bi-chevron-right text-xl"></i>
+      </span>
+    </button>
+  </div>
+
+  <nav class="px-3">
+    {% for key, page in sidebar.items() %}
+    {% if key == current_page %}
+    <a href="/page/{{ page.url }}" x-on:click="page = '{{ key }}'"
+      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700 bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500">
+      {% else %}
+    <a href="/page/{{ page.url }}" x-on:click="page = '{{ key }}'"
+      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700">
+      {% endif %}
+      <i class="bi {{ page.icon }} text-xl"></i>
+      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded }">
+        {{ page.name }}
+      </span>
+    </a>
+    {% endfor %}
+  </nav>
+</aside>

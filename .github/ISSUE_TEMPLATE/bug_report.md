@@ -1,35 +1,59 @@
+<!--
+SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+SPDX-License-Identifier: GPL-3.0-or-later
+License-Filename: LICENSES/GPL-3.0-or-later
+-->
+
 ---
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
+name: Bug Report
+about: Report a bug or unexpected behavior
+title: '[BUG] Brief description of the issue'
+labels: 'bug'
 assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Bug Description
+<!-- A clear and detailed description of what the bug is. The more information, the better! -->
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+## Reproduction Steps
+<!-- Step-by-step instructions to reproduce the behavior -->
+1. 
+2. 
+3. 
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## Expected Behavior
+<!-- What you expected to happen -->
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+## Actual Behavior
+<!-- What actually happened instead -->
 
-**Running environment (please complete the following information):**
- - OS: [e.g. iOS]
- - Python version [e.g. 3.6, 3.8, 3.9, 3.10]
- - Game version [e.g. 22]
+## Screenshots/Videos
+<!-- If applicable, add screenshots or videos to demonstrate the problem -->
 
-**Error log (or attach the printed error log file)**
-Describe error here.
+## Environment Details
+<!-- Please complete as much information as possible -->
+ - OS & Version: <!-- e.g., Ubuntu 22.04, Windows 11, macOS 12.4 -->
+ - Python Version: <!-- e.g., 3.10.4 -->
+ - Game Version: <!-- e.g., v0.5.2 -->
+ - Installation Method: <!-- e.g., git clone, download zip, pip install -->
+ - Dependencies: <!-- Any relevant dependency versions (if known) -->
 
-**Additional context**
-Add any other context about the problem here.
+## Console Output/Logs
+<!-- Please include any relevant error messages, console output, or log entries between the ``` markers -->
+```
+
+```
+
+## Possible Solution
+<!-- If you have any ideas on what might be causing the issue or how to fix it, share them here -->
+
+## Context
+<!-- Any additional context that might help us understand the issue -->
+
+## Checklist
+<!-- Please check these items before submitting -->
+- [ ] I have verified this is not a duplicate issue
+- [ ] I have included all relevant information to reproduce the bug
+- [ ] I am using the latest version of the game
+- [ ] I have run any relevant diagnostics (if applicable)

@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+SPDX-License-Identifier: GPL-3.0-or-later
+License-Filename: LICENSES/GPL-3.0-or-later
+-->
+
 # FEATURES
 
 This game has many planned features. In this document we will go over 
@@ -7,9 +13,9 @@ in the game.
 - [ ] Select an eSport (MOBA, RTS, FPS) - this has to be a generic eSport with fictional players
 - [ ] Give the user the ability to modify the eSport in a separate editor or config files (so he
 can implement his favorite eSport in the genre, adding champions/heroes or races)
-- [x] Create a new game with new manager name and information
-- [x] Save game and Load game functions
-- [x] Choose your own team from any region available
+- [ ] Create a new game with new manager name and information
+- [ ] Save game and Load game functions
+- [ ] Choose your own team from any region available
 - [ ] Play minor championships (leagues or cups)
 - [ ] Play major championships (such as World Championship)
 - [ ] Patches change the gameplay
@@ -20,7 +26,7 @@ each players' abilities
 improve on
 - [ ] Player talk sessions: allows the user to talk to each member of the team, increasing or decreasing
 their relationship (it affects matches)
-- [x] Match Live Events: a description of what happens in the simulated game
+- [ ] Match Live Events: a description of what happens in the simulated game
 - [ ] Match Live Events 2D/3D: a visualization of what happens in the simulated game
 - [ ] Managing finances: hire and fire players, arrange contracts and scrim sessions
 - [ ] Find new talents in solo queue/ladder

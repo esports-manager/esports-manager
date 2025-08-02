@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+SPDX-License-Identifier: GPL-3.0-or-later
+License-Filename: LICENSES/GPL-3.0-or-later
+-->
+
 # eSports Manager Game Design Document
 
 This document describes elements of the game that should be explored by developers. It is a document that provides the general ideas and abstractions that should compose the final product, and does not include implementation details and explanations of how the code actually works, or even actual in-game mock-ups.

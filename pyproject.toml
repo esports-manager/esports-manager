@@ -1,30 +1,27 @@
-[tool.poetry]
+# SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+# SPDX-License-Identifier: GPL-3.0-or-later
+# License-Filename: LICENSES/GPL-3.0-or-later
+
+[project]
 name = "esports-manager"
 version = "0.1.0"
-description = "A free and open source eSports Management game"
-authors = ["sturdy-robot <pedrenriquegg@hotmail.com>"]
-license = "GPLv3"
+description = "A free and open source eSports manager game"
+authors = [{ name = "sturdy-robot", email = "admin@esportsmanager.net" }]
+license = "GPL-3.0-or-later"
 readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.116.1",
+    "uvicorn[standard]>=0.35.0",
+    "sqlmodel>=0.0.22",
+    "python-dotenv>=1.1.1",
+    "sqlalchemy>=2.0.42",
+    "pywebview[qt]>=5.4",
+    "jinja2>=3.1.6",
+    "pytailwindcss>=0.2.0",
+    "httpx>=0.26.1",
+    "pycountry>=24.6.1",
+]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-PyYAML = "^6.0.1"
-cbor2 = "^5.6.4"
-setuptools = "^70.1.0"
-
-[tool.poetry.group.dev.dependencies]
-black = "^24.4.2"
-pre-commit = "^3.7.1"
-isort = "^5.13.2"
-flake8 = "^7.1.0"
-pytest = "^8.2.2"
-hypothesis = "^6.103.2"
-doq = "^0.10.0"
-docutils = "^0.21.2"
-coverage = "^7.5.3"
-autopep8 = "^2.3.0"
-pylint = "^3.2.3"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[dependency-groups]
+dev = ["pre-commit>=4.2.0", "pytest>=8.3.5", "ruff>=0.11.11"]

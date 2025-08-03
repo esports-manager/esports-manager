@@ -33,7 +33,7 @@ class MobaPlayerWithTeam(MobaPlayerPublic):
     image_url: Optional[str] = None
 
 
-@player_routes.get("/")
+@player_routes.get("/", response_model=list[MobaPlayerPublic])
 async def get_players(
     request: Request,
     session: Session = Depends(get_session),

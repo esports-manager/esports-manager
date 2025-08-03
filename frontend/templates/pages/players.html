@@ -253,9 +253,7 @@
     </div>
 
     <div id="players-list" class="relative">
-      <div hx-get="/api/moba/players" hx-trigger="load" hx-target="#players-list" hx-swap="innerHTML" class="hidden">
-        {% include "components/players_skeleton.html" %}
-      </div>
+      {% include "components/players_skeleton.html" %}
     </div>
   </div>
 </div>

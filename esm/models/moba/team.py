@@ -18,6 +18,7 @@ class MobaTeamBase(SQLModel):
     region: Optional[str]
     description: Optional[str]
     logo_path: Optional[str]
+    banner_path: Optional[str]
 
 
 class MobaTeam(MobaTeamBase, table=True):
@@ -65,4 +66,5 @@ class MobaTeamUpdate(SQLModel):
     region: Optional[str] = None
     description: Optional[str] = None
     logo_path: Optional[str] = None
+    banner_path: Optional[str] = None
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)

@@ -1,0 +1,329 @@
+<!-- Teams List View Partial -->
+{% if teams %}
+<div x-show="view === 'list'" class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-x-auto mb-6">
+  <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+    <thead>
+      <tr class="bg-gray-50 dark:bg-slate-800">
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          Team
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          Region
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          League
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          Rating
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          Championships
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          Tier
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody class="bg-white dark:bg-slate-700 divide-y divide-gray-200 dark:divide-gray-600">
+      {% for team in teams %}
+      <tr class="hover:bg-gray-50 dark:hover:bg-slate-600">
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 h-10 w-10">
+              {% if team.logo_path %}
+              <img class="h-10 w-10 rounded-full object-contain bg-white dark:bg-slate-800 p-1" src="{{ team.logo_path }}"
+                alt="{{ team.name }}">
+              {% else %}
+              <img class="h-10 w-10 rounded-full object-contain bg-white dark:bg-slate-800 p-1"
+                src="{{ url_for('static', filename='img/placeholders/team_default.webp') }}"
+                alt="{{ team.name }}">
+              {% endif %}
+            </div>
+            <div class="ml-4">
+              <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ team.name }}</div>
+              <div class="text-xs text-gray-500 dark:text-gray-400">{{ team.short_name or '' }}</div>
+            </div>
+          </div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="flex items-center">
+            {% if team.region %}
+              <img src="https://flagcdn.com/w20/{{ team.region_code|lower }}.png" alt="{{ team.region }}" class="h-4 w-6 mr-2">
+              <span class="text-sm text-gray-700 dark:text-gray-300">{{ team.region }}</span>
+            {% else %}
+              <span class="text-sm text-gray-500 dark:text-gray-400">Unknown</span>
+            {% endif %}
+          </div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <span class="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+            {{ team.league }}
+          </span>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div>
+            <div class="flex items-center text-xs mb-1">
+              <span class="text-gray-800 dark:text-gray-200 font-medium">{{ team.rating }}</span>
+            </div>
+            <div class="h-1.5 w-24 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+              {% set rating = team.rating %}
+              {% if rating > 90 %}
+              <div class="h-full transition-all duration-300 bg-green-500 dark:bg-green-400 rounded-full" style="width: {{ rating }}%"></div>
+              {% elif rating > 80 %}
+              <div class="h-full transition-all duration-300 bg-green-500 dark:bg-green-500 rounded-full" style="width: {{ rating }}%"></div>
+              {% elif rating > 70 %}
+              <div class="h-full transition-all duration-300 bg-yellow-500 dark:bg-yellow-500 rounded-full" style="width: {{ rating }}%"></div>
+              {% elif rating > 60 %}
+              <div class="h-full transition-all duration-300 bg-orange-500 dark:bg-orange-500 rounded-full" style="width: {{ rating }}%"></div>
+              {% else %}
+              <div class="h-full transition-all duration-300 bg-red-500 dark:bg-red-400 rounded-full" style="width: {{ rating }}%"></div>
+              {% endif %}
+            </div>
+          </div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+          <span class="text-lg font-bold text-blue-600 dark:text-blue-400">{{ team.championships }}</span>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          {% set tier = team.tier|lower %}
+          {% if tier == "s" %}
+          <span class="px-2 py-1 text-xs font-medium rounded bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">S TIER</span>
+          {% elif tier == "a" %}
+          <span class="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">A TIER</span>
+          {% elif tier == "b" %}
+          <span class="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">B TIER</span>
+          {% elif tier == "c" %}
+          <span class="px-2 py-1 text-xs font-medium rounded bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">C TIER</span>
+          {% elif tier == "d" %}
+          <span class="px-2 py-1 text-xs font-medium rounded bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">D TIER</span>
+          {% else %}
+          <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">UNRATED</span>
+          {% endif %}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+          <a href="#" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-3">View</a>
+          <a href="#" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">Manage</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Teams Grid View Partial -->
+<div x-show="view === 'grid'"
+  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+  {% for team in teams %}
+  <div
+    class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col">
+    <div class="relative">
+      <!-- Team Banner -->
+      <div class="w-full h-32 bg-gradient-to-r from-black to-gray-800 flex items-center justify-center overflow-hidden">
+        {% if team.banner_path %}
+        <img src="{{ team.banner_path }}" alt="{{ team.name }}" class="w-full h-full object-cover opacity-70">
+        {% else %}
+        <div class="w-full h-full flex items-center justify-center bg-gradient-to-r from-gray-800 to-gray-900">
+          <span class="text-2xl font-bold text-white opacity-30">{{ team.name }}</span>
+        </div>
+        {% endif %}
+        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+      </div>
+
+      <!-- Team Logo -->
+      <div
+        class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-white dark:bg-slate-800 rounded-full h-20 w-20 flex items-center justify-center border-4 border-white dark:border-slate-700 shadow-lg">
+        {% if team.logo_path %}
+        <img src="{{ team.logo_path }}" alt="{{ team.name }} Logo" class="h-16 w-16 object-contain">
+        {% else %}
+        <img src="{{ url_for('static', filename='img/placeholders/team_default.webp') }}" alt="{{ team.name }} Logo"
+          class="h-16 w-16 object-contain">
+        {% endif %}
+      </div>
+
+      <!-- League Badge -->
+      <div class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+        {{ team.league }}
+      </div>
+
+      <!-- Rating Badge -->
+      <div class="absolute top-2 right-2 bg-yellow-400 text-gray-900 text-sm font-bold px-2 py-1 rounded-md">
+        {{ team.rating }}
+      </div>
+    </div>
+
+    <div class="p-4 pt-12">
+      <!-- Team Name and Region -->
+      <div class="text-center mb-2">
+        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-xl">{{ team.name }}</h3>
+        <div class="flex items-center justify-center">
+          {% if team.region_code %}
+          <img src="https://flagcdn.com/w20/{{ team.region_code|lower }}.png" alt="{{ team.region }}" class="h-4 w-6 mr-1">
+          {% endif %}
+          <span class="text-xs text-gray-600 dark:text-gray-400">{{ team.region }}</span>
+        </div>
+      </div>
+
+      <!-- Team Stats -->
+      <div class="grid grid-cols-3 gap-2 mb-4">
+        <div class="text-center">
+          <div class="text-sm font-semibold text-gray-700 dark:text-gray-300">Championships</div>
+          <div class="text-lg font-bold text-blue-600 dark:text-blue-400">{{ team.championships }}</div>
+        </div>
+        <div class="text-center">
+          <div class="text-sm font-semibold text-gray-700 dark:text-gray-300">Win Rate</div>
+          <div class="text-lg font-bold text-green-600 dark:text-green-400">{{ team.win_rate }}%</div>
+        </div>
+        <div class="text-center">
+          <div class="text-sm font-semibold text-gray-700 dark:text-gray-300">Fans</div>
+          <div class="text-lg font-bold text-purple-600 dark:text-purple-400">{{ team.fans }}</div>
+        </div>
+      </div>
+
+      <!-- Tier Rating -->
+      <div class="flex items-center justify-center mb-3">
+        <span class="text-xs text-gray-500 dark:text-gray-400 mr-2">Team Tier:</span>
+        {% set tier = team.tier|lower %}
+        {% if tier == "s" %}
+        <span class="text-sm font-bold text-gray-800 dark:text-gray-200 bg-yellow-100 dark:bg-yellow-900 px-2 py-0.5 rounded">S TIER</span>
+        {% elif tier == "a" %}
+        <span class="text-sm font-bold text-gray-800 dark:text-gray-200 bg-blue-100 dark:bg-blue-900 px-2 py-0.5 rounded">A TIER</span>
+        {% elif tier == "b" %}
+        <span class="text-sm font-bold text-gray-800 dark:text-gray-200 bg-green-100 dark:bg-green-900 px-2 py-0.5 rounded">B TIER</span>
+        {% elif tier == "c" %}
+        <span class="text-sm font-bold text-gray-800 dark:text-gray-200 bg-orange-100 dark:bg-orange-900 px-2 py-0.5 rounded">C TIER</span>
+        {% elif tier == "d" %}
+        <span class="text-sm font-bold text-gray-800 dark:text-gray-200 bg-red-100 dark:bg-red-900 px-2 py-0.5 rounded">D TIER</span>
+        {% else %}
+        <span class="text-sm font-bold text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">UNRATED</span>
+        {% endif %}
+      </div>
+
+      <!-- Key Players -->
+      {% if team.key_players %}
+      <div class="text-xs text-gray-600 dark:text-gray-400 mb-4">
+        <div class="mb-1 text-center font-medium">Key Players</div>
+        <div class="flex justify-center space-x-1">
+          {% for player in team.key_players %}
+          <div class="flex-shrink-0 h-6 w-6 relative">
+            {% if player.image_path %}
+            <img class="h-6 w-6 rounded-full object-cover" src="{{ player.image_path }}" alt="{{ player.name }}">
+            {% else %}
+            <div class="h-6 w-6 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-xs font-bold">
+              {{ player.name[0]|upper }}
+            </div>
+            {% endif %}
+            <div class="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border border-white dark:border-slate-700
+            {% if player.role == 'top' %} bg-red-500 
+            {% elif player.role == 'jungle' %} bg-green-500 
+            {% elif player.role == 'mid' %} bg-blue-500 
+            {% elif player.role == 'adc' %} bg-purple-500 
+            {% elif player.role == 'support' %} bg-yellow-500 
+            {% else %} bg-gray-500 {% endif %}"></div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="flex justify-between">
+        <!-- View Team Button -->
+        <a href="#" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm">
+          <i class="bi bi-info-circle mr-1"></i> Team Profile
+        </a>
+
+        <!-- Achievement Badge -->
+        {% if team.achievement %}
+        <span class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
+          {{ team.achievement }}
+        </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if pagination %}
+<div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
+  <div class="text-sm text-gray-600 dark:text-gray-400">
+    {% if pagination.total_teams > 0 %}
+    Showing <span class="font-medium">{{ pagination.showing_start }}-{{ pagination.showing_end }}</span> of <span
+      class="font-medium">{{ pagination.total_teams }}</span> teams
+    {% else %}
+    No teams found
+    {% endif %}
+  </div>
+
+  {% if pagination.total_pages > 1 %}
+  <div class="flex flex-wrap justify-center gap-1">
+    <!-- Previous Button -->
+    <button {% if pagination.has_prev %} hx-get="/api/teams" hx-include="#team-filters-form"
+      hx-vals='{"page": {{ pagination.page - 1 }}}' hx-target="#teams-list" hx-swap="innerHTML"
+      class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
+      {% else %} disabled
+      class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500 text-sm cursor-not-allowed"
+      {% endif %}>
+      Previous
+    </button>
+
+    <!-- First Page (if not near the beginning) -->
+    {% if pagination.page > 3 %}
+    <button hx-get="/api/teams" hx-include="#team-filters-form" hx-vals='{"page": 1}'
+      hx-target="#teams-list" hx-swap="innerHTML"
+      class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150">
+      1
+    </button>
+
+    <!-- Ellipsis if needed -->
+    {% if pagination.page > 4 %}
+    <span class="px-3 py-1 text-gray-500 dark:text-gray-400 text-sm">...</span>
+    {% endif %}
+    {% endif %}
+
+    <!-- Page Numbers -->
+    {% set start_page = [pagination.page - 2, 1]|max %}
+    {% set end_page = [pagination.page + 2, pagination.total_pages]|min %}
+
+    {% for page_num in range(start_page, end_page + 1) %}
+    <button {% if page_num == pagination.page %} class="px-3 py-1 rounded-md bg-blue-500 text-white text-sm" disabled {%
+      else %} hx-get="/api/teams" hx-include="#team-filters-form" hx-vals='{"page": {{ page_num }}}'
+      hx-target="#teams-list" hx-swap="innerHTML"
+      class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
+      {% endif %}>
+      {{ page_num }}
+    </button>
+    {% endfor %}
+
+    <!-- Ellipsis if needed -->
+    {% if pagination.page < pagination.total_pages - 3 %}
+    <span class="px-3 py-1 text-gray-500 dark:text-gray-400 text-sm">...</span>
+
+    <!-- Last Page -->
+    <button hx-get="/api/teams" hx-include="#team-filters-form"
+      hx-vals='{"page": {{ pagination.total_pages }}}' hx-target="#teams-list" hx-swap="innerHTML"
+      class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150">
+      {{ pagination.total_pages }}
+    </button>
+    {% endif %}
+
+    <!-- Next Button -->
+    <button {% if pagination.has_next %} hx-get="/api/teams" hx-include="#team-filters-form"
+      hx-vals='{"page": {{ pagination.page + 1 }}}' hx-target="#teams-list" hx-swap="innerHTML"
+      class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
+      {% else %} disabled
+      class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500 text-sm cursor-not-allowed"
+      {% endif %}>
+      Next
+    </button>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+{% else %}
+<!-- Include empty state -->
+{% include "components/teams_empty.html" %}
+{% endif %}

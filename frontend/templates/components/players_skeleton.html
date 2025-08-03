@@ -1,5 +1,5 @@
 <!-- Players Skeleton/Loading State -->
-<div id="players-loading-skeleton">
+<div id="players-loading-skeleton" hx-get="/api/moba/players" hx-trigger="load" hx-target="#players-list" hx-swap="innerHTML">
     <!-- Grid View Skeleton -->
     <div x-show="view === 'grid'" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
       {% for i in range(12) %}

@@ -3,7 +3,7 @@ from pathlib import Path
 from esm.config import ESM_DIR
 
 
-def serve_image(image_path: Path):
+async def serve_image(image_path: Path):
     if (
         not image_path.exists()
         or not image_path.is_file()
@@ -22,7 +22,7 @@ def serve_image(image_path: Path):
     )
 
 
-def get_country_code(nationality: str) -> str:
+async def get_country_code(nationality: str) -> str:
     import pycountry
 
     try:

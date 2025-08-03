@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
+import enum
 from sqlmodel import SQLModel, Field, DateTime, Column
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import Relationship
@@ -12,13 +13,23 @@ if TYPE_CHECKING:
     from esm.models.moba.player import MobaPlayer
 
 
+class MobaTeamTier(enum.Enum):
+    SP = "S+"
+    S = "S"
+    A = "A"
+    B = "B"
+    C = "C"
+    D = "D"
+    F = "F"
+
+
 class MobaTeamBase(SQLModel):
     name: str
-    nationality: Optional[str]
-    region: Optional[str]
-    description: Optional[str]
-    logo_path: Optional[str]
-    banner_path: Optional[str]
+    nationality: Optional[str] = None
+    region: Optional[str] = None
+    description: Optional[str] = None
+    logo_path: Optional[str] = None
+    banner_path: Optional[str] = None
 
 
 class MobaTeam(MobaTeamBase, table=True):
@@ -36,6 +47,29 @@ class MobaTeam(MobaTeamBase, table=True):
     @property
     def current_players(self) -> list["MobaPlayer"]:
         return [contract.player for contract in self.contracts if contract.is_active]
+
+    @property
+    def overall(self) -> int:
+        return sum(player.overall for player in self.current_players) // len(
+            self.current_players
+        )
+
+    @property
+    def tier(self) -> MobaTeamTier:
+        if self.overall >= 95:
+            return MobaTeamTier.SP
+        elif self.overall >= 90:
+            return MobaTeamTier.S
+        elif self.overall >= 85:
+            return MobaTeamTier.A
+        elif self.overall >= 80:
+            return MobaTeamTier.B
+        elif self.overall >= 75:
+            return MobaTeamTier.C
+        elif self.overall >= 70:
+            return MobaTeamTier.D
+
+        return MobaTeamTier.F
 
     def add_player(self, player: "MobaPlayer", contract: "MobaPlayerContract") -> None:
         if contract.team_id != self.id:

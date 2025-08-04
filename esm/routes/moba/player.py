@@ -3,6 +3,7 @@
 # License-Filename: LICENSES/GPL-3.0-or-later
 from fastapi import APIRouter, status, Request
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
 from esm.config import FRONTEND_DIR, ESM_DIR
 from esm.db import get_session
 from esm.services import serve_image
@@ -235,3 +236,9 @@ async def get_player_image(filename: str):
     """Serve player images from the res/img/players directory"""
     image_path = Path(ESM_DIR) / "res" / "img" / "players" / filename
     return await serve_image(image_path)
+
+
+@player_routes.get("/country_flags/{country_code}")
+async def get_country_flag(country_code: str):
+    """Serve country flags from the res/img/country_flags directory"""
+    return HTMLResponse(content='<i class="fi fi-' + country_code + '"></i>')

@@ -62,7 +62,10 @@ class MobaPlayerBase(Person):
         )
 
     def get_country_code(self) -> str:
-        return get_country_code(self.nationality)
+        if self.nationality:
+            return get_country_code(self.nationality)
+        else:
+            return ""
 
 
 class MobaPlayer(MobaPlayerBase, table=True):

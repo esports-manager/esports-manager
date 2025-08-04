@@ -3,7 +3,6 @@
 # License-Filename: LICENSES/GPL-3.0-or-later
 from fastapi import APIRouter, status, Request
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
 from esm.config import FRONTEND_DIR, ESM_DIR
 from esm.db import get_session
 from esm.services import serve_image
@@ -181,18 +180,19 @@ async def get_player(*, session: Session = Depends(get_session), request: Reques
     # Set the team data
     player_with_team.team = team_data
 
-    # Generate image URL for the player
+    # Generate image URL for the player - optimize to avoid unnecessary processing
     if player.image_path:
         # If image_path is a URL, use it directly
         if player.image_path.startswith("http"):
             player_with_team.image_url = player.image_path
         else:
-            # If it's a local path, extract the filename and create a URL to our endpoint
+            # If it's a local path, use the static file serving instead of API endpoint
+            # This is more efficient as it avoids FastAPI routing overhead
             filename = Path(player.image_path).name
-            player_with_team.image_url = f"/api/moba/players/images/{filename}"
+            player_with_team.image_url = f"/static/img/players/{filename}"
     else:
         # Use default image if no image path specified
-        player_with_team.image_url = "/api/moba/players/images/default_player.webp"
+        player_with_team.image_url = "/static/img/players/default_player.webp"
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
@@ -236,9 +236,3 @@ async def get_player_image(filename: str):
     """Serve player images from the res/img/players directory"""
     image_path = Path(ESM_DIR) / "res" / "img" / "players" / filename
     return await serve_image(image_path)
-
-
-@player_routes.get("/country_flags/{country_code}")
-async def get_country_flag(country_code: str):
-    """Serve country flags from the res/img/country_flags directory"""
-    return HTMLResponse(content='<i class="fi fi-' + country_code + '"></i>')

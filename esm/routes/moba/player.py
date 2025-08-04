@@ -234,4 +234,4 @@ async def delete_player(*, session: Session = Depends(get_session), id: int):
 async def get_player_image(filename: str):
     """Serve player images from the res/img/players directory"""
     image_path = Path(ESM_DIR) / "res" / "img" / "players" / filename
-    return serve_image(image_path)
+    return await serve_image(image_path)

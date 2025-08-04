@@ -22,7 +22,7 @@ async def serve_image(image_path: Path):
     )
 
 
-async def get_country_code(nationality: str) -> str:
+def get_country_code(nationality: str) -> str:
     import pycountry
 
     try:

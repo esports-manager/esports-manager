@@ -79,9 +79,7 @@
 
                             <!-- Nationality with Flag -->
                             <div class="flex items-center">
-                                <img src="https://flagcdn.com/w20/{{ player.get_country_code().lower() }}.png" 
-                                    alt="{{ player.nationality }}" 
-                                    class="h-4 w-auto mr-1.5">
+                                <i class="fi fi-{{ player.get_country_code()|lower }}"></i>
                                 <span class="text-sm text-gray-600 dark:text-gray-400">{{ player.nationality }}</span>
                             </div>
                         </div>

@@ -30,7 +30,6 @@ templates = Jinja2Templates(directory=templates_dir)
 
 class MobaPlayerWithTeam(MobaPlayerPublic):
     team: Optional["MobaTeamPublic"] = None
-    image_url: Optional[str] = None
 
 
 @player_routes.get("/", response_model=list[MobaPlayerPublic])
@@ -135,23 +134,8 @@ async def get_players(
         player_data = player.model_dump()
         if player.current_contract and player.current_contract.team_id:
             team_data = session.get(MobaTeam, player.current_contract.team_id)
+            player_data["team"] = MobaTeamPublic.model_validate(team_data).model_dump()
         player_with_team = MobaPlayerWithTeam.model_validate(player_data)
-
-        # Set the team data
-        player_with_team.team = team_data
-
-        # Generate image URL for the player
-        if player.image_path:
-            # If image_path is a URL, use it directly
-            if player.image_path.startswith("http"):
-                player_with_team.image_url = player.image_path
-            else:
-                # If it's a local path, extract the filename and create a URL to our endpoint
-                filename = Path(player.image_path).name
-                player_with_team.image_url = f"/api/moba/players/images/{filename}"
-        else:
-            # Use default image if no image path specified
-            player_with_team.image_url = "/api/moba/players/images/default_player.webp"
 
         result.append(player_with_team)
 

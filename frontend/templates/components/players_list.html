@@ -7,7 +7,8 @@
     class="group bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden flex flex-col border border-gray-100 dark:border-slate-600 transition-all duration-200 hover:shadow-xl hover:scale-[1.05] cursor-pointer">
     <!-- Player Image -->
     <div class="relative bg-gradient-to-r from-blue-500 to-indigo-600 h-56 w-full overflow-hidden">
-      <img src="{{ player.image_url }}" alt="{{ player.nick_name }}" class="w-full h-full object-cover" loading="lazy">
+      <img src="/api/moba/players/images/{{ player.image_path }}" alt="{{ player.nick_name }}"
+        class="w-full h-full object-cover" loading="lazy">
 
       <!-- Role & Region -->
       <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 text-white">
@@ -46,8 +47,8 @@
       <!-- Team Badge if applicable -->
       {% if player.team %}
       <div class="absolute top-2 left-2 bg-white/90 dark:bg-slate-800/90 rounded-full p-1">
-        <img src="/static/img/teams/{{ player.team.logo|default('fnatic.png') }}"
-          alt="{{ player.team.name|default('Fnatic') }}" class="w-6 h-6 rounded-full">
+        <img src="/api/moba/teams/images/{{ player.team.logo_path }}" alt="{{ player.team.name }} " loading="lazy"
+          class="w-6 h-6 rounded-full">
       </div>
       {% endif %}
 
@@ -206,7 +207,8 @@
         <td class="px-6 py-4 whitespace-nowrap">
           <div class="flex items-center">
             <div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-600">
-              <img src="{{ player.image_url }}" alt="{{ player.nick_name }}" class="h-full w-full object-cover"
+              <img src="/api/moba/players/images/{{ player.image_path }}" alt="{{ player.nick_name }}"
+                class="h-full w-full object-cover"
                 onerror="this.onerror=null; this.src='/static/img/default_player.png';">
             </div>
             <div class="ml-4">
@@ -227,8 +229,8 @@
         <td class="px-6 py-4 whitespace-nowrap">
           <div class="flex items-center">
             {% if player.team %}
-            <img src="/static/img/teams/{{ player.team.logo|default('fnatic.png') }}" alt="{{ player.team.name }}"
-              class="w-5 h-5 mr-2 rounded-full bg-white" loading="lazy">
+            <img src="/api/moba/teams/images/{{ player.team.logo_path }}" alt="{{ player.team.name }}"
+              class="w-5 h-5 mr-2 rounded-full" loading="lazy">
             <span class="text-sm text-gray-900 dark:text-gray-100">{{ player.team.name }}</span>
             {% else %}
             <span class="text-sm text-gray-900 dark:text-gray-100">Free Agent</span>

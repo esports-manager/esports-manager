@@ -6,7 +6,7 @@ from sqlmodel import SQLModel, Field, DateTime, Column
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import Relationship
 from datetime import datetime
-
+from esm.services import get_country_code
 from esm.models.moba.player_contract import MobaPlayerContract
 
 if TYPE_CHECKING:
@@ -31,6 +31,12 @@ class MobaTeamBase(SQLModel):
     logo_path: Optional[str] = None
     banner_path: Optional[str] = None
 
+    def get_country_code(self) -> str:
+        if self.nationality:
+            return get_country_code(self.nationality)
+        else:
+            return ""
+
 
 class MobaTeam(MobaTeamBase, table=True):
     __tablename__ = "moba_teams"
@@ -53,23 +59,6 @@ class MobaTeam(MobaTeamBase, table=True):
         return sum(player.overall for player in self.current_players) // len(
             self.current_players
         )
-
-    @property
-    def tier(self) -> MobaTeamTier:
-        if self.overall >= 95:
-            return MobaTeamTier.SP
-        elif self.overall >= 90:
-            return MobaTeamTier.S
-        elif self.overall >= 85:
-            return MobaTeamTier.A
-        elif self.overall >= 80:
-            return MobaTeamTier.B
-        elif self.overall >= 75:
-            return MobaTeamTier.C
-        elif self.overall >= 70:
-            return MobaTeamTier.D
-
-        return MobaTeamTier.F
 
     def add_player(self, player: "MobaPlayer", contract: "MobaPlayerContract") -> None:
         if contract.team_id != self.id:

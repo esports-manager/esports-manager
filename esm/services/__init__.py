@@ -1,9 +1,8 @@
 from fastapi.responses import FileResponse
 from pathlib import Path
-from esm.config import ESM_DIR
 
 
-async def serve_image(image_path: Path):
+def serve_image(image_path: Path, default_image: Path):
     if (
         not image_path.exists()
         or not image_path.is_file()
@@ -11,12 +10,12 @@ async def serve_image(image_path: Path):
     ):
         # Return default image with cache headers
         return FileResponse(
-            ESM_DIR / "res" / "img" / "players" / "default_player.webp",
+            default_image,
             media_type="image/webp",
-            filename="default_player.webp",
+            filename=default_image.name,
             headers={
                 "Cache-Control": "public, max-age=86400",  # Cache for 1 day
-                "ETag": "default-player",  # Add ETag for validation
+                "ETag": default_image.name,  # Add ETag for validation
             },
         )
 

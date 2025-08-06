@@ -54,6 +54,41 @@ async def get_players(
 
     skip = (page - 1) * per_page
 
+    if request.query_params.get("is_active"):
+        query = query.where(
+            MobaPlayer.is_active == bool(request.query_params.get("is_active"))
+        )
+        count_query = count_query.where(
+            MobaPlayer.is_active == bool(request.query_params.get("is_active"))
+        )
+    if request.query_params.get("first_name"):
+        query = query.where(
+            MobaPlayer.first_name == request.query_params.get("first_name")
+        )
+        count_query = count_query.where(
+            MobaPlayer.first_name == request.query_params.get("first_name")
+        )
+    if request.query_params.get("last_name"):
+        query = query.where(
+            MobaPlayer.last_name == request.query_params.get("last_name")
+        )
+        count_query = count_query.where(
+            MobaPlayer.last_name == request.query_params.get("last_name")
+        )
+    if request.query_params.get("nick_name"):
+        query = query.where(
+            MobaPlayer.nick_name == request.query_params.get("nick_name")
+        )
+        count_query = count_query.where(
+            MobaPlayer.nick_name == request.query_params.get("nick_name")
+        )
+    if request.query_params.get("date_of_birth"):
+        query = query.where(
+            MobaPlayer.date_of_birth == request.query_params.get("date_of_birth")
+        )
+        count_query = count_query.where(
+            MobaPlayer.date_of_birth == request.query_params.get("date_of_birth")
+        )
     if request.query_params.get("role"):
         query = query.where(MobaPlayer.role == request.query_params.get("role"))
         count_query = count_query.where(
@@ -235,4 +270,6 @@ async def delete_player(*, session: Session = Depends(get_session), id: int):
 async def get_player_image(filename: str):
     """Serve player images from the res/img/players directory"""
     image_path = Path(ESM_DIR) / "res" / "img" / "players" / filename
-    return await serve_image(image_path)
+    return serve_image(
+        image_path, Path(ESM_DIR) / "res" / "img" / "players" / "default_player.webp"
+    )

@@ -4,7 +4,7 @@
 from fastapi import APIRouter, status, Request
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, Field
 from typing import Optional
 from esm.config import FRONTEND_DIR, ESM_DIR
 from esm.db import get_session
@@ -14,6 +14,7 @@ from esm.models.moba.team import (
     MobaTeamCreate,
     MobaTeamUpdate,
     MobaTeamPublic,
+    MobaTeamTier,
 )
 from esm.models.moba.player import MobaPlayer, MobaPlayerPublic
 from esm.models.moba.player_contract import MobaPlayerContract, MobaPlayerContractCreate
@@ -32,12 +33,35 @@ templates = Jinja2Templates(directory=templates_dir)
 
 
 class MobaTeamWithPlayers(MobaTeamPublic):
-    players: list[MobaPlayerPublic] = []
+    players: list[MobaPlayerPublic] = Field(default_factory=list)
     image_url: Optional[str] = None
     image_banner: Optional[str] = None
 
+    @property
+    def overall(self) -> int:
+        if not self.players:
+            return 0
+        return sum(player.overall for player in self.players) // len(self.players)
 
-@team_routes.get("/", response_model=list[MobaTeamPublic])
+    @property
+    def tier(self) -> MobaTeamTier:
+        if self.overall >= 95:
+            return MobaTeamTier.SP
+        elif self.overall >= 90:
+            return MobaTeamTier.S
+        elif self.overall >= 85:
+            return MobaTeamTier.A
+        elif self.overall >= 80:
+            return MobaTeamTier.B
+        elif self.overall >= 75:
+            return MobaTeamTier.C
+        elif self.overall >= 70:
+            return MobaTeamTier.D
+
+        return MobaTeamTier.F
+
+
+@team_routes.get("/", response_model=list[MobaTeamWithPlayers])
 async def get_teams(request: Request, session: Session = Depends(get_session)):
     query = select(MobaTeam)
     count_query = select(MobaTeam)
@@ -89,8 +113,11 @@ async def get_teams(request: Request, session: Session = Depends(get_session)):
         if team.logo_path:
             filename = Path(team.logo_path).name
             team_data["image_url"] = f"/api/moba/teams/images/{filename}"
+        if team.banner_path:
+            filename = Path(team.banner_path).name
+            team_data["image_banner"] = f"/api/moba/teams/images/{filename}"
 
-        result.append(MobaTeamPublic.model_validate(team_data))
+        result.append(MobaTeamWithPlayers.model_validate(team_data))
 
     pagination = {
         "page": page,
@@ -136,13 +163,39 @@ async def create_team(*, session: Session = Depends(get_session), team: MobaTeam
 
 
 @team_routes.get("/{id}", response_model=MobaTeamPublic)
-async def get_team(*, session: Session = Depends(get_session), id: int):
+async def get_team(
+    *, request: Request, session: Session = Depends(get_session), id: int
+):
     team = session.get(MobaTeam, id)
     if not team:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Team not found"
         )
-    return team
+    team_data = team.model_dump()
+    team_public = MobaTeamPublic.model_validate(team_data)
+
+    if request.headers.get("HX-Request"):
+        if team.current_players:
+            team_data["players"] = [
+                MobaPlayerPublic.model_validate(player.model_dump())
+                for player in team.current_players
+            ]
+        if team.logo_path:
+            filename = Path(team.logo_path).name
+            team_data["image_url"] = f"/api/moba/teams/images/{filename}"
+        if team.banner_path:
+            filename = Path(team.banner_path).name
+            team_data["image_banner"] = f"/api/moba/teams/images/{filename}"
+        team_public = MobaTeamWithPlayers.model_validate(team_data)
+        return templates.TemplateResponse(
+            "components/team_info.html",
+            {
+                "request": request,
+                "team": team_public,
+            },
+        )
+
+    return team_public
 
 
 @team_routes.patch("/{id}", response_model=MobaTeamPublic)
@@ -163,13 +216,29 @@ async def update_team(
 
 
 @team_routes.get("/{id}/players", response_model=list[MobaPlayerPublic])
-async def get_team_players(*, session: Session = Depends(get_session), id: int):
+async def get_team_players(
+    *, request: Request, session: Session = Depends(get_session), id: int
+):
     team = session.get(MobaTeam, id)
     if not team:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Team not found"
         )
-    return team.current_players
+    players = []
+    for player in team.current_players:
+        player_data = player.model_dump()
+        players.append(MobaPlayerPublic.model_validate(player_data))
+
+    if request.headers.get("HX-Request"):
+        return templates.TemplateResponse(
+            "components/team_players.html",
+            {
+                "request": request,
+                "players": players,
+                "team": team,
+            },
+        )
+    return players
 
 
 @team_routes.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -219,4 +288,6 @@ async def add_player_to_team(
 @team_routes.get("/images/{filename}")
 async def get_team_image(filename: str):
     image_path = Path(ESM_DIR) / "res" / "img" / "teams" / filename
-    return serve_image(image_path)
+    return serve_image(
+        image_path, Path(ESM_DIR) / "res" / "img" / "teams" / "default_team.webp"
+    )

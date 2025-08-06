@@ -2,9 +2,9 @@
     activeTab: 'teams',
     view: 'grid',
     searchQuery: '',
-    selectedRegion: 'all',
-    selectedLeague: 'all',
-    selectedTier: 'all',
+    selectedRegion: '',
+    selectedLeague: '',
+    selectedTier: '',
     sortBy: 'name',
     sortDirection: 'asc',
     showAdvancedFilters: false,
@@ -36,7 +36,7 @@
 
   <!-- Filters and Search -->
   <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4 mb-6">
-    <form id="team-filters-form" hx-get="/api/teams" hx-target="#teams-list" hx-trigger="submit"
+    <form id="team-filters-form" hx-get="/api/moba/teams" hx-target="#teams-list" hx-trigger="submit"
       hx-indicator="#loading-indicator"
       x-on:submit="isLoading = true; $event.preventDefault(); htmx.trigger(this, 'submit')">
       <div class="flex flex-col lg:flex-row gap-4">
@@ -113,38 +113,38 @@
 
     <!-- Active Filters -->
     <div class="mt-3 flex flex-wrap gap-2"
-      x-show="selectedLeague !== 'all' || selectedRegion !== 'all' || selectedTier !== 'all' || searchQuery !== ''">
+      x-show="selectedLeague !== '' || selectedRegion !== '' || selectedTier !== '' || searchQuery !== ''">
       <span class="text-xs text-gray-500 dark:text-gray-400 self-center">Active filters:</span>
 
       <!-- League Filter Tag -->
-      <div x-show="selectedLeague !== 'all'"
+      <div x-show="selectedLeague !== ''"
         class="flex items-center text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full">
         <span>League: <span x-text="selectedLeague.toUpperCase()"></span></span>
         <button
-          @click="selectedLeague = 'all'; $nextTick(() => document.getElementById('team-filters-form').dispatchEvent(new Event('submit')))"
+          @click="selectedLeague = ''; $nextTick(() => document.getElementById('team-filters-form').dispatchEvent(new Event('submit')))"
           class="ml-1 text-blue-500 hover:text-blue-700 focus:outline-none">
           <i class="bi bi-x-circle"></i>
         </button>
       </div>
 
       <!-- Region Filter Tag -->
-      <div x-show="selectedRegion !== 'all'"
+      <div x-show="selectedRegion !== ''"
         class="flex items-center text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded-full">
         <span>Region: <span
             x-text="selectedRegion === 'na' ? 'North America' : selectedRegion === 'kr' ? 'Korea' : selectedRegion === 'cn' ? 'China' : selectedRegion === 'eu' ? 'Europe' : selectedRegion === 'sea' ? 'Southeast Asia' : selectedRegion.toUpperCase()"></span></span>
         <button
-          @click="selectedRegion = 'all'; $nextTick(() => document.getElementById('team-filters-form').dispatchEvent(new Event('submit')))"
+          @click="selectedRegion = ''; $nextTick(() => document.getElementById('team-filters-form').dispatchEvent(new Event('submit')))"
           class="ml-1 text-green-500 hover:text-green-700 focus:outline-none">
           <i class="bi bi-x-circle"></i>
         </button>
       </div>
 
       <!-- Tier Filter Tag -->
-      <div x-show="selectedTier !== 'all'"
+      <div x-show="selectedTier !== ''"
         class="flex items-center text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded-full">
         <span>Tier: <span x-text="selectedTier.toUpperCase() + ' Tier'"></span></span>
         <button
-          @click="selectedTier = 'all'; $nextTick(() => document.getElementById('team-filters-form').dispatchEvent(new Event('submit')))"
+          @click="selectedTier = ''; $nextTick(() => document.getElementById('team-filters-form').dispatchEvent(new Event('submit')))"
           class="ml-1 text-purple-500 hover:text-purple-700 focus:outline-none">
           <i class="bi bi-x-circle"></i>
         </button>
@@ -162,7 +162,7 @@
       </div>
 
       <!-- Clear All Filters -->
-      <button @click="selectedLeague = 'all'; selectedRegion = 'all'; selectedTier = 'all'; searchQuery = '';
+      <button @click="selectedLeague = ''; selectedRegion = ''; selectedTier = ''; searchQuery = '';
                      $nextTick(() => document.getElementById('team-filters-form').dispatchEvent(new Event('submit')))"
         class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 ml-auto">
         Clear All

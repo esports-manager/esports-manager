@@ -43,9 +43,8 @@
                     <div class="mr-4">
                         <div
                             class="h-24 w-24 rounded-full bg-gray-200 dark:bg-slate-600 overflow-hidden border-4 border-white dark:border-slate-700 shadow-md">
-                            <img src="{{ player.image_url }}" alt="{{ player.nick_name }}"
-                                class="h-full w-full object-cover"
-                                loading="lazy"
+                            <img src="/api/moba/players/images/{{ player.image_path }}" alt="{{ player.nick_name }}"
+                                class="h-full w-full object-cover" loading="lazy"
                                 onerror="this.src='/static/images/default_avatar.png'">
                         </div>
                     </div>
@@ -161,7 +160,7 @@
         <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Team</div>
         <div class="flex items-center font-medium text-gray-800 dark:text-gray-200">
             {% if player.team %}
-            <img src="{{ player.team.logo_url }}" alt="{{ player.team.name }}"
+            <img src="/api/moba/teams/images/{{ player.team.logo_path }}" alt="{{ player.team.name }}"
                 class="h-4 w-4 mr-1.5 rounded-full object-contain">
             {{ player.team.name }}
             {% else %}
@@ -185,20 +184,18 @@
             <!-- Alternative: <span class="text-amber-500">Listed for transfer</span> -->
         </div>
     </div>
+    <div class="border-t border-gray-200 dark:border-slate-600 p-4">
+        <div
+            class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            Overall Rating</div>
+        <div
+            class="font-bold text-3xl text-gray-800 dark:text-gray-100">
+            {{ player.overall }}</div>
+    </div>
     </div>
     </div>
 
     <!-- Player Bio Section -->
-    <div class="border-t border-gray-200 dark:border-slate-600 p-4">
-        <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2">Biography</h3>
-        <div class="text-sm text-gray-600 dark:text-gray-400">
-            {% if player.bio %}
-            {{ player.bio }}
-            {% else %}
-            <p class="italic">No biography available for this player.</p>
-            {% endif %}
-        </div>
-    </div>
     </div>
     </div>
 
@@ -238,6 +235,18 @@
             <!-- Tab Contents -->
             <!-- Overview Tab Content -->
             <div x-show="activeTab === 'overview'" class="p-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                        <i class="bi bi-fingerprint text-green-500 mr-2"></i>Biography
+                    </h3>
+                    <div class="text-base text-gray-700 dark:text-gray-300 mb-6">
+                        {% if player.bio %}
+                        {{ player.bio }}
+                        {% else %}
+                        <p class="italic">No biography available for this player.</p>
+                        {% endif %}
+                    </div>
+                </div>
                 <!-- Core Attributes -->
                 <div class="mb-8">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
@@ -450,14 +459,7 @@
                                                                                 <!-- Overall Rating -->
                                                                                 <div
                                                                                     class="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-800 rounded-lg mb-4">
-                                                                                    <div>
-                                                                                        <div
-                                                                                            class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                                                                                            Overall Rating</div>
-                                                                                        <div
-                                                                                            class="font-bold text-3xl text-gray-800 dark:text-gray-100">
-                                                                                            {{ player.overall }}</div>
-                                                                                    </div>
+                                                                                    
                                                                                     <div>
                                                                                         <div
                                                                                             class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400">

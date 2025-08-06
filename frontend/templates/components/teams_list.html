@@ -34,7 +34,7 @@
           <div class="flex items-center">
             <div class="flex-shrink-0 h-10 w-10">
               <img class="h-10 w-10 rounded-full object-contain bg-white dark:bg-slate-800 p-1"
-                src="{{ team.image_url }}" alt="{{ team.name }}">
+                src="/api/moba/teams/images/{{ team.logo_path }}" alt="{{ team.name }}">
             </div>
             <div class="ml-4">
               <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ team.name }}</div>
@@ -132,7 +132,7 @@
 <!-- Teams Grid View Partial -->
 <div x-show="view === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
   {% for team in teams %}
-  <a hx-get="/api/moba/teams/{{ team.id }}" hx-target="#maincontent" hx-swap="innerHTML"
+  <a href="/teams/{{ team.id }}"
     class="group transition-all duration-200 hover:shadow-xl hover:scale=[1.05] cursor-pointer">
     <div
       class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col">
@@ -140,7 +140,8 @@
         <!-- Team Banner -->
         <div
           class="w-full h-full bg-gradient-to-r from-black to-gray-800 flex items-center justify-center overflow-hidden">
-          <img src="{{ team.image_banner }}" alt="{{ team.name }}" class="w-full h-full object-cover opacity-70">
+          <img src="/api/moba/teams/images/{{ team.banner_path }}" alt="{{ team.name }}"
+            class="w-full h-full object-cover opacity-70">
         </div>
         <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
 
@@ -157,7 +158,8 @@
         <!-- Team Logo -->
         <div
           class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-white dark:bg-slate-800 rounded-full h-20 w-20 flex items-center justify-center border-4 border-white dark:border-slate-700 shadow-lg">
-          <img src="{{ team.image_url }}" alt="{{ team.name }} Logo" class="h-16 w-16 object-contain">
+          <img src="/api/moba/teams/images/{{ team.logo_path }}" alt="{{ team.name }} Logo"
+            class="h-16 w-16 object-contain">
         </div>
       </div>
 

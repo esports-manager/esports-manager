@@ -5,7 +5,6 @@ from fastapi import APIRouter, status, Request
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 from sqlmodel import SQLModel, Field
-from typing import Optional
 from esm.config import FRONTEND_DIR, ESM_DIR
 from esm.db import get_session
 from esm.services import serve_image
@@ -34,8 +33,6 @@ templates = Jinja2Templates(directory=templates_dir)
 
 class MobaTeamWithPlayers(MobaTeamPublic):
     players: list[MobaPlayerPublic] = Field(default_factory=list)
-    image_url: Optional[str] = None
-    image_banner: Optional[str] = None
 
     @property
     def overall(self) -> int:

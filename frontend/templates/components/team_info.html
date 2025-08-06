@@ -31,7 +31,7 @@
                     <!-- Team Logo -->
                     <div class="mr-4">
                         <div class="h-24 w-24 rounded-full bg-gray-200 dark:bg-slate-600 overflow-hidden border-4 border-white dark:border-slate-700 shadow-md">
-                            <img src="{{ team.image_url }}" alt="{{ team.name }}"
+                            <img src="/api/moba/teams/images/{{ team.logo_path }}" alt="{{ team.name }}"
                                 class="h-full w-full object-cover"
                                 loading="lazy"
                                 onerror="this.src='/static/images/default_team.png'">

@@ -1,77 +1,16 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
-from pathlib import Path
-
-from fastapi import FastAPI, Request
+from fastapi import Request, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-
-root_dir = Path(__file__).parent
-static_dir = root_dir / "static"
-templates_dir = root_dir / "templates"
+from esm.config import FRONTEND_DIR
+from frontend.sidebar import sidebar
 
 
-sidebar = {
-    "home": {
-        "name": "Home",
-        "icon": "bi bi-house-door-fill",
-        "url": "home",
-    },
-    "inbox": {
-        "name": "Inbox",
-        "icon": "bi bi-inbox-fill",
-        "url": "inbox",
-    },
-    "news": {
-        "name": "News",
-        "icon": "bi bi-newspaper",
-        "url": "news",
-    },
-    "practice": {
-        "name": "Practice",
-        "icon": "bi bi-cone-striped",
-        "url": "practice",
-    },
-    "roster": {
-        "name": "Roster",
-        "icon": "bi bi-people-fill",
-        "url": "roster",
-    },
-    "staff": {
-        "name": "Staff",
-        "icon": "bi bi-briefcase-fill",
-        "url": "staff",
-    },
-    "scout": {
-        "name": "Scout",
-        "icon": "bi bi-binoculars-fill",
-        "url": "scout",
-    },
-    "champions": {
-        "name": "Champions",
-        "icon": "bi bi-star-fill",
-        "url": "champions",
-    },
-    "players": {
-        "name": "Players",
-        "icon": "bi bi-person-fill",
-        "url": "players",
-    },
-    "teams": {
-        "name": "Teams",
-        "icon": "bi bi-shield-fill",
-        "url": "teams",
-    },
-    "championships": {
-        "name": "Championships",
-        "icon": "bi bi-trophy-fill",
-        "url": "championships",
-    },
-}
-
-current_page = "home"
+static_dir = FRONTEND_DIR / "static"
+templates_dir = FRONTEND_DIR / "templates"
 
 
 def create_frontend(app: FastAPI) -> FastAPI:
@@ -121,21 +60,10 @@ def create_frontend(app: FastAPI) -> FastAPI:
             },
         )
 
-    @app.get("/page/players/{player_id}")
-    async def player(request: Request, player_id: int):
-        global current_page
-        global sidebar
-        current_page = "players"
-        contentview = "pages/players.html"
+    from frontend.routes.player import player_routes
+    from frontend.routes.team import team_routes
 
-        return templates.TemplateResponse(
-            "layout.html",
-            {
-                "request": request,
-                "content": contentview,
-                "sidebar": sidebar,
-                "current_page": current_page,
-            },
-        )
+    app.include_router(player_routes)
+    app.include_router(team_routes)
 
     return app

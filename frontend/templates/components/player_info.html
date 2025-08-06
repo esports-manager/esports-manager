@@ -28,8 +28,8 @@
 }">
     <!-- Page Header - Player Name/Nickname -->
     <header class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">{{ player.nick_name }}</h1>
-        <p class="text-lg text-gray-600 dark:text-gray-400">{{ player.first_name }} {{ player.last_name }}</p>
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">Player details</h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400">See the player details and statistics</p>
     </header>
 
     <!-- Main Content Grid -->
@@ -41,48 +41,48 @@
                 <div class="p-6 flex">
                     <!-- Player Image -->
                     <div class="mr-4">
-                        <div class="h-24 w-24 rounded-full bg-gray-200 dark:bg-slate-600 overflow-hidden border-4 border-white dark:border-slate-700 shadow-md">
-                            <img 
-                                src="{{ player.image_url }}" 
-                                alt="{{ player.nick_name }}" 
-                                class="h-full w-full object-cover"
-                                onerror="this.src='/static/images/default_avatar.png'"
-                            >
+                        <div
+                            class="h-24 w-24 rounded-full bg-gray-200 dark:bg-slate-600 overflow-hidden border-4 border-white dark:border-slate-700 shadow-md">
+                            <img src="/api/moba/players/images/{{ player.image_path }}" alt="{{ player.nick_name }}"
+                                class="h-full w-full object-cover" loading="lazy"
+                                onerror="this.src='/static/images/default_avatar.png'">
                         </div>
                     </div>
 
                     <!-- Player Name and Basic Info -->
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ player.nick_name }}</h2>
+                        <h2 class="text-3xl font-semibold text-gray-800 dark:text-gray-100">{{ player.nick_name }}</h2>
+                        <p class="text-lg text-gray-600 dark:text-gray-400 text-wrap">{{ player.first_name }} {{
+                            player.last_name }}</p>
                         <div class="flex items-center mt-2 space-x-3">
                             <!-- Role Badge -->
                             {% if player.role %}
                             {% set role_colors = {
-                                'support': 'bg-purple-500',
-                                'mid': 'bg-blue-500',
-                                'top': 'bg-red-500',
-                                'jungle': 'bg-green-500',
-                                'bottom': 'bg-yellow-500'
+                            'support': 'bg-purple-500',
+                            'mid': 'bg-blue-500',
+                            'top': 'bg-red-500',
+                            'jungle': 'bg-green-500',
+                            'bottom': 'bg-yellow-500'
                             } %}
                             {% set role_icons = {
-                                'support': 'bi-headset',
-                                'mid': 'bi-lightning-charge',
-                                'top': 'bi-shield',
-                                'jungle': 'bi-tree',
-                                'bottom': 'bi-crosshair'
+                            'support': 'bi-headset',
+                            'mid': 'bi-lightning-charge',
+                            'top': 'bi-shield',
+                            'jungle': 'bi-tree',
+                            'bottom': 'bi-crosshair'
                             } %}
-                            <span class="{{ role_colors[player.role.value]|default('bg-gray-500') }} text-white text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full flex items-center">
-                                <i class="bi {{ role_icons[player.role.value]|default('bi-person') }} mr-1"></i> 
+                            <span
+                                class="{{ role_colors[player.role.value]|default('bg-gray-500') }} text-white text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full flex items-center">
+                                <i class="bi {{ role_icons[player.role.value]|default('bi-person') }} mr-1"></i>
                                 {{ player.role.value }}
                             </span>
                             {% endif %}
 
                             <!-- Nationality with Flag -->
                             <div class="flex items-center">
-                                <img src="https://flagcdn.com/w20/{{ player.get_country_code().lower() }}.png" 
-                                    alt="{{ player.nationality }}" 
-                                    class="h-4 w-auto mr-1.5">
-                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ player.nationality }}</span>
+                                <i class="fi fi-{{ player.get_country_code() }}"></i>
+                                <span class="text-sm ml-2 text-gray-600 dark:text-gray-400">{{ player.nationality
+                                    }}</span>
                             </div>
                         </div>
                     </div>
@@ -93,8 +93,10 @@
                     <div class="grid grid-cols-2 gap-4">
                         <!-- Date of Birth -->
                         <div>
-                            <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Date of Birth</div>
-                            <div class="font-medium text-gray-800 dark:text-gray-200">{{ player.date_of_birth.strftime('%d %b %Y') }}</div>
+                            <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Date of Birth
+                            </div>
+                            <div class="font-medium text-gray-800 dark:text-gray-200">{{
+                                player.date_of_birth.strftime('%d %b %Y') }}</div>
                         </div>
 
                         <!-- Age -->
@@ -107,88 +109,119 @@
                         <div>
                             <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Form</div>
                             <div class="flex items-center">
-                                {% set form_color = "text-red-500" if player.form < 40 else "text-yellow-500" if player.form < 70 else "text-green-500" %}
-                                <span class="font-medium {{ form_color }}">{{ player.form }}%</span>
+                                {% set form_color = "text-red-500" if player.form < 40 else "text-yellow-500" if player.form < 70 else "text-green-500" %} <span class="font-medium {{ form_color }}">{{ player.form }}%</span>
                                 <div class="ml-2 w-16 bg-gray-200 dark:bg-slate-600 rounded-full h-1.5 overflow-hidden">
-                                    {% set form_bg = "bg-red-500" if player.form < 40 else "bg-yellow-500" if player.form < 70 else "bg-green-500" %}
-                                    {% set form_percent = player.form|default(0) %}
-                                    {% set form_width_class = "w-[" ~ form_percent ~ "%]" %}
-                                    {% set form_percent = player.form|default(0) %}
-                                    {% if form_percent < 5 %}
-                                        <div class="{{ form_bg }} h-1.5 rounded-full w-0"></div>
-                                    {% elif form_percent < 15 %}
-                                        <div class="{{ form_bg }} h-1.5 rounded-full w-1/12"></div>
-                                    {% elif form_percent < 25 %}
-                                        <div class="{{ form_bg }} h-1.5 rounded-full w-1/4"></div>
-                                    {% elif form_percent < 35 %}
-                                        <div class="{{ form_bg }} h-1.5 rounded-full w-1/3"></div>
-                                    {% elif form_percent < 45 %}
-                                        <div class="{{ form_bg }} h-1.5 rounded-full w-5/12"></div>
-                                    {% elif form_percent < 55 %}
-                                        <div class="{{ form_bg }} h-1.5 rounded-full w-1/2"></div>
-                                    {% elif form_percent < 65 %}
-                                        <div class="{{ form_bg }} h-1.5 rounded-full w-7/12"></div>
-                                    {% elif form_percent < 75 %}
-                                        <div class="{{ form_bg }} h-1.5 rounded-full w-3/4"></div>
-                                    {% elif form_percent < 85 %}
-                                        <div class="{{ form_bg }} h-1.5 rounded-full w-10/12"></div>
-                                    {% elif form_percent < 95 %}
-                                        <div class="{{ form_bg }} h-1.5 rounded-full w-11/12"></div>
-                                    {% else %}
-                                        <div class="{{ form_bg }} h-1.5 rounded-full w-full"></div>
+                                    {% set form_bg = "bg-red-500" if player.form < 40 else "bg-yellow-500" if player.form < 70 else "bg-green-500" %} {% set form_percent=player.form|default(0) %} {% set form_width_class="w-[" ~ form_percent ~ "%]" %} {% set form_percent=player.form|default(0) %} {% if form_percent < 5 %} <div class="{{ form_bg }} h-1.5 rounded-full w-0"></div>
+                                    {% elif form_percent < 15 %} <div class="{{ form_bg }} h-1.5 rounded-full w-1/12"></div>
+                                    {% elif form_percent < 25 %} <div class="{{ form_bg }} h-1.5 rounded-full w-1/4"></div>
+                                    {% elif form_percent < 35 %} <div class="{{ form_bg }} h-1.5 rounded-full w-1/3"></div>
+                                    {% elif form_percent < 45 %} <div class="{{ form_bg }} h-1.5 rounded-full w-5/12"></div>
+                                    {% elif form_percent < 55 %} <div class="{{ form_bg }} h-1.5 rounded-full w-1/2"></div>
+                                    {% elif form_percent < 65 %} <div class="{{ form_bg }} h-1.5 rounded-full w-7/12"></div>
+                                    {% elif form_percent < 75 %} <div class="{{ form_bg }} h-1.5 rounded-full w-3/4"></div>
+                                    {% elif form_percent < 85 %} <div class="{{ form_bg }} h-1.5 rounded-full w-10/12"></div>
+                                    {% elif form_percent < 95 %} <div class="{{ form_bg }} h-1.5 rounded-full w-11/12"></div>
+                                    {% else %} <div class="{{ form_bg }} h-1.5 rounded-full w-full"></div>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Status -->
-                        <div>
-                            <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Status</div>
-                            <div class="font-medium">
-                                {% if player.is_active %}
-                                <span class="text-green-600 dark:text-green-400">Active</span>
-                                {% else %}
-                                <span class="text-red-500 dark:text-red-400">Retired</span>
-                                {% endif %}
-                            </div>
-                        </div>
+    <!-- Status -->
+    <div>
+        <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Status</div>
+        <div class="font-medium">
+            {% if player.is_active %}
+            <span class="text-green-600 dark:text-green-400">Active</span>
+            {% else %}
+            <span class="text-red-500 dark:text-red-400">Retired</span>
+            {% endif %}
+        </div>
+    </div>
 
-                        <!-- Current Team -->
-                        <div>
-                            <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Team</div>
-                            <div class="flex items-center font-medium text-gray-800 dark:text-gray-200">
-                                {% if player.team %}
-                                <img src="{{ player.team.logo_url }}" alt="{{ player.team.name }}" 
-                                    class="h-4 w-4 mr-1.5 rounded-full object-contain">
-                                {{ player.team.name }}
-                                {% else %}
-                                <span class="text-yellow-500">Free Agent</span>
-                                {% endif %}
-                            </div>
-                        </div>
+    <!-- Current Team -->
+    <div>
+        <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Team</div>
+        <div class="flex items-center font-medium text-gray-800 dark:text-gray-200">
+            {% if player.team %}
+            <img src="/api/moba/teams/images/{{ player.team.logo_path }}" alt="{{ player.team.name }}"
+                class="h-4 w-4 mr-1.5 rounded-full object-contain">
+            {{ player.team.name }}
+            {% else %}
+            <span class="text-yellow-500">Free Agent</span>
+            {% endif %}
+        </div>
+    </div>
 
-                        <!-- Player Value -->
-                        <div>
-                            <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Value</div>
-                            <div class="font-medium text-gray-800 dark:text-gray-200">${{ '{:,}'.format(player.value) }}</div>
-                        </div>
+    <!-- Player Value -->
+    <div>
+        <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Value</div>
+        <div class="font-medium text-gray-800 dark:text-gray-200">${{ '{:,}'.format(player.value) }}</div>
+    </div>
 
-                        <!-- Transfer Status (Placeholder for future) -->
-                        <div class="col-span-2">
-                            <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Transfer Status</div>
-                            <div class="font-medium text-gray-800 dark:text-gray-200">
-                                <!-- This will be dynamic once backend support is added -->
-                                <span class="text-blue-500">Not on transfer list</span>
-                                <!-- Alternative: <span class="text-amber-500">Listed for transfer</span> -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Transfer Status (Placeholder for future) -->
+    <div class="col-span-2">
+        <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Transfer Status</div>
+        <div class="font-medium text-gray-800 dark:text-gray-200">
+            <!-- This will be dynamic once backend support is added -->
+            <span class="text-blue-500">Not on transfer list</span>
+            <!-- Alternative: <span class="text-amber-500">Listed for transfer</span> -->
+        </div>
+    </div>
+    <div class="border-t border-gray-200 dark:border-slate-600 p-4">
+        <div class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            Overall Rating</div>
+        <div class="font-bold text-3xl text-gray-800 dark:text-gray-100">
+            {{ player.overall }}</div>
+    </div>
+    </div>
+    </div>
 
-                <!-- Player Bio Section -->
-                <div class="border-t border-gray-200 dark:border-slate-600 p-4">
-                    <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2">Biography</h3>
-                    <div class="text-sm text-gray-600 dark:text-gray-400">
+    <!-- Player Bio Section -->
+    </div>
+    </div>
+
+    <!-- Right Column: Player Tabs -->
+    <div class="lg:col-span-2">
+        <div class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden">
+            <!-- Tab Navigation -->
+            <div class="border-b border-gray-200 dark:border-slate-600">
+                <nav class="flex" x-cloak>
+                    <button @click="activeTab = 'overview'"
+                        class="px-4 py-3 text-sm font-medium transition-colors duration-150"
+                        :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'overview', 
+                            'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'overview'}">
+                        <i class="bi bi-grid mr-1"></i> Overview
+                    </button>
+                    <button @click="activeTab = 'history'"
+                        class="px-4 py-3 text-sm font-medium transition-colors duration-150"
+                        :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'history', 
+                            'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'history'}">
+                        <i class="bi bi-clock-history mr-1"></i> History
+                    </button>
+                    <button @click="activeTab = 'statistics'"
+                        class="px-4 py-3 text-sm font-medium transition-colors duration-150"
+                        :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'statistics', 
+                            'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'statistics'}">
+                        <i class="bi bi-bar-chart mr-1"></i> Statistics
+                    </button>
+                    <button @click="activeTab = 'scouting'"
+                        class="px-4 py-3 text-sm font-medium transition-colors duration-150"
+                        :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'scouting', 
+                            'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'scouting'}">
+                        <i class="bi bi-search mr-1"></i> Scouting
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Tab Contents -->
+            <!-- Overview Tab Content -->
+            <div x-show="activeTab === 'overview'" class="p-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                        <i class="bi bi-fingerprint text-green-500 mr-2"></i>Biography
+                    </h3>
+                    <div class="text-base text-gray-700 dark:text-gray-300 mb-6">
                         {% if player.bio %}
                         {{ player.bio }}
                         {% else %}
@@ -196,336 +229,411 @@
                         {% endif %}
                     </div>
                 </div>
-            </div>
-        </div>
+                <!-- Core Attributes -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                        <i class="bi bi-star-fill text-yellow-500 mr-2"></i> Core Attributes
+                    </h3>
 
-        <!-- Right Column: Player Tabs -->
-        <div class="lg:col-span-2">
-            <div class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden">
-                <!-- Tab Navigation -->
-                <div class="border-b border-gray-200 dark:border-slate-600">
-                    <nav class="flex" x-cloak>
-                        <button @click="activeTab = 'overview'" 
-                            class="px-4 py-3 text-sm font-medium transition-colors duration-150"
-                            :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'overview', 
-                            'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'overview'}">   
-                            <i class="bi bi-grid mr-1"></i> Overview
-                        </button>
-                        <button @click="activeTab = 'history'" 
-                            class="px-4 py-3 text-sm font-medium transition-colors duration-150"
-                            :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'history', 
-                            'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'history'}">   
-                            <i class="bi bi-clock-history mr-1"></i> History
-                        </button>
-                        <button @click="activeTab = 'statistics'" 
-                            class="px-4 py-3 text-sm font-medium transition-colors duration-150"
-                            :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'statistics', 
-                            'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'statistics'}">   
-                            <i class="bi bi-bar-chart mr-1"></i> Statistics
-                        </button>
-                        <button @click="activeTab = 'scouting'" 
-                            class="px-4 py-3 text-sm font-medium transition-colors duration-150"
-                            :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'scouting', 
-                            'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'scouting'}">   
-                            <i class="bi bi-search mr-1"></i> Scouting
-                        </button>
-                    </nav>
-                </div>
-
-                <!-- Tab Contents -->
-                <!-- Overview Tab Content -->
-                <div x-show="activeTab === 'overview'" class="p-6">
-                    <!-- Core Attributes -->
-                    <div class="mb-8">
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-                            <i class="bi bi-star-fill text-yellow-500 mr-2"></i> Core Attributes
-                        </h3>
-
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
-                            <!-- Mechanics -->
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-sm text-gray-700 dark:text-gray-300">Mechanics</span>
-                                    <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ player.mechanics }}</span>
-                                </div>
-                                <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
-                                    {% set mechanics_percent = player.mechanics|default(0) %}
-                                    {% if mechanics_percent < 5 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-0"></div>
-                                    {% elif mechanics_percent < 15 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-1/12"></div>
-                                    {% elif mechanics_percent < 25 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-1/4"></div>
-                                    {% elif mechanics_percent < 35 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-1/3"></div>
-                                    {% elif mechanics_percent < 45 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-5/12"></div>
-                                    {% elif mechanics_percent < 55 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-1/2"></div>
-                                    {% elif mechanics_percent < 65 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-7/12"></div>
-                                    {% elif mechanics_percent < 75 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-3/4"></div>
-                                    {% elif mechanics_percent < 85 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-10/12"></div>
-                                    {% elif mechanics_percent < 95 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-11/12"></div>
-                                    {% else %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-full"></div>
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            <!-- Knowledge -->
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-sm text-gray-700 dark:text-gray-300">Knowledge</span>
-                                    <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ player.knowledge }}</span>
-                                </div>
-                                <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
-                                    {% set knowledge_percent = player.knowledge|default(0) %}
-                                    {% if knowledge_percent < 5 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-0"></div>
-                                    {% elif knowledge_percent < 15 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-1/12"></div>
-                                    {% elif knowledge_percent < 25 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-1/4"></div>
-                                    {% elif knowledge_percent < 35 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-1/3"></div>
-                                    {% elif knowledge_percent < 45 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-5/12"></div>
-                                    {% elif knowledge_percent < 55 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-1/2"></div>
-                                    {% elif knowledge_percent < 65 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-7/12"></div>
-                                    {% elif knowledge_percent < 75 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-3/4"></div>
-                                    {% elif knowledge_percent < 85 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-10/12"></div>
-                                    {% elif knowledge_percent < 95 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-11/12"></div>
-                                    {% else %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-full"></div>
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            <!-- Agility -->
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-sm text-gray-700 dark:text-gray-300">Agility</span>
-                                    <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ player.agility }}</span>
-                                </div>
-                                <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
-                                    {% set agility_percent = player.agility|default(0) %}
-                                    {% if agility_percent < 5 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-0"></div>
-                                    {% elif agility_percent < 15 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-1/12"></div>
-                                    {% elif agility_percent < 25 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-1/4"></div>
-                                    {% elif agility_percent < 35 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-1/3"></div>
-                                    {% elif agility_percent < 45 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-5/12"></div>
-                                    {% elif agility_percent < 55 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-1/2"></div>
-                                    {% elif agility_percent < 65 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-7/12"></div>
-                                    {% elif agility_percent < 75 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-3/4"></div>
-                                    {% elif agility_percent < 85 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-10/12"></div>
-                                    {% elif agility_percent < 95 %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-11/12"></div>
-                                    {% else %}
-                                        <div class="bg-blue-500 h-2 rounded-full w-full"></div>
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            <!-- Add more attributes as needed -->
-                        </div>
-                    </div>
-
-                    <!-- Role-Specific Skills -->
-                    <div class="mb-8">
-                        {% set role_color = "purple" if player.role.value == "support" else "blue" if player.role.value == "mid" else "red" if player.role.value == "top" else "green" if player.role.value == "jungle" else "yellow" %}
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-                            <i class="bi bi-lightning-charge-fill text-{{ role_color }}-500 mr-2"></i> 
-                            Role Skills
-                        </h3>
-
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
-                            <!-- Vision -->
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-sm text-gray-700 dark:text-gray-300">Vision</span>
-                                    <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ player.vision }}</span>
-                                </div>
-                                <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
-                                    <div class="bg-{{ role_color }}-500 h-2 rounded-full" style="width: {{ player.vision }}%"></div>
-                                </div>
-                            </div>
-
-                            <!-- Farming -->
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-sm text-gray-700 dark:text-gray-300">Farming</span>
-                                    <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ player.farming }}</span>
-                                </div>
-                                <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
-                                    <div class="bg-{{ role_color }}-500 h-2 rounded-full" style="width: {{ player.farming }}%"></div>
-                                </div>
-                            </div>
-
-                            <!-- Communication -->
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-sm text-gray-700 dark:text-gray-300">Communication</span>
-                                    <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ player.communication }}</span>
-                                </div>
-                                <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
-                                    <div class="bg-{{ role_color }}-500 h-2 rounded-full" style="width: {{ player.communication }}%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Overall Rating -->
-                    <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-800 rounded-lg mb-4">
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                        <!-- Mechanics -->
                         <div>
-                            <div class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400">Overall Rating</div>
-                            <div class="font-bold text-3xl text-gray-800 dark:text-gray-100">{{ player.overall }}</div>
-                        </div>
-                        <div>
-                            <div class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400">Contract Status</div>
-                            <div class="font-medium text-gray-800 dark:text-gray-200">
-                                {% if player.current_contract %}
-                                Until {{ player.current_contract.end_date.strftime('%b %Y') }}
-                                {% else %}
-                                No Contract
-                                {% endif %}
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-sm text-gray-700 dark:text-gray-300">Mechanics</span>
+                                <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ player.mechanics
+                                    }}</span>
                             </div>
+                            <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+                                {% set mechanics_percent = player.mechanics|default(0) %}
+                                {% if mechanics_percent < 5 %} <div class="bg-blue-500 h-2 rounded-full w-0">
+                            </div>
+                            {% elif mechanics_percent < 15 %} <div class="bg-blue-500 h-2 rounded-full w-1/12">
                         </div>
+                        {% elif mechanics_percent < 25 %} <div class="bg-blue-500 h-2 rounded-full w-1/4">
                     </div>
+                    {% elif mechanics_percent < 35 %} <div class="bg-blue-500 h-2 rounded-full w-1/3">
                 </div>
-
-                <!-- History Tab Content -->
-                <div x-show="activeTab === 'history'" class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-                        <i class="bi bi-clock-history text-blue-500 mr-2"></i> Player History
-                    </h3>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                            Career milestones and transfer history for {{ player.nick_name }}.
-                        </p>
-
-                        <!-- Placeholder for history data -->
-                        <div class="text-center text-gray-500 dark:text-gray-400 text-sm italic">
-                            Player history data will be displayed here
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Statistics Tab Content -->
-                <div x-show="activeTab === 'statistics'" class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-                        <i class="bi bi-bar-chart text-blue-500 mr-2"></i> Player Statistics
-                    </h3>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                            Performance statistics for {{ player.nick_name }}.
-                        </p>
-
-                        <!-- Placeholder for statistics data -->
-                        <div class="text-center text-gray-500 dark:text-gray-400 text-sm italic">
-                            Player statistics will be displayed here
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Scouting Tab Content -->
-                <div x-show="activeTab === 'scouting'" class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-                        <i class="bi bi-search text-blue-500 mr-2"></i> Scouting Report
-                    </h3>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                            Detailed scouting analysis for {{ player.nick_name }}.
-                        </p>
-
-                        <!-- Placeholder for scouting data -->
-                        <div class="text-center text-gray-500 dark:text-gray-400 text-sm italic">
-                            Scouting report will be displayed here
-                        </div>
-                    </div>
-                </div>
+                {% elif mechanics_percent < 45 %} <div class="bg-blue-500 h-2 rounded-full w-5/12">
             </div>
+            {% elif mechanics_percent < 55 %} <div class="bg-blue-500 h-2 rounded-full w-1/2">
         </div>
+        {% elif mechanics_percent < 65 %} <div class="bg-blue-500 h-2 rounded-full w-7/12">
     </div>
-
-    <!-- Bottom Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-        <!-- Past Teams -->
-        <div class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden">
-            <div class="border-b border-gray-200 dark:border-slate-600 px-4 py-3">
-                <h3 class="font-semibold text-gray-800 dark:text-gray-200 flex items-center">
-                    <i class="bi bi-building mr-2 text-indigo-500"></i> Past Teams
-                </h3>
+    {% elif mechanics_percent < 75 %} <div class="bg-blue-500 h-2 rounded-full w-3/4">
+        </div>
+        {% elif mechanics_percent < 85 %} <div class="bg-blue-500 h-2 rounded-full w-10/12">
             </div>
-            <div class="p-4">
-                <!-- Placeholder for past teams data -->
-                <div class="text-center text-gray-500 dark:text-gray-400 text-sm italic py-4">
-                    Past teams data will be displayed here
+            {% elif mechanics_percent < 95 %} <div class="bg-blue-500 h-2 rounded-full w-11/12">
                 </div>
-            </div>
-        </div>
-
-        <!-- Accomplishments -->
-        <div class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden">
-            <div class="border-b border-gray-200 dark:border-slate-600 px-4 py-3">
-                <h3 class="font-semibold text-gray-800 dark:text-gray-200 flex items-center">
-                    <i class="bi bi-trophy mr-2 text-yellow-500"></i> Accomplishments
-                </h3>
-            </div>
-            <div class="p-4">
-                <!-- Placeholder for accomplishments data -->
-                <div class="text-center text-gray-500 dark:text-gray-400 text-sm italic py-4">
-                    Accomplishments data will be displayed here
+                {% else %}
+                <div class="bg-blue-500 h-2 rounded-full w-full"></div>
+                {% endif %}
                 </div>
-            </div>
-        </div>
+                </div>
 
-        <!-- Actions -->
-        <div class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden">
-            <div class="border-b border-gray-200 dark:border-slate-600 px-4 py-3">
-                <h3 class="font-semibold text-gray-800 dark:text-gray-200 flex items-center">
-                    <i class="bi bi-lightning mr-2 text-blue-500"></i> Actions
-                </h3>
-            </div>
-            <div class="p-4 space-y-3">
-                <button class="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150">
-                    <i class="bi bi-cash-coin mr-2"></i> Approach for Transfer
-                </button>
-                <button class="w-full flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150">
-                    <i class="bi bi-clipboard-plus mr-2"></i> Add to Scout List
-                </button>
-                <button class="w-full flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150">
-                    <i class="bi bi-arrow-left-right mr-2"></i> Compare Player
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-{% else %}
-<div class="flex items-center justify-center h-full m-8">
-    <div class="text-center">
-        <i class="bi bi-people text-4xl text-gray-400 dark:text-gray-500"></i>
-        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">No player found</p>
-    </div>
-</div>
-{% endif %}
+                <!-- Knowledge -->
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Knowledge</span>
+                        <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ player.knowledge }}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+                        {% set knowledge_percent = player.knowledge|default(0) %}
+                        {% if knowledge_percent < 5 %} <div class="bg-blue-500 h-2 rounded-full w-0">
+                    </div>
+                    {% elif knowledge_percent < 15 %} <div class="bg-blue-500 h-2 rounded-full w-1/12">
+                </div>
+                {% elif knowledge_percent < 25 %} <div class="bg-blue-500 h-2 rounded-full w-1/4">
+                    </div>
+                    {% elif knowledge_percent < 35 %} <div class="bg-blue-500 h-2 rounded-full w-1/3">
+                        </div>
+                        {% elif knowledge_percent < 45 %} <div class="bg-blue-500 h-2 rounded-full w-5/12">
+                            </div>
+                            {% elif knowledge_percent < 55 %} <div class="bg-blue-500 h-2 rounded-full w-1/2">
+                                </div>
+                                {% elif knowledge_percent < 65 %} <div class="bg-blue-500 h-2 rounded-full w-7/12">
+                                    </div>
+                                    {% elif knowledge_percent < 75 %} <div class="bg-blue-500 h-2 rounded-full w-3/4">
+                                        </div>
+                                        {% elif knowledge_percent < 85 %} <div
+                                            class="bg-blue-500 h-2 rounded-full w-10/12">
+                                            </div>
+                                            {% elif knowledge_percent < 95 %} <div
+                                                class="bg-blue-500 h-2 rounded-full w-11/12">
+                                                </div>
+                                                {% else %}
+                                                <div class="bg-blue-500 h-2 rounded-full w-full"></div>
+                                                {% endif %}
+                                                </div>
+                                                </div>
+
+                                                <!-- Agility -->
+                                                <div>
+                                                    <div class="flex justify-between items-center mb-1">
+                                                        <span
+                                                            class="text-sm text-gray-700 dark:text-gray-300">Agility</span>
+                                                        <span
+                                                            class="text-sm font-medium text-gray-800 dark:text-gray-200">{{
+                                                            player.agility }}</span>
+                                                    </div>
+                                                    <div
+                                                        class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+                                                        {% set agility_percent = player.agility|default(0) %}
+                                                        {% if agility_percent < 5 %} <div
+                                                            class="bg-blue-500 h-2 rounded-full w-0">
+                                                    </div>
+                                                    {% elif agility_percent < 15 %} <div
+                                                        class="bg-blue-500 h-2 rounded-full w-1/12">
+                                                </div>
+                                                {% elif agility_percent < 25 %} <div
+                                                    class="bg-blue-500 h-2 rounded-full w-1/4">
+                                                    </div>
+                                                    {% elif agility_percent < 35 %} <div
+                                                        class="bg-blue-500 h-2 rounded-full w-1/3">
+                                                        </div>
+                                                        {% elif agility_percent < 45 %} <div
+                                                            class="bg-blue-500 h-2 rounded-full w-5/12">
+                                                            </div>
+                                                            {% elif agility_percent < 55 %} <div
+                                                                class="bg-blue-500 h-2 rounded-full w-1/2">
+                                                                </div>
+                                                                {% elif agility_percent < 65 %} <div
+                                                                    class="bg-blue-500 h-2 rounded-full w-7/12">
+                                                                    </div>
+                                                                    {% elif agility_percent < 75 %} <div
+                                                                        class="bg-blue-500 h-2 rounded-full w-3/4">
+                                                                        </div>
+                                                                        {% elif agility_percent < 85 %} <div
+                                                                            class="bg-blue-500 h-2 rounded-full w-10/12">
+                                                                            </div>
+                                                                            {% elif agility_percent < 95 %} <div
+                                                                                class="bg-blue-500 h-2 rounded-full w-11/12">
+                                                                                </div>
+                                                                                {% else %}
+                                                                                <div
+                                                                                    class="bg-blue-500 h-2 rounded-full w-full">
+                                                                                </div>
+                                                                                {% endif %}
+                                                                                </div>
+                                                                                </div>
+
+                                                                                <!-- Add more attributes as needed -->
+                                                                                </div>
+                                                                                </div>
+
+                                                                                <!-- Role-Specific Skills -->
+                                                                                <div class="mb-8">
+                                                                                    {% set role_color = "purple" if
+                                                                                    player.role.value == "support" else
+                                                                                    "blue" if player.role.value == "mid"
+                                                                                    else "red" if player.role.value ==
+                                                                                    "top" else "green" if
+                                                                                    player.role.value == "jungle" else
+                                                                                    "yellow" %}
+                                                                                    <h3
+                                                                                        class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                                                                                        <i
+                                                                                            class="bi bi-lightning-charge-fill text-{{ role_color }}-500 mr-2"></i>
+                                                                                        Role Skills
+                                                                                    </h3>
+
+                                                                                    <div
+                                                                                        class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                                                                                        <!-- Vision -->
+                                                                                        <div>
+                                                                                            <div
+                                                                                                class="flex justify-between items-center mb-1">
+                                                                                                <span
+                                                                                                    class="text-sm text-gray-700 dark:text-gray-300">Vision</span>
+                                                                                                <span
+                                                                                                    class="text-sm font-medium text-gray-800 dark:text-gray-200">{{
+                                                                                                    player.vision
+                                                                                                    }}</span>
+                                                                                            </div>
+                                                                                            <div
+                                                                                                class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+                                                                                                <div class="bg-{{ role_color }}-500 h-2 rounded-full"
+                                                                                                    style="width: {{ player.vision }}%">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                        <!-- Farming -->
+                                                                                        <div>
+                                                                                            <div
+                                                                                                class="flex justify-between items-center mb-1">
+                                                                                                <span
+                                                                                                    class="text-sm text-gray-700 dark:text-gray-300">Farming</span>
+                                                                                                <span
+                                                                                                    class="text-sm font-medium text-gray-800 dark:text-gray-200">{{
+                                                                                                    player.farming
+                                                                                                    }}</span>
+                                                                                            </div>
+                                                                                            <div
+                                                                                                class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+                                                                                                <div class="bg-{{ role_color }}-500 h-2 rounded-full"
+                                                                                                    style="width: {{ player.farming }}%">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                        <!-- Communication -->
+                                                                                        <div>
+                                                                                            <div
+                                                                                                class="flex justify-between items-center mb-1">
+                                                                                                <span
+                                                                                                    class="text-sm text-gray-700 dark:text-gray-300">Communication</span>
+                                                                                                <span
+                                                                                                    class="text-sm font-medium text-gray-800 dark:text-gray-200">{{
+                                                                                                    player.communication
+                                                                                                    }}</span>
+                                                                                            </div>
+                                                                                            <div
+                                                                                                class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+                                                                                                <div class="bg-{{ role_color }}-500 h-2 rounded-full"
+                                                                                                    style="width: {{ player.communication }}%">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <!-- Overall Rating -->
+                                                                                <div
+                                                                                    class="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-800 rounded-lg mb-4">
+
+                                                                                    <div>
+                                                                                        <div
+                                                                                            class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                                                                            Contract Status</div>
+                                                                                        <div
+                                                                                            class="font-medium text-gray-800 dark:text-gray-200">
+                                                                                            {% if
+                                                                                            player.current_contract %}
+                                                                                            Until {{
+                                                                                            player.current_contract.end_date.strftime('%b
+                                                                                            %Y') }}
+                                                                                            {% else %}
+                                                                                            No Contract
+                                                                                            {% endif %}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                </div>
+
+                                                                                <!-- History Tab Content -->
+                                                                                <div x-show="activeTab === 'history'"
+                                                                                    class="p-6">
+                                                                                    <h3
+                                                                                        class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                                                                                        <i
+                                                                                            class="bi bi-clock-history text-blue-500 mr-2"></i>
+                                                                                        Player History
+                                                                                    </h3>
+
+                                                                                    <div class="mb-6">
+                                                                                        <p
+                                                                                            class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                                                                            Career milestones and
+                                                                                            transfer history for {{
+                                                                                            player.nick_name }}.
+                                                                                        </p>
+
+                                                                                        <!-- Placeholder for history data -->
+                                                                                        <div
+                                                                                            class="text-center text-gray-500 dark:text-gray-400 text-sm italic">
+                                                                                            Player history data will be
+                                                                                            displayed here
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <!-- Statistics Tab Content -->
+                                                                                <div x-show="activeTab === 'statistics'"
+                                                                                    class="p-6">
+                                                                                    <h3
+                                                                                        class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                                                                                        <i
+                                                                                            class="bi bi-bar-chart text-blue-500 mr-2"></i>
+                                                                                        Player Statistics
+                                                                                    </h3>
+
+                                                                                    <div class="mb-6">
+                                                                                        <p
+                                                                                            class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                                                                            Performance statistics for
+                                                                                            {{ player.nick_name }}.
+                                                                                        </p>
+
+                                                                                        <!-- Placeholder for statistics data -->
+                                                                                        <div
+                                                                                            class="text-center text-gray-500 dark:text-gray-400 text-sm italic">
+                                                                                            Player statistics will be
+                                                                                            displayed here
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <!-- Scouting Tab Content -->
+                                                                                <div x-show="activeTab === 'scouting'"
+                                                                                    class="p-6">
+                                                                                    <h3
+                                                                                        class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                                                                                        <i
+                                                                                            class="bi bi-search text-blue-500 mr-2"></i>
+                                                                                        Scouting Report
+                                                                                    </h3>
+
+                                                                                    <div class="mb-6">
+                                                                                        <p
+                                                                                            class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                                                                            Detailed scouting analysis
+                                                                                            for {{ player.nick_name }}.
+                                                                                        </p>
+
+                                                                                        <!-- Placeholder for scouting data -->
+                                                                                        <div
+                                                                                            class="text-center text-gray-500 dark:text-gray-400 text-sm italic">
+                                                                                            Scouting report will be
+                                                                                            displayed here
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                </div>
+                                                                                </div>
+                                                                                </div>
+
+                                                                                <!-- Bottom Section -->
+                                                                                <div
+                                                                                    class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                                                                                    <!-- Past Teams -->
+                                                                                    <div
+                                                                                        class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden">
+                                                                                        <div
+                                                                                            class="border-b border-gray-200 dark:border-slate-600 px-4 py-3">
+                                                                                            <h3
+                                                                                                class="font-semibold text-gray-800 dark:text-gray-200 flex items-center">
+                                                                                                <i
+                                                                                                    class="bi bi-building mr-2 text-indigo-500"></i>
+                                                                                                Past Teams
+                                                                                            </h3>
+                                                                                        </div>
+                                                                                        <div class="p-4">
+                                                                                            <!-- Placeholder for past teams data -->
+                                                                                            <div
+                                                                                                class="text-center text-gray-500 dark:text-gray-400 text-sm italic py-4">
+                                                                                                Past teams data will be
+                                                                                                displayed here
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <!-- Accomplishments -->
+                                                                                    <div
+                                                                                        class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden">
+                                                                                        <div
+                                                                                            class="border-b border-gray-200 dark:border-slate-600 px-4 py-3">
+                                                                                            <h3
+                                                                                                class="font-semibold text-gray-800 dark:text-gray-200 flex items-center">
+                                                                                                <i
+                                                                                                    class="bi bi-trophy mr-2 text-yellow-500"></i>
+                                                                                                Accomplishments
+                                                                                            </h3>
+                                                                                        </div>
+                                                                                        <div class="p-4">
+                                                                                            <!-- Placeholder for accomplishments data -->
+                                                                                            <div
+                                                                                                class="text-center text-gray-500 dark:text-gray-400 text-sm italic py-4">
+                                                                                                Accomplishments data
+                                                                                                will be displayed here
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <!-- Actions -->
+                                                                                    <div
+                                                                                        class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden">
+                                                                                        <div
+                                                                                            class="border-b border-gray-200 dark:border-slate-600 px-4 py-3">
+                                                                                            <h3
+                                                                                                class="font-semibold text-gray-800 dark:text-gray-200 flex items-center">
+                                                                                                <i
+                                                                                                    class="bi bi-lightning mr-2 text-blue-500"></i>
+                                                                                                Actions
+                                                                                            </h3>
+                                                                                        </div>
+                                                                                        <div class="p-4 space-y-3">
+                                                                                            <button
+                                                                                                class="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150">
+                                                                                                <i
+                                                                                                    class="bi bi-cash-coin mr-2"></i>
+                                                                                                Approach for Transfer
+                                                                                            </button>
+                                                                                            <button
+                                                                                                class="w-full flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150">
+                                                                                                <i
+                                                                                                    class="bi bi-clipboard-plus mr-2"></i>
+                                                                                                Add to Scout List
+                                                                                            </button>
+                                                                                            <button
+                                                                                                class="w-full flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150">
+                                                                                                <i
+                                                                                                    class="bi bi-arrow-left-right mr-2"></i>
+                                                                                                Compare Player
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                </div>
+                                                                                {% else %}
+                                                                                <div
+                                                                                    class="flex items-center justify-center h-full m-8">
+                                                                                    <div class="text-center">
+                                                                                        <i
+                                                                                            class="bi bi-people text-4xl text-gray-400 dark:text-gray-500"></i>
+                                                                                        <p
+                                                                                            class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                                                            No player found</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                {% endif %}

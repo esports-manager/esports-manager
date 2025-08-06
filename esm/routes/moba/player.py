@@ -6,14 +6,14 @@ from fastapi.templating import Jinja2Templates
 from esm.config import FRONTEND_DIR, ESM_DIR
 from esm.db import get_session
 from esm.services import serve_image
-from esm.models.moba import MobaPlayer, MobaTeam
 from pathlib import Path
+from esm.models.moba.team import MobaTeam, MobaTeamPublic
 from esm.models.moba.player import (
+    MobaPlayer,
     MobaPlayerPublic,
     MobaPlayerCreate,
     MobaPlayerUpdate,
 )
-from esm.models.moba.team import MobaTeamPublic
 from sqlmodel import Session, select
 from fastapi import Depends, HTTPException
 from typing import Optional
@@ -30,10 +30,9 @@ templates = Jinja2Templates(directory=templates_dir)
 
 class MobaPlayerWithTeam(MobaPlayerPublic):
     team: Optional["MobaTeamPublic"] = None
-    image_url: Optional[str] = None
 
 
-@player_routes.get("/")
+@player_routes.get("/", response_model=list[MobaPlayerPublic])
 async def get_players(
     request: Request,
     session: Session = Depends(get_session),
@@ -43,51 +42,81 @@ async def get_players(
 
     page = 1
     per_page = 20
+    current_page = request.query_params.get("page", 1)
+    per_page = request.query_params.get("per_page", 20)
 
-    if request.query_params.get("page") and request.query_params.get("page").isdigit():
-        page = max(1, int(request.query_params.get("page")))
-    if (
-        request.query_params.get("per_page")
-        and request.query_params.get("per_page").isdigit()
-    ):
-        per_page = min(100, max(1, int(request.query_params.get("per_page"))))
+    if current_page:
+        page = max(1, int(current_page))
+    if per_page:
+        per_page = min(100, max(1, int(per_page)))
 
     skip = (page - 1) * per_page
 
-    if request.query_params.get("role"):
-        query = query.where(MobaPlayer.role == request.query_params.get("role"))
-        count_query = count_query.where(
-            MobaPlayer.role == request.query_params.get("role")
-        )
-    if request.query_params.get("nationality"):
-        query = query.where(
-            MobaPlayer.nationality == request.query_params.get("nationality")
-        )
-        count_query = count_query.where(
-            MobaPlayer.nationality == request.query_params.get("nationality")
-        )
-    if request.query_params.get("search"):
-        query = query.where(
-            MobaPlayer.nick_name.icontains(request.query_params.get("search"))
-        )
-        count_query = count_query.where(
-            MobaPlayer.nick_name.icontains(request.query_params.get("search"))
-        )
-
-    sort_by = request.query_params.get("sort")
+    is_active = request.query_params.get("is_active")
+    first_name = request.query_params.get("first_name")
+    last_name = request.query_params.get("last_name")
+    nick_name = request.query_params.get("nick_name")
+    date_of_birth = request.query_params.get("date_of_birth")
+    role = request.query_params.get("role")
+    nationality = request.query_params.get("nationality")
+    search = request.query_params.get("search")
+    sort = request.query_params.get("sort")
     sort_direction = request.query_params.get("direction", "asc")
     sort_map = {
         "name": MobaPlayer.nick_name,
         "role": MobaPlayer.role,
         "nationality": MobaPlayer.nationality,
     }
+    search = request.query_params.get("search")
 
-    if sort_by in sort_map:
-        sort_field = sort_map[sort_by]
-        if sort_direction == "desc":
-            query = query.order_by(sort_field.desc())
-        else:
-            query = query.order_by(sort_field.asc())
+    if is_active:
+        query = query.where(MobaPlayer.is_active == bool(is_active))
+        count_query = count_query.where(MobaPlayer.is_active == bool(is_active))
+    if first_name:
+        query = query.where(MobaPlayer.first_name == first_name)
+        count_query = count_query.where(MobaPlayer.first_name == first_name)
+    if last_name:
+        query = query.where(MobaPlayer.last_name == last_name)
+        count_query = count_query.where(MobaPlayer.last_name == last_name)
+    if nick_name:
+        query = query.where(MobaPlayer.nick_name == nick_name)
+        count_query = count_query.where(MobaPlayer.nick_name == nick_name)
+    if date_of_birth:
+        query = query.where(MobaPlayer.date_of_birth == date_of_birth)
+        count_query = count_query.where(MobaPlayer.date_of_birth == date_of_birth)
+    if role:
+        query = query.where(MobaPlayer.role == role)
+        count_query = count_query.where(MobaPlayer.role == role)
+    if nationality:
+        query = query.where(MobaPlayer.nationality == nationality)
+        count_query = count_query.where(MobaPlayer.nationality == nationality)
+    if search:
+        query = query.where(MobaPlayer.nick_name.icontains(search))
+        count_query = count_query.where(MobaPlayer.nick_name.icontains(search))
+    if date_of_birth:
+        query = query.where(MobaPlayer.date_of_birth == date_of_birth)
+        count_query = count_query.where(MobaPlayer.date_of_birth == date_of_birth)
+    if role:
+        query = query.where(MobaPlayer.role == role)
+        count_query = count_query.where(MobaPlayer.role == role)
+    if nationality:
+        query = query.where(MobaPlayer.nationality == nationality)
+        count_query = count_query.where(MobaPlayer.nationality == nationality)
+    if search:
+        query = query.where(MobaPlayer.nick_name.icontains(search))
+        count_query = count_query.where(MobaPlayer.nick_name.icontains(search))
+    if sort and sort_direction:
+        sort_map = {
+            "name": MobaPlayer.nick_name,
+            "role": MobaPlayer.role,
+            "nationality": MobaPlayer.nationality,
+        }
+        if sort in sort_map:
+            sort_field = sort_map[sort]
+            if sort_direction == "desc":
+                query = query.order_by(sort_field.desc())
+            else:
+                query = query.order_by(sort_field.asc())
 
     total_players = len(session.exec(count_query).all())
     total_pages = (total_players + per_page - 1) // per_page
@@ -100,23 +129,8 @@ async def get_players(
         player_data = player.model_dump()
         if player.current_contract and player.current_contract.team_id:
             team_data = session.get(MobaTeam, player.current_contract.team_id)
+            player_data["team"] = MobaTeamPublic.model_validate(team_data).model_dump()
         player_with_team = MobaPlayerWithTeam.model_validate(player_data)
-
-        # Set the team data
-        player_with_team.team = team_data
-
-        # Generate image URL for the player
-        if player.image_path:
-            # If image_path is a URL, use it directly
-            if player.image_path.startswith("http"):
-                player_with_team.image_url = player.image_path
-            else:
-                # If it's a local path, extract the filename and create a URL to our endpoint
-                filename = Path(player.image_path).name
-                player_with_team.image_url = f"/api/moba/players/images/{filename}"
-        else:
-            # Use default image if no image path specified
-            player_with_team.image_url = "/api/moba/players/images/default_player.webp"
 
         result.append(player_with_team)
 
@@ -142,7 +156,7 @@ async def get_players(
                     "role": request.query_params.get("role", ""),
                     "nationality": request.query_params.get("nationality", ""),
                     "search": request.query_params.get("search", ""),
-                    "sort": sort_by,
+                    "sort": sort,
                     "direction": sort_direction,
                 },
             },
@@ -175,23 +189,8 @@ async def get_player(*, session: Session = Depends(get_session), request: Reques
     team_data = None
     if player.current_contract and player.current_contract.team_id:
         team_data = session.get(MobaTeam, player.current_contract.team_id)
+        player_data["team"] = MobaTeamPublic.model_validate(team_data.model_dump())
     player_with_team = MobaPlayerWithTeam.model_validate(player_data)
-
-    # Set the team data
-    player_with_team.team = team_data
-
-    # Generate image URL for the player
-    if player.image_path:
-        # If image_path is a URL, use it directly
-        if player.image_path.startswith("http"):
-            player_with_team.image_url = player.image_path
-        else:
-            # If it's a local path, extract the filename and create a URL to our endpoint
-            filename = Path(player.image_path).name
-            player_with_team.image_url = f"/api/moba/players/images/{filename}"
-    else:
-        # Use default image if no image path specified
-        player_with_team.image_url = "/api/moba/players/images/default_player.webp"
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
@@ -234,4 +233,6 @@ async def delete_player(*, session: Session = Depends(get_session), id: int):
 async def get_player_image(filename: str):
     """Serve player images from the res/img/players directory"""
     image_path = Path(ESM_DIR) / "res" / "img" / "players" / filename
-    return serve_image(image_path)
+    return serve_image(
+        image_path, Path(ESM_DIR) / "res" / "img" / "players" / "default_player.webp"
+    )

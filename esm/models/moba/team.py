@@ -1,23 +1,41 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
+import enum
 from sqlmodel import SQLModel, Field, DateTime, Column
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import Relationship
 from datetime import datetime
-
+from esm.services import get_country_code
 from esm.models.moba.player_contract import MobaPlayerContract
 
 if TYPE_CHECKING:
     from esm.models.moba.player import MobaPlayer
 
 
+class MobaTeamTier(enum.Enum):
+    SP = "S+"
+    S = "S"
+    A = "A"
+    B = "B"
+    C = "C"
+    D = "D"
+    F = "F"
+
+
 class MobaTeamBase(SQLModel):
     name: str
-    nationality: Optional[str]
-    region: Optional[str]
-    description: Optional[str]
-    logo_path: Optional[str]
+    nationality: Optional[str] = None
+    region: Optional[str] = None
+    description: Optional[str] = None
+    logo_path: Optional[str] = None
+    banner_path: Optional[str] = None
+
+    def get_country_code(self) -> str:
+        if self.nationality:
+            return get_country_code(self.nationality)
+        else:
+            return ""
 
 
 class MobaTeam(MobaTeamBase, table=True):
@@ -35,6 +53,12 @@ class MobaTeam(MobaTeamBase, table=True):
     @property
     def current_players(self) -> list["MobaPlayer"]:
         return [contract.player for contract in self.contracts if contract.is_active]
+
+    @property
+    def overall(self) -> int:
+        return sum(player.overall for player in self.current_players) // len(
+            self.current_players
+        )
 
     def add_player(self, player: "MobaPlayer", contract: "MobaPlayerContract") -> None:
         if contract.team_id != self.id:
@@ -65,4 +89,5 @@ class MobaTeamUpdate(SQLModel):
     region: Optional[str] = None
     description: Optional[str] = None
     logo_path: Optional[str] = None
+    banner_path: Optional[str] = None
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)

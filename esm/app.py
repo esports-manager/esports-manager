@@ -26,12 +26,8 @@ def create_api(lifespan: Optional[Callable] = lifespan):
         lifespan=lifespan,
     )
 
-    from .routes.moba.player import player_routes
-    from .routes.moba.team import team_routes
-    from .routes.moba.champion import champion_routes
+    from .routes.moba import moba_router
 
-    app.include_router(player_routes, prefix="/api/moba")
-    app.include_router(team_routes, prefix="/api/moba")
-    app.include_router(champion_routes, prefix="/api/moba")
+    app.include_router(moba_router, prefix="/api")
 
     return app

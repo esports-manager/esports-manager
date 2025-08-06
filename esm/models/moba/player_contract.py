@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 class MobaPlayerContractBase(SQLModel):
     start_date: date
     end_date: date
+    leave_date: Optional[date] = None
     salary: int = Field(default=0)
     is_active: bool = Field(default=True, index=True)
 
@@ -29,7 +30,6 @@ class MobaPlayerContract(MobaPlayerContractBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     team_id: int = Field(foreign_key="moba_teams.id")
     player_id: int = Field(foreign_key="moba_players.id")
-    leave_date: Optional[date] = None
     player: "MobaPlayer" = Relationship(back_populates="contracts")
     team: "MobaTeam" = Relationship(back_populates="contracts")
     created_at: datetime = Field(default_factory=datetime.now)
@@ -38,8 +38,6 @@ class MobaPlayerContract(MobaPlayerContractBase, table=True):
 
 class MobaPlayerContractPublic(MobaPlayerContractBase):
     id: int
-    created_at: datetime
-    updated_at: Optional[datetime]
 
 
 class MobaPlayerContractCreate(MobaPlayerContractBase):

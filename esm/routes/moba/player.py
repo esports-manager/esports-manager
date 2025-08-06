@@ -194,24 +194,8 @@ async def get_player(*, session: Session = Depends(get_session), request: Reques
     team_data = None
     if player.current_contract and player.current_contract.team_id:
         team_data = session.get(MobaTeam, player.current_contract.team_id)
+        player_data["team"] = MobaTeamPublic.model_validate(team_data.model_dump())
     player_with_team = MobaPlayerWithTeam.model_validate(player_data)
-
-    # Set the team data
-    player_with_team.team = team_data
-
-    # Generate image URL for the player - optimize to avoid unnecessary processing
-    if player.image_path:
-        # If image_path is a URL, use it directly
-        if player.image_path.startswith("http"):
-            player_with_team.image_url = player.image_path
-        else:
-            # If it's a local path, use the static file serving instead of API endpoint
-            # This is more efficient as it avoids FastAPI routing overhead
-            filename = Path(player.image_path).name
-            player_with_team.image_url = f"/static/img/players/{filename}"
-    else:
-        # Use default image if no image path specified
-        player_with_team.image_url = "/static/img/players/default_player.webp"
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(

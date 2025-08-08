@@ -87,9 +87,9 @@ async def get_champions(
             MobaChampion.name.icontains(request.query_params.get("search"))
         )
 
-    # Handle sorting
-    sort_by = request.query_params.get("sort", "name")
-    sort_direction = request.query_params.get("direction", "asc")
+    # Handle sorting (normalize to lowercase for safety)
+    sort_by = (request.query_params.get("sort", "name") or "name").lower()
+    sort_direction = (request.query_params.get("direction", "asc") or "asc").lower()
 
     # Map frontend sort fields to model attributes
     sort_map = {

@@ -13,7 +13,7 @@
   showFilters: false,
   updateChampionsList() {
     document.getElementById('per-page-input').value = this.perPage;
-    document.getElementById('champion-filters-form').dispatchEvent(new Event('submit'));
+    htmx.trigger('#champion-filters-form', 'submit');
   }
 }">
   <!-- Page Header -->
@@ -66,8 +66,7 @@
     <!-- Filters and Search Section -->
     <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4 mb-4">
       <!-- Search & Filters Form -->
-      <form id="champion-filters-form" hx-get="/api/moba/champions"
-        hx-trigger="input delay:300ms from:#search-input, change from:#role-filter, change from:#difficulty-filter, change from:#tier-filter, change from:#sort-filter, change from:#sort-direction-toggle, change from:#per-page-input, submit"
+      <form id="champion-filters-form" hx-get="/api/moba/champions" hx-trigger="submit"
         hx-include="#champion-filters-form" hx-swap="innerHTML" hx-target="#champ-list">
 
         <!-- Search Bar (Full Width) with Filter Toggle -->
@@ -76,7 +75,8 @@
             <i class="bi bi-search text-gray-500 dark:text-gray-400"></i>
           </div>
           <input id="search-input" type="text" name="search" x-model="searchQuery" placeholder="Search champions..."
-            class="pl-10 pr-12 py-2 w-full rounded-lg bg-gray-100 dark:bg-slate-600 border-0 focus:ring-2 focus:ring-blue-500 text-sm shadow-sm">
+            class="pl-10 pr-12 py-2 w-full rounded-lg bg-gray-100 dark:bg-slate-600 border-0 focus:ring-2 focus:ring-blue-500 text-sm shadow-sm"
+            @input.debounce.300ms="$el.form.dispatchEvent(new Event('submit'))">
 
           <!-- Filter Toggle Button -->
           <button type="button" @click="showFilters = !showFilters"
@@ -167,8 +167,8 @@
                 </button>
               </div>
               <!-- Hidden inputs -->
-              <input id="per-page-input" type="hidden" name="per_page" :value="perPage">
-              <input type="hidden" name="direction" :value="sortDirection">
+              <input id="per-page-input" type="hidden" name="per_page" x-model="perPage">
+              <input type="hidden" name="direction" x-model="sortDirection">
             </div>
           </div>
         </div> <!-- End of collapsible filters section -->

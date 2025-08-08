@@ -1200,6 +1200,229 @@ curl -X POST "$BASE_URL" \
     "ban_rate": 16.7
   }'
 
+# Rell - The Iron Maiden
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Rell",
+    "release_date": "2020-12-10",
+    "primary_role": "support",
+    "secondary_role": null,
+    "champion_type1": "tank",
+    "champion_type2": "support",
+    "difficulty": "medium",
+    "strength": 74,
+    "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Rell_0.jpg",
+    "description": "The Iron Maiden",
+    "win_rate": 51.0,
+    "pick_rate": 8.2,
+    "ban_rate": 6.9
+  }'
+
+# Akshan - The Rogue Sentinel
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Akshan",
+    "release_date": "2021-07-22",
+    "primary_role": "mid",
+    "secondary_role": "adc",
+    "champion_type1": "marksman",
+    "champion_type2": "assassin",
+    "difficulty": "hard",
+    "strength": 79,
+    "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Akshan_0.jpg",
+    "description": "The Rogue Sentinel",
+    "win_rate": 49.2,
+    "pick_rate": 7.4,
+    "ban_rate": 9.6
+  }'
+
+# Vex - The Gloomist
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Vex",
+    "release_date": "2021-09-23",
+    "primary_role": "mid",
+    "secondary_role": null,
+    "champion_type1": "mage",
+    "champion_type2": null,
+    "difficulty": "medium",
+    "strength": 73,
+    "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Vex_0.jpg",
+    "description": "The Gloomist",
+    "win_rate": 50.8,
+    "pick_rate": 6.3,
+    "ban_rate": 4.7
+  }'
+
+# Renata Glasc - The Chem-Baroness
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Renata Glasc",
+    "release_date": "2022-02-17",
+    "primary_role": "support",
+    "secondary_role": null,
+    "champion_type1": "support",
+    "champion_type2": "mage",
+    "difficulty": "medium",
+    "strength": 75,
+    "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Renata_0.jpg",
+    "description": "The Chem-Baroness",
+    "win_rate": 50.9,
+    "pick_rate": 9.1,
+    "ban_rate": 6.4
+  }'
+
+# Bel'Veth - Empress of the Void
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Bel'Veth","release_date": "2022-06-09","primary_role": "jungle","secondary_role": null,"champion_type1": "fighter","champion_type2": "assassin","difficulty": "hard","strength": 82,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Belveth_0.jpg","description": "Empress of the Void","win_rate": 49.4,"pick_rate": 8.5,"ban_rate": 12.7}
+JSON
+
+# Nilah - The Joy Unbound
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Nilah",
+    "release_date": "2022-07-13",
+    "primary_role": "adc",
+    "secondary_role": null,
+    "champion_type1": "marksman",
+    "champion_type2": "fighter",
+    "difficulty": "hard",
+    "strength": 78,
+    "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Nilah_0.jpg",
+    "description": "The Joy Unbound",
+    "win_rate": 50.1,
+    "pick_rate": 5.6,
+    "ban_rate": 7.8
+  }'
+
+# K'Sante - The Pride of Nazumah
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "K'Sante","release_date": "2022-11-03","primary_role": "top","secondary_role": null,"champion_type1": "tank","champion_type2": "fighter","difficulty": "hard","strength": 81,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/KSante_0.jpg","description": "The Pride of Nazumah","win_rate": 49.1,"pick_rate": 7.9,"ban_rate": 10.5}
+JSON
+
+# Milio - The Gentle Flame
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Milio",
+    "release_date": "2023-03-23",
+    "primary_role": "support",
+    "secondary_role": null,
+    "champion_type1": "support",
+    "champion_type2": "mage",
+    "difficulty": "easy",
+    "strength": 66,
+    "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Milio_0.jpg",
+    "description": "The Gentle Flame",
+    "win_rate": 51.5,
+    "pick_rate": 6.8,
+    "ban_rate": 5.1
+  }'
+
+# Naafiri - The Hound of a Hundred Bites
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Naafiri",
+    "release_date": "2023-07-20",
+    "primary_role": "mid",
+    "secondary_role": "jungle",
+    "champion_type1": "assassin",
+    "champion_type2": null,
+    "difficulty": "easy",
+    "strength": 72,
+    "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Naafiri_0.jpg",
+    "description": "The Hound of a Hundred Bites",
+    "win_rate": 50.0,
+    "pick_rate": 5.3,
+    "ban_rate": 6.6
+  }'
+
+# Briar - The Restrained Hunger
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Briar",
+    "release_date": "2023-09-14",
+    "primary_role": "jungle",
+    "secondary_role": "top",
+    "champion_type1": "assassin",
+    "champion_type2": "fighter",
+    "difficulty": "medium",
+    "strength": 77,
+    "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Briar_0.jpg",
+    "description": "The Restrained Hunger",
+    "win_rate": 49.6,
+    "pick_rate": 6.9,
+    "ban_rate": 8.2
+  }'
+
+# Hwei - The Visionary
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Hwei",
+    "release_date": "2023-12-13",
+    "primary_role": "mid",
+    "secondary_role": null,
+    "champion_type1": "mage",
+    "champion_type2": null,
+    "difficulty": "hard",
+    "strength": 80,
+    "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Hwei_0.jpg",
+    "description": "The Visionary",
+    "win_rate": 49.0,
+    "pick_rate": 5.7,
+    "ban_rate": 7.5
+  }'
+
+# Smolder - The Fiery Fledgling
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Smolder",
+    "release_date": "2024-01-31",
+    "primary_role": "adc",
+    "secondary_role": null,
+    "champion_type1": "marksman",
+    "champion_type2": null,
+    "difficulty": "medium",
+    "strength": 74,
+    "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Smolder_0.jpg",
+    "description": "The Fiery Fledgling",
+    "win_rate": 50.4,
+    "pick_rate": 12.7,
+    "ban_rate": 9.9
+  }'
+
+# Aurora - The Witch Between Worlds
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Aurora",
+    "release_date": "2024-07-17",
+    "primary_role": "mid",
+    "secondary_role": "jungle",
+    "champion_type1": "mage",
+    "champion_type2": "assassin",
+    "difficulty": "medium",
+    "strength": 78,
+    "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aurora_0.jpg",
+    "description": "The Witch Between Worlds",
+    "win_rate": 50.2,
+    "pick_rate": 8.1,
+    "ban_rate": 7.3
+  }'
+
 # Gwen - The Hallowed Seamstress
 curl -X POST "$BASE_URL" \
   -H "Content-Type: application/json" \
@@ -1219,24 +1442,7 @@ curl -X POST "$BASE_URL" \
     "ban_rate": 9.5
   }'
 
-# Akshan - The Rogue Sentinel
-curl -X POST "$BASE_URL" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Akshan",
-    "release_date": "2021-07-22",
-    "primary_role": "adc",
-    "secondary_role": "mid",
-    "champion_type1": "marksman",
-    "champion_type2": "assassin",
-    "difficulty": "medium",
-    "strength": 73,
-    "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Akshan_0.jpg",
-    "description": "The Rogue Sentinel",
-    "win_rate": 47.9,
-    "pick_rate": 4.6,
-    "ban_rate": 6.3
-  }'
+ 
 
 # Warwick - The Uncaged Wrath of Zaun
 curl -X POST "$BASE_URL" \
@@ -1390,24 +1596,7 @@ curl -X POST "$BASE_URL" \
     "ban_rate": 14.9
   }'
 
-# Vex - The Gloomist
-curl -X POST "$BASE_URL" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Vex",
-    "release_date": "2021-09-23",
-    "primary_role": "mid",
-    "secondary_role": null,
-    "champion_type1": "mage",
-    "champion_type2": "assassin",
-    "difficulty": "medium",
-    "strength": 71,
-    "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Vex_0.jpg",
-    "description": "The Gloomist",
-    "win_rate": 50.7,
-    "pick_rate": 7.8,
-    "ban_rate": 6.5
-  }'
+ 
 
 # Lillia - The Bashful Bloom
 curl -X POST "$BASE_URL" \
@@ -1830,21 +2019,9 @@ curl -X POST "$BASE_URL" \
 # Vel'Koz - The Eye of the Void
 curl -X POST "$BASE_URL" \
   -H "Content-Type: application/json" \
-  -d '{
-    "name": "Vel Koz",
-    "release_date": "2014-02-27",
-    "primary_role": "mid",
-    "secondary_role": "support",
-    "champion_type1": "mage",
-    "champion_type2": null,
-    "difficulty": "medium",
-    "strength": 75,
-    "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Velkoz_0.jpg",
-    "description": "The Eye of the Void",
-    "win_rate": 52.4,
-    "pick_rate": 4.6,
-    "ban_rate": 3.1
-  }'
+  -d @- <<'JSON'
+{"name": "Vel'Koz","release_date": "2014-02-27","primary_role": "mid","secondary_role": "support","champion_type1": "mage","champion_type2": null,"difficulty": "medium","strength": 75,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Velkoz_0.jpg","description": "The Eye of the Void","win_rate": 52.4,"pick_rate": 4.6,"ban_rate": 3.1}
+JSON
 
 # Wukong - The Monkey King
 curl -X POST "$BASE_URL" \
@@ -1902,3 +2079,423 @@ curl -X POST "$BASE_URL" \
     "pick_rate": 3.8,
     "ban_rate": 4.1
   }'
+
+# Alistar - the Minotaur
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Alistar","release_date": "2009-02-21","primary_role": "support","secondary_role": null,"champion_type1": "tank","champion_type2": "support","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Alistar_0.jpg","description": "the Minotaur","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Ambessa - Matriarch of War
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Ambessa","release_date": "2024-11-06","primary_role": "top","secondary_role": null,"champion_type1": "fighter","champion_type2": "assassin","difficulty": "hard","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ambessa_0.jpg","description": "Matriarch of War","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Amumu - the Sad Mummy
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Amumu","release_date": "2009-06-26","primary_role": "jungle","secondary_role": "support","champion_type1": "tank","champion_type2": "support","difficulty": "easy","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Amumu_0.jpg","description": "the Sad Mummy","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Anivia - the Cryophoenix
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Anivia","release_date": "2009-07-10","primary_role": "mid","secondary_role": null,"champion_type1": "mage","champion_type2": null,"difficulty": "hard","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Anivia_0.jpg","description": "the Cryophoenix","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Ashe - the Frost Archer
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Ashe","release_date": "2009-02-21","primary_role": "adc","secondary_role": "support","champion_type1": "marksman","champion_type2": "support","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ashe_0.jpg","description": "the Frost Archer","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Aurelion Sol - The Star Forger
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Aurelion Sol","release_date": "2016-03-24","primary_role": "mid","secondary_role": null,"champion_type1": "mage","champion_type2": null,"difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/AurelionSol_0.jpg","description": "The Star Forger","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Cho'Gath - the Terror of the Void
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Cho'Gath","release_date": "2009-06-26","primary_role": "top","secondary_role": null,"champion_type1": "tank","champion_type2": "mage","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Chogath_0.jpg","description": "the Terror of the Void","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Corki - the Daring Bombardier
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Corki","release_date": "2009-09-19","primary_role": "mid","secondary_role": null,"champion_type1": "marksman","champion_type2": "mage","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Corki_0.jpg","description": "the Daring Bombardier","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Evelynn - Agony's Embrace
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Evelynn","release_date": "2009-05-01","primary_role": "jungle","secondary_role": null,"champion_type1": "assassin","champion_type2": "mage","difficulty": "hard","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Evelynn_0.jpg","description": "Agony's Embrace","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Fizz - the Tidal Trickster
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Fizz","release_date": "2011-11-15","primary_role": "mid","secondary_role": null,"champion_type1": "assassin","champion_type2": "fighter","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Fizz_0.jpg","description": "the Tidal Trickster","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Galio - the Colossus
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Galio","release_date": "2010-08-10","primary_role": "mid","secondary_role": "support","champion_type1": "tank","champion_type2": "mage","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Galio_0.jpg","description": "the Colossus","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Gnar - the Missing Link
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Gnar","release_date": "2014-08-14","primary_role": "top","secondary_role": null,"champion_type1": "fighter","champion_type2": "tank","difficulty": "hard","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Gnar_0.jpg","description": "the Missing Link","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Gragas - the Rabble Rouser
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Gragas","release_date": "2010-02-02","primary_role": "jungle","secondary_role": "mid","champion_type1": "fighter","champion_type2": "mage","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Gragas_0.jpg","description": "the Rabble Rouser","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Illaoi - the Kraken Priestess
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Illaoi","release_date": "2015-11-24","primary_role": "top","secondary_role": null,"champion_type1": "fighter","champion_type2": "tank","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Illaoi_0.jpg","description": "the Kraken Priestess","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Janna - the Storm's Fury
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Janna","release_date": "2009-09-02","primary_role": "support","secondary_role": null,"champion_type1": "support","champion_type2": "mage","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Janna_0.jpg","description": "the Storm's Fury","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Jayce - the Defender of Tomorrow
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Jayce","release_date": "2012-07-07","primary_role": "mid","secondary_role": "top","champion_type1": "fighter","champion_type2": "marksman","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jayce_0.jpg","description": "the Defender of Tomorrow","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Kalista - the Spear of Vengeance
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Kalista","release_date": "2014-11-20","primary_role": "adc","secondary_role": null,"champion_type1": "marksman","champion_type2": null,"difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kalista_0.jpg","description": "the Spear of Vengeance","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Karthus - the Deathsinger
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Karthus","release_date": "2009-06-12","primary_role": "jungle","secondary_role": null,"champion_type1": "mage","champion_type2": null,"difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Karthus_0.jpg","description": "the Deathsinger","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Kayle - the Righteous
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Kayle","release_date": "2009-02-21","primary_role": "top","secondary_role": null,"champion_type1": "mage","champion_type2": "marksman","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kayle_0.jpg","description": "the Righteous","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Kennen - the Heart of the Tempest
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Kennen","release_date": "2010-04-08","primary_role": "top","secondary_role": null,"champion_type1": "mage","champion_type2": null,"difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kennen_0.jpg","description": "the Heart of the Tempest","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Kindred - The Eternal Hunters
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Kindred","release_date": "2015-10-14","primary_role": "jungle","secondary_role": null,"champion_type1": "marksman","champion_type2": null,"difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kindred_0.jpg","description": "The Eternal Hunters","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Kled - the Cantankerous Cavalier
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Kled","release_date": "2016-08-10","primary_role": "top","secondary_role": null,"champion_type1": "fighter","champion_type2": null,"difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kled_0.jpg","description": "the Cantankerous Cavalier","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Kog'Maw - the Mouth of the Abyss
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Kog'Maw","release_date": "2010-06-24","primary_role": "adc","secondary_role": null,"champion_type1": "marksman","champion_type2": "mage","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/KogMaw_0.jpg","description": "the Mouth of the Abyss","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Lissandra - the Ice Witch
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Lissandra","release_date": "2013-04-30","primary_role": "mid","secondary_role": null,"champion_type1": "mage","champion_type2": null,"difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lissandra_0.jpg","description": "the Ice Witch","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Lulu - the Fae Sorceress
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Lulu","release_date": "2012-03-20","primary_role": "support","secondary_role": null,"champion_type1": "support","champion_type2": "mage","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lulu_0.jpg","description": "the Fae Sorceress","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Malzahar - the Prophet of the Void
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Malzahar","release_date": "2010-06-01","primary_role": "mid","secondary_role": null,"champion_type1": "mage","champion_type2": null,"difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Malzahar_0.jpg","description": "the Prophet of the Void","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Mel - the Soul's Reflection
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Mel","release_date": "2025-01-23","primary_role": "mid","secondary_role": "support","champion_type1": "mage","champion_type2": "support","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Mel_0.jpg","description": "the Soul's Reflection","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Miss Fortune - the Bounty Hunter
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Miss Fortune","release_date": "2010-09-08","primary_role": "adc","secondary_role": null,"champion_type1": "marksman","champion_type2": "mage","difficulty": "easy","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MissFortune_0.jpg","description": "the Bounty Hunter","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Mordekaiser - the Iron Revenant
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Mordekaiser","release_date": "2010-02-24","primary_role": "top","secondary_role": null,"champion_type1": "fighter","champion_type2": "mage","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Mordekaiser_0.jpg","description": "the Iron Revenant","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Nautilus - the Titan of the Depths
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Nautilus","release_date": "2012-02-14","primary_role": "support","secondary_role": null,"champion_type1": "tank","champion_type2": "support","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Nautilus_0.jpg","description": "the Titan of the Depths","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Nidalee - the Bestial Huntress
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Nidalee","release_date": "2009-12-17","primary_role": "jungle","secondary_role": null,"champion_type1": "assassin","champion_type2": "mage","difficulty": "hard","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Nidalee_0.jpg","description": "the Bestial Huntress","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Nunu & Willump - the Boy and His Yeti
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Nunu & Willump","release_date": "2009-02-21","primary_role": "jungle","secondary_role": null,"champion_type1": "tank","champion_type2": "mage","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Nunu_0.jpg","description": "the Boy and His Yeti","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Poppy - Keeper of the Hammer
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Poppy","release_date": "2010-01-13","primary_role": "jungle","secondary_role": "top","champion_type1": "tank","champion_type2": "fighter","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Poppy_0.jpg","description": "Keeper of the Hammer","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Rek'Sai - the Void Burrower
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Rek'Sai","release_date": "2014-12-11","primary_role": "jungle","secondary_role": null,"champion_type1": "fighter","champion_type2": "tank","difficulty": "easy","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/RekSai_0.jpg","description": "the Void Burrower","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Renekton - the Butcher of the Sands
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Renekton","release_date": "2011-01-18","primary_role": "top","secondary_role": null,"champion_type1": "fighter","champion_type2": "tank","difficulty": "easy","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Renekton_0.jpg","description": "the Butcher of the Sands","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Rumble - the Mechanized Menace
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Rumble","release_date": "2011-04-26","primary_role": "mid","secondary_role": "top","champion_type1": "fighter","champion_type2": "mage","difficulty": "hard","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Rumble_0.jpg","description": "the Mechanized Menace","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Ryze - the Rune Mage
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Ryze","release_date": "2009-02-21","primary_role": "mid","secondary_role": null,"champion_type1": "mage","champion_type2": null,"difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ryze_0.jpg","description": "the Rune Mage","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Skarner - the Primordial Sovereign
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Skarner","release_date": "2011-08-09","primary_role": "jungle","secondary_role": "top","champion_type1": "tank","champion_type2": "fighter","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Skarner_0.jpg","description": "the Primordial Sovereign","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Sona - Maven of the Strings
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Sona","release_date": "2010-09-21","primary_role": "support","secondary_role": null,"champion_type1": "support","champion_type2": "mage","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Sona_0.jpg","description": "Maven of the Strings","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Tahm Kench - The River King
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Tahm Kench","release_date": "2015-07-09","primary_role": "support","secondary_role": "top","champion_type1": "tank","champion_type2": "support","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/TahmKench_0.jpg","description": "The River King","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Talon - the Blade's Shadow
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Talon","release_date": "2011-08-24","primary_role": "jungle","secondary_role": null,"champion_type1": "assassin","champion_type2": null,"difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Talon_0.jpg","description": "the Blade's Shadow","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Taric - the Shield of Valoran
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Taric","release_date": "2009-08-19","primary_role": "mid","secondary_role": "support","champion_type1": "support","champion_type2": "tank","difficulty": "easy","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Taric_0.jpg","description": "the Shield of Valoran","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Tristana - the Yordle Gunner
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Tristana","release_date": "2009-02-21","primary_role": "adc","secondary_role": "mid","champion_type1": "marksman","champion_type2": "assassin","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Tristana_0.jpg","description": "the Yordle Gunner","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Trundle - the Troll King
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Trundle","release_date": "2010-12-01","primary_role": "jungle","secondary_role": "top","champion_type1": "fighter","champion_type2": "tank","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Trundle_0.jpg","description": "the Troll King","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Twitch - the Plague Rat
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Twitch","release_date": "2009-05-01","primary_role": "adc","secondary_role": "support","champion_type1": "marksman","champion_type2": "assassin","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Twitch_0.jpg","description": "the Plague Rat","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Urgot - the Dreadnought
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Urgot","release_date": "2010-08-24","primary_role": "top","secondary_role": null,"champion_type1": "fighter","champion_type2": "tank","difficulty": "hard","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Urgot_0.jpg","description": "the Dreadnought","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Varus - the Arrow of Retribution
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Varus","release_date": "2012-05-08","primary_role": "adc","secondary_role": null,"champion_type1": "marksman","champion_type2": "mage","difficulty": "easy","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Varus_0.jpg","description": "the Arrow of Retribution","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Vi - the Piltover Enforcer
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Vi","release_date": "2012-12-19","primary_role": "jungle","secondary_role": null,"champion_type1": "fighter","champion_type2": "assassin","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Vi_0.jpg","description": "the Piltover Enforcer","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Volibear - the Relentless Storm
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Volibear","release_date": "2011-11-29","primary_role": "jungle","secondary_role": "top","champion_type1": "fighter","champion_type2": "tank","difficulty": "easy","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Volibear_0.jpg","description": "the Relentless Storm","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Xin Zhao - the Seneschal of Demacia
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Xin Zhao","release_date": "2010-07-13","primary_role": "jungle","secondary_role": null,"champion_type1": "fighter","champion_type2": "tank","difficulty": "easy","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/XinZhao_0.jpg","description": "the Seneschal of Demacia","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Yunara - the Unbroken Faith
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Yunara","release_date": "2025-07-16","primary_role": "adc","secondary_role": null,"champion_type1": "marksman","champion_type2": null,"difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yunara_0.jpg","description": "the Unbroken Faith","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Zac - the Secret Weapon
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Zac","release_date": "2013-03-29","primary_role": "jungle","secondary_role": "support","champion_type1": "tank","champion_type2": "fighter","difficulty": "hard","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zac_0.jpg","description": "the Secret Weapon","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Ziggs - the Hexplosives Expert
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Ziggs","release_date": "2012-02-01","primary_role": "adc","secondary_role": "mid","champion_type1": "mage","champion_type2": null,"difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ziggs_0.jpg","description": "the Hexplosives Expert","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Zoe - the Aspect of Twilight
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Zoe","release_date": "2017-11-21","primary_role": "mid","secondary_role": null,"champion_type1": "mage","champion_type2": null,"difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zoe_0.jpg","description": "the Aspect of Twilight","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Seraphine - the Starry-Eyed Songstress
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Seraphine","release_date": "2020-10-29","primary_role": "adc","secondary_role": "support","champion_type1": "support","champion_type2": "mage","difficulty": "easy","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Seraphine_0.jpg","description": "the Starry-Eyed Songstress","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Sett - the Boss
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Sett","release_date": "2020-01-14","primary_role": "top","secondary_role": null,"champion_type1": "fighter","champion_type2": "tank","difficulty": "easy","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Sett_0.jpg","description": "the Boss","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Shaco - the Demon Jester
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Shaco","release_date": "2009-10-10","primary_role": "jungle","secondary_role": "support","champion_type1": "assassin","champion_type2": null,"difficulty": "hard","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Shaco_0.jpg","description": "the Demon Jester","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Shyvana - the Half-Dragon
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Shyvana","release_date": "2011-11-01","primary_role": "jungle","secondary_role": null,"champion_type1": "fighter","champion_type2": "mage","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Shyvana_0.jpg","description": "the Half-Dragon","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Singed - the Mad Chemist
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Singed","release_date": "2009-04-18","primary_role": "top","secondary_role": null,"champion_type1": "tank","champion_type2": "mage","difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Singed_0.jpg","description": "the Mad Chemist","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON
+
+# Sivir - the Battle Mistress
+curl -X POST "$BASE_URL" \
+  -H "Content-Type: application/json" \
+  -d @- <<'JSON'
+{"name": "Sivir","release_date": "2009-02-21","primary_role": "adc","secondary_role": null,"champion_type1": "marksman","champion_type2": null,"difficulty": "medium","strength": 70,"image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Sivir_0.jpg","description": "the Battle Mistress","win_rate": null,"pick_rate": null,"ban_rate": null}
+JSON

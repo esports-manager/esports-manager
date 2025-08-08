@@ -12,8 +12,10 @@
   perPage: '20',
   showFilters: false,
   updateChampionsList() {
-    document.getElementById('per-page-input').value = this.perPage;
-    htmx.trigger('#champion-filters-form', 'submit');
+    // Ensure x-model updates are flushed before submitting via HTMX
+    this.$nextTick(() => {
+      htmx.trigger('#champion-filters-form', 'submit');
+    });
   }
 }">
   <!-- Page Header -->

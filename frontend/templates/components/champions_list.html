@@ -268,7 +268,7 @@
   <div class="flex flex-wrap justify-center gap-1">
     <!-- Previous Button -->
     <button {% if pagination.has_prev %} hx-get="/api/moba/champions" hx-include="#champion-filters-form"
-      hx-vals='{"page": {{ pagination.page - 1 }}}' hx-target="#champ-list" hx-swap="innerHTML"
+      hx-vals='{"page": {{ pagination.page - 1 }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "role": "{{ current_filters.role }}", "difficulty": "{{ current_filters.difficulty }}", "tier": "{{ current_filters.tier }}", "search": "{{ current_filters.search }}" }' hx-target="#champ-list" hx-swap="innerHTML"
       class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
       {% else %} disabled
       class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500 text-sm cursor-not-allowed"
@@ -278,7 +278,7 @@
 
     <!-- First Page (if not near the beginning) -->
     {% if pagination.page > 3 %}
-    <button hx-get="/api/moba/champions" hx-include="#champion-filters-form" hx-vals='{"page": 1}'
+    <button hx-get="/api/moba/champions" hx-include="#champion-filters-form" hx-vals='{"page": 1, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "role": "{{ current_filters.role }}", "difficulty": "{{ current_filters.difficulty }}", "tier": "{{ current_filters.tier }}", "search": "{{ current_filters.search }}" }'
       hx-target="#champ-list" hx-swap="innerHTML"
       class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150">
       1
@@ -296,7 +296,7 @@
 
     {% for page_num in range(start_page, end_page + 1) %}
     <button {% if page_num==pagination.page %} class="px-3 py-1 rounded-md bg-blue-500 text-white text-sm" disabled {%
-      else %} hx-get="/api/moba/champions" hx-include="#champion-filters-form" hx-vals='{"page": {{ page_num }}}'
+      else %} hx-get="/api/moba/champions" hx-include="#champion-filters-form" hx-vals='{"page": {{ page_num }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "role": "{{ current_filters.role }}", "difficulty": "{{ current_filters.difficulty }}", "tier": "{{ current_filters.tier }}", "search": "{{ current_filters.search }}" }'
       hx-target="#champ-list" hx-swap="innerHTML"
       class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
       {% endif %}>
@@ -310,7 +310,7 @@
 
       <!-- Last Page -->
       <button hx-get="/api/moba/champions" hx-include="#champion-filters-form"
-        hx-vals='{"page": {{ pagination.total_pages }}}' hx-target="#champ-list" hx-swap="innerHTML"
+        hx-vals='{"page": {{ pagination.total_pages }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "role": "{{ current_filters.role }}", "difficulty": "{{ current_filters.difficulty }}", "tier": "{{ current_filters.tier }}", "search": "{{ current_filters.search }}" }' hx-target="#champ-list" hx-swap="innerHTML"
         class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150">
         {{ pagination.total_pages }}
       </button>
@@ -318,7 +318,7 @@
 
       <!-- Next Button -->
       <button {% if pagination.has_next %} hx-get="/api/moba/champions" hx-include="#champion-filters-form"
-        hx-vals='{"page": {{ pagination.page + 1 }}}' hx-target="#champ-list" hx-swap="innerHTML"
+        hx-vals='{"page": {{ pagination.page + 1 }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "role": "{{ current_filters.role }}", "difficulty": "{{ current_filters.difficulty }}", "tier": "{{ current_filters.tier }}", "search": "{{ current_filters.search }}" }' hx-target="#champ-list" hx-swap="innerHTML"
         class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
         {% else %} disabled
         class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500 text-sm cursor-not-allowed"

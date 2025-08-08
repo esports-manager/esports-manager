@@ -102,10 +102,11 @@ async def get_champions(
     # Apply sorting if the field exists in our mapping
     if sort_by in sort_map:
         sort_field = sort_map[sort_by]
+        # Add a secondary tiebreaker on ID to keep pagination stable
         if sort_direction == "desc":
-            query = query.order_by(sort_field.desc())
+            query = query.order_by(sort_field.desc(), MobaChampion.id.desc())
         else:
-            query = query.order_by(sort_field.asc())
+            query = query.order_by(sort_field.asc(), MobaChampion.id.asc())
 
     # Count total champions matching filters
     total_champions = len(session.exec(count_query).all())

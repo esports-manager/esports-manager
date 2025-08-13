@@ -1,0 +1,103 @@
+<div class="m-8">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">Tournament</h1>
+      <div class="text-sm text-gray-500 dark:text-gray-400">
+        <span>Tournament information</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <span
+        class="px-2 py-1 rounded text-xs font-semibold bg-amber-200 dark:bg-amber-800 text-gray-700 dark:text-gray-200">{{
+        tournament.tier.value.upper() }}</span>
+      <span
+        class="px-2 py-1 rounded text-xs font-medium bg-blue-200 dark:bg-blue-800 text-gray-700 dark:text-gray-200">{{
+        tournament.type.value.upper() }}</span>
+      <span
+        class="px-2 py-1 rounded text-xs font-medium bg-green-200 dark:bg-green-800 text-gray-700 dark:text-gray-200">{{
+        tournament.format.value.upper().replace("_", " ") }}</span>
+    </div>
+  </div>
+
+  <!-- Banner / Logo -->
+  <div
+    class="relative rounded-xl overflow-hidden mb-6 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+    {% if tournament.banner_path %}
+    <img src="/api/moba/tournaments/images/{{ tournament.banner_path }}" alt="{{ tournament.name }} banner"
+      class="w-full h-48 object-cover" onerror="replaceWithColor(this)">
+    {% else %}
+    <div class="w-full h-40 md:h-48 bg-gradient-to-r from-slate-600 to-slate-700"></div>
+    {% endif %}
+    <div
+      class="absolute top-6 left-2 h-20 w-20 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-lg bg-white dark:bg-slate-700 flex items-center justify-center">
+      {% if tournament.logo_path %}
+      <img src="/api/moba/tournaments/images/{{ tournament.logo_path }}"
+        alt="{{ tournament.abbreviation or tournament.name }} logo" class="w-full h-full object-cover"
+        onerror="replaceWithLogo(this)">
+      {% else %}
+      <i class="bi bi-trophy-fill text-yellow-500 text-5xl opacity-80"></i>
+      {% endif %}
+    </div>
+    <div class="absolute top-6 left-24">
+      <div class="flex flex-col">
+        <span class="text-xl text-gray-500 dark:text-gray-400 mb-2">{{ tournament.name }}</span>
+        <span class="text-sm text-gray-500 dark:text-gray-400">{{ tournament.location }} <span
+            class="text-gray-500 dark:text-gray-400">|</span> {{ tournament.start_date.strftime('%d %b %Y') }} - {{
+          tournament.end_date.strftime('%d %b %Y') }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  {% if tournament.description %}
+  <div class="prose dark:prose-invert max-w-none mb-6">
+    <p>{{ tournament.description }}</p>
+  </div>
+  {% endif %}
+
+  <!-- Participating Teams -->
+  <div class="bg-white dark:bg-slate-800 rounded-lg shadow border border-gray-200 dark:border-slate-700">
+    <div class="px-4 py-3 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Participating Teams</h2>
+      <div class="text-xs text-gray-500 dark:text-gray-400">{{ teams|length }} teams</div>
+    </div>
+
+    {% if teams %}
+    <div class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {% for team in teams %}
+      <a href="/teams/{{ team.id }}"
+        class="block bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-4 hover:shadow-md transition">
+        <div class="flex items-center">
+          <div class="h-12 w-12 rounded-full bg-gray-200 dark:bg-slate-700 overflow-hidden mr-3">
+            {% if team.logo_path %}
+            <img src="/api/moba/teams/images/{{ team.logo_path }}" alt="{{ team.name }}"
+              class="h-full w-full object-cover" onerror="replaceWithLogo(this)">
+            {% else %}
+            <i class="bi bi-shield-fill text-blue-500 text-5xl opacity-80"></i>
+            {% endif %}
+          </div>
+          <div>
+            <div class="font-medium text-gray-800 dark:text-gray-200">{{ team.name }}</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">{{ team.region or '—' }}</div>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="p-6 text-center text-sm text-gray-500 dark:text-gray-400">No teams linked to this tournament yet.</div>
+    {% endif %}
+  </div>
+</div>
+<script>
+  function replaceWithColor(img) {
+    const div = document.createElement("div");
+    div.className = "h-40 w-full object-cover bg-gray-200 dark:bg-slate-700 overflow-hidden mr-3";
+    img.replaceWith(div);
+  }
+  function replaceWithLogo(img) {
+    const div = document.createElement("i");
+    div.className = "bi bi-shield-fill text-blue-500 text-5xl opacity-80";
+    img.replaceWith(div);
+  }
+</script>

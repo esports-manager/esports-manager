@@ -62,8 +62,10 @@ def create_frontend(app: FastAPI) -> FastAPI:
 
     from frontend.routes.player import player_routes
     from frontend.routes.team import team_routes
+    from frontend.routes.tournament import tournament_routes
 
     app.include_router(player_routes)
     app.include_router(team_routes)
+    app.include_router(tournament_routes)
 
     return app

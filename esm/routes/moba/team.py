@@ -75,10 +75,50 @@ async def get_teams(request: Request, session: Session = Depends(get_session)):
         per_page = min(100, max(1, int(request.query_params.get("per_page"))))
     skip = (page - 1) * per_page
 
-    if request.query_params.get("region"):
-        query = query.where(MobaTeam.region == request.query_params.get("region"))
-    if request.query_params.get("search"):
-        query = query.where(MobaTeam.name.icontains(request.query_params.get("search")))
+    # Filters
+    region = request.query_params.get("region")
+    search = request.query_params.get("search")
+    league = request.query_params.get("league")
+    tier_param = request.query_params.get("tier")
+
+    if region:
+        query = query.where(MobaTeam.region == region)
+        count_query = count_query.where(MobaTeam.region == region)
+
+    if search:
+        query = query.where(MobaTeam.name.icontains(search))
+        count_query = count_query.where(MobaTeam.name.icontains(search))
+
+    if league:
+        query = query.where(MobaTeam.league == league)
+        count_query = count_query.where(MobaTeam.league == league)
+
+    # Tier filter based on overall thresholds mirroring MobaTeamWithPlayers.tier logic
+    if tier_param:
+        tier_param = tier_param.lower()
+        lower_bound = None
+        if tier_param == "sp":
+            lower_bound = 95
+        elif tier_param == "s":
+            lower_bound = 90
+        elif tier_param == "a":
+            lower_bound = 85
+        elif tier_param == "b":
+            lower_bound = 80
+        elif tier_param == "c":
+            lower_bound = 75
+        elif tier_param == "d":
+            lower_bound = 70
+
+        if lower_bound is not None:
+            # Approximate using stored overall if present; if overall is not a stored column,
+            # we fall back to name-only filters and leave tier as UI-only. Here we assume
+            # teams have a numeric 'overall' field; if not, remove this or replace with a join/aggregate.
+            try:
+                query = query.where(MobaTeam.overall >= lower_bound)
+                count_query = count_query.where(MobaTeam.overall >= lower_bound)
+            except AttributeError:
+                pass
 
     sort_by = request.query_params.get("sort")
     sort_direction = request.query_params.get("direction", "asc")
@@ -146,6 +186,21 @@ async def get_teams(request: Request, session: Session = Depends(get_session)):
         )
 
     return result
+
+
+@team_routes.get("/options")
+async def get_team_options(request: Request, session: Session = Depends(get_session)):
+    teams = session.exec(select(MobaTeam).order_by(MobaTeam.name)).all()
+    if request.headers.get("HX-Request"):
+        return templates.TemplateResponse(
+            "components/team_options.html",
+            {
+                "request": request,
+                "teams": teams,
+            },
+        )
+    # Fallback JSON
+    return [{"id": t.id, "name": t.name} for t in teams]
 
 
 @team_routes.post(

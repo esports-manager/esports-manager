@@ -8,11 +8,13 @@ from esm.db import get_session
 from esm.services import serve_image
 from pathlib import Path
 from esm.models.moba.team import MobaTeam, MobaTeamPublic
+from esm.models.moba.player_contract import MobaPlayerContract
 from esm.models.moba.player import (
     MobaPlayer,
     MobaPlayerPublic,
     MobaPlayerCreate,
     MobaPlayerUpdate,
+    MobaPlayerRole,
 )
 from sqlmodel import Session, select
 from fastapi import Depends, HTTPException
@@ -37,8 +39,25 @@ async def get_players(
     request: Request,
     session: Session = Depends(get_session),
 ):
-    query = select(MobaPlayer)
-    count_query = select(MobaPlayer)
+    # Base queries
+    query = (
+        select(MobaPlayer)
+        .join(
+            MobaPlayerContract,
+            MobaPlayerContract.player_id == MobaPlayer.id,
+            isouter=True,
+        )
+        .join(MobaTeam, MobaTeam.id == MobaPlayerContract.team_id, isouter=True)
+    )
+    count_query = (
+        select(MobaPlayer)
+        .join(
+            MobaPlayerContract,
+            MobaPlayerContract.player_id == MobaPlayer.id,
+            isouter=True,
+        )
+        .join(MobaTeam, MobaTeam.id == MobaPlayerContract.team_id, isouter=True)
+    )
 
     page = 1
     per_page = 20
@@ -53,12 +72,11 @@ async def get_players(
     skip = (page - 1) * per_page
 
     is_active = request.query_params.get("is_active")
-    first_name = request.query_params.get("first_name")
-    last_name = request.query_params.get("last_name")
-    nick_name = request.query_params.get("nick_name")
-    date_of_birth = request.query_params.get("date_of_birth")
     role = request.query_params.get("role")
     nationality = request.query_params.get("nationality")
+    region = request.query_params.get("region")
+    team_id = request.query_params.get("team_id")
+    status = request.query_params.get("status")
     search = request.query_params.get("search")
     sort = request.query_params.get("sort")
     sort_direction = request.query_params.get("direction", "asc")
@@ -69,42 +87,56 @@ async def get_players(
     }
     search = request.query_params.get("search")
 
-    if is_active:
-        query = query.where(MobaPlayer.is_active == bool(is_active))
-        count_query = count_query.where(MobaPlayer.is_active == bool(is_active))
-    if first_name:
-        query = query.where(MobaPlayer.first_name == first_name)
-        count_query = count_query.where(MobaPlayer.first_name == first_name)
-    if last_name:
-        query = query.where(MobaPlayer.last_name == last_name)
-        count_query = count_query.where(MobaPlayer.last_name == last_name)
-    if nick_name:
-        query = query.where(MobaPlayer.nick_name == nick_name)
-        count_query = count_query.where(MobaPlayer.nick_name == nick_name)
-    if date_of_birth:
-        query = query.where(MobaPlayer.date_of_birth == date_of_birth)
-        count_query = count_query.where(MobaPlayer.date_of_birth == date_of_birth)
+    if is_active is not None:
+        # Accept 'true'/'false' strings
+        active = str(is_active).lower() in ["1", "true", "yes"]
+        query = query.where(MobaPlayer.is_active == active)
+        count_query = count_query.where(MobaPlayer.is_active == active)
     if role:
-        query = query.where(MobaPlayer.role == role)
-        count_query = count_query.where(MobaPlayer.role == role)
+        # Coerce to enum if possible
+        try:
+            role_enum = MobaPlayerRole(role)
+        except Exception:
+            role_enum = None
+        if role_enum is not None:
+            query = query.where(MobaPlayer.role == role_enum)
+            count_query = count_query.where(MobaPlayer.role == role_enum)
     if nationality:
         query = query.where(MobaPlayer.nationality == nationality)
         count_query = count_query.where(MobaPlayer.nationality == nationality)
+    if region:
+        # Filter by the region of the player's current team (if any)
+        query = query.where(MobaTeam.region == region)
+        count_query = count_query.where(MobaTeam.region == region)
+    if team_id:
+        try:
+            tid = int(team_id)
+            query = query.where(
+                MobaPlayerContract.is_active is True, MobaPlayerContract.team_id == tid
+            )
+            count_query = count_query.where(
+                MobaPlayerContract.is_active is True, MobaPlayerContract.team_id == tid
+            )
+        except ValueError:
+            pass
     if search:
         query = query.where(MobaPlayer.nick_name.icontains(search))
         count_query = count_query.where(MobaPlayer.nick_name.icontains(search))
-    if date_of_birth:
-        query = query.where(MobaPlayer.date_of_birth == date_of_birth)
-        count_query = count_query.where(MobaPlayer.date_of_birth == date_of_birth)
-    if role:
-        query = query.where(MobaPlayer.role == role)
-        count_query = count_query.where(MobaPlayer.role == role)
-    if nationality:
-        query = query.where(MobaPlayer.nationality == nationality)
-        count_query = count_query.where(MobaPlayer.nationality == nationality)
-    if search:
-        query = query.where(MobaPlayer.nick_name.icontains(search))
-        count_query = count_query.where(MobaPlayer.nick_name.icontains(search))
+    if status:
+        status_lc = status.lower()
+        if status_lc == "signed":
+            query = query.where(MobaPlayerContract.is_active is True)
+            count_query = count_query.where(MobaPlayerContract.is_active is True)
+        elif status_lc == "free":
+            # No active contract
+            query = query.where(
+                (MobaPlayerContract.id is None)
+                | (MobaPlayerContract.is_active is False)
+            )
+            count_query = count_query.where(
+                (MobaPlayerContract.id is None)
+                | (MobaPlayerContract.is_active is False)
+            )
     if sort and sort_direction:
         sort_map = {
             "name": MobaPlayer.nick_name,
@@ -117,6 +149,10 @@ async def get_players(
                 query = query.order_by(sort_field.desc())
             else:
                 query = query.order_by(sort_field.asc())
+
+    # Avoid duplicates due to joins
+    query = query.distinct(MobaPlayer.id)
+    count_query = count_query.distinct(MobaPlayer.id)
 
     total_players = len(session.exec(count_query).all())
     total_pages = (total_players + per_page - 1) // per_page

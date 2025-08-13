@@ -87,9 +87,9 @@ async def get_champions(
             MobaChampion.name.icontains(request.query_params.get("search"))
         )
 
-    # Handle sorting
-    sort_by = request.query_params.get("sort", "name")
-    sort_direction = request.query_params.get("direction", "asc")
+    # Handle sorting (normalize to lowercase for safety)
+    sort_by = (request.query_params.get("sort", "name") or "name").lower()
+    sort_direction = (request.query_params.get("direction", "asc") or "asc").lower()
 
     # Map frontend sort fields to model attributes
     sort_map = {
@@ -102,10 +102,11 @@ async def get_champions(
     # Apply sorting if the field exists in our mapping
     if sort_by in sort_map:
         sort_field = sort_map[sort_by]
+        # Add a secondary tiebreaker on ID to keep pagination stable
         if sort_direction == "desc":
-            query = query.order_by(sort_field.desc())
+            query = query.order_by(sort_field.desc(), MobaChampion.id.desc())
         else:
-            query = query.order_by(sort_field.asc())
+            query = query.order_by(sort_field.asc(), MobaChampion.id.asc())
 
     # Count total champions matching filters
     total_champions = len(session.exec(count_query).all())

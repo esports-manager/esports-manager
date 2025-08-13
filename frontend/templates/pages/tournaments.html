@@ -1,0 +1,607 @@
+<div class="m-8" x-data="tournamentsPage()" x-init="init()">
+  <!-- Page Header with Quick Stats -->
+  <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Tournaments</h1>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Browse tournaments, standings, and tournament history</p>
+    </div>
+
+  </div>
+
+  <!-- Filters Section -->
+  <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4 mb-6">
+    <div class="flex flex-col md:flex-row gap-4 items-start">
+      <!-- Search -->
+      <div class="relative flex-grow">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <i class="bi bi-search text-gray-500 dark:text-gray-400"></i>
+        </div>
+        <input type="text" x-model.debounce.300ms="searchQuery" @input="onControlsChanged()"
+          placeholder="Search tournaments..."
+          class="pl-10 pr-4 py-2 w-full rounded-lg bg-gray-100 dark:bg-slate-600 border-0 focus:ring-2 focus:ring-blue-500">
+      </div>
+
+      <!-- Filter Dropdowns -->
+      <div class="flex flex-wrap gap-2">
+        <!-- Region Filter -->
+        <select x-model="regionFilter" @change="onControlsChanged()"
+          class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <option value="all">All Regions</option>
+          <option value="lck">LCK (Korea)</option>
+          <option value="lpl">LPL (China)</option>
+          <option value="lec">LEC (Europe)</option>
+          <option value="lcs">LCS (North America)</option>
+          <option value="international">International</option>
+        </select>
+
+        <!-- Tournament Tier Filter -->
+        <select x-model="tierFilter" @change="onControlsChanged()"
+          class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <option value="all">All Tiers</option>
+          <option value="s">S-Tier (Major)</option>
+          <option value="a">A-Tier (Premier)</option>
+          <option value="b">B-Tier (Minor)</option>
+          <option value="c">C-Tier (Regional)</option>
+        </select>
+
+        <!-- Sort By -->
+        <select x-model="sortBy" @change="onControlsChanged()"
+          class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <option value="start_date">Sort by Start Date</option>
+          <option value="end_date">Sort by End Date</option>
+          <option value="name">Sort by Name</option>
+        </select>
+
+        <!-- Sort Direction Toggle -->
+        <button @click="toggleSortDirection()"
+          class="bg-gray-100 hover:bg-gray-200 dark:bg-slate-600 dark:hover:bg-slate-500 rounded-lg px-3 py-2 text-sm">
+          <i :class="sortDirection === 'asc' ? 'bi bi-sort-alpha-down' : 'bi bi-sort-alpha-up'"></i>
+        </button>
+
+        <!-- View Toggle -->
+        <div class="flex items-center bg-gray-100 dark:bg-slate-600 rounded-lg p-1 ml-auto" role="group"
+          aria-label="View toggle">
+          <button @click="setView('cards')"
+            :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'cards'}"
+            class="px-2 py-1 rounded-md text-sm transition-colors duration-150" aria-label="Cards view">
+            <i class="bi bi-grid"></i>
+          </button>
+          <button @click="setView('list')"
+            :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'list'}"
+            class="px-2 py-1 rounded-md text-sm transition-colors duration-150" aria-label="List view">
+            <i class="bi bi-list-ul"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Filters Display -->
+    <div class="mt-3 flex flex-wrap gap-2"
+      x-show="regionFilter !== 'all' || tierFilter !== 'all' || searchQuery !== ''">
+      <span class="text-xs text-gray-500 dark:text-gray-400 self-center">Active filters:</span>
+
+      <!-- Region Filter Tag -->
+      <div x-show="regionFilter !== 'all'"
+        class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full flex items-center">
+        Region: <span x-text="regionFilter.toUpperCase()" class="font-medium mx-1"></span>
+        <button @click="regionFilter = 'all'" class="ml-1 hover:text-blue-600 dark:hover:text-blue-100">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      </div>
+
+      <!-- Tier Filter Tag -->
+      <div x-show="tierFilter !== 'all'"
+        class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full flex items-center">
+        Tier: <span x-text="tierFilter.toUpperCase() + '-Tier'" class="font-medium mx-1"></span>
+        <button @click="tierFilter = 'all'" class="ml-1 hover:text-green-600 dark:hover:text-green-100">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      </div>
+
+      <!-- Search Query Tag -->
+      <div x-show="searchQuery !== ''"
+        class="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs px-2 py-1 rounded-full flex items-center">
+        Search: <span x-text="searchQuery" class="font-medium mx-1"></span>
+        <button @click="searchQuery = ''" class="ml-1 hover:text-purple-600 dark:hover:text-purple-100">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Tabs -->
+  <div class="mb-6 border-b border-gray-200 dark:border-gray-600">
+    <div class="flex overflow-x-auto scrollbar-hide">
+      <button @click="activeTab = 'current'"
+        :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'current', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'current'}"
+        class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+        <i class="bi bi-trophy mr-2"></i>
+        Current Season
+      </button>
+      <button @click="activeTab = 'standings'"
+        :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'standings', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'standings'}"
+        class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+        <i class="bi bi-table mr-2"></i>
+        Standings
+      </button>
+      <button @click="activeTab = 'history'"
+        :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'history', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'history'}"
+        class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+        <i class="bi bi-clock-history mr-2"></i>
+        Past Tournaments
+      </button>
+      <button @click="activeTab = 'calendar'"
+        :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'calendar', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'calendar'}"
+        class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none">
+        <i class="bi bi-calendar-event mr-2"></i>
+        Tournament Calendar
+      </button>
+    </div>
+    <!-- Tab Contents -->
+    <!-- Current Season Tab Content -->
+    <div x-show="activeTab === 'current'" class="space-y-8">
+      <!-- Featured Tournament (dynamic S/A tier) -->
+      <template x-if="featuredTournament()">
+        <div class="relative rounded-xl shadow-lg overflow-hidden mb-8 mt-4">
+          <img class="absolute inset-0 w-full h-full object-cover opacity-40"
+               :src="bannerOrColor(featuredTournament())" :alt="featuredTournament().abbreviation || featuredTournament().name">
+          <div class="relative bg-gradient-to-br from-blue-700/80 to-purple-700/80 text-white">
+            <!-- Tournament Header -->
+            <div class="px-6 pt-6 pb-4 border-b border-white/20">
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-bold px-3 py-1 rounded-full"
+                      :class="{'bg-amber-600': featuredTournament().tier==='premier', 'bg-purple-600': featuredTournament().tier==='major', 'bg-blue-600': featuredTournament().tier==='league' }"
+                 ><span x-text="tierLabel(featuredTournament().tier)"></span></span>
+                <h2 class="text-2xl md:text-3xl font-bold" x-text="featuredTournament().name"></h2>
+              </div>
+              <div class="flex flex-wrap items-center text-sm opacity-90 mt-2 gap-2">
+                <div class="flex items-center">
+                  <i class="bi bi-geo-alt mr-1"></i>
+                  <span x-text="featuredTournament().location || 'TBD'"></span>
+                </div>
+                <span class="hidden md:inline">•</span>
+                <div class="flex items-center">
+                  <i class="bi bi-calendar3 mr-1"></i>
+                  <span x-text="dateRange(featuredTournament())"></span>
+                </div>
+              </div>
+            </div>
+            <!-- Content -->
+            <div class="p-6 flex flex-col lg:flex-row gap-8">
+              <!-- Logo -->
+              <div class="flex-shrink-0 flex justify-center">
+                <div class="relative w-36 h-36 md:w-44 md:h-44 flex-shrink-0">
+                  <div class="absolute inset-0 bg-white/20 rounded-full shadow-lg border border-white/30"></div>
+                  <div class="absolute inset-2 rounded-full overflow-hidden">
+                    <img :src="logoOrFallback(featuredTournament())" class="w-full h-full object-cover" :alt="featuredTournament().abbreviation || featuredTournament().name">
+                  </div>
+                </div>
+              </div>
+              <!-- Info -->
+              <div class="flex-grow">
+                <div class="flex flex-wrap gap-2 mb-5">
+                  <span class="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1.5 text-sm font-medium" x-text="typeLabel(featuredTournament().type)"></span>
+                  <span class="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1.5 text-sm font-medium" x-text="formatLabel(featuredTournament().format)"></span>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                  <a :href="`/tournaments/${featuredTournament().id}`" class="bg-blue-500 hover:bg-blue-600 px-5 py-2.5 rounded-md text-sm font-medium transition-colors shadow-sm">
+                    <i class="bi bi-info-circle mr-1"></i> More Details
+                  </a>
+                  <a class="bg-green-500 hover:bg-green-600 px-5 py-2.5 rounded-md text-sm font-medium transition-colors shadow-sm" href="#">
+                    <i class="bi bi-people mr-1"></i> View Teams
+                  </a>
+                  <a class="bg-purple-500 hover:bg-purple-600 px-5 py-2.5 rounded-md text-sm font-medium transition-colors shadow-sm" href="#">
+                    <i class="bi bi-calendar-check mr-1"></i> View Schedule
+                  </a>
+                </div>
+              </div>
+              <!-- Status placeholder -->
+              <div class="flex-shrink-0 flex flex-col items-center justify-center bg-white/10 rounded-xl p-5 lg:w-56 shadow-inner border border-white/10">
+                <div class="text-sm font-medium mb-1 uppercase tracking-wider opacity-80">Featured</div>
+                <div class="font-bold text-2xl mb-1" x-text="tierLabel(featuredTournament().tier)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    
+
+    <!-- Tournament Grid View -->
+    <h3 class="text-xl font-semibold mb-4 mt-2 text-slate-800 dark:text-white">Current Season Tournaments</h3>
+    <div x-show="view === 'cards'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <template x-if="loading">
+        <div class="col-span-full text-center text-sm text-gray-500 dark:text-gray-400 py-8">Loading tournaments...
+        </div>
+      </template>
+      <template x-if="!loading && tournaments.length === 0">
+        <div class="col-span-full text-center text-sm text-gray-500 dark:text-gray-400 py-8">No tournaments found.
+        </div>
+      </template>
+      <template x-for="t in majors()" :key="t.id">
+        <a :href="`/tournaments/${t.id}`" class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 border border-slate-200 dark:border-slate-600">
+          <div class="relative">
+            <img :src="bannerOrColor(t)" alt="" class="w-full h-28 object-cover">
+            <div class="absolute top-3 right-3 text-white text-xs font-medium px-2.5 py-1 rounded-md shadow-sm"
+              :class="tierBadgeClass(t.tier)">
+              <span x-text="tierLabel(t.tier)"></span>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <div class="min-w-0">
+                <h3 class="font-semibold text-gray-800 dark:text-gray-100 truncate" x-text="t.name"></h3>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5" x-text="t.location || 'TBD'"></div>
+              </div>
+              <div class="flex items-center bg-blue-50 dark:bg-blue-900/30 rounded px-2 py-1">
+                <i class="bi bi-calendar-event text-blue-600 dark:text-blue-400 mr-1 text-xs"></i>
+                <span class="text-xs text-blue-600 dark:text-blue-400 font-medium" x-text="dateRange(t)"></span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 mb-3">
+              <span
+                class="bg-gray-100 dark:bg-slate-600 text-gray-700 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full"
+                x-text="formatLabel(t.format)"></span>
+              <span
+                class="bg-gray-100 dark:bg-slate-600 text-gray-700 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full"
+                x-text="typeLabel(t.type)"></span>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">Tier</div>
+                <div class="font-medium text-gray-800 dark:text-gray-200" x-text="tierLabel(t.tier)"></div>
+              </div>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-3 py-1.5 text-xs font-medium">
+                View Details
+              </button>
+            </div>
+          </div>
+        </a>
+      </template>
+    </div>
+
+    <!-- Minor Tournaments (B-Tier) Cards -->
+    <template x-if="view === 'cards' && minors().length > 0">
+      <div>
+        <h3 class="text-lg font-semibold mt-8 mb-4 text-slate-800 dark:text-white">Minor Tournaments</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <template x-for="t in minors()" :key="t.id">
+            <a :href="`/tournaments/${t.id}`" class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden border border-slate-200 dark:border-slate-600">
+              <div class="relative">
+                <img :src="bannerOrColor(t)" alt="" class="w-full h-24 object-cover">
+                <div class="absolute top-3 right-3 text-white text-xs font-medium px-2.5 py-1 rounded-md shadow-sm"
+                  :class="tierBadgeClass(t.tier)">
+                  <span x-text="tierLabel(t.tier)"></span>
+                </div>
+              </div>
+              <div class="p-4">
+                <div class="flex justify-between items-start mb-2">
+                  <div class="min-w-0">
+                    <h3 class="font-semibold text-gray-800 dark:text-gray-100 truncate" x-text="t.name"></h3>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5" x-text="t.location || 'TBD'"></div>
+                  </div>
+                  <div class="flex items-center bg-gray-50 dark:bg-slate-800/50 rounded px-2 py-1">
+                    <i class="bi bi-calendar-event text-gray-600 dark:text-gray-300 mr-1 text-xs"></i>
+                    <span class="text-xs text-gray-600 dark:text-gray-300 font-medium" x-text="dateRange(t)"></span>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Tier</div>
+                    <div class="font-medium text-gray-800 dark:text-gray-200" x-text="tierLabel(t.tier)"></div>
+                  </div>
+                  <a class="text-blue-600 dark:text-blue-400 text-xs font-medium" :href="`/tournaments/${t.id}`">View</a>
+                </div>
+              </div>
+            </a>
+          </template>
+        </div>
+      </div>
+    </template>
+
+    <!-- Tournament List View -->
+    <div x-show="view === 'list'" class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+          <thead class="bg-gray-50 dark:bg-slate-800">
+            <tr>
+              <th scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Tournament</th>
+              <th scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Region</th>
+              <th scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Tier</th>
+              <th scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Dates</th>
+              <th scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Prize Pool</th>
+              <th scope="col" class="relative px-6 py-3">
+                <span class="sr-only">Actions</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-slate-700 divide-y divide-gray-200 dark:divide-gray-600">
+            <template x-if="loading">
+              <tr>
+                <td colspan="6" class="px-6 py-6 text-center text-sm text-gray-500 dark:text-gray-400">Loading
+                  tournaments...</td>
+              </tr>
+            </template>
+            <template x-if="!loading && tournaments.length === 0">
+              <tr>
+                <td colspan="6" class="px-6 py-6 text-center text-sm text-gray-500 dark:text-gray-400">No tournaments
+                  found.</td>
+              </tr>
+            </template>
+            <template x-for="t in majors()" :key="t.id">
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="h-10 w-10 flex-shrink-0">
+                      <img class="h-10 w-10 rounded-full" :src="logoOrFallback(t)" :alt="t.abbreviation || t.name">
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900 dark:text-gray-100" x-text="t.name"></div>
+                      <div class="text-sm text-gray-500 dark:text-gray-400" x-text="t.location || 'TBD'"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-gray-100" x-text="typeLabel(t.type)"></div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                    :class="tierPillClass(t.tier)">
+                    <span x-text="tierLabel(t.tier)"></span>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400"
+                  x-text="dateRange(t)"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">—</td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <a :href="`/tournaments/${t.id}`" class="text-blue-600 hover:text-blue-900">View</a>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+      <!-- Pagination -->
+      <div
+        class="px-4 py-3 bg-gray-50 dark:bg-slate-800 border-t border-gray-200 dark:border-gray-600 flex items-center justify-between">
+        <div class="text-xs text-gray-600 dark:text-gray-300">Page <span x-text="page"></span></div>
+        <div class="inline-flex rounded-md shadow-sm" role="group">
+          <button @click="prevPage()" :disabled="page <= 1"
+            class="px-3 py-1.5 text-sm bg-white dark:bg-slate-700 border border-gray-200 dark:border-gray-600 rounded-l-md disabled:opacity-50">
+            Prev
+          </button>
+          <button @click="nextPage()"
+            class="px-3 py-1.5 text-sm bg-white dark:bg-slate-700 border border-gray-200 dark:border-gray-600 rounded-r-md">
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Minor Tournaments (B-Tier) List -->
+    <template x-if="view === 'list' && minors().length > 0">
+      <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden">
+        <div class="px-4 pt-4">
+          <h3 class="text-lg font-semibold text-slate-800 dark:text-white">Minor Tournaments</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+            <thead class="bg-gray-50 dark:bg-slate-800">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tournament</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Region</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tier</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Dates</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Prize Pool</th>
+                <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody class="bg-white dark:bg-slate-700 divide-y divide-gray-200 dark:divide-gray-600">
+              <template x-for="t in minors()" :key="t.id">
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="h-10 w-10 flex-shrink-0">
+                        <img class="h-10 w-10 rounded-full" :src="logoOrFallback(t)" :alt="t.abbreviation || t.name">
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900 dark:text-gray-100" x-text="t.name"></div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400" x-text="t.location || 'TBD'"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900 dark:text-gray-100" x-text="typeLabel(t.type)"></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="tierPillClass(t.tier)">
+                      <span x-text="tierLabel(t.tier)"></span>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400" x-text="dateRange(t)"></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">—</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <a :href="`/tournaments/${t.id}`" class="text-blue-600 hover:text-blue-900">View</a>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination -->
+        <div
+          class="px-4 py-3 bg-gray-50 dark:bg-slate-800 border-t border-gray-200 dark:border-gray-600 flex items-center justify-between">
+          <div class="text-xs text-gray-600 dark:text-gray-300">Page <span x-text="page"></span></div>
+          <div class="inline-flex rounded-md shadow-sm" role="group">
+            <button @click="prevPage()" :disabled="page <= 1"
+              class="px-3 py-1.5 text-sm bg-white dark:bg-slate-700 border border-gray-200 dark:border-gray-600 rounded-l-md disabled:opacity-50">
+              Prev
+            </button>
+            <button @click="nextPage()"
+              class="px-3 py-1.5 text-sm bg-white dark:bg-slate-700 border border-gray-200 dark:border-gray-600 rounded-r-md">
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </template>
+    </div>
+
+    <!-- Standings Tab -->
+    <div x-show="activeTab === 'standings'" class="py-6">
+      <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">Standings placeholder</div>
+    </div>
+
+    <!-- Past Tournaments Tab Content -->
+    <div x-show="activeTab === 'history'" class="space-y-6 py-6">
+      <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">Past tournaments placeholder</div>
+    </div>
+
+    <!-- Calendar Tab Content -->
+    <div x-show="activeTab === 'calendar'" class="space-y-6 py-6">
+      <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">Tournament calendar placeholder</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function tournamentsPage() {
+    return {
+      // State
+      activeTab: 'current',
+      view: 'cards',
+      searchQuery: '',
+      regionFilter: 'all',
+      tierFilter: 'all',
+      sortBy: 'start_date',
+      sortDirection: 'desc',
+      page: 1,
+      perPage: 12,
+      loading: false,
+      tournaments: [],
+
+      init() {
+        this.fetchTournaments();
+      },
+
+      onControlsChanged() {
+        this.page = 1;
+        this.fetchTournaments();
+      },
+
+      setView(v) { this.view = v; },
+      toggleSortDirection() {
+        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+        this.fetchTournaments();
+      },
+      nextPage() { this.page += 1; this.fetchTournaments(); },
+      prevPage() { if (this.page > 1) { this.page -= 1; this.fetchTournaments(); } },
+
+      async fetchTournaments() {
+        this.loading = true;
+        try {
+          const params = new URLSearchParams();
+          if (this.searchQuery) params.set('search', this.searchQuery);
+          // API supports: tier, type, format, sort, direction, page, per_page
+          if (this.tierFilter !== 'all') params.set('tier', this.mapTierFilter(this.tierFilter));
+          if (this.regionFilter && this.regionFilter !== 'all') {
+            // Currently no region field in API; keep for future expansion
+          }
+          params.set('sort', this.sortBy);
+          params.set('direction', this.sortDirection);
+          params.set('page', String(this.page));
+          params.set('per_page', String(this.perPage));
+
+          const res = await fetch(`/api/moba/tournaments/?${params.toString()}`);
+          if (!res.ok) throw new Error('Failed to load tournaments');
+          const data = await res.json();
+          this.tournaments = Array.isArray(data) ? data : [];
+        } catch (e) {
+          console.error(e);
+          this.tournaments = [];
+        } finally {
+          this.loading = false;
+        }
+      },
+
+      // Helpers
+      dateRange(t) {
+        const f = (d) => d ? new Date(d).toLocaleDateString() : 'TBD';
+        const start = f(t.start_date);
+        const end = f(t.end_date);
+        if (!t.start_date && !t.end_date) return 'Dates TBD';
+        if (t.start_date && !t.end_date) return `${start}`;
+        return `${start} - ${end}`;
+      },
+      logoOrFallback(t) {
+        if (t.logo_path) return `/static/${t.logo_path.replace(/^\/+/, '')}`;
+        return `/static/img/trophy.svg`;
+      },
+      bannerOrColor(t) {
+        if (t.banner_path) return `/static/${t.banner_path.replace(/^\/+/, '')}`;
+        if (t.default_color) return `https://placehold.co/800x200/${t.default_color.replace('#', '')}/FFFFFF/png?text=${encodeURIComponent(t.abbreviation || t.name)}`;
+        return `/static/img/background2.jpg`;
+      },
+      tierLabel(tier) {
+        if (!tier) return '—';
+        const map = {
+          premier: 'Premier',
+          major: 'Major',
+          league: 'League',
+          minor: 'Minor',
+          academy: 'Academy',
+          semipro: 'Semi-Pro',
+          amateur: 'Amateur',
+        };
+        return map[tier] || (String(tier).replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()));
+      },
+      typeLabel(type) { return type || '—'; },
+      formatLabel(format) { return format || '—'; },
+      mapTierFilter(v) {
+        // Map UI filter to backend enum values
+        const map = { s: 'premier', a: 'major', b: 'minor', c: 'league' };
+        return map[v] || v;
+      },
+      tierBadgeClass(tier) {
+        return {
+          'bg-blue-500': tier === 'league',
+          'bg-amber-600': tier === 'premier',
+          'bg-purple-600': tier === 'major',
+          'bg-emerald-600': tier === 'minor',
+        };
+      },
+      tierPillClass(tier) {
+        return {
+          'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300': tier === 'league',
+          'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300': tier === 'premier',
+          'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300': tier === 'major',
+          'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300': tier === 'minor',
+        };
+      },
+      // Derived collections
+      majors() {
+        const MAJORS = new Set(['premier', 'major', 'league']);
+        return (this.tournaments || []).filter(t => MAJORS.has(t.tier));
+      },
+      minors() {
+        const MINORS = new Set(['minor', 'academy', 'semipro', 'amateur']);
+        return (this.tournaments || []).filter(t => MINORS.has(t.tier));
+      },
+      featuredTournament() {
+        const majorList = this.majors();
+        return majorList.length ? majorList[0] : null;
+      },
+    }
+  }
+</script>

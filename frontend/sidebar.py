@@ -52,10 +52,10 @@ sidebar = {
         "icon": "bi bi-shield-fill",
         "url": "teams",
     },
-    "championships": {
-        "name": "Championships",
+    "tournaments": {
+        "name": "Tournaments",
         "icon": "bi bi-trophy-fill",
-        "url": "championships",
+        "url": "tournaments",
     },
 }
 

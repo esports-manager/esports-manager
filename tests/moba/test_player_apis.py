@@ -5,6 +5,10 @@ from esm.models.moba.player import (
     MobaPlayer,
     MobaPlayerRole,
 )
+from esm.models.moba.champion import MobaChampion, MobaChampionRole
+from esm.models.moba.champion_mastery import (
+    MobaChampionMasteryTier,
+)
 
 
 def test_get_players_empty(client: TestClient):
@@ -122,3 +126,79 @@ def test_delete_player(client: TestClient, session: Session):
     assert response.status_code == 200
     player = session.get(MobaPlayer, player.id)
     assert player is None
+
+
+def test_get_empty_champion_pool(client: TestClient, session: Session):
+    player = MobaPlayer(
+        first_name="Test",
+        last_name="Player",
+        date_of_birth=date(2005, 1, 1),
+        nationality="Test",
+        role=MobaPlayerRole.TOP,
+    )
+    session.add(player)
+    session.commit()
+    session.refresh(player)
+    response = client.get(f"/api/moba/players/{player.id}/champion_pool")
+    assert response.status_code == 200
+    assert response.json() == []
+
+
+def test_get_champion_pool(client: TestClient, session: Session):
+    player = MobaPlayer(
+        first_name="Test",
+        last_name="Player",
+        date_of_birth=date(2005, 1, 1),
+        nationality="Test",
+        role=MobaPlayerRole.TOP,
+    )
+    session.add(player)
+    session.commit()
+    session.refresh(player)
+    champion = MobaChampion(
+        name="Test Champion",
+        release_date=date(2025, 1, 1),
+        description="Test Champion",
+        role=MobaChampionRole.TOP,
+    )
+    session.add(champion)
+    session.commit()
+    session.refresh(champion)
+    session.add(player)
+    session.commit()
+    session.refresh(player)
+    client.post(f"/api/moba/players/{player.id}/champion_pool/{champion.id}")
+    response = client.get(f"/api/moba/players/{player.id}/champion_pool/{champion.id}")
+    expected_response = {
+        "player_id": player.id,
+        "champion_id": champion.id,
+        "tier": MobaChampionMasteryTier.BRONZE.value,
+        "points": 0,
+    }
+    assert response.status_code == 200
+    assert response.json() == expected_response
+
+
+def test_get_champion_pool_not_found(client: TestClient, session: Session):
+    player = MobaPlayer(
+        first_name="Test",
+        last_name="Player",
+        date_of_birth=date(2005, 1, 1),
+        nationality="Test",
+        role=MobaPlayerRole.TOP,
+    )
+    session.add(player)
+    session.commit()
+    session.refresh(player)
+    champion = MobaChampion(
+        name="Test Champion",
+        release_date=date(2025, 1, 1),
+        description="Test Champion",
+        role=MobaChampionRole.TOP,
+    )
+    session.add(champion)
+    session.commit()
+    session.refresh(champion)
+    response = client.get(f"/api/moba/players/{player.id}/champion_pool/{champion.id}")
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Champion not found in pool"}

@@ -13,6 +13,12 @@ from .tournament import (
     MobaTournamentUpdate,
     MobaTournamentPublic,
 )
+from .champion_mastery import (
+    MobaChampionMastery,
+    MobaChampionMasteryCreate,
+    MobaChampionMasteryUpdate,
+    MobaChampionMasteryPublic,
+)
 
 __all__ = [
     "MobaPlayerContract",
@@ -25,4 +31,8 @@ __all__ = [
     "MobaTournamentCreate",
     "MobaTournamentUpdate",
     "MobaTournamentPublic",
+    "MobaChampionMastery",
+    "MobaChampionMasteryCreate",
+    "MobaChampionMasteryUpdate",
+    "MobaChampionMasteryPublic",
 ]

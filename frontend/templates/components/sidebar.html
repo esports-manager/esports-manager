@@ -36,16 +36,16 @@
     {% for key, page in sidebar.items() %}
     {% if key == current_page %}
     <a href="/page/{{ page.url }}" x-on:click="page = '{{ key }}'"
-      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700 bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500">
+      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-200 dark:hover:bg-gray-700 bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500">
       {% else %}
-    <a href="/page/{{ page.url }}" x-on:click="page = '{{ key }}'"
-      class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-50 dark:hover:bg-gray-700">
-      {% endif %}
-      <i class="bi {{ page.icon }} text-xl"></i>
-      <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded }">
-        {{ page.name }}
-      </span>
-    </a>
-    {% endfor %}
+      <a href="/page/{{ page.url }}" x-on:click="page = '{{ key }}'"
+        class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-200 dark:hover:bg-gray-700">
+        {% endif %}
+        <i class="bi {{ page.icon }} text-xl"></i>
+        <span class="overflow-hidden transition-all" :class="{ 'w-0': !expanded, 'w-52 ml-3': expanded }">
+          {{ page.name }}
+        </span>
+      </a>
+      {% endfor %}
   </nav>
 </aside>

@@ -11,10 +11,9 @@ from . import db
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
     config = Config()
-    database_url = getattr(config, "DATABASE_URL", "sqlite:///main.db")
-    db.db_manager = DatabaseManager(database_url)
+    config.load_config()
+    db.db_manager = DatabaseManager(config.database_url)
     yield
 
 

@@ -2,11 +2,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
 from typing import Optional
-from datetime import datetime
-
+from datetime import date, datetime
 from sqlmodel import SQLModel, Field, Column, Enum
 from esm.models.tournament import (
     TournamentType,
+    TournamentStatus,
     TournamentFormat,
     TournamentTier,
 )
@@ -20,11 +20,13 @@ class MobaTournamentBase(SQLModel):
     tier: TournamentTier = Field(
         sa_column=Column(Enum(TournamentTier)), default=TournamentTier.LEAGUE
     )
-    start_date: Optional[datetime] = Field(default=None)
-    end_date: Optional[datetime] = Field(default=None)
+    status: TournamentStatus = Field(
+        sa_column=Column(Enum(TournamentStatus)), default=TournamentStatus.NOT_STARTED
+    )
+    start_date: Optional[date] = Field(default=None)
+    end_date: Optional[date] = Field(default=None)
     location: Optional[str] = Field(default=None)
     description: Optional[str] = Field(default=None)
-    banner_path: Optional[str] = Field(default=None)
     default_color: Optional[str] = Field(default=None)
     logo_path: Optional[str] = Field(default=None)
 
@@ -39,8 +41,8 @@ class MobaTournament(MobaTournamentBase, table=True):
 
 class MobaTournamentPublic(MobaTournamentBase):
     id: int
-    created_at: datetime
-    updated_at: Optional[datetime]
+    created_at: date
+    updated_at: Optional[date]
 
 
 class MobaTournamentCreate(MobaTournamentBase):
@@ -59,11 +61,10 @@ class MobaTournamentUpdate(SQLModel):
     tier: Optional[TournamentTier] = Field(
         default=None, sa_column=Column(Enum(TournamentTier))
     )
-    start_date: Optional[datetime] = Field(default=None)
-    end_date: Optional[datetime] = Field(default=None)
+    start_date: Optional[date] = Field(default=None)
+    end_date: Optional[date] = Field(default=None)
     location: Optional[str] = Field(default=None)
     description: Optional[str] = Field(default=None)
-    banner_path: Optional[str] = Field(default=None)
     default_color: Optional[str] = Field(default=None)
     logo_path: Optional[str] = Field(default=None)
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)

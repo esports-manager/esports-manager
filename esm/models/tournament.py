@@ -12,7 +12,6 @@ class TournamentType(enum.Enum):
     INTERNATIONAL = "international"
     REGIONAL = "regional"
     NATIONAL = "national"
-    INVITATIONAL = "invitational"
     SHOWMATCH = "showmatch"
 
 
@@ -23,8 +22,12 @@ class TournamentFormat(enum.Enum):
     SWISS = "swiss"
     LEAGUE = "league"
     GSL = "gsl"
+    BO1_SERIES = "bo1_series"
+    BO2_SERIES = "bo2_series"
     BO3_SERIES = "bo3_series"
     BO5_SERIES = "bo5_series"
+    BO7_SERIES = "bo7_series"
+    BO9_SERIES = "bo9_series"
 
 
 class TournamentTier(enum.Enum):
@@ -37,6 +40,14 @@ class TournamentTier(enum.Enum):
     AMATEUR = "amateur"
 
 
+class TournamentStatus(enum.Enum):
+    NOT_STARTED = "not_started"
+    IN_PROGRESS = "in_progress"
+    SUSPENDED = "suspended"
+    ENDED = "ended"
+    CANCELLED = "cancelled"
+
+
 class TournamentBase(SQLModel):
     name: str = Field(index=True)
     abbreviation: Optional[str] = Field(default=None)
@@ -44,6 +55,9 @@ class TournamentBase(SQLModel):
     format: TournamentFormat = Field(sa_column=Column(Enum(TournamentFormat)))
     tier: TournamentTier = Field(
         sa_column=Column(Enum(TournamentTier)), default=TournamentTier.LEAGUE
+    )
+    status: TournamentStatus = Field(
+        sa_column=Column(Enum(TournamentStatus)), default=TournamentStatus.NOT_STARTED
     )
     start_date: Optional[datetime] = Field(default=None)
     end_date: Optional[datetime] = Field(default=None)

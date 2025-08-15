@@ -4,8 +4,10 @@
 from fastapi import APIRouter, status, Depends, HTTPException, Request
 from pydantic import BaseModel
 from sqlmodel import Session, select
-
+from pathlib import Path
+from esm.config import ESM_DIR
 from esm.db import get_session
+from esm.services import serve_image
 from esm.models.moba.tournament import (
     MobaTournament,
     MobaTournamentCreate,
@@ -204,3 +206,12 @@ async def delete_tournament(*, session: Session = Depends(get_session), id: int)
     session.delete(tournament)
     session.commit()
     return None
+
+
+@tournament_routes.get("/images/{filename}")
+async def get_tournament_image(filename: str):
+    image_path = Path(ESM_DIR) / "res" / "img" / "tournaments" / filename
+    return serve_image(
+        image_path,
+        Path(ESM_DIR) / "res" / "img" / "tournaments" / "default_tournament.webp",
+    )

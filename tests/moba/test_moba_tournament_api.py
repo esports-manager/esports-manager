@@ -3,7 +3,7 @@
 # License-Filename: LICENSES/GPL-3.0-or-later
 from fastapi.testclient import TestClient
 from sqlmodel import Session
-from datetime import datetime
+from datetime import date
 
 from esm.models.moba.tournament import (
     MobaTournament,
@@ -24,11 +24,10 @@ def test_create_and_get_tournament(client: TestClient, session: Session):
         "type": TournamentType.REGIONAL.value,
         "format": TournamentFormat.LEAGUE.value,
         "tier": TournamentTier.LEAGUE.value,
-        "start_date": "2025-06-01T00:00:00",
-        "end_date": "2025-08-10T00:00:00",
+        "start_date": "2025-06-01",
+        "end_date": "2025-08-10",
         "location": "Korea",
         "description": "Top Korean league split.",
-        "banner_path": None,
         "default_color": "#111111",
         "logo_path": "/assets/tournaments/lck.png",
     }
@@ -59,8 +58,8 @@ def test_update_tournament(client: TestClient, session: Session):
         type=TournamentType.INTERNATIONAL,
         format=TournamentFormat.GSL,
         tier=TournamentTier.MAJOR,
-        start_date=datetime(2025, 5, 1),
-        end_date=datetime(2025, 5, 20),
+        start_date=date(2025, 5, 1),
+        end_date=date(2025, 5, 20),
         location="UK",
         default_color="#222222",
     )

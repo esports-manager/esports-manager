@@ -1,0 +1,130 @@
+[
+    {
+      "name": "T1",
+      "nationality": "South Korea",
+      "region": "LCK",
+      "description": "T1, formerly SK Telecom T1, is the most decorated team in League of Legends history. Based in South Korea, they have won multiple LCK titles and three World Championships (2013, 2015, 2016). Led by the legendary Faker, T1 is known for their disciplined macro play, adaptability to any meta, and ability to perform under immense pressure. They remain a global powerhouse and a symbol of excellence in esports.",
+      "logo_path": "T1.webp",
+      "banner_path": "T1_Banner.webp"
+    },
+    {
+      "name": "Gen.G",
+      "nationality": "South Korea",
+      "region": "LCK",
+      "description": "Gen.G is a top-tier South Korean organization that has consistently been among the best in the LCK. Known for their calculated, methodical playstyle and strong laning phase, Gen.G has secured multiple domestic titles and deep Worlds runs. They are recognized for their ability to develop star players and maintain a stable, competitive roster.",
+      "logo_path": "GenG.webp",
+      "banner_path": "GenG_Banner.webp"
+    },
+    {
+      "name": "KT Rolster",
+      "nationality": "South Korea",
+      "region": "LCK",
+      "description": "KT Rolster is one of the oldest esports organizations in Korea, with a rich history in competitive League of Legends. Known for their fierce rivalry with T1, KT has fielded some of the most talented rosters in LCK history. Their playstyle often emphasizes strong laning and coordinated teamfighting.",
+      "logo_path": "KT.webp",
+      "banner_path": "KT_Banner.webp"
+    },
+    {
+      "name": "Hanwha Life Esports",
+      "nationality": "South Korea",
+      "region": "LCK",
+      "description": "Hanwha Life Esports is a South Korean team known for their passionate fanbase and ability to surprise top-tier opponents. While not always at the top of the standings, they have produced memorable Worlds performances and developed notable players.",
+      "logo_path": "HLE.webp",
+      "banner_path": "HLE_Banner.webp"
+    },
+    {
+      "name": "JD Gaming",
+      "nationality": "China",
+      "region": "LPL",
+      "description": "JD Gaming (JDG) is a dominant force in the LPL, known for their exceptional teamfighting and aggressive skirmishes. Since their rise in 2019, they have claimed multiple LPL titles and consistently challenged for international trophies. Their roster often features mechanically gifted players who thrive in chaotic fights.",
+      "logo_path": "JDG.webp",
+      "banner_path": "JDG_Banner.webp"
+    },
+    {
+      "name": "Bilibili Gaming",
+      "nationality": "China",
+      "region": "LPL",
+      "description": "Bilibili Gaming (BLG) has emerged as one of the strongest teams in the LPL, known for their calculated macro play and ability to adapt mid-series. They have made deep runs in both domestic and international tournaments, earning a reputation as a disciplined yet dangerous opponent.",
+      "logo_path": "BLG.webp",
+      "banner_path": "BLG_Banner.webp"
+    },
+    {
+      "name": "Top Esports",
+      "nationality": "China",
+      "region": "LPL",
+      "description": "Top Esports (TES) is a Chinese powerhouse recognized for their explosive early-game aggression and mechanically skilled roster. They have won LPL titles and are known for producing highlight-reel plays, often overwhelming opponents with relentless pressure.",
+      "logo_path": "TES.webp",
+      "banner_path": "TES_Banner.webp"
+    },
+    {
+      "name": "Edward Gaming",
+      "nationality": "China",
+      "region": "LPL",
+      "description": "Edward Gaming (EDG) is one of the most storied organizations in Chinese League of Legends, with multiple LPL titles and a World Championship victory in 2021. Known for their strong team coordination and late-game decision-making, EDG has been a consistent contender for nearly a decade.",
+      "logo_path": "EDG.webp",
+      "banner_path": "EDG_Banner.webp"
+    },
+    {
+      "name": "G2 Esports",
+      "nationality": "Europe",
+      "region": "LEC",
+      "description": "G2 Esports is a dominant European team known for their aggressive, high-tempo playstyle and creative strategies. Founded in 2014, they have won numerous LEC titles and reached the Worlds 2019 finals. G2 is famous for their charismatic players, bold drafts, and ability to challenge the best teams in the world.",
+      "logo_path": "G2.webp",
+      "banner_path": "G2_Banner.webp"
+    },
+    {
+      "name": "Fnatic",
+      "nationality": "United Kingdom",
+      "region": "LEC",
+      "description": "Fnatic is one of the oldest and most successful European teams, winning the first-ever League of Legends World Championship in 2011. They have a long history of producing legendary players and remain a consistent contender in the LEC, with a passionate fanbase and fierce rivalries.",
+      "logo_path": "Fnatic.webp",
+      "banner_path": "Fnatic_Banner.webp"
+    },
+    {
+      "name": "MAD Lions",
+      "nationality": "Spain",
+      "region": "LEC",
+      "description": "MAD Lions is a Spanish organization that quickly rose to prominence in the LEC with their fearless, aggressive playstyle. They have won multiple LEC titles and are known for developing young talent into world-class competitors.",
+      "logo_path": "MAD.webp",
+      "banner_path": "MAD_Banner.webp"
+    },
+    {
+      "name": "Team Vitality",
+      "nationality": "France",
+      "region": "LEC",
+      "description": "Team Vitality is a French esports organization competing in the LEC. Known for their ambitious roster building and high-profile signings, Vitality aims to challenge Europe's best and make a mark on the international stage.",
+      "logo_path": "Vitality.webp",
+      "banner_path": "Vitality_Banner.webp"
+    },
+    {
+      "name": "Cloud9",
+      "nationality": "United States",
+      "region": "LCS",
+      "description": "Cloud9 is one of the most popular and successful North American teams, known for their consistent Worlds appearances and ability to perform under pressure. They have won multiple LCS titles and are recognized for developing young talent into top-tier players.",
+      "logo_path": "C9.webp",
+      "banner_path": "C9_Banner.webp"
+    },
+    {
+      "name": "Team Liquid",
+      "nationality": "United States",
+      "region": "LCS",
+      "description": "Team Liquid is a North American powerhouse with multiple LCS titles and a history of strong international performances. Known for their disciplined play and strategic approach, TL has fielded some of the most talented rosters in the region.",
+      "logo_path": "TL.webp",
+      "banner_path": "TL_Banner.webp"
+    },
+    {
+      "name": "100 Thieves",
+      "nationality": "United States",
+      "region": "LCS",
+      "description": "100 Thieves is a lifestyle and esports brand that has quickly become a top contender in the LCS. Known for their strong branding, fan engagement, and competitive rosters, they have won LCS titles and made multiple Worlds appearances.",
+      "logo_path": "100T.webp",
+      "banner_path": "100T_Banner.webp"
+    },
+    {
+      "name": "Evil Geniuses",
+      "nationality": "United States",
+      "region": "LCS",
+      "description": "Evil Geniuses is one of the oldest esports organizations in North America, with a history of competing at the highest level. In League of Legends, they are known for their bold roster moves, focus on player development, and ability to upset top teams.",
+      "logo_path": "EG.webp",
+      "banner_path": "EG_Banner.webp"
+    }
+  ]

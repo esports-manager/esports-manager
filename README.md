@@ -11,8 +11,9 @@ License-Filename: LICENSES/GPL-3.0-or-later
 # eSports Manager
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Python version](https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/esports-manager/esports-manager/develop/pyproject.toml)](https://www.python.org/downloads/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/esports-manager/esports-manager/graphs/commit-activity)
+[![Last commit](https://img.shields.io/github/last-commit/esports-manager/esports-manager)](https://github.com/esports-manager/esports-manager/commits/develop)
 [![GitHub contributors](https://img.shields.io/github/contributors/esports-manager/esports-manager.svg)](https://GitHub.com/esports-manager/esports-manager/graphs/contributors/)
 
 **A free and open source eSports management simulation game**
@@ -31,7 +32,7 @@ In eSports Manager, you'll:
 
 - **Manage your own professional eSports team** across various game titles
 - **Discover and develop talent** from solo queue and amateur leagues
-- **Create strategies** for your team and make real-time decisions during matches
+- **Create strategies** for your team
 - **Compete in major leagues and championships** against the world's best teams
 - **Handle team finances, sponsorships, and player contracts** to build a sustainable organization
 - **Train your squad** with specialized coaching staff and practice regimens
@@ -100,13 +101,13 @@ The UI is currently being reworked with a modern web-based interface. Here are s
    cd esports-manager
    ```
 
-2. **Set up the environment and install dependencies**
+1. **Set up the environment and install dependencies**
    ```bash
    uv venv .venv
    uv sync
    ```
 
-3. **Activate the virtual environment**
+1. **Activate the virtual environment**
    - On Linux/macOS:
      ```bash
      source .venv/bin/activate
@@ -116,16 +117,18 @@ The UI is currently being reworked with a modern web-based interface. Here are s
      .venv\Scripts\activate
      ```
 
-4. **Initialize the database**
+1. **Initialize the database**
    ```bash
-   ./scripts/add_champions_to_db.sh
-   ./scripts/add_teams_to_db.sh
+   uv run python scripts/init_db.py
    ```
 
-5. **Run the development server**
+1. **Run the development server**
    ```bash
    uv run uvicorn dev:app --reload
    ```
+
+
+
 
 For more detailed setup instructions, including troubleshooting tips, refer to the [CONTRIBUTING.md](CONTRIBUTING.md#development-environment-setup) document.
 

@@ -101,7 +101,7 @@ test(models): add unit tests for Staff model
 ### Code conventions
 
 - Follow [PEP 8](https://www.python.org/dev/peps/pep-0008/). I use **flake8** to check for PEP 8 compliance.
-- Use the **pre-commit** package to auto format your code with **Black** and **isort**. I don't like to spend time talking about formatting, and styling issues, so using autoformatters to take care of these issues is a way to settle the styling debate.
+- Use the **pre-commit** package to auto format your code with **ruff**. I don't like to spend time talking about formatting, and styling issues, so using autoformatters to take care of these issues is a way to settle the styling debate.
 - Make descriptive variable names, as best as you can.
 - Whenever you can, use typehints. Typehints help me and other devs to understand how a function or class should be used. I learned to love typehints, you should embrace them as your friend as well.
 - I usually separate my work in classes rather than just using functions. I don't enforce the use of OOP in code, but I use it very often to encapsulate behavior.
@@ -230,7 +230,7 @@ Alternatively, you can use the shell script to both run the server and update th
 ./scripts/run_dev.sh
 ```
 
-And then you can run the development server. If you wish to minify the CSS, you can run:
+If you wish to minify the CSS, you can run:
 
 ```bash
 uv run tailwindcss -i frontend/static/css/input.css -o frontend/static/css/tailwind.css --minify

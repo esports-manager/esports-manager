@@ -3,7 +3,7 @@
 # License-Filename: LICENSES/GPL-3.0-or-later
 from typing import Optional
 from datetime import date, datetime
-from sqlmodel import SQLModel, Field, Column, Enum
+from sqlmodel import SQLModel, Field, Column, Enum, DateTime
 from esm.models.tournament import (
     TournamentType,
     TournamentStatus,
@@ -35,14 +35,14 @@ class MobaTournament(MobaTournamentBase, table=True):
     __tablename__ = "moba_tournaments"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    created_at: datetime = Field(default_factory=datetime.now)
-    updated_at: Optional[datetime] = Field(default=None)
+    created_at: datetime = Field(
+        default_factory=datetime.now, sa_column=Column(DateTime)
+    )
+    updated_at: Optional[datetime] = Field(default=None, sa_column=Column(DateTime))
 
 
 class MobaTournamentPublic(MobaTournamentBase):
     id: int
-    created_at: date
-    updated_at: Optional[date]
 
 
 class MobaTournamentCreate(MobaTournamentBase):
@@ -67,4 +67,4 @@ class MobaTournamentUpdate(SQLModel):
     description: Optional[str] = Field(default=None)
     default_color: Optional[str] = Field(default=None)
     logo_path: Optional[str] = Field(default=None)
-    updated_at: Optional[datetime] = Field(default_factory=datetime.now)
+    updated_at: Optional[datetime] = Field(default=None, sa_column=Column(DateTime))

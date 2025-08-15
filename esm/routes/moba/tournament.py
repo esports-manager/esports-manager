@@ -89,7 +89,7 @@ async def get_tournaments(
 
 
 @tournament_routes.post(
-    "/", response_model=MobaTournamentPublic, status_code=status.HTTP_201_CREATED
+    "/", response_model=MobaTournament, status_code=status.HTTP_201_CREATED
 )
 async def create_tournament(
     *,
@@ -108,6 +108,7 @@ async def get_tournament(*, session: Session = Depends(get_session), id: int):
     tournament = session.get(MobaTournament, id)
     if not tournament:
         raise HTTPException(status_code=404, detail="Tournament not found")
+    tournament = MobaTournamentPublic.model_validate(tournament.model_dump())
     return tournament
 
 
@@ -180,7 +181,7 @@ async def remove_tournament_team(
     return None
 
 
-@tournament_routes.patch("/{id}", response_model=MobaTournamentPublic)
+@tournament_routes.patch("/{id}", response_model=MobaTournament)
 async def update_tournament(
     *,
     session: Session = Depends(get_session),

@@ -187,19 +187,9 @@ Below is an expanded guide to setting up your development environment:
    ```
 
 1. **Populate the database:**
-  On Linux, you might need to give the permissions to these files:
-
   ```bash
-  chmod +x ./scripts/add_champions_to_db.sh
-  chmod +x ./scripts/add_teams_to_db.sh
+  uv run python scripts/init_db.py
   ```
-
-  Then run:
-
-   ```bash
-   ./scripts/add_champions_to_db.sh
-   ./scripts/add_teams_to_db.sh
-   ```
 
 #### Running the Application
 
@@ -213,12 +203,31 @@ To run the development server with auto-reload:
 uv run uvicorn dev:app --reload
 ```
 
+Alternatively, you can use the shell scripts:
+
+
+To run the main application with pywebview:
+```bash
+./scripts/run.sh
+```
+
+To run the development server with tailwindcss updates (if you are changing the frontend):
+```bash
+./scripts/run_dev.sh
+```
+
 #### Working on the frontend
 
 To stylize the frontend, you need to run tailwindcss:
 
 ```bash
 uv run tailwindcss -i frontend/static/css/input.css -o frontend/static/css/tailwind.css --watch
+```
+
+Alternatively, you can use the shell script to both run the server and update the CSS:
+
+```bash
+./scripts/run_dev.sh
 ```
 
 And then you can run the development server. If you wish to minify the CSS, you can run:

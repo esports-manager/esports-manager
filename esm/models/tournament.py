@@ -68,14 +68,6 @@ class TournamentBase(SQLModel):
     logo_path: Optional[str] = Field(default=None)
 
 
-class Tournament(TournamentBase, table=True):
-    __tablename__ = "tournaments"
-
-    id: Optional[int] = Field(default=None, primary_key=True)
-    created_at: datetime = Field(default_factory=datetime.now)
-    updated_at: Optional[datetime] = Field(default=None)
-
-
 class TournamentPublic(TournamentBase):
     id: int
     created_at: datetime

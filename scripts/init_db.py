@@ -3,10 +3,12 @@
 # License-Filename: LICENSES/GPL-3.0-or-later
 
 import json
+import os
 import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any
+import random
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -14,7 +16,6 @@ from sqlmodel import Session
 from esm.db import DatabaseManager
 from esm.config import Config
 from esm.models.tournament import (
-    Tournament,
     TournamentType,
     TournamentFormat,
     TournamentTier,
@@ -27,10 +28,15 @@ from esm.models.moba.champion import (
     MobaChampionType,
     MobaChampionDifficulty,
 )
+from esm.models.moba.champion_mastery import (
+    MobaChampionMastery,
+    MobaChampionMasteryTier,
+)
 from esm.models.moba.player_contract import MobaPlayerContract
+from esm.models.moba.tournament import MobaTournament
 
 
-def load_json_file(file_path: str) -> List[Dict[str, Any]]:
+def load_json_file(file_path: str) -> list[dict[str, Any]]:
     """Load data from a JSON file."""
     try:
         with open(file_path, "r", encoding="utf-8") as file:
@@ -40,7 +46,9 @@ def load_json_file(file_path: str) -> List[Dict[str, Any]]:
         return []
 
 
-def import_tournaments(session: Session, data: List[Dict[str, Any]]) -> Dict[str, int]:
+def add_tournaments(
+    session: Session, data: list[dict[str, Any]]
+) -> dict[int, MobaTournament]:
     """Import tournament data into the database."""
     print("Importing tournaments...")
     tournament_map = {}  # Map tournament names to IDs
@@ -57,7 +65,7 @@ def import_tournaments(session: Session, data: List[Dict[str, Any]]) -> Dict[str
             else None
         )
 
-        tournament = Tournament(
+        tournament = MobaTournament(
             name=item["name"],
             abbreviation=item.get("abbreviation"),
             type=TournamentType(item["type"]),
@@ -81,7 +89,7 @@ def import_tournaments(session: Session, data: List[Dict[str, Any]]) -> Dict[str
     return tournament_map
 
 
-def import_teams(session: Session, data: List[Dict[str, Any]]) -> Dict[str, int]:
+def add_teams(session: Session, data: list[dict[str, Any]]) -> dict[int, MobaTeam]:
     """Import team data into the database."""
     print("Importing teams...")
     team_map = {}  # Map team names to IDs
@@ -97,16 +105,18 @@ def import_teams(session: Session, data: List[Dict[str, Any]]) -> Dict[str, int]
         )
 
         session.add(team)
-        session.flush()  # Flush to get the ID
-        team_map[item["name"]] = team.id
-        print(f"  Added team: {item['name']}")
+        session.flush()
+        team_map[team.id] = team
+        print(f"  Added team: {team.name}")
 
     session.commit()
     print(f"Imported {len(team_map)} teams")
     return team_map
 
 
-def import_champions(session: Session, data: List[Dict[str, Any]]) -> Dict[str, int]:
+def add_champions(
+    session: Session, data: list[dict[str, Any]]
+) -> dict[int, MobaChampion]:
     """Import champion data into the database."""
     print("Importing champions...")
     champion_map = {}  # Map champion names to IDs
@@ -142,16 +152,16 @@ def import_champions(session: Session, data: List[Dict[str, Any]]) -> Dict[str, 
         )
 
         session.add(champion)
-        session.flush()  # Flush to get the ID
-        champion_map[item["name"]] = champion.id
-        print(f"  Added champion: {item['name']}")
+        session.flush()
+        champion_map[champion.id] = champion
+        print(f"  Added champion: {champion.name}")
 
     session.commit()
     print(f"Imported {len(champion_map)} champions")
     return champion_map
 
 
-def import_players(
+def add_players(
     session: Session,
     data: List[Dict[str, Any]],
 ) -> Dict[str, int]:
@@ -191,9 +201,9 @@ def import_players(
         )
 
         session.add(player)
-        session.flush()  # Flush to get the ID
-        player_map[item["nick_name"]] = player.id
-        print(f"  Added player: {item['nick_name']}")
+        session.flush()
+        player_map[player.id] = player
+        print(f"  Added player: {player.nick_name}")
 
     session.commit()
     print(f"Imported {len(player_map)} players")
@@ -202,28 +212,23 @@ def import_players(
 
 def create_player_contracts(
     session: Session,
-    player_map: Dict[str, int],
-    team_map: Dict[str, int],
+    player_map: Dict[int, MobaPlayer],
+    team_map: Dict[int, MobaTeam],
 ) -> None:
     """Create player contracts based on the team information in players data."""
     print("Creating player contracts...")
     contracts_created = 0
 
-    for i in range(len(player_map), 5):
-        team_index = i // 5
-        players = [
-            player_map[i],
-            player_map[i + 1],
-            player_map[i + 2],
-            player_map[i + 3],
-            player_map[i + 4],
-        ]
-        player_ids = [player[0] for player in players]
+    for i, team in enumerate(team_map.values()):
+        team_id = team.id
+        start_index = (i * 5) + 1
+        end_index = start_index + 5
+        player_ids = list(range(start_index, end_index))
 
         for player_id in player_ids:
             contract = MobaPlayerContract(
                 player_id=player_id,
-                team_id=team_map[team_index],
+                team_id=team_id,
                 start_date=datetime.now().date(),
                 end_date=datetime(2026, 12, 31).date(),
                 salary=500000,
@@ -233,10 +238,42 @@ def create_player_contracts(
             session.add(contract)
             session.commit()
             contracts_created += 1
-            print(f"  Created contract: {player_id} -> {team_map[team_index]}")
+            print(
+                f"  Created contract: {player_map[player_id].nick_name} -> {team_map[team_id].name}"
+            )
 
-    session.flush()
     print(f"Created {contracts_created} player contracts")
+
+
+def add_champions_to_champion_pool(
+    session: Session,
+    champion_map: dict[int, MobaChampion],
+    player_map: dict[int, MobaPlayer],
+):
+    number_champions = random.randint(1, 10)
+
+    for player in player_map.values():
+        champions = random.sample(list(champion_map.values()), number_champions)
+        mastery_tiers = list(MobaChampionMasteryTier)
+        if player.overall >= 80:
+            mastery_tiers.remove(MobaChampionMasteryTier.BRONZE)
+            mastery_tiers.remove(MobaChampionMasteryTier.SILVER)
+            mastery_tiers.remove(MobaChampionMasteryTier.GOLD)
+            mastery_tiers.remove(MobaChampionMasteryTier.PLATINUM)
+        for champion in champions:
+            tier = random.choice(mastery_tiers)
+            mastery = MobaChampionMastery(
+                player_id=player.id,
+                champion_id=champion.id,
+                tier=tier,
+                points=0,
+            )
+            session.add(mastery)
+            session.commit()
+            print(
+                f"Added champion {champion.name} to player {player.nick_name} with tier {tier}"
+            )
+    print("Added champions to champion pool")
 
 
 def main():
@@ -245,6 +282,10 @@ def main():
 
     config = Config()
     config.load_config()
+
+    if os.path.exists(config.database_url):
+        print("Database already exists. Please remove it before running this script.")
+        return
 
     db_manager = DatabaseManager(config.database_url)
 
@@ -268,13 +309,14 @@ def main():
     # Import data into the database
     with Session(db_manager.engine) as session:
         # Import data in order of dependencies
-        import_tournaments(session, tournaments_data)
-        team_map = import_teams(session, teams_data)
-        import_champions(session, champions_data)
-        player_map = import_players(session, players_data)
+        add_tournaments(session, tournaments_data)
+        team_map = add_teams(session, teams_data)
+        champions_map = add_champions(session, champions_data)
+        player_map = add_players(session, players_data)
 
         # Create player contracts
         create_player_contracts(session, player_map, team_map)
+        add_champions_to_champion_pool(session, champions_map, player_map)
 
     print("Data import completed successfully!")
 

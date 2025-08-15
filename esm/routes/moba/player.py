@@ -16,6 +16,13 @@ from esm.models.moba.player import (
     MobaPlayerUpdate,
     MobaPlayerRole,
 )
+from esm.models.moba.champion import MobaChampion
+from esm.models.moba.champion_mastery import (
+    MobaChampionMasteryPublic,
+    MobaChampionMastery,
+    MobaChampionMasteryTier,
+    MobaChampionMasteryUpdate,
+)
 from sqlmodel import Session, select
 from fastapi import Depends, HTTPException
 from typing import Optional
@@ -142,6 +149,8 @@ async def get_players(
             "name": MobaPlayer.nick_name,
             "role": MobaPlayer.role,
             "nationality": MobaPlayer.nationality,
+            "overall": MobaPlayer.overall,
+            "value": MobaPlayer.value,
         }
         if sort in sort_map:
             sort_field = sort_map[sort]
@@ -214,7 +223,7 @@ async def create_player(
     return db_player
 
 
-@player_routes.get("/{id}")
+@player_routes.get("/{id}", response_model=MobaPlayerPublic)
 async def get_player(*, session: Session = Depends(get_session), request: Request):
     id = int(request.path_params.get("id"))
     player = session.get(MobaPlayer, id)
@@ -255,7 +264,7 @@ async def update_player(
     return db_player
 
 
-@player_routes.delete("/{id}")
+@player_routes.delete("/{id}", response_model=dict[str, str])
 async def delete_player(*, session: Session = Depends(get_session), id: int):
     player = session.get(MobaPlayer, id)
     if not player:
@@ -272,3 +281,139 @@ async def get_player_image(filename: str):
     return serve_image(
         image_path, Path(ESM_DIR) / "res" / "img" / "players" / "default_player.webp"
     )
+
+
+@player_routes.get(
+    "/{player_id}/champion_pool", response_model=list[MobaChampionMasteryPublic]
+)
+async def get_player_champion_pool(
+    *, session: Session = Depends(get_session), player_id: int
+):
+    player = session.get(MobaPlayer, player_id)
+    if not player:
+        raise HTTPException(status_code=404, detail="Player not found")
+    champions = []
+    for champion in player.champion_pool:
+        champions.append(MobaChampionMasteryPublic.model_validate(champion))
+    return champions
+
+
+@player_routes.get(
+    "/{player_id}/champion_pool/{champion_id}", response_model=MobaChampionMasteryPublic
+)
+async def get_champion_pool(
+    *, session: Session = Depends(get_session), player_id: int, champion_id: int
+):
+    player = session.get(MobaPlayer, player_id)
+    if not player:
+        raise HTTPException(status_code=404, detail="Player not found")
+    champion = session.get(MobaChampion, champion_id)
+    if not champion:
+        raise HTTPException(status_code=404, detail="Champion not found")
+    for champion_mastery in player.champion_pool:
+        if champion_mastery.champion_id == champion_id:
+            champion_mastery_data = champion_mastery.model_dump()
+            champion_mastery_public = MobaChampionMasteryPublic.model_validate(
+                champion_mastery_data
+            )
+            return champion_mastery_public
+    raise HTTPException(status_code=404, detail="Champion not found in pool")
+
+
+@player_routes.post(
+    "/{player_id}/champion_pool/{champion_id}", response_model=MobaChampionMasteryPublic
+)
+async def add_champion_to_player_pool(
+    *,
+    request: Request,
+    session: Session = Depends(get_session),
+    player_id: int,
+    champion_id: int,
+):
+    player = session.get(MobaPlayer, player_id)
+    if not player:
+        raise HTTPException(status_code=404, detail="Player not found")
+    champion = session.get(MobaChampion, champion_id)
+    if not champion:
+        raise HTTPException(status_code=404, detail="Champion not found")
+
+    for champion_mastery in player.champion_pool:
+        if champion_mastery.champion_id == champion_id:
+            raise HTTPException(status_code=400, detail="Champion already in pool")
+
+    if request.query_params.get("tier"):
+        tier = request.query_params.get("tier")
+    else:
+        tier = MobaChampionMasteryTier.BRONZE
+
+    if request.query_params.get("points"):
+        points = request.query_params.get("points")
+    else:
+        points = 0
+
+    champion_mastery_data = {
+        "player_id": player_id,
+        "champion_id": champion_id,
+        "tier": tier,
+        "points": points,
+    }
+
+    champion_mastery = MobaChampionMastery.model_validate(champion_mastery_data)
+    session.add(champion_mastery)
+    session.commit()
+    session.refresh(champion_mastery)
+    return champion_mastery
+
+
+@player_routes.delete(
+    "/{player_id}/champion_pool/{champion_id}", response_model=dict[str, str]
+)
+async def remove_champion_from_player_pool(
+    *, session: Session = Depends(get_session), player_id: int, champion_id: int
+):
+    player = session.get(MobaPlayer, player_id)
+    if not player:
+        raise HTTPException(status_code=404, detail="Player not found")
+    champion = session.get(MobaChampion, champion_id)
+    if not champion:
+        raise HTTPException(status_code=404, detail="Champion not found")
+    for champion_mastery in player.champion_pool:
+        if champion_mastery.champion_id == champion_id:
+            session.delete(champion_mastery)
+            session.commit()
+            return {"message": "Champion removed from pool"}
+
+    raise HTTPException(status_code=404, detail="Champion not found in pool")
+
+
+@player_routes.patch(
+    "/{player_id}/champion_pool/{champion_id}", response_model=MobaChampionMasteryUpdate
+)
+async def update_champion_in_player_pool(
+    *,
+    session: Session = Depends(get_session),
+    player_id: int,
+    champion_id: int,
+    champion_mastery: MobaChampionMasteryUpdate,
+):
+    player = session.get(MobaPlayer, player_id)
+    if not player:
+        raise HTTPException(status_code=404, detail="Player not found")
+    champion = session.get(MobaChampion, champion_id)
+    if not champion:
+        raise HTTPException(status_code=404, detail="Champion not found")
+    for champion_mastery in player.champion_pool:
+        if champion_mastery.champion_id == champion_id:
+            champion_mastery_data = champion_mastery.model_dump(exclude_unset=True)
+            champion_mastery_update = MobaChampionMasteryUpdate.model_validate(
+                champion_mastery_data
+            )
+            champion_mastery.sqlmodel_update(
+                champion_mastery_update.model_dump(exclude_unset=True)
+            )
+            session.add(champion_mastery)
+            session.commit()
+            session.refresh(champion_mastery)
+            return champion_mastery
+
+    raise HTTPException(status_code=404, detail="Champion not found in pool")

@@ -1,12 +1,26 @@
 <!-- Player List Component - Receives data from /api/moba/players endpoint -->
 {% if players %}
 <!-- Grid View -->
-<div x-show="view === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 p-2">
+<div x-show="view === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-2">
   {% for player in players %}
   <a href="/players/{{ player.id }}"
-    class="group bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden flex flex-col border border-gray-100 dark:border-slate-600 transition-all duration-200 hover:shadow-xl hover:scale-[1.05] cursor-pointer">
+    class="group bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden flex flex-col border border-gray-100 dark:border-slate-600 transition-all duration-200 hover:shadow-xl hover:scale-[1.1] cursor-pointer">
     <!-- Player Image -->
-    <div class="relative bg-gradient-to-r from-blue-500 to-indigo-600 h-56 w-full overflow-hidden">
+    {% set overall = player.overall|default(50) %}
+    {% if overall >= 90 %}
+    {% set img_bg_color = 'from-orange-500 to-gray-300' %}
+    {% elif overall >= 80 %}
+    {% set img_bg_color = 'from-purple-500 to-orange-600' %}
+    {% elif overall >= 70 %}
+    {% set img_bg_color = 'from-green-500 to-purple-600' %}
+    {% elif overall >= 60 %}
+    {% set img_bg_color = 'from-blue-500 to-green-600' %}
+    {% elif overall >= 50 %}
+    {% set img_bg_color = 'from-indigo-500 to-blue-600' %}
+    {% else %}
+    {% set img_bg_color = 'from-red-500 to-blue-600' %}
+    {% endif %}
+    <div class="relative bg-gradient-to-r {{ img_bg_color }} h-56 w-full overflow-hidden">
       <img src="/api/moba/players/images/{{ player.image_path }}" alt="{{ player.nick_name }}"
         class="w-full h-full object-cover" loading="lazy">
 
@@ -14,28 +28,7 @@
       <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 text-white">
         <div class="flex items-center justify-between">
           <div class="flex items-center">
-            <!-- Role Badge -->
-            {% if player.role %}
-            {% set role_colors = {
-            'support': 'bg-purple-500',
-            'mid': 'bg-blue-500',
-            'top': 'bg-red-500',
-            'jungle': 'bg-green-500',
-            'bottom': 'bg-yellow-500'
-            } %}
-            {% set role_icons = {
-            'support': 'bi-headset',
-            'mid': 'bi-lightning-charge',
-            'top': 'bi-shield',
-            'jungle': 'bi-tree',
-            'bottom': 'bi-crosshair'
-            } %}
-            <span
-              class="{{ role_colors[player.role.value]|default('bg-gray-500') }} text-white text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full flex items-center">
-              <i class="bi {{ role_icons[player.role.value]|default('bi-person') }} mr-1"></i>
-              {{ player.role.value }}
-            </span>
-            {% endif %}
+            {% include "components/player_role_component.html" %}
           </div>
           <div class="flex items-center">
             <i class="fi fi-{{ player.get_country_code() }}"></i>
@@ -48,16 +41,16 @@
       {% if player.team %}
       <div class="absolute top-2 left-2 bg-white/90 dark:bg-slate-800/90 rounded-full p-1">
         <img src="/api/moba/teams/images/{{ player.team.logo_path }}" alt="{{ player.team.name }} " loading="lazy"
-          class="w-6 h-6 rounded-full">
+          class="w-8 h-8 rounded-full">
       </div>
       {% endif %}
 
       <!-- Contract Status Badge -->
       <div class="absolute top-2 right-2">
         {% if not player.is_active %}
-        {% set bg_color = 'bg-red-600 text-white' %}
+        {% set bg_color = 'bg-purple-600 text-white' %}
         {% elif player.team %}
-        {% set bg_color = 'bg-yellow-600 text-white' %}
+        {% set bg_color = 'bg-indigo-600 text-white' %}
         {% else %}
         {% set bg_color = 'bg-green-600 text-white' %}
         {% endif %}
@@ -84,50 +77,33 @@
       <!-- Details Grid -->
       <div class="flex justify-between items-center mb-2 text-sm text-gray-600 dark:text-gray-300">
         {% if player.team %}
-        <div>Team: <span class="font-medium">{{ player.team.name }}</span></div>
+        <div class="flex items-center">
+          <img src="/api/moba/teams/images/{{ player.team.logo_path }}" alt="{{ player.team.name }}"
+            class="w-8 h-8 mr-2 rounded-full" loading="lazy">
+          <span class="font-semibold text-base">{{ player.team.name }}</span>
+        </div>
         {% else %}
-        <div><span class="font-medium">Free Agent</span></div>
+        <div
+          class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full flex items-center">
+          <span class="font-semibold text-base">Free Agent</span>
+        </div>
         {% endif %}
-        <div>Role: <span class="font-medium">{{ player.role.value.capitalize() }}</span></div>
       </div>
 
       <!-- Stats Bars -->
       <div class="space-y-2 mb-3">
         <!-- Overall Rating -->
         <div class="flex items-center">
-          <span class="text-xs w-12 text-gray-500 dark:text-gray-400">Overall</span>
-          <div class="flex-grow bg-gray-200 dark:bg-gray-600 rounded-full h-2 ml-2">
-            {% set overall = player.overall|default(75) %}
-            {% if overall >= 95 %}
-            <div class="bg-blue-500 h-2 rounded-full w-11/12"></div>
-            {% elif overall >= 90 %}
-            <div class="bg-blue-500 h-2 rounded-full w-10/12"></div>
-            {% elif overall >= 80 %}
-            <div class="bg-blue-500 h-2 rounded-full w-4/5"></div>
-            {% elif overall >= 70 %}
-            <div class="bg-blue-500 h-2 rounded-full w-7/10"></div>
-            {% elif overall >= 60 %}
-            <div class="bg-blue-500 h-2 rounded-full w-3/5"></div>
-            {% elif overall >= 50 %}
-            <div class="bg-blue-500 h-2 rounded-full w-1/2"></div>
-            {% elif overall >= 40 %}
-            <div class="bg-blue-500 h-2 rounded-full w-2/5"></div>
-            {% elif overall >= 30 %}
-            <div class="bg-blue-500 h-2 rounded-full w-3/10"></div>
-            {% elif overall >= 20 %}
-            <div class="bg-blue-500 h-2 rounded-full w-1/5"></div>
-            {% elif overall >= 10 %}
-            <div class="bg-blue-500 h-2 rounded-full w-1/10"></div>
-            {% else %}
-            <div class="bg-blue-500 h-2 rounded-full w-0"></div>
-            {% endif %}
+          <span class="text-sm w-12 text-gray-500 dark:text-gray-400">Overall</span>
+          <div class="ml-4">
+          {% include "components/player_stars_component.html" %}
           </div>
           <span class="text-xs font-semibold ml-2">{{ overall }}</span>
         </div>
 
         <!-- Form Rating -->
         <div class="flex items-center">
-          <span class="text-xs w-12 text-gray-500 dark:text-gray-400">Form</span>
+          <span class="text-sm w-12 text-gray-500 dark:text-gray-400">Form</span>
           <div class="flex-grow bg-gray-200 dark:bg-gray-600 rounded-full h-2 ml-2">
             {% set form = player.form|default(70) %}
             {% if form >= 95 %}
@@ -159,9 +135,10 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex justify-between text-xs">
-        <span class="text-gray-500 dark:text-gray-400">Value: $<span class="font-semibold">{{
-            player.value|default('$850K') }}</span></span>
+      <div class="flex justify-between text-sm">
+        <span class="text-gray-500 dark:text-gray-400">Value: </span>
+        <span class="font-semibold">
+          {{ player.get_value()|default('$850K') }}
         </span>
       </div>
     </div>
@@ -199,11 +176,9 @@
     </thead>
     <tbody class="bg-white dark:bg-slate-700 divide-y divide-gray-200 dark:divide-gray-600">
       {% for player in players %}
-
-      <tr>
-        <a href="/players/{{ player.id }}"
-          class="hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors cursor-pointer">
-          <td class="px-6 py-4 whitespace-nowrap">
+      <tr class="hover:bg-gray-50 dark:hover:bg-slate-600 cursor-pointer">
+        <td class="px-6 py-4 whitespace-nowrap">
+          <a href="/players/{{ player.id }}">
             <div class="flex items-center">
               <div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-600">
                 <img src="/api/moba/players/images/{{ player.image_path }}" alt="{{ player.nick_name }}"
@@ -216,16 +191,19 @@
                   player.nationality }}</div>
               </div>
             </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
+          </a>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <a href="/players/{{ player.id }}">
             <div class="flex flex-col">
               <div class="flex items-center">
-                <span class="w-3 h-3 rounded-full bg-{{ player.role.value_color|default('gray') }}-500 mr-2"></span>
-                <span class="text-sm text-gray-900 dark:text-gray-100">{{ player.role.value.capitalize() }}</span>
+                {% include "components/player_role_component.html" %}
               </div>
             </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
+          </a>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <a href="/players/{{ player.id }}">
             <div class="flex items-center">
               {% if player.team %}
               <img src="/api/moba/teams/images/{{ player.team.logo_path }}" alt="{{ player.team.name }}"
@@ -235,14 +213,18 @@
               <span class="text-sm text-gray-900 dark:text-gray-100">Free Agent</span>
               {% endif %}
             </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
+          </a>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <a href="/players/{{ player.id }}">
             <div class="flex items-center">
               <i class="fi fi-{{ player.get_country_code() }}"></i>
               <span class="text-sm text-gray-900 dark:text-gray-100">{{ player.region|default('LCK') }}</span>
             </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
+          </a>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <a href="/players/{{ player.id }}">
             <div class="flex items-center">
               <div class="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5 mr-2">
                 {% set overall = player.overall|default(75) %}
@@ -272,11 +254,13 @@
               </div>
               <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ overall }}</span>
             </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-            {{ player.value|default('$850K') }}
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
+          </a>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+          {{ player.get_value()|default('$850K') }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <a href="/players/{{ player.id }}">
             <span class="px-2 py-1 text-xs rounded-full 
             {% if player.contract_status == 'free_agent' %}
               bg-green-500 text-white
@@ -287,8 +271,8 @@
             {% endif %}">
               {{ player.contract_status|replace('_', ' ')|title|default('Contracted') }}
             </span>
-          </td>
-        </a>
+          </a>
+        </td>
       </tr>
       {% endfor %}
     </tbody>

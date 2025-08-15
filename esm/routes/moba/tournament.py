@@ -4,8 +4,10 @@
 from fastapi import APIRouter, status, Depends, HTTPException, Request
 from pydantic import BaseModel
 from sqlmodel import Session, select
-
+from pathlib import Path
+from esm.config import ESM_DIR
 from esm.db import get_session
+from esm.services import serve_image
 from esm.models.moba.tournament import (
     MobaTournament,
     MobaTournamentCreate,
@@ -87,7 +89,7 @@ async def get_tournaments(
 
 
 @tournament_routes.post(
-    "/", response_model=MobaTournamentPublic, status_code=status.HTTP_201_CREATED
+    "/", response_model=MobaTournament, status_code=status.HTTP_201_CREATED
 )
 async def create_tournament(
     *,
@@ -106,6 +108,7 @@ async def get_tournament(*, session: Session = Depends(get_session), id: int):
     tournament = session.get(MobaTournament, id)
     if not tournament:
         raise HTTPException(status_code=404, detail="Tournament not found")
+    tournament = MobaTournamentPublic.model_validate(tournament.model_dump())
     return tournament
 
 
@@ -178,7 +181,7 @@ async def remove_tournament_team(
     return None
 
 
-@tournament_routes.patch("/{id}", response_model=MobaTournamentPublic)
+@tournament_routes.patch("/{id}", response_model=MobaTournament)
 async def update_tournament(
     *,
     session: Session = Depends(get_session),
@@ -204,3 +207,12 @@ async def delete_tournament(*, session: Session = Depends(get_session), id: int)
     session.delete(tournament)
     session.commit()
     return None
+
+
+@tournament_routes.get("/images/{filename}")
+async def get_tournament_image(filename: str):
+    image_path = Path(ESM_DIR) / "res" / "img" / "tournaments" / filename
+    return serve_image(
+        image_path,
+        Path(ESM_DIR) / "res" / "img" / "tournaments" / "default_tournament.webp",
+    )

@@ -2,12 +2,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
 import enum
-from sqlmodel import SQLModel, Field, Column, Enum
+from sqlmodel import SQLModel, Field, Column, Enum, Relationship
 from typing import Optional, TYPE_CHECKING
 from datetime import datetime, date
 
 if TYPE_CHECKING:
-    pass
+    from esm.models.moba.champion_mastery import MobaChampionMastery
 
 
 class MobaChampionRole(enum.Enum):
@@ -85,6 +85,10 @@ class MobaChampionBase(SQLModel):
 class MobaChampion(MobaChampionBase, table=True):
     __tablename__ = "moba_champions"
     id: Optional[int] = Field(default=None, primary_key=True)
+
+    champion_masteries: list["MobaChampionMastery"] = Relationship(
+        back_populates="champion"
+    )
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = Field(default=None)
 

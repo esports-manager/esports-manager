@@ -7,11 +7,11 @@ from datetime import datetime
 
 from esm.models.tournament import (
     TournamentBase,
-    Tournament,
     TournamentType,
     TournamentFormat,
     TournamentTier,
 )
+from esm.models.moba.tournament import MobaTournament
 
 
 @pytest.fixture
@@ -33,8 +33,8 @@ def tournament_base() -> TournamentBase:
 
 
 @pytest.fixture
-def tournament_instance(tournament_base: TournamentBase) -> Tournament:
-    return Tournament(
+def tournament_instance(tournament_base: TournamentBase) -> MobaTournament:
+    return MobaTournament(
         name=tournament_base.name,
         type=tournament_base.type,
         format=tournament_base.format,
@@ -80,7 +80,7 @@ def test_tournament_enums_assignment(tournament_base: TournamentBase):
 
 
 def test_tournament_instance_persistence(
-    session: Session, tournament_instance: Tournament
+    session: Session, tournament_instance: MobaTournament
 ):
     session.add(tournament_instance)
     session.commit()
@@ -90,5 +90,5 @@ def test_tournament_instance_persistence(
     assert tournament_instance.created_at is not None
     assert isinstance(tournament_instance.created_at, datetime)
 
-    fetched = session.get(Tournament, tournament_instance.id)
+    fetched = session.get(MobaTournament, tournament_instance.id)
     assert fetched == tournament_instance

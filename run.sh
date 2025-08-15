@@ -1,2 +1,4 @@
-uv run tailwindcss -i ./src/input.css -o ./src/output.css --minify
+#!/bin/bash
+
+uv run tailwindcss -i ./frontend/static/css/input.css -o ./frontend/static/css/tailwind.css --minify
 uv run esm.py

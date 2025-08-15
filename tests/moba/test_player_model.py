@@ -39,7 +39,11 @@ def test_create_moba_player(player: MobaPlayerBase):
     assert player.agility == 50
     assert player.reflexes == 50
     assert player.accuracy == 50
-    assert player.aggressiveness == 50
+    assert player.aggression == 50
+    assert player.concentration == 50
+    assert player.teamwork == 50
+    assert player.concentration == 50
+    assert player.decisions == 50
     assert player.vision == 50
     assert player.farming == 50
     assert player.communication == 50

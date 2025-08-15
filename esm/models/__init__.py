@@ -2,10 +2,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
 
-from .tournament import Tournament, TournamentType, TournamentFormat, TournamentTier
+from .tournament import TournamentType, TournamentFormat, TournamentTier
 
 __all__ = [
-    "Tournament",
     "TournamentType",
     "TournamentFormat",
     "TournamentTier",

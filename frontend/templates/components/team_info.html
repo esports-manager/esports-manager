@@ -30,10 +30,10 @@
                 <div class="p-6 flex">
                     <!-- Team Logo -->
                     <div class="mr-4">
-                        <div class="h-24 w-24 rounded-full bg-gray-200 dark:bg-slate-600 overflow-hidden border-4 border-white dark:border-slate-700 shadow-md">
+                        <div
+                            class="h-24 w-24 rounded-full bg-gray-200 dark:bg-slate-600 overflow-hidden border-4 border-white dark:border-slate-700 shadow-md">
                             <img src="/api/moba/teams/images/{{ team.logo_path }}" alt="{{ team.name }}"
-                                class="h-full w-full object-cover"
-                                loading="lazy"
+                                class="h-full w-full object-cover" loading="lazy"
                                 onerror="this.src='/static/images/default_team.png'">
                         </div>
                     </div>
@@ -62,7 +62,8 @@
 
                         <!-- Championships -->
                         <div>
-                            <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Championships</div>
+                            <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Championships
+                            </div>
                             <div class="font-medium text-gray-800 dark:text-gray-200">{{ team.championships }}</div>
                         </div>
 
@@ -91,7 +92,8 @@
 
                         <!-- Overall Rating -->
                         <div>
-                            <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Overall Rating</div>
+                            <div class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Overall
+                                Rating</div>
                             <div class="font-medium text-gray-800 dark:text-gray-200">{{ team.overall }}</div>
                         </div>
                     </div>
@@ -153,19 +155,23 @@
                             <!-- Team Win Rate -->
                             <div class="bg-gray-50 dark:bg-slate-800 p-4 rounded-lg">
                                 <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Win Rate</h4>
-                                <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ team.win_rate|default('64.3') }}%</div>
+                                <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{
+                                    team.win_rate|default('64.3') }}%</div>
                             </div>
-                            
+
                             <!-- Championships -->
                             <div class="bg-gray-50 dark:bg-slate-800 p-4 rounded-lg">
-                                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Championships</h4>
-                                <div class="text-2xl font-bold text-amber-600 dark:text-amber-400">{{ team.championships|default('2') }}</div>
+                                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Championships
+                                </h4>
+                                <div class="text-2xl font-bold text-amber-600 dark:text-amber-400">{{
+                                    team.championships|default('2') }}</div>
                             </div>
-                            
+
                             <!-- Fan Base -->
                             <div class="bg-gray-50 dark:bg-slate-800 p-4 rounded-lg">
                                 <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Fan Base</h4>
-                                <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ team.fans|default('750K') }}</div>
+                                <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{
+                                    team.fans|default('750K') }}</div>
                             </div>
                         </div>
                     </div>
@@ -175,11 +181,16 @@
                         <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Recent Performance</h3>
                         <div class="bg-gray-50 dark:bg-slate-800 p-4 rounded-lg">
                             <div class="flex space-x-1 mb-4">
-                                <span class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">W</span>
-                                <span class="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white font-bold">L</span>
-                                <span class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">W</span>
-                                <span class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">W</span>
-                                <span class="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white font-bold">L</span>
+                                <span
+                                    class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">W</span>
+                                <span
+                                    class="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white font-bold">L</span>
+                                <span
+                                    class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">W</span>
+                                <span
+                                    class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">W</span>
+                                <span
+                                    class="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white font-bold">L</span>
                             </div>
                         </div>
                     </div>
@@ -189,33 +200,31 @@
                 <div x-show="activeTab === 'roster'" class="p-6">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Current Roster</h3>
                     {% if team.players %}
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {% for player in team.players %}
                         <a href="/players/{{ player.id }}" class="block cursor-pointer">
-                            <div class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg p-4 hover:shadow-md transition-shadow duration-200 hover:bg-gray-50 dark:hover:bg-slate-700">
+                            <div
+                                class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg p-4 hover:shadow-md transition-shadow duration-200 hover:bg-gray-50 dark:hover:bg-slate-700">
                                 <div class="flex items-center">
                                     <!-- Player Image -->
-                                    <div class="h-14 w-14 rounded-full bg-gray-200 dark:bg-slate-700 overflow-hidden mr-3">
-                                        <img src="/api/moba/players/images/{{ player.image_path }}" alt="{{ player.nick_name }}" class="h-full w-full object-cover">
+                                    <div
+                                        class="h-14 w-14 rounded-full bg-gray-200 dark:bg-slate-700 overflow-hidden mr-3">
+                                        <img src="/api/moba/players/images/{{ player.image_path }}"
+                                            alt="{{ player.nick_name }}" class="h-full w-full object-cover">
                                     </div>
-                                    
+
                                     <div>
                                         <!-- Nickname -->
-                                        <div class="font-bold text-gray-800 dark:text-gray-200">{{ player.nick_name }}</div>
-                                        
+                                        <div class="font-bold text-gray-800 dark:text-gray-200 text-lg">{{
+                                            player.nick_name }}
+                                        </div>
+
                                         <!-- Role & Rating -->
                                         <div class="flex items-center mt-1">
-                                            <span class="text-xs px-1.5 py-0.5 rounded uppercase
-                                            {% if player.role.value == 'top' %} bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
-                                            {% elif player.role.value == 'jungle' %} bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                            {% elif player.role.value == 'mid' %} bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
-                                            {% elif player.role.value == 'bottom' %} bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200
-                                            {% elif player.role.value == 'support' %} bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
-                                            {% else %} bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200
-                                            {% endif %}
-                                            ">{{ player.role.value }}</span>
-                                            
-                                            <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Rating: <span class="font-medium">{{ player.overall }}</span></span>
+                                            {% include "components/player_role_component.html" %}
+
+                                            <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Rating: <span
+                                                    class="font-medium">{{ player.overall }}</span></span>
                                         </div>
                                     </div>
                                 </div>
@@ -239,19 +248,20 @@
                         <template x-for="(match, index) in teamStats.lastMatches" :key="index">
                             <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-4 flex items-center justify-between">
                                 <div class="flex items-center">
-                                    <div class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mr-3">
+                                    <div
+                                        class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mr-3">
                                         <span x-text="match.opponent.charAt(0)" class="font-bold"></span>
                                     </div>
                                     <div>
                                         <div class="font-medium" x-text="'vs ' + match.opponent"></div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400" x-text="match.score"></div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400" x-text="match.score">
+                                        </div>
                                     </div>
                                 </div>
                                 <div>
                                     <span class="text-sm font-bold px-2 py-1 rounded-full"
                                         :class="{'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200': match.result === 'W',
-                                                'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200': match.result === 'L'}" 
-                                        x-text="match.result"></span>
+                                                'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200': match.result === 'L'}" x-text="match.result"></span>
                                 </div>
                             </div>
                         </template>
@@ -269,20 +279,23 @@
                                 <tbody>
                                     <tr class="border-b border-gray-200 dark:border-gray-700">
                                         <td class="py-2 text-gray-600 dark:text-gray-400">Matches Played</td>
-                                        <td class="py-2 text-right font-medium" x-text="teamStats.seasonStats.matches"></td>
+                                        <td class="py-2 text-right font-medium" x-text="teamStats.seasonStats.matches">
+                                        </td>
                                     </tr>
                                     <tr class="border-b border-gray-200 dark:border-gray-700">
                                         <td class="py-2 text-gray-600 dark:text-gray-400">Win Rate</td>
-                                        <td class="py-2 text-right font-medium" x-text="teamStats.seasonStats.winRate + '%'"></td>
+                                        <td class="py-2 text-right font-medium"
+                                            x-text="teamStats.seasonStats.winRate + '%'"></td>
                                     </tr>
                                     <tr>
                                         <td class="py-2 text-gray-600 dark:text-gray-400">Championships</td>
-                                        <td class="py-2 text-right font-medium" x-text="teamStats.seasonStats.championships"></td>
+                                        <td class="py-2 text-right font-medium"
+                                            x-text="teamStats.seasonStats.championships"></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <!-- Team Style -->
                         <div>
                             <h4 class="font-medium text-gray-700 dark:text-gray-300 mb-3">Team Style</h4>
@@ -327,8 +340,10 @@
     <div class="text-center p-6 max-w-sm mx-auto bg-white dark:bg-slate-700 rounded-xl shadow-md">
         <i class="bi bi-exclamation-triangle text-yellow-500 text-5xl mb-4"></i>
         <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">Team Not Found</h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-4">The team you're looking for could not be found or doesn't exist.</p>
-        <a href="/teams" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+        <p class="text-gray-600 dark:text-gray-400 mb-4">The team you're looking for could not be found or doesn't
+            exist.</p>
+        <a href="/teams"
+            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
             <i class="bi bi-arrow-left mr-2"></i> Back to Teams
         </a>
     </div>

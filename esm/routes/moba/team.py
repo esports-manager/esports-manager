@@ -250,7 +250,7 @@ async def get_team(
     return team_public
 
 
-@team_routes.patch("/{id}", response_model=MobaTeamPublic)
+@team_routes.patch("/{id}", response_model=MobaTeam)
 async def update_team(
     *, session: Session = Depends(get_session), id: int, team: MobaTeamUpdate
 ):

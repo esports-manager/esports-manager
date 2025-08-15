@@ -1,0 +1,93 @@
+[
+  {
+    "name": "League of Legends World Championship",
+    "abbreviation": "Worlds",
+    "type": "international",
+    "format": "double_elimination",
+    "tier": "premier",
+    "start_date": "2025-10-14",
+    "end_date": "2025-11-09",
+    "location": "China",
+    "description": "The 2025 Season World Championship (Worlds 2025) is the conclusion of the 2025 League of Legends esports season. The tournament will be held in China.",
+    "default_color": "#0ea5e9",
+    "logo_path": "Worlds.webp"
+  },
+  {
+    "name": "Mid-Season Invitational",
+    "abbreviation": "MSI",
+    "type": "international",
+    "format": "round_robin",
+    "tier": "major",
+    "start_date": "2025-06-27",
+    "end_date": "2025-07-12",
+    "location": "Canada",
+    "description": "The 2025 Mid-Season Invitational (MSI 2025) is held between the second and third splits of all regions. The top two teams of each competitive region compete for the MSI title.",
+    "default_color": "#a855f7",
+    "logo_path": "MSI.webp"
+  },
+  {
+    "name": "League of Legends EMEA Championship",
+    "abbreviation": "LEC",
+    "type": "regional",
+    "format": "league",
+    "tier": "major",
+    "start_date": "2025-09-05",
+    "end_date": "2025-09-28",
+    "location": "Europe",
+    "description": "The LEC 2025 Summer Playoffs is the third split of the third year of EMEA's unified professional League of Legends league.",
+    "default_color": "#3b82f6",
+    "logo_path": "LEC.webp"
+  },
+  {
+    "name": "League of Legends Champions Korea",
+    "abbreviation": "LCK",
+    "type": "national",
+    "format": "league",
+    "tier": "major",
+    "start_date": "2025-01-15",
+    "end_date": "2025-02-23",
+    "location": "South Korea",
+    "description": "League of Legends Champions Korea 2025 (LCK 2025) is the fifth year of Korea's professional League of Legends league under partnership, and the fourteenth year of the league overall.",
+    "default_color": "#0ea5e9",
+    "logo_path": "LCK.webp"
+  },
+  {
+    "name": "League of Legends Professional League",
+    "abbreviation": "LPL",
+    "type": "national",
+    "format": "league",
+    "tier": "major",
+    "start_date": "2025-01-15",
+    "end_date": "2025-02-23",
+    "location": "China",
+    "description": "League of Legends Professional League 2025 (LPL 2025) is the fifth year of China's professional League of Legends league under partnership, and the fourteenth year of the league overall.",
+    "default_color": "#0ea5e9",
+    "logo_path": "LPL.webp"
+  },
+  {
+    "name": "League of Legends LCS",
+    "abbreviation": "LCS",
+    "type": "national",
+    "format": "league",
+    "tier": "major",
+    "start_date": "2025-01-15",
+    "end_date": "2025-02-23",
+    "location": "United States",
+    "description": "League of Legends LCS 2025 (LCS 2025) is the fifth year of the LCS professional League of Legends league under partnership, and the fourteenth year of the league overall.",
+    "default_color": "#0ea5e9",
+    "logo_path": "LCS.webp"
+  },
+  {
+    "name": "Campeonato Brasileiro de League of Legends",
+    "abbreviation": "CBLOL",
+    "type": "national",
+    "format": "league",
+    "tier": "major",
+    "start_date": "2025-01-15",
+    "end_date": "2025-02-23",
+    "location": "Brazil",
+    "description": "Campeonato Brasileiro de League of Legends 2025 (CBLOL 2025) is the fifth year of the Brazilian professional League of Legends league under partnership, and the fourteenth year of the league overall.",
+    "default_color": "#0ea5e9",
+    "logo_path": "CBLOL.webp"
+  }
+]

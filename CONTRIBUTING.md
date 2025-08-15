@@ -101,7 +101,7 @@ test(models): add unit tests for Staff model
 ### Code conventions
 
 - Follow [PEP 8](https://www.python.org/dev/peps/pep-0008/). I use **flake8** to check for PEP 8 compliance.
-- Use the **pre-commit** package to auto format your code with **Black** and **isort**. I don't like to spend time talking about formatting, and styling issues, so using autoformatters to take care of these issues is a way to settle the styling debate.
+- Use the **pre-commit** package to auto format your code with **ruff**. I don't like to spend time talking about formatting, and styling issues, so using autoformatters to take care of these issues is a way to settle the styling debate.
 - Make descriptive variable names, as best as you can.
 - Whenever you can, use typehints. Typehints help me and other devs to understand how a function or class should be used. I learned to love typehints, you should embrace them as your friend as well.
 - I usually separate my work in classes rather than just using functions. I don't enforce the use of OOP in code, but I use it very often to encapsulate behavior.
@@ -187,19 +187,9 @@ Below is an expanded guide to setting up your development environment:
    ```
 
 1. **Populate the database:**
-  On Linux, you might need to give the permissions to these files:
-
   ```bash
-  chmod +x ./scripts/add_champions_to_db.sh
-  chmod +x ./scripts/add_teams_to_db.sh
+  uv run python scripts/init_db.py
   ```
-
-  Then run:
-
-   ```bash
-   ./scripts/add_champions_to_db.sh
-   ./scripts/add_teams_to_db.sh
-   ```
 
 #### Running the Application
 
@@ -213,6 +203,19 @@ To run the development server with auto-reload:
 uv run uvicorn dev:app --reload
 ```
 
+Alternatively, you can use the shell scripts:
+
+
+To run the main application with pywebview:
+```bash
+./scripts/run.sh
+```
+
+To run the development server with tailwindcss updates (if you are changing the frontend):
+```bash
+./scripts/run_dev.sh
+```
+
 #### Working on the frontend
 
 To stylize the frontend, you need to run tailwindcss:
@@ -221,7 +224,13 @@ To stylize the frontend, you need to run tailwindcss:
 uv run tailwindcss -i frontend/static/css/input.css -o frontend/static/css/tailwind.css --watch
 ```
 
-And then you can run the development server. If you wish to minify the CSS, you can run:
+Alternatively, you can use the shell script to both run the server and update the CSS:
+
+```bash
+./scripts/run_dev.sh
+```
+
+If you wish to minify the CSS, you can run:
 
 ```bash
 uv run tailwindcss -i frontend/static/css/input.css -o frontend/static/css/tailwind.css --minify

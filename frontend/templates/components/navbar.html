@@ -2,26 +2,30 @@
   class="text-black border-b border-b-gray-300 dark:border-b-gray-700 dark:text-white bg-slate-50 dark:bg-slate-900 justify-between transition-all items-center flex px-4 shadow-sm h-[90px] top-0"
   :class="{ 'ml-64': expanded, 'ml-16': !expanded }" x-data="{ searchQuery: '', searchOpen: false }">
   <div class="flex flex-row items-center">
-    <button @click="history.back()" class="p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer" :disabled="history.length === 0" aria-label="Go back">
+    <button @click="history.back()" class="p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
+      :disabled="history.length === 0" aria-label="Go back">
       <i class="bi bi-chevron-left text-xl"></i>
     </button>
-    <button @click="history.forward()" class="p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer" :disabled="history.length === 0" aria-label="Go forward">
+    <button @click="history.forward()" class="p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
+      :disabled="history.length === 0" aria-label="Go forward">
       <i class="bi bi-chevron-right text-xl"></i>
     </button>
   </div>
-  
-  <div class="flex flex-row font-bold text-3xl text-center px-4 self-center">
+
+
+  <div class="flex flex-row items-center font-bold text-3xl text-center px-4 self-center">
     <img class="w-14" src="{{ url_for('static', path='img/g2-logo-clear.webp') }}" />
     <div class="ml-4 place-self-center text-gray-600 dark:text-gray-300">G2 Esports</div>
   </div>
+
 
   <div class="flex flex-grow max-w-xl items-center px-4 gap-4 overflow-visible relative">
     <div class="relative w-full">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         <i class="bi bi-search text-gray-500 dark:text-gray-400"></i>
       </div>
-      <input type="text" placeholder="Search players, teams, matches..." x-model="searchQuery" name="q" id="omni-search-input"
-        @focus="searchOpen = true" @keydown.escape="searchOpen = false; searchQuery='';"
+      <input type="text" placeholder="Search players, teams, matches..." x-model="searchQuery" name="q"
+        id="omni-search-input" @focus="searchOpen = true" @keydown.escape="searchOpen = false; searchQuery='';"
         hx-get="/api/moba/search" hx-target="#omni-results" hx-swap="innerHTML" hx-trigger="keyup changed delay:300ms"
         class="pl-10 pr-16 rounded-xl w-full py-3 bg-slate-200 hover:bg-gray-100 dark:bg-slate-600 dark:hover:bg-slate-500 focus:outline-none focus:ring focus:ring-blue-500 text-gray-800 dark:text-gray-200">
       <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -39,7 +43,7 @@
 
   <div class="flex items-center space-x-6 gap-4">
     <!-- Date and Week Information -->
-    <div class="flex flex-col items-end justify-center mr-2">
+    <div class="block sm:hidden items-end justify-center mr-2">
       <div class="text-sm font-medium text-gray-800 dark:text-gray-200">November 15, 2025</div>
       <div class="text-xs text-gray-500 dark:text-gray-400">Week 25 - World Championship</div>
     </div>

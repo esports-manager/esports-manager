@@ -1,11 +1,10 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
-from sqlmodel import SQLModel, Field, Column, Enum
+from sqlmodel import SQLModel, Field, Column, Enum, Relationship
 from typing import TYPE_CHECKING, Optional
 import enum
 from datetime import datetime
-from sqlmodel import Relationship
 
 if TYPE_CHECKING:
     from esm.models.moba.player_contract import MobaPlayer

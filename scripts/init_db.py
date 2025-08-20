@@ -250,10 +250,15 @@ def add_champions_to_champion_pool(
     champion_map: dict[int, MobaChampion],
     player_map: dict[int, MobaPlayer],
 ):
-    number_champions = random.randint(1, 10)
-
     for player in player_map.values():
-        champions = random.sample(list(champion_map.values()), number_champions)
+        number_champions = random.randint(5, 20)
+        champions_list = list(champion_map.values())
+        champions_list = list(
+            filter(lambda x: x.primary_role.value == player.role.value, champions_list)
+        )
+        champions_list = sorted(champions_list, key=lambda x: x.strength)
+
+        champions = random.sample(champions_list, number_champions)
         mastery_tiers = list(MobaChampionMasteryTier)
         if player.overall >= 80:
             mastery_tiers.remove(MobaChampionMasteryTier.BRONZE)
@@ -273,6 +278,7 @@ def add_champions_to_champion_pool(
             print(
                 f"Added champion {champion.name} to player {player.nick_name} with tier {tier}"
             )
+        player.champion_pool = sorted(player.champion_pool, key=lambda x: x.tier.value)
     print("Added champions to champion pool")
 
 

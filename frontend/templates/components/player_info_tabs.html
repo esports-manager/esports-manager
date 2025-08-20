@@ -1,0 +1,229 @@
+<!-- Right Column: Player Tabs -->
+<div class="lg:col-span-2">
+    <div class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden">
+        <!-- Tab Navigation -->
+        <div class="border-b border-gray-200 dark:border-slate-600 overflow-y-hidden overflow-x-auto">
+            <nav class="flex" x-cloak>
+                <button @click="activeTab = 'overview'"
+                    class="px-4 py-3 text-sm font-medium transition-colors duration-150"
+                    :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'overview', 
+                    'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'overview'}">
+                    <i class="bi bi-grid mr-1"></i> Overview
+                </button>
+                <button @click="activeTab = 'attributes'"
+                    class="px-4 py-3 text-sm font-medium transition-colors duration-150"
+                    :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'attributes', 
+                    'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'attributes'}">
+                    <i class="bi bi-grid mr-1"></i> Attributes
+                </button>
+                <button @click="activeTab = 'champions'"
+                    class="px-4 py-3 text-sm font-medium transition-colors duration-150"
+                    :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'champions', 
+                    'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'champions'}">
+                    <i class="bi bi-star-fill mr-1"></i> Champions
+                </button>
+                <button @click="activeTab = 'history'"
+                    class="px-4 py-3 text-sm font-medium transition-colors duration-150"
+                    :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'history', 
+                    'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'history'}">
+                    <i class="bi bi-clock-history mr-1"></i> History
+                </button>
+                <button @click="activeTab = 'statistics'"
+                    class="px-4 py-3 text-sm font-medium transition-colors duration-150"
+                    :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'statistics', 
+                    'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'statistics'}">
+                    <i class="bi bi-bar-chart mr-1"></i> Statistics
+                </button>
+                <button @click="activeTab = 'scouting'"
+                    class="px-4 py-3 text-sm font-medium transition-colors duration-150"
+                    :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'scouting', 
+                    'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'scouting'}">
+                    <i class="bi bi-search mr-1"></i> Scouting
+                </button>
+            </nav>
+        </div>
+
+        <!-- Tab Contents -->
+        <!-- Overview Tab Content -->
+        <div x-show="activeTab === 'overview'" class="p-6">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                    <i class="bi bi-fingerprint text-green-500 mr-2"></i>Biography
+                </h3>
+                <div class="text-base text-gray-700 dark:text-gray-300 mb-6">
+                    {% if player.bio %}
+                    {{ player.bio }}
+                    {% else %}
+                    <p class="italic">No biography available for this player.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Contract Information -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                    <i class="bi bi-file-earmark-text-fill text-green-500 mr-2"></i> Contract Information
+                </h3>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Contract Status -->
+                    <div>
+                        <div class="text-sm text-gray-700 dark:text-gray-300 mb-1">Status</div>
+                        <div class="font-medium text-gray-800 dark:text-gray-200">
+                            {% if player.contract_start_date and player.contract_end_date %}
+                            <span class="text-green-500">Active</span>
+                            {% else %}
+                            <span class="text-gray-500">No Contract</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Current Team -->
+                    <div>
+                        <div class="text-sm text-gray-700 dark:text-gray-300 mb-1">Team</div>
+                        <div class="font-medium text-gray-800 dark:text-gray-200">
+                            {% if player.team %}
+                            {{ player.team.name }}
+                            {% else %}
+                            <span class="text-gray-500">No Team</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Salary -->
+                    <div>
+                        <div class="text-sm text-gray-700 dark:text-gray-300 mb-1">Weekly Salary</div>
+                        <div class="font-medium text-gray-800 dark:text-gray-200">
+                            {% if player.salary %}
+                            ${{ '{:,}'.format(player.salary) }}
+                            {% else %}
+                            <span class="text-gray-500">N/A</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Contract Expiry -->
+                    <div>
+                        <div class="text-sm text-gray-700 dark:text-gray-300 mb-1">Contract Expires</div>
+                        <div class="font-medium text-gray-800 dark:text-gray-200">
+                            {% if player.contract_end_date %}
+                            {{ player.contract_end_date.strftime('%d %b %Y') }}
+                            {% else %}
+                            <span class="text-gray-500">N/A</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Value -->
+                    <div>
+                        <div class="text-sm text-gray-700 dark:text-gray-300 mb-1">Market Value</div>
+                        <div class="font-medium text-gray-800 dark:text-gray-200">
+                            {% if player.value %}
+                            ${{ '{:,}'.format(player.value) }}
+                            {% else %}
+                            <span class="text-gray-500">N/A</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Release Clause -->
+                    <div>
+                        <div class="text-sm text-gray-700 dark:text-gray-300 mb-1">Release Clause</div>
+                        <div class="font-medium text-gray-800 dark:text-gray-200">
+                            {% if player.release_clause %}
+                            ${{ '{:,}'.format(player.release_clause) }}
+                            {% else %}
+                            <span class="text-gray-500">None</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-800 rounded-lg mb-4">
+                <div>
+                    <div class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                        Contract Status
+                    </div>
+                    <div class="font-medium text-gray-800 dark:text-gray-200">
+                        {% if player.contract_end_date and player.contract_start_date %}
+                        {{ player.contract_start_date.strftime('%b %Y') }} - {{
+                        player.contract_end_date.strftime('%b %Y') }}
+                        {% else %}
+                        No Contract
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attributes Tab Content -->
+        <div x-show="activeTab === 'attributes'" class="p-6">
+            {% include "components/player_info_skills.html" %}
+        </div>
+
+        <!-- Champions Tab Content -->
+        <div x-show="activeTab === 'champions'" class="p-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                <i class="bi bi-star-fill text-purple-500 mr-2"></i>
+                Champion Pool
+            </h3>
+
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                {{ player.nick_name }}'s champion mastery collection and proficiency levels.
+            </p>
+
+            {% include "components/player_champion_pool.html" %}
+        </div>
+
+        <!-- History Tab Content -->
+        <div x-show="activeTab === 'history'" class="p-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                <i class="bi bi-clock-history text-blue-500 mr-2"></i>
+                Player History
+            </h3>
+
+            <div class="mb-6">
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Career milestones and transfer history for {{ player.nick_name }}.
+                </p>
+
+                <div class="text-center text-gray-500 dark:text-gray-400 text-sm italic">
+                    Player history data will be displayed here
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Tab Content -->
+        <div x-show="activeTab === 'statistics'" class="p-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                <i class="bi bi-bar-chart-fill text-green-500 mr-2"></i>
+                Performance Statistics
+            </h3>
+
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                Detailed performance metrics and statistics for {{ player.nick_name }}.
+            </p>
+
+            <div class="text-center text-gray-500 dark:text-gray-400 text-sm italic">
+                Performance statistics will be displayed here
+            </div>
+        </div>
+
+        <!-- Scouting Tab Content -->
+        <div x-show="activeTab === 'scouting'" class="p-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                <i class="bi bi-search text-amber-500 mr-2"></i>
+                Scouting Reports
+            </h3>
+
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                Scouting assessments and reports for {{ player.nick_name }}.
+            </p>
+
+            <div class="text-center text-gray-500 dark:text-gray-400 text-sm italic">
+                Scouting reports will be displayed here
+            </div>
+        </div>
+    </div>
+</div>

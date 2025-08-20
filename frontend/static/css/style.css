@@ -2,9 +2,25 @@
     font-family: "Inter";
     src: url("/static/fonts/Inter.ttf");
     font-weight: normal;
-    font-style:normal;
+    font-style: normal;
 }
 
 body {
     font-family: "Inter", sans-serif;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }

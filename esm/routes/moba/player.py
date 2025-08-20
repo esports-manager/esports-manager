@@ -223,9 +223,10 @@ async def create_player(
     return db_player
 
 
-@player_routes.get("/{id}", response_model=MobaPlayerPublic)
-async def get_player(*, session: Session = Depends(get_session), request: Request):
-    id = int(request.path_params.get("id"))
+@player_routes.get("/{id}", response_model=MobaPlayerWithTeam)
+async def get_player(
+    *, session: Session = Depends(get_session), id: int, request: Request
+):
     player = session.get(MobaPlayer, id)
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")

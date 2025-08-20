@@ -4,7 +4,13 @@
 from .player_contract import MobaPlayerContract
 from .player import MobaPlayer
 from .team import MobaTeam
-from .champion import MobaChampion
+from .champion import (
+    MobaChampion,
+    MobaChampionPublic,
+    MobaChampionRole,
+    MobaChampionType,
+    MobaChampionDifficulty,
+)
 from .moba_match import MobaMatch
 from .tournament import (
     MobaTournament,
@@ -25,6 +31,10 @@ __all__ = [
     "MobaPlayer",
     "MobaTeam",
     "MobaChampion",
+    "MobaChampionPublic",
+    "MobaChampionRole",
+    "MobaChampionType",
+    "MobaChampionDifficulty",
     "MobaMatch",
     "MobaTournament",
     "MobaTournamentBase",

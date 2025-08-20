@@ -79,7 +79,7 @@
         {% if player.team %}
         <div class="flex items-center">
           <img src="/api/moba/teams/images/{{ player.team.logo_path }}" alt="{{ player.team.name }}"
-            class="w-8 h-8 mr-2 rounded-full" loading="lazy">
+            class="w-8 h-8 mr-2 rounded-full border-2 border-white dark:border-slate-800" loading="lazy">
           <span class="font-semibold text-base">{{ player.team.name }}</span>
         </div>
         {% else %}
@@ -96,7 +96,7 @@
         <div class="flex items-center">
           <span class="text-sm w-12 text-gray-500 dark:text-gray-400">Overall</span>
           <div class="ml-4">
-          {% include "components/player_stars_component.html" %}
+            {% include "components/player_stars_component.html" %}
           </div>
           <span class="text-xs font-semibold ml-2">{{ overall }}</span>
         </div>

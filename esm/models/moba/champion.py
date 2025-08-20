@@ -95,8 +95,6 @@ class MobaChampion(MobaChampionBase, table=True):
 
 class MobaChampionPublic(MobaChampionBase):
     id: int
-    created_at: datetime
-    updated_at: Optional[datetime]
 
 
 class MobaChampionCreate(MobaChampionBase):

@@ -1,0 +1,127 @@
+{% if player.champion_pool %}
+<div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for mastery in player.champion_pool %}
+    <div
+        class="bg-gray-50 dark:bg-slate-800 rounded-lg p-3 flex flex-col relative group hover:shadow-xl hover:scale-[1.1] cursor-pointer duration-200 transition-all">
+        <!-- Champion Image -->
+        <div class="relative">
+            <img src="{{ mastery.image_path }}" alt="{{ mastery.name }}"
+                class="w-full h-32 object-cover rounded-lg mb-2" onerror="this.src='/static/img/default_champion.png'">
+        </div>
+
+        <!-- Champion Name -->
+        <span class="text-lg font-semibold text-gray-800 dark:text-gray-200 flex justify-between">
+            {{ mastery.name }}
+
+            {% set tier_color = {
+            'bronze': 'bg-amber-700',
+            'silver': 'bg-gray-400',
+            'gold': 'bg-yellow-500',
+            'platinum': 'bg-cyan-500',
+            'diamond': 'bg-blue-500',
+            'master': 'bg-purple-600',
+            'grandmaster': 'bg-red-600',
+            'challenger': 'bg-gradient-to-r from-yellow-400 to-orange-500'
+            } %}
+
+            <div
+                class="{{ tier_color[mastery.tier.value] }} text-white text-xs font-bold rounded-lg px-1.5 py-0.5 flex items-center justify-center border-2 border-white dark:border-slate-800">
+                {% set tier_icon = {
+                'bronze': 'BRONZE',
+                'silver': 'SILVER',
+                'gold': 'GOLD',
+                'platinum': 'PLAT',
+                'diamond': 'DIA',
+                'master': 'MAS',
+                'grandmaster': 'GM',
+                'challenger': 'CHAL'
+                } %}
+                {{ tier_icon[mastery.tier.value] }}
+            </div>
+        </span>
+
+        <!-- Champion Type & Role -->
+        <div class="flex items-center mt-1 space-x-1 justify-between">
+            <!-- Mastery Tier Badge -->
+
+            {% set role_colors = {
+            'support': 'bg-purple-500',
+            'mid': 'bg-blue-500',
+            'top': 'bg-indigo-500',
+            'jungle': 'bg-green-500',
+            'adc': 'bg-red-500'
+            } %}
+            {% set role_icons = {
+            'support': 'bi-headset',
+            'mid': 'bi-lightning-charge',
+            'top': 'bi-shield',
+            'jungle': 'bi-tree',
+            'adc': 'bi-crosshair'
+            } %}
+            {% set role_values = {
+            'top': 'top',
+            'jungle': 'jng',
+            'mid': 'mid',
+            'adc': 'adc',
+            'support': 'sup'
+            }
+            %}
+
+            {% set type_colors = {
+            'assassin': 'bg-red-500',
+            'support': 'bg-purple-500',
+            'tank': 'bg-blue-500',
+            'mage': 'bg-green-500',
+            'fighter': 'bg-yellow-500',
+            'marksman': 'bg-orange-500'
+            } %}
+            {% set type_icon = {
+            'assassin': 'bi-lightning',
+            'support': 'bi-shield',
+            'tank': 'bi-shield-fill',
+            'mage': 'bi-magic',
+            'fighter': 'bi-hammer',
+            'marksman': 'bi-bullseye'
+            } %}
+            {% set type_name = {
+            'assassin': 'Assassin',
+            'support': 'Support',
+            'tank': 'Tank',
+            'mage': 'Mage',
+            'fighter': 'Fighter',
+            'marksman': 'Marksman'
+            }
+            %}
+
+            <div
+                class="{{ role_colors[mastery.primary_role.value]|default('bg-gray-500') }} text-white text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full flex items-center">
+                <i class="bi {{ role_icons[mastery.primary_role.value]|default('bi-person') }} mr-1"></i>
+                {{ role_values[mastery.primary_role.value]|upper }}
+            </div>
+
+            <span class="text-xs px-1.5 py-0.5 {{ type_colors[mastery.champion_type1.value] }} text-white rounded">
+                <i class="{{ type_icon[mastery.champion_type1.value] }} mr-1"></i>
+                {{ type_name[mastery.champion_type1.value]|upper }}
+            </span>
+        </div>
+
+        <!-- Mastery Points -->
+        <div class="mt-2 w-full">
+            <div class="text-xs text-gray-500 dark:text-gray-400 flex justify-between">
+                <span>EXP</span>
+                <span>{{ '{:,}'.format(mastery.points) }}</span>
+            </div>
+            <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-1.5 mt-1">
+                {% set mastery_percent = mastery.points / 10000 * 100 if mastery.points < 10000 else 100 %} {% set
+                    percent=mastery_percent %} {% set color='blue' %} {% include "components/progress_bar.html" %}
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% else %}
+<div class="text-center text-gray-500 dark:text-gray-400 text-sm italic py-4 bg-gray-50 dark:bg-slate-800 rounded-lg">
+    <i class="bi bi-exclamation-circle mr-2"></i>
+    No champion mastery data available for this player
+</div>
+{% endif %}

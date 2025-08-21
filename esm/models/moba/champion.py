@@ -60,9 +60,6 @@ class MobaChampionBase(SQLModel):
     strength: int = Field(gt=0, lt=100, default=50)
     image_path: Optional[str] = Field(default=None)
     description: Optional[str] = Field(default=None)
-    win_rate: Optional[float] = Field(default=None)
-    pick_rate: Optional[float] = Field(default=None)
-    ban_rate: Optional[float] = Field(default=None)
 
     @property
     def champion_tier(self) -> MobaChampionTier:
@@ -122,7 +119,4 @@ class MobaChampionUpdate(SQLModel):
     strength: Optional[int] = Field(gt=0, lt=100, default=None)
     image_path: Optional[str] = Field(default=None)
     description: Optional[str] = Field(default=None)
-    win_rate: Optional[float] = Field(default=None)
-    pick_rate: Optional[float] = Field(default=None)
-    ban_rate: Optional[float] = Field(default=None)
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)

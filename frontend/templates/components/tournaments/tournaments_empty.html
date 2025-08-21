@@ -1,0 +1,26 @@
+<!-- Tournaments Empty State -->
+<div class="bg-white dark:bg-slate-700 rounded-lg shadow p-8 text-center">
+  <div class="flex flex-col items-center justify-center py-6">
+    <div class="bg-gray-100 dark:bg-slate-600 rounded-full p-6 mb-4">
+      <i
+        class="bi bi-trophy-fill text-4xl text-gray-400 dark:text-gray-500"
+      ></i>
+    </div>
+    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+      No Tournaments Found
+    </h3>
+    <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-6">
+      No tournaments match your current filters. Try adjusting your search
+      criteria or clear filters to see all available tournaments.
+    </p>
+    <button
+      hx-get="/api/moba/tournaments"
+      hx-trigger="click"
+      hx-target="#tournaments-container"
+      hx-swap="innerHTML"
+      class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-150 mb-8"
+    >
+      Reset Filters
+    </button>
+  </div>
+</div>

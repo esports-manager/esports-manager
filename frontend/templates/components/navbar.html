@@ -1,54 +1,96 @@
 <nav
   class="text-black border-b border-b-gray-300 dark:border-b-gray-700 dark:text-white bg-slate-50 dark:bg-slate-900 justify-between transition-all items-center flex px-4 shadow-sm h-[90px] top-0"
-  :class="{ 'ml-64': expanded, 'ml-16': !expanded }" x-data="{ searchQuery: '', searchOpen: false }">
+  :class="{ 'ml-64': expanded, 'ml-16': !expanded }"
+  x-data="{ searchQuery: '', searchOpen: false }"
+>
   <div class="flex flex-row items-center">
-    <button @click="history.back()" class="p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
-      :disabled="history.length === 0" aria-label="Go back">
+    <button
+      @click="history.back()"
+      class="p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
+      :disabled="history.length === 0"
+      aria-label="Go back"
+    >
       <i class="bi bi-chevron-left text-xl"></i>
     </button>
-    <button @click="history.forward()" class="p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
-      :disabled="history.length === 0" aria-label="Go forward">
+    <button
+      @click="history.forward()"
+      class="p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
+      :disabled="history.length === 0"
+      aria-label="Go forward"
+    >
       <i class="bi bi-chevron-right text-xl"></i>
     </button>
   </div>
 
-
-  <div class="flex flex-row items-center font-bold text-3xl text-center px-4 self-center">
-    <img class="w-14" src="{{ url_for('static', path='img/g2-logo-clear.webp') }}" />
-    <div class="ml-4 place-self-center text-gray-600 dark:text-gray-300">G2 Esports</div>
+  <div
+    class="flex flex-row items-center font-bold text-3xl text-center px-4 self-center"
+  >
+    <img
+      class="w-14"
+      src="{{ url_for('static', path='img/g2-logo-clear.webp') }}"
+    />
+    <div class="ml-4 place-self-center text-gray-600 dark:text-gray-300">
+      G2 Esports
+    </div>
   </div>
 
-
-  <div class="flex flex-grow max-w-xl items-center px-4 gap-4 overflow-visible relative">
+  <div
+    class="flex flex-grow max-w-xl items-center px-4 gap-4 overflow-visible relative"
+  >
     <div class="relative w-full">
-      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+      <div
+        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+      >
         <i class="bi bi-search text-gray-500 dark:text-gray-400"></i>
       </div>
-      <input type="text" placeholder="Search players, teams, matches..." x-model="searchQuery" name="q"
-        id="omni-search-input" @focus="searchOpen = true" @keydown.escape="searchOpen = false; searchQuery='';"
-        hx-get="/api/moba/search" hx-target="#omni-results" hx-swap="innerHTML" hx-trigger="keyup changed delay:300ms"
-        class="pl-10 pr-16 rounded-xl w-full py-3 bg-slate-200 hover:bg-gray-100 dark:bg-slate-600 dark:hover:bg-slate-500 focus:outline-none focus:ring focus:ring-blue-500 text-gray-800 dark:text-gray-200">
-      <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+      <input
+        type="text"
+        placeholder="Search players, teams, matches..."
+        x-model="searchQuery"
+        name="q"
+        id="omni-search-input"
+        @focus="searchOpen = true"
+        @keydown.escape="searchOpen = false; searchQuery='';"
+        hx-get="/api/moba/search"
+        hx-target="#omni-results"
+        hx-swap="innerHTML"
+        hx-trigger="keyup changed delay:300ms"
+        class="pl-10 pr-16 rounded-xl w-full py-3 bg-slate-200 hover:bg-gray-100 dark:bg-slate-600 dark:hover:bg-slate-500 focus:outline-none focus:ring focus:ring-blue-500 text-gray-800 dark:text-gray-200"
+      />
+      <div
+        class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+      >
         <kbd
-          class="px-1.5 py-0.5 text-xs font-semibold text-gray-600 bg-gray-100 border border-gray-300 rounded-md dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600">/</kbd>
+          class="px-1.5 py-0.5 text-xs font-semibold text-gray-600 bg-gray-100 border border-gray-300 rounded-md dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600"
+          >/</kbd
+        >
       </div>
 
       <!-- Search Results Dropdown (HTMX target) -->
-      <div x-show="searchOpen && searchQuery && searchQuery.length > 1" @click.away="searchOpen = false" x-transition
+      <div
+        x-show="searchOpen && searchQuery && searchQuery.length > 1"
+        @click.away="searchOpen = false"
+        x-transition
         id="omni-results"
-        class="absolute z-50 mt-2 w-full bg-white dark:bg-slate-800 rounded-md shadow-lg py-2 text-sm border border-gray-200 dark:border-gray-700 max-h-[400px] overflow-y-auto">
-      </div>
+        class="absolute z-50 mt-2 w-full bg-white dark:bg-slate-800 rounded-md shadow-lg py-2 text-sm border border-gray-200 dark:border-gray-700 max-h-[400px] overflow-y-auto"
+      ></div>
     </div>
   </div>
 
   <div class="flex items-center space-x-6 gap-4">
     <!-- Date and Week Information -->
     <div class="block sm:hidden items-end justify-center mr-2">
-      <div class="text-sm font-medium text-gray-800 dark:text-gray-200">November 15, 2025</div>
-      <div class="text-xs text-gray-500 dark:text-gray-400">Week 25 - World Championship</div>
+      <div class="text-sm font-medium text-gray-800 dark:text-gray-200">
+        November 15, 2025
+      </div>
+      <div class="text-xs text-gray-500 dark:text-gray-400">
+        Week 25 - World Championship
+      </div>
     </div>
-    <button @click="darkMode = !darkMode"
-      class="rounded-full px-5 py-4 mx-1 bg-slate-200 hover:bg-gray-100 dark:bg-slate-600 dark:hover:bg-slate-500">
+    <button
+      @click="darkMode = !darkMode"
+      class="rounded-full px-5 py-4 mx-1 bg-slate-200 hover:bg-gray-100 dark:bg-slate-600 dark:hover:bg-slate-500"
+    >
       <span x-show="darkMode !== true">
         <i class="bi bi-moon-fill text-lg"></i>
       </span>
@@ -57,7 +99,9 @@
       </span>
     </button>
 
-    <button class="flex rounded-xl px-5 py-4 bg-blue-500 hover:bg-blue-400 text-white font-bold uppercase">
+    <button
+      class="flex rounded-xl px-5 py-4 bg-blue-500 hover:bg-blue-400 text-white font-bold uppercase"
+    >
       Continue
       <span class="ml-4 text-lg">
         <i class="bi bi-arrow-right-circle-fill"></i>

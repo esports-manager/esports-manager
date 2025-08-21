@@ -1,0 +1,162 @@
+<div
+  id="inbox-loading-skeleton"
+  hx-get="/api/moba/inbox"
+  hx-trigger="load"
+  hx-target="#inbox-list"
+  hx-swap="innerHTML"
+>
+  <!-- Inbox Tabs Skeleton -->
+  <div class="border-b border-gray-200 dark:border-slate-700">
+    <ul
+      class="flex flex-wrap -mb-px text-lg font-medium text-center bg-white dark:bg-slate-700 rounded-t-xl"
+    >
+      {% for i in range(5) %}
+      <li class="mr-2">
+        <button
+          class="inline-block p-4 border-b-2 border-slate-200 dark:border-slate-600 transition-colors duration-200 w-18"
+        ></button>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Message List Skeleton -->
+  <div class="flex min-h-96 bg-white dark:bg-slate-700">
+    <div
+      class="w-full md:w-2/5 lg:w-1/3 border-r border-gray-200 dark:border-slate-600 rounded-b-xl"
+    >
+      {% for i in range(12) %}
+      <div class="p-4 border-b border-gray-200 dark:border-slate-600">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center">
+            <div
+              class="h-4 w-14 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+            ></div>
+            <div
+              class="ml-2 h-4 w-14 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+            ></div>
+          </div>
+          <div
+            class="h-4 w-14 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+          ></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Message Detail Skeleton -->
+    <div class="w-full md:w-3/5 lg:w-2/3">
+      <div class="h-full flex flex-col">
+        <div
+          class="p-4 border-b border-t border-gray-200 dark:border-slate-600 flex justify-between items-center sticky top-0 bg-white dark:bg-slate-700 z-10"
+        >
+          <div class="flex items-center">
+            <div
+              class="h-4 w-14 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+            ></div>
+            <div
+              class="ml-2 h-4 w-14 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+            ></div>
+          </div>
+        </div>
+        <div class="p-6 overflow-y-auto flex-grow">
+          <div class="bg-white dark:bg-slate-700 max-w-none">
+            <div class="space-y-6">
+              <!-- Subject Skeleton -->
+              <div
+                class="h-6 w-2/3 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+              ></div>
+
+              <!-- Sender and Meta Skeleton -->
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <div
+                    class="h-10 w-10 rounded-full bg-gray-200 dark:bg-slate-600 animate-pulse"
+                  ></div>
+                  <div>
+                    <div
+                      class="h-4 w-32 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+                    ></div>
+                    <div
+                      class="mt-1 h-3 w-24 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+                    ></div>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <div
+                    class="h-8 w-20 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+                  ></div>
+                  <div
+                    class="h-8 w-8 bg-gray-200 dark:bg-slate-600 rounded-full animate-pulse"
+                  ></div>
+                  <div
+                    class="h-8 w-8 bg-gray-200 dark:bg-slate-600 rounded-full animate-pulse"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Tags/Labels Skeleton -->
+              <div class="flex flex-wrap gap-2">
+                {% for i in range(3) %}
+                <div
+                  class="h-6 w-16 bg-gray-200 dark:bg-slate-600 rounded-full animate-pulse"
+                ></div>
+                {% endfor %}
+              </div>
+
+              <hr class="border-gray-200 dark:border-slate-600" />
+
+              <!-- Message Body Skeleton -->
+              <div class="space-y-3">
+                <div
+                  class="h-4 w-full bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+                ></div>
+                <div
+                  class="h-4 w-11/12 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+                ></div>
+                <div
+                  class="h-4 w-5/6 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+                ></div>
+                <div
+                  class="h-4 w-2/3 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+                ></div>
+                <div
+                  class="h-4 w-3/4 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+                ></div>
+              </div>
+
+              <!-- Attachments Skeleton -->
+              <div>
+                <div
+                  class="h-5 w-28 bg-gray-200 dark:bg-slate-600 rounded animate-pulse mb-3"
+                ></div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {% for i in range(3) %}
+                  <div
+                    class="h-24 bg-gray-200 dark:bg-slate-600 rounded-lg animate-pulse"
+                  ></div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <!-- Quick Reply Skeleton -->
+              <div>
+                <div
+                  class="h-24 w-full bg-gray-200 dark:bg-slate-600 rounded-lg animate-pulse"
+                ></div>
+                <div class="flex justify-end space-x-2 mt-3">
+                  <div
+                    class="h-8 w-20 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+                  ></div>
+                  <div
+                    class="h-8 w-24 bg-gray-200 dark:bg-slate-600 rounded animate-pulse"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

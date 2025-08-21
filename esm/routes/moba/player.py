@@ -192,7 +192,7 @@ async def get_players(
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
-            "components/players_list.html",
+            "components/players/players_list.html",
             {
                 "request": request,
                 "players": result,
@@ -296,6 +296,9 @@ async def get_player_champion_pool(
     champions = []
     for champion in player.champion_pool:
         champions.append(MobaChampionMasteryPublic.model_validate(champion))
+
+    champions = sorted(champions, key=lambda x: (x.tier.value, x.points), reverse=True)
+
     return champions
 
 

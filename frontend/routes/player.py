@@ -34,7 +34,7 @@ async def players(request: Request):
     global current_page
     global sidebar
     current_page = "players"
-    contentview = "components/players_list.html"
+    contentview = "components/players/players_list.html"
 
     return templates.TemplateResponse(
         "layout.html",
@@ -54,7 +54,7 @@ async def player(
     global current_page
     global sidebar
     current_page = "players"
-    contentview = "components/player_info.html"
+    contentview = "components/players/player_info.html"
 
     player = session.get(MobaPlayer, player_id)
     if not player:

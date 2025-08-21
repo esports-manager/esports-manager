@@ -1,4 +1,6 @@
-<div class="m-8" x-data="{
+<div
+  class="m-8"
+  x-data="{
     activeTab: 'teams',
     view: $persist('grid').using(sessionStorage),
     searchQuery: '',
@@ -9,26 +11,36 @@
     sortDirection: 'asc',
     showAdvancedFilters: false,
     isLoading: true
-  }" x-init="
+  }"
+  x-init="
     $nextTick(() => {
       isLoading = true;
     })
-  ">
+  "
+>
   <!-- Page Header -->
   <div class="flex justify-between items-center mb-6">
     <div>
       <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Teams</h1>
-      <p class="text-sm text-gray-500 dark:text-gray-400">Browse and filter all esports teams</p>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        Browse and filter all esports teams
+      </p>
     </div>
 
     <!-- View Toggle -->
     <div class="flex items-center bg-gray-100 dark:bg-slate-700 rounded-lg p-1">
-      <button @click="view = 'grid'" :class="{'bg-white dark:bg-slate-600 shadow': view === 'grid'}"
-        class="px-3 py-1 rounded-md text-sm font-medium transition-colors duration-150">
+      <button
+        @click="view = 'grid'"
+        :class="{'bg-white dark:bg-slate-600 shadow': view === 'grid'}"
+        class="px-3 py-1 rounded-md text-sm font-medium transition-colors duration-150"
+      >
         <i class="bi bi-grid mr-1"></i> Grid
       </button>
-      <button @click="view = 'list'" :class="{'bg-white dark:bg-slate-600 shadow': view === 'list'}"
-        class="px-3 py-1 rounded-md text-sm font-medium transition-colors duration-150">
+      <button
+        @click="view = 'list'"
+        :class="{'bg-white dark:bg-slate-600 shadow': view === 'list'}"
+        class="px-3 py-1 rounded-md text-sm font-medium transition-colors duration-150"
+      >
         <i class="bi bi-list-ul mr-1"></i> List
       </button>
     </div>
@@ -36,35 +48,62 @@
 
   <!-- Filters and Search -->
   <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4 mb-6">
-    <form id="team-filters-form" hx-get="/api/moba/teams" hx-target="#teams-list" hx-trigger="submit"
-      hx-indicator="#loading-indicator">
+    <form
+      id="team-filters-form"
+      hx-get="/api/moba/teams"
+      hx-target="#teams-list"
+      hx-trigger="submit"
+      hx-indicator="#loading-indicator"
+    >
       <div class="flex flex-col lg:flex-row gap-4">
         <!-- Search -->
         <div class="relative flex-grow min-w-0">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
             <i class="bi bi-search text-gray-500 dark:text-gray-400"></i>
           </div>
-          <input type="text" x-model="searchQuery" name="search" placeholder="Search teams..."
+          <input
+            type="text"
+            x-model="searchQuery"
+            name="search"
+            placeholder="Search teams..."
             class="h-10 pl-10 pr-12 w-full rounded-lg bg-gray-100 dark:bg-slate-600 border-0 focus:ring-2 focus:ring-blue-500 text-sm shadow-sm truncate"
-            @input.debounce.300ms="htmx.trigger('#team-filters-form','submit')">
+            @input.debounce.300ms="htmx.trigger('#team-filters-form','submit')"
+          />
 
           <!-- Filter Toggle Button (inside input, absolute right) -->
-          <button type="button" @click="showAdvancedFilters = !showAdvancedFilters"
-            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors">
-            <i class="bi" :class="showAdvancedFilters ? 'bi-funnel-fill' : 'bi-funnel'"></i>
-            <span class="text-xs ml-1 hidden sm:inline"
-              x-text="showAdvancedFilters ? 'Hide Filters' : 'Show Filters'"></span>
+          <button
+            type="button"
+            @click="showAdvancedFilters = !showAdvancedFilters"
+            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors"
+          >
+            <i
+              class="bi"
+              :class="showAdvancedFilters ? 'bi-funnel-fill' : 'bi-funnel'"
+            ></i>
+            <span
+              class="text-xs ml-1 hidden sm:inline"
+              x-text="showAdvancedFilters ? 'Hide Filters' : 'Show Filters'"
+            ></span>
           </button>
         </div>
 
         <!-- Filter Dropdowns (Collapsible) -->
-        <div x-show="showAdvancedFilters" x-transition:enter="transition ease-out duration-200"
+        <div
+          x-show="showAdvancedFilters"
+          x-transition:enter="transition ease-out duration-200"
           x-transition:enter-start="opacity-0 transform -translate-y-2"
-          x-transition:enter-end="opacity-100 transform translate-y-0" class="w-full flex flex-wrap gap-2 sm:ml-auto">
+          x-transition:enter-end="opacity-100 transform translate-y-0"
+          class="w-full flex flex-wrap gap-2 sm:ml-auto"
+        >
           <!-- League Filter -->
-          <select x-model="selectedLeague" name="league"
+          <select
+            x-model="selectedLeague"
+            name="league"
             class="h-10 bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3"
-            @change="htmx.trigger('#team-filters-form','submit')">
+            @change="htmx.trigger('#team-filters-form','submit')"
+          >
             <option value="">All Leagues</option>
             <option value="LEC">LEC (Europe)</option>
             <option value="LCS">LCS (North America)</option>
@@ -74,9 +113,12 @@
           </select>
 
           <!-- Region Filter -->
-          <select x-model="selectedRegion" name="region"
+          <select
+            x-model="selectedRegion"
+            name="region"
             class="h-10 bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3"
-            @change="htmx.trigger('#team-filters-form','submit')">
+            @change="htmx.trigger('#team-filters-form','submit')"
+          >
             <option value="">All Regions</option>
             <option value="Europe">Europe</option>
             <option value="North America">North America</option>
@@ -86,9 +128,12 @@
           </select>
 
           <!-- Tier Filter -->
-          <select x-model="selectedTier" name="tier"
+          <select
+            x-model="selectedTier"
+            name="tier"
             class="h-10 bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3"
-            @change="htmx.trigger('#team-filters-form','submit')">
+            @change="htmx.trigger('#team-filters-form','submit')"
+          >
             <option value="">All Tiers</option>
             <option value="s">S Tier</option>
             <option value="a">A Tier</option>
@@ -98,76 +143,111 @@
           </select>
 
           <!-- Sort Options -->
-          <select x-model="sortBy" name="sort"
+          <select
+            x-model="sortBy"
+            name="sort"
             class="h-10 bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3"
-            @change="htmx.trigger('#team-filters-form','submit')">
+            @change="htmx.trigger('#team-filters-form','submit')"
+          >
             <option value="name">Sort by Name</option>
             <option value="region">Sort by Region</option>
           </select>
 
-          <input type="hidden" name="direction" x-bind:value="sortDirection">
-          <input type="hidden" name="view" x-bind:value="view">
+          <input type="hidden" name="direction" x-bind:value="sortDirection" />
+          <input type="hidden" name="view" x-bind:value="view" />
 
           <!-- Sort Direction Toggle -->
-          <button type="button" id="team-sort-direction-toggle"
+          <button
+            type="button"
+            id="team-sort-direction-toggle"
             @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'; $nextTick(() => htmx.trigger('#team-filters-form','submit'))"
-            class="h-10 bg-gray-100 hover:bg-gray-200 dark:bg-slate-600 dark:hover:bg-slate-500 rounded-lg px-3 text-sm inline-flex items-center justify-center">
-            <i :class="sortDirection === 'asc' ? 'bi bi-sort-alpha-down' : 'bi bi-sort-alpha-up'"></i>
+            class="h-10 bg-gray-100 hover:bg-gray-200 dark:bg-slate-600 dark:hover:bg-slate-500 rounded-lg px-3 text-sm inline-flex items-center justify-center"
+          >
+            <i
+              :class="sortDirection === 'asc' ? 'bi bi-sort-alpha-down' : 'bi bi-sort-alpha-up'"
+            ></i>
           </button>
         </div>
       </div>
-
     </form>
 
     <!-- Active Filters -->
-    <div class="mt-3 flex flex-wrap gap-2"
-      x-show="selectedLeague !== '' || selectedRegion !== '' || selectedTier !== '' || searchQuery !== ''">
-      <span class="text-xs text-gray-500 dark:text-gray-400 self-center">Active filters:</span>
+    <div
+      class="mt-3 flex flex-wrap gap-2"
+      x-show="selectedLeague !== '' || selectedRegion !== '' || selectedTier !== '' || searchQuery !== ''"
+    >
+      <span class="text-xs text-gray-500 dark:text-gray-400 self-center"
+        >Active filters:</span
+      >
 
       <!-- League Filter Tag -->
-      <div x-show="selectedLeague !== ''"
-        class="flex items-center text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full">
+      <div
+        x-show="selectedLeague !== ''"
+        class="flex items-center text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full"
+      >
         <span>League: <span x-text="selectedLeague.toUpperCase()"></span></span>
-        <button type="button" @click="selectedLeague = ''; $nextTick(() => htmx.trigger('#team-filters-form','submit'))"
-          class="ml-1 text-blue-500 hover:text-blue-700 focus:outline-none">
+        <button
+          type="button"
+          @click="selectedLeague = ''; $nextTick(() => htmx.trigger('#team-filters-form','submit'))"
+          class="ml-1 text-blue-500 hover:text-blue-700 focus:outline-none"
+        >
           <i class="bi bi-x-circle"></i>
         </button>
       </div>
 
       <!-- Region Filter Tag -->
-      <div x-show="selectedRegion !== ''"
-        class="flex items-center text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded-full">
+      <div
+        x-show="selectedRegion !== ''"
+        class="flex items-center text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded-full"
+      >
         <span>Region: <span x-text="selectedRegion"></span></span>
-        <button type="button" @click="selectedRegion = ''; $nextTick(() => htmx.trigger('#team-filters-form','submit'))"
-          class="ml-1 text-green-500 hover:text-green-700 focus:outline-none">
+        <button
+          type="button"
+          @click="selectedRegion = ''; $nextTick(() => htmx.trigger('#team-filters-form','submit'))"
+          class="ml-1 text-green-500 hover:text-green-700 focus:outline-none"
+        >
           <i class="bi bi-x-circle"></i>
         </button>
       </div>
 
       <!-- Tier Filter Tag -->
-      <div x-show="selectedTier !== ''"
-        class="flex items-center text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded-full">
-        <span>Tier: <span x-text="selectedTier.toUpperCase() + ' Tier'"></span></span>
-        <button type="button" @click="selectedTier = ''; $nextTick(() => htmx.trigger('#team-filters-form','submit'))"
-          class="ml-1 text-purple-500 hover:text-purple-700 focus:outline-none">
+      <div
+        x-show="selectedTier !== ''"
+        class="flex items-center text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded-full"
+      >
+        <span
+          >Tier: <span x-text="selectedTier.toUpperCase() + ' Tier'"></span
+        ></span>
+        <button
+          type="button"
+          @click="selectedTier = ''; $nextTick(() => htmx.trigger('#team-filters-form','submit'))"
+          class="ml-1 text-purple-500 hover:text-purple-700 focus:outline-none"
+        >
           <i class="bi bi-x-circle"></i>
         </button>
       </div>
 
       <!-- Search Filter Tag -->
-      <div x-show="searchQuery !== ''"
-        class="flex items-center text-xs bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-2 py-1 rounded-full">
+      <div
+        x-show="searchQuery !== ''"
+        class="flex items-center text-xs bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-2 py-1 rounded-full"
+      >
         <span>Search: <span x-text="searchQuery"></span></span>
-        <button type="button" @click="searchQuery = ''; $nextTick(() => htmx.trigger('#team-filters-form','submit'))"
-          class="ml-1 text-yellow-500 hover:text-yellow-700 focus:outline-none">
+        <button
+          type="button"
+          @click="searchQuery = ''; $nextTick(() => htmx.trigger('#team-filters-form','submit'))"
+          class="ml-1 text-yellow-500 hover:text-yellow-700 focus:outline-none"
+        >
           <i class="bi bi-x-circle"></i>
         </button>
       </div>
 
       <!-- Clear All Filters -->
-      <button type="button"
+      <button
+        type="button"
         @click="selectedLeague = ''; selectedRegion = ''; selectedTier = ''; searchQuery = ''; $nextTick(() => htmx.trigger('#team-filters-form','submit'))"
-        class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 ml-auto">
+        class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 ml-auto"
+      >
         Clear All
       </button>
     </div>
@@ -176,6 +256,6 @@
   <!-- Teams Content Container -->
   <div id="teams-list">
     <!-- Initial loading skeleton will be replaced by HTMX -->
-    {% include "components/teams_skeleton.html" %}
+    {% include "components/teams/teams_skeleton.html" %}
   </div>
 </div>

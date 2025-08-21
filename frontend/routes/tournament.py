@@ -27,7 +27,7 @@ async def get_tournament_page(
 ):
     global sidebar  # used by layout
     current_page = "tournaments"
-    contentview = "components/tournament_info.html"
+    contentview = "components/tournaments/tournament_info.html"
 
     tournament = session.get(MobaTournament, id)
     if not tournament:

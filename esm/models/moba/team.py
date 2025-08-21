@@ -11,6 +11,7 @@ from esm.models.moba.player_contract import MobaPlayerContract
 
 if TYPE_CHECKING:
     from esm.models.moba.player import MobaPlayer
+    from esm.models.moba.staff import MobaStaff
 
 
 class MobaTeamTier(enum.Enum):
@@ -49,6 +50,7 @@ class MobaTeam(MobaTeamBase, table=True):
     updated_at: Optional[datetime] = Field(default=None, sa_column=Column(DateTime))
 
     contracts: list["MobaPlayerContract"] = Relationship(back_populates="team")
+    staff: list["MobaStaff"] = Relationship(back_populates="team")
 
     @property
     def current_players(self) -> list["MobaPlayer"]:

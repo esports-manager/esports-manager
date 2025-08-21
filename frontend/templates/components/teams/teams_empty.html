@@ -3,29 +3,33 @@
   <div class="flex flex-col items-center justify-center py-6">
     <!-- Empty Illustration -->
     <div class="bg-gray-100 dark:bg-slate-600 rounded-full p-6 mb-4">
-      <i class="bi bi-people-fill text-4xl text-gray-400 dark:text-gray-500"></i>
+      <i
+        class="bi bi-shield-fill text-4xl text-gray-400 dark:text-gray-500"
+      ></i>
     </div>
-    
+
     <!-- Empty Message -->
-    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">No Players Found</h3>
+    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+      No Teams Found
+    </h3>
     <p class="text-gray-500 dark:text-gray-400 mb-6 max-w-md">
-      {% if search_query %}
-        No players match your search for "{{ search_query }}". Try adjusting your filters or search terms.
-      {% else %}
-        No players match your current filter criteria. Try adjusting your filters for different results.
+      {% if search_query %} No teams match your search for "{{ search_query }}".
+      Try adjusting your filters or search terms. {% else %} No teams match your
+      current filter criteria. Try adjusting your filters for different results.
       {% endif %}
     </p>
-    
+
     <!-- Action Buttons -->
     <div class="flex flex-wrap gap-3 justify-center">
       <!-- Reset Filters -->
-      <button 
+      <button
         class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-        hx-get="/api/players"
-        hx-include="#player-filters-form"
+        hx-get="/api/moba/teams"
+        hx-include="#team-filters-form"
         hx-vals='{"reset": true}'
-        hx-target="#players-list"
-        hx-swap="innerHTML">
+        hx-target="#teams-list"
+        hx-swap="innerHTML"
+      >
         <i class="bi bi-arrow-repeat mr-2"></i>
         Reset Filters
       </button>

@@ -9,10 +9,7 @@
     "difficulty": "hard",
     "strength": 80,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zeri_0.jpg",
-    "description": "The spark of Zaun",
-    "win_rate": 48.2,
-    "pick_rate": 12.1,
-    "ban_rate": 8.5
+    "description": "The spark of Zaun"
   },
 
   {
@@ -25,10 +22,7 @@
     "difficulty": "medium",
     "strength": 75,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jinx_0.jpg",
-    "description": "The Loose Cannon",
-    "win_rate": 51.3,
-    "pick_rate": 18.7,
-    "ban_rate": 15.2
+    "description": "The Loose Cannon"
   },
 
   {
@@ -41,10 +35,7 @@
     "difficulty": "hard",
     "strength": 85,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yasuo_0.jpg",
-    "description": "The Unforgiven",
-    "win_rate": 49.8,
-    "pick_rate": 25.4,
-    "ban_rate": 35.7
+    "description": "The Unforgiven"
   },
 
   {
@@ -57,10 +48,7 @@
     "difficulty": "hard",
     "strength": 78,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Thresh_0.jpg",
-    "description": "The Chain Warden",
-    "win_rate": 50.1,
-    "pick_rate": 22.3,
-    "ban_rate": 12.8
+    "description": "The Chain Warden"
   },
 
   {
@@ -73,10 +61,7 @@
     "difficulty": "hard",
     "strength": 82,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/LeeSin_0.jpg",
-    "description": "The Blind Monk",
-    "win_rate": 47.9,
-    "pick_rate": 16.5,
-    "ban_rate": 18.9
+    "description": "The Blind Monk"
   },
 
   {
@@ -89,10 +74,7 @@
     "difficulty": "medium",
     "strength": 72,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg",
-    "description": "The Nine-Tailed Fox",
-    "win_rate": 52.1,
-    "pick_rate": 14.3,
-    "ban_rate": 6.7
+    "description": "The Nine-Tailed Fox"
   },
 
   {
@@ -105,10 +87,7 @@
     "difficulty": "easy",
     "strength": 65,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Garen_0.jpg",
-    "description": "The Might of Demacia",
-    "win_rate": 51.8,
-    "pick_rate": 8.9,
-    "ban_rate": 4.2
+    "description": "The Might of Demacia"
   },
 
   {
@@ -121,10 +100,7 @@
     "difficulty": "hard",
     "strength": 83,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Vayne_0.jpg",
-    "description": "The Night Hunter",
-    "win_rate": 50.5,
-    "pick_rate": 19.2,
-    "ban_rate": 22.1
+    "description": "The Night Hunter"
   },
 
   {
@@ -137,10 +113,7 @@
     "difficulty": "hard",
     "strength": 79,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Katarina_0.jpg",
-    "description": "The Sinister Blade",
-    "win_rate": 52.3,
-    "pick_rate": 11.8,
-    "ban_rate": 28.4
+    "description": "The Sinister Blade"
   },
 
   {
@@ -153,10 +126,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Blitzcrank_0.jpg",
-    "description": "The Great Steam Golem",
-    "win_rate": 51.9,
-    "pick_rate": 13.4,
-    "ban_rate": 16.8
+    "description": "The Great Steam Golem"
   },
 
   {
@@ -169,10 +139,7 @@
     "difficulty": "easy",
     "strength": 73,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Darius_0.jpg",
-    "description": "The Hand of Noxus",
-    "win_rate": 50.9,
-    "pick_rate": 14.2,
-    "ban_rate": 19.3
+    "description": "The Hand of Noxus"
   },
 
   {
@@ -185,10 +152,7 @@
     "difficulty": "easy",
     "strength": 68,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lux_0.jpg",
-    "description": "The Lady of Luminosity",
-    "win_rate": 51.5,
-    "pick_rate": 17.8,
-    "ban_rate": 7.2
+    "description": "The Lady of Luminosity"
   },
 
   {
@@ -201,10 +165,7 @@
     "difficulty": "medium",
     "strength": 76,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Graves_0.jpg",
-    "description": "The Outlaw",
-    "win_rate": 50.7,
-    "pick_rate": 13.9,
-    "ban_rate": 11.4
+    "description": "The Outlaw"
   },
 
   {
@@ -217,10 +178,7 @@
     "difficulty": "easy",
     "strength": 71,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Leona_0.jpg",
-    "description": "The Radiant Dawn",
-    "win_rate": 52.8,
-    "pick_rate": 15.6,
-    "ban_rate": 8.9
+    "description": "The Radiant Dawn"
   },
 
   {
@@ -233,10 +191,7 @@
     "difficulty": "hard",
     "strength": 87,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Azir_0.jpg",
-    "description": "The Emperor of the Sands",
-    "win_rate": 46.3,
-    "pick_rate": 4.2,
-    "ban_rate": 2.1
+    "description": "The Emperor of the Sands"
   },
 
   {
@@ -249,10 +204,7 @@
     "difficulty": "hard",
     "strength": 81,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Fiora_0.jpg",
-    "description": "The Grand Duelist",
-    "win_rate": 50.2,
-    "pick_rate": 9.7,
-    "ban_rate": 14.8
+    "description": "The Grand Duelist"
   },
 
   {
@@ -265,10 +217,7 @@
     "difficulty": "medium",
     "strength": 77,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jhin_0.jpg",
-    "description": "The Virtuoso",
-    "win_rate": 51.8,
-    "pick_rate": 20.4,
-    "ban_rate": 13.7
+    "description": "The Virtuoso"
   },
 
   {
@@ -281,10 +230,7 @@
     "difficulty": "hard",
     "strength": 84,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zed_0.jpg",
-    "description": "The Master of Shadows",
-    "win_rate": 49.1,
-    "pick_rate": 13.2,
-    "ban_rate": 31.5
+    "description": "The Master of Shadows"
   },
 
   {
@@ -297,10 +243,7 @@
     "difficulty": "easy",
     "strength": 69,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Braum_0.jpg",
-    "description": "The Heart of the Freljord",
-    "win_rate": 51.2,
-    "pick_rate": 11.8,
-    "ban_rate": 5.3
+    "description": "The Heart of the Freljord"
   },
 
   {
@@ -313,10 +256,7 @@
     "difficulty": "medium",
     "strength": 74,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ekko_0.jpg",
-    "description": "The Boy Who Shattered Time",
-    "win_rate": 50.6,
-    "pick_rate": 12.4,
-    "ban_rate": 9.8
+    "description": "The Boy Who Shattered Time"
   },
 
   {
@@ -329,10 +269,7 @@
     "difficulty": "hard",
     "strength": 86,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Riven_0.jpg",
-    "description": "The Exile",
-    "win_rate": 50.8,
-    "pick_rate": 11.3,
-    "ban_rate": 17.2
+    "description": "The Exile"
   },
 
   {
@@ -345,10 +282,7 @@
     "difficulty": "medium",
     "strength": 73,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Caitlyn_0.jpg",
-    "description": "The Sheriff of Piltover",
-    "win_rate": 50.3,
-    "pick_rate": 16.8,
-    "ban_rate": 9.1
+    "description": "The Sheriff of Piltover"
   },
 
   {
@@ -361,10 +295,7 @@
     "difficulty": "medium",
     "strength": 72,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/TwistedFate_0.jpg",
-    "description": "The Card Master",
-    "win_rate": 51.7,
-    "pick_rate": 7.6,
-    "ban_rate": 3.4
+    "description": "The Card Master"
   },
 
   {
@@ -377,10 +308,7 @@
     "difficulty": "medium",
     "strength": 78,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kassadin_0.jpg",
-    "description": "The Void Walker",
-    "win_rate": 51.9,
-    "pick_rate": 6.8,
-    "ban_rate": 12.3
+    "description": "The Void Walker"
   },
 
   {
@@ -393,10 +321,7 @@
     "difficulty": "easy",
     "strength": 67,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Morgana_0.jpg",
-    "description": "The Fallen",
-    "win_rate": 51.4,
-    "pick_rate": 14.7,
-    "ban_rate": 21.6
+    "description": "The Fallen"
   },
 
   {
@@ -409,10 +334,7 @@
     "difficulty": "hard",
     "strength": 82,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Viktor_0.jpg",
-    "description": "The Machine Herald",
-    "win_rate": 52.1,
-    "pick_rate": 8.3,
-    "ban_rate": 6.7
+    "description": "The Machine Herald"
   },
 
   {
@@ -425,10 +347,7 @@
     "difficulty": "hard",
     "strength": 85,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Draven_0.jpg",
-    "description": "The Glorious Executioner",
-    "win_rate": 49.8,
-    "pick_rate": 7.2,
-    "ban_rate": 11.4
+    "description": "The Glorious Executioner"
   },
 
   {
@@ -441,10 +360,7 @@
     "difficulty": "medium",
     "strength": 79,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Irelia_0.jpg",
-    "description": "The Blade Dancer",
-    "win_rate": 48.9,
-    "pick_rate": 10.7,
-    "ban_rate": 18.3
+    "description": "The Blade Dancer"
   },
 
   {
@@ -457,10 +373,7 @@
     "difficulty": "easy",
     "strength": 71,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Sejuani_0.jpg",
-    "description": "Fury of the North",
-    "win_rate": 51.6,
-    "pick_rate": 9.4,
-    "ban_rate": 7.8
+    "description": "Fury of the North"
   },
 
   {
@@ -473,10 +386,7 @@
     "difficulty": "hard",
     "strength": 83,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Syndra_0.jpg",
-    "description": "The Dark Sovereign",
-    "win_rate": 49.2,
-    "pick_rate": 6.9,
-    "ban_rate": 14.1
+    "description": "The Dark Sovereign"
   },
 
   {
@@ -489,10 +399,7 @@
     "difficulty": "hard",
     "strength": 81,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Rengar_0.jpg",
-    "description": "The Pridestalker",
-    "win_rate": 48.7,
-    "pick_rate": 8.1,
-    "ban_rate": 22.9
+    "description": "The Pridestalker"
   },
 
   {
@@ -505,10 +412,7 @@
     "difficulty": "medium",
     "strength": 68,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Nami_0.jpg",
-    "description": "The Tidecaller",
-    "win_rate": 52.3,
-    "pick_rate": 16.7,
-    "ban_rate": 4.2
+    "description": "The Tidecaller"
   },
 
   {
@@ -521,10 +425,7 @@
     "difficulty": "hard",
     "strength": 84,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Camille_0.jpg",
-    "description": "The Steel Shadow",
-    "win_rate": 50.1,
-    "pick_rate": 7.8,
-    "ban_rate": 16.5
+    "description": "The Steel Shadow"
   },
 
   {
@@ -537,10 +438,7 @@
     "difficulty": "medium",
     "strength": 76,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Khazix_0.jpg",
-    "description": "The Voidreaver",
-    "win_rate": 50.8,
-    "pick_rate": 12.3,
-    "ban_rate": 13.7
+    "description": "The Voidreaver"
   },
 
   {
@@ -553,10 +451,7 @@
     "difficulty": "hard",
     "strength": 80,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Orianna_0.jpg",
-    "description": "The Lady of Clockwork",
-    "win_rate": 49.7,
-    "pick_rate": 5.4,
-    "ban_rate": 3.8
+    "description": "The Lady of Clockwork"
   },
 
   {
@@ -569,10 +464,7 @@
     "difficulty": "easy",
     "strength": 66,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Malphite_0.jpg",
-    "description": "Shard of the Monolith",
-    "win_rate": 52.4,
-    "pick_rate": 11.2,
-    "ban_rate": 8.6
+    "description": "Shard of the Monolith"
   },
 
   {
@@ -585,10 +477,7 @@
     "difficulty": "medium",
     "strength": 74,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ezreal_0.jpg",
-    "description": "The Prodigal Explorer",
-    "win_rate": 48.6,
-    "pick_rate": 22.1,
-    "ban_rate": 5.9
+    "description": "The Prodigal Explorer"
   },
 
   {
@@ -601,10 +490,7 @@
     "difficulty": "medium",
     "strength": 75,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Diana_0.jpg",
-    "description": "Scorn of the Moon",
-    "win_rate": 51.2,
-    "pick_rate": 9.8,
-    "ban_rate": 7.3
+    "description": "Scorn of the Moon"
   },
 
   {
@@ -617,10 +503,7 @@
     "difficulty": "medium",
     "strength": 69,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Shen_0.jpg",
-    "description": "The Eye of Twilight",
-    "win_rate": 51.8,
-    "pick_rate": 6.7,
-    "ban_rate": 4.1
+    "description": "The Eye of Twilight"
   },
 
   {
@@ -633,10 +516,7 @@
     "difficulty": "easy",
     "strength": 77,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jax_0.jpg",
-    "description": "Grandmaster at Arms",
-    "win_rate": 50.9,
-    "pick_rate": 13.4,
-    "ban_rate": 12.8
+    "description": "Grandmaster at Arms"
   },
 
   {
@@ -649,10 +529,7 @@
     "difficulty": "easy",
     "strength": 63,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Annie_0.jpg",
-    "description": "The Dark Child",
-    "win_rate": 51.7,
-    "pick_rate": 4.8,
-    "ban_rate": 2.3
+    "description": "The Dark Child"
   },
 
   {
@@ -665,10 +542,7 @@
     "difficulty": "medium",
     "strength": 78,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lucian_0.jpg",
-    "description": "The Purifier",
-    "win_rate": 49.3,
-    "pick_rate": 19.7,
-    "ban_rate": 7.4
+    "description": "The Purifier"
   },
 
   {
@@ -681,10 +555,7 @@
     "difficulty": "medium",
     "strength": 72,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zyra_0.jpg",
-    "description": "Rise of the Thorns",
-    "win_rate": 52.1,
-    "pick_rate": 8.9,
-    "ban_rate": 6.2
+    "description": "Rise of the Thorns"
   },
 
   {
@@ -697,10 +568,7 @@
     "difficulty": "hard",
     "strength": 86,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Akali_0.jpg",
-    "description": "The Rogue Assassin",
-    "win_rate": 47.8,
-    "pick_rate": 9.4,
-    "ban_rate": 26.3
+    "description": "The Rogue Assassin"
   },
 
   {
@@ -713,10 +581,7 @@
     "difficulty": "medium",
     "strength": 73,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Veigar_0.jpg",
-    "description": "The Tiny Master of Evil",
-    "win_rate": 52.6,
-    "pick_rate": 7.1,
-    "ban_rate": 5.8
+    "description": "The Tiny Master of Evil"
   },
 
   {
@@ -729,10 +594,7 @@
     "difficulty": "medium",
     "strength": 74,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Hecarim_0.jpg",
-    "description": "The Shadow of War",
-    "win_rate": 51.3,
-    "pick_rate": 10.2,
-    "ban_rate": 8.7
+    "description": "The Shadow of War"
   },
 
   {
@@ -745,10 +607,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Brand_0.jpg",
-    "description": "The Burning Vengeance",
-    "win_rate": 51.9,
-    "pick_rate": 12.6,
-    "ban_rate": 9.4
+    "description": "The Burning Vengeance"
   },
 
   {
@@ -761,10 +620,7 @@
     "difficulty": "easy",
     "strength": 61,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Teemo_0.jpg",
-    "description": "The Swift Scout",
-    "win_rate": 50.4,
-    "pick_rate": 6.8,
-    "ban_rate": 11.7
+    "description": "The Swift Scout"
   },
 
   {
@@ -777,10 +633,7 @@
     "difficulty": "medium",
     "strength": 79,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kayn_0.jpg",
-    "description": "The Shadow Reaper",
-    "win_rate": 50.7,
-    "pick_rate": 14.1,
-    "ban_rate": 10.3
+    "description": "The Shadow Reaper"
   },
 
   {
@@ -793,10 +646,7 @@
     "difficulty": "easy",
     "strength": 64,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Soraka_0.jpg",
-    "description": "The Starchild",
-    "win_rate": 52.8,
-    "pick_rate": 13.9,
-    "ban_rate": 7.1
+    "description": "The Starchild"
   },
 
   {
@@ -809,10 +659,7 @@
     "difficulty": "hard",
     "strength": 83,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yone_0.jpg",
-    "description": "The Unforgotten",
-    "win_rate": 49.6,
-    "pick_rate": 15.2,
-    "ban_rate": 21.8
+    "description": "The Unforgotten"
   },
 
   {
@@ -825,10 +672,7 @@
     "difficulty": "hard",
     "strength": 84,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Samira_0.jpg",
-    "description": "The Desert Rose",
-    "win_rate": 48.7,
-    "pick_rate": 9.4,
-    "ban_rate": 18.6
+    "description": "The Desert Rose"
   },
 
   {
@@ -841,10 +685,7 @@
     "difficulty": "hard",
     "strength": 87,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aphelios_0.jpg",
-    "description": "The Weapon of the Faithful",
-    "win_rate": 47.3,
-    "pick_rate": 6.1,
-    "ban_rate": 12.4
+    "description": "The Weapon of the Faithful"
   },
 
   {
@@ -857,10 +698,7 @@
     "difficulty": "medium",
     "strength": 76,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Pyke_0.jpg",
-    "description": "The Bloodharbor Ripper",
-    "win_rate": 50.9,
-    "pick_rate": 11.7,
-    "ban_rate": 15.3
+    "description": "The Bloodharbor Ripper"
   },
 
   {
@@ -873,10 +711,7 @@
     "difficulty": "medium",
     "strength": 78,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kaisa_0.jpg",
-    "description": "Daughter of the Void",
-    "win_rate": 50.2,
-    "pick_rate": 17.8,
-    "ban_rate": 11.9
+    "description": "Daughter of the Void"
   },
 
   {
@@ -889,10 +724,7 @@
     "difficulty": "medium",
     "strength": 75,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Xayah_0.jpg",
-    "description": "The Rebel",
-    "win_rate": 50.8,
-    "pick_rate": 13.2,
-    "ban_rate": 7.4
+    "description": "The Rebel"
   },
 
   {
@@ -905,10 +737,7 @@
     "difficulty": "hard",
     "strength": 72,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Rakan_0.jpg",
-    "description": "The Charmer",
-    "win_rate": 51.4,
-    "pick_rate": 8.9,
-    "ban_rate": 5.6
+    "description": "The Charmer"
   },
 
   {
@@ -921,10 +750,7 @@
     "difficulty": "medium",
     "strength": 73,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ornn_0.jpg",
-    "description": "The Fire Beneath the Mountain",
-    "win_rate": 51.7,
-    "pick_rate": 7.3,
-    "ban_rate": 4.8
+    "description": "The Fire Beneath the Mountain"
   },
 
   {
@@ -937,10 +763,7 @@
     "difficulty": "medium",
     "strength": 77,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Sylas_0.jpg",
-    "description": "The Unshackled",
-    "win_rate": 48.9,
-    "pick_rate": 8.7,
-    "ban_rate": 13.2
+    "description": "The Unshackled"
   },
 
   {
@@ -953,10 +776,7 @@
     "difficulty": "medium",
     "strength": 71,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Neeko_0.jpg",
-    "description": "The Curious Chameleon",
-    "win_rate": 51.3,
-    "pick_rate": 5.9,
-    "ban_rate": 3.7
+    "description": "The Curious Chameleon"
   },
 
   {
@@ -969,10 +789,7 @@
     "difficulty": "easy",
     "strength": 62,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yuumi_0.jpg",
-    "description": "The Magical Cat",
-    "win_rate": 48.4,
-    "pick_rate": 7.2,
-    "ban_rate": 24.8
+    "description": "The Magical Cat"
   },
 
   {
@@ -985,10 +802,7 @@
     "difficulty": "medium",
     "strength": 74,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Senna_0.jpg",
-    "description": "The Redeemer",
-    "win_rate": 50.6,
-    "pick_rate": 14.3,
-    "ban_rate": 8.1
+    "description": "The Redeemer"
   },
 
   {
@@ -1001,10 +815,7 @@
     "difficulty": "medium",
     "strength": 80,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Viego_0.jpg",
-    "description": "The Ruined King",
-    "win_rate": 49.8,
-    "pick_rate": 10.4,
-    "ban_rate": 16.7
+    "description": "The Ruined King"
   },
 
   {
@@ -1017,10 +828,7 @@
     "difficulty": "medium",
     "strength": 74,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Rell_0.jpg",
-    "description": "The Iron Maiden",
-    "win_rate": 51.0,
-    "pick_rate": 8.2,
-    "ban_rate": 6.9
+    "description": "The Iron Maiden"
   },
 
   {
@@ -1033,10 +841,7 @@
     "difficulty": "hard",
     "strength": 79,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Akshan_0.jpg",
-    "description": "The Rogue Sentinel",
-    "win_rate": 49.2,
-    "pick_rate": 7.4,
-    "ban_rate": 9.6
+    "description": "The Rogue Sentinel"
   },
 
   {
@@ -1049,10 +854,7 @@
     "difficulty": "medium",
     "strength": 73,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Vex_0.jpg",
-    "description": "The Gloomist",
-    "win_rate": 50.8,
-    "pick_rate": 6.3,
-    "ban_rate": 4.7
+    "description": "The Gloomist"
   },
 
   {
@@ -1065,10 +867,7 @@
     "difficulty": "medium",
     "strength": 75,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Renata_0.jpg",
-    "description": "The Chem-Baroness",
-    "win_rate": 50.9,
-    "pick_rate": 9.1,
-    "ban_rate": 6.4
+    "description": "The Chem-Baroness"
   },
 
   {
@@ -1081,10 +880,7 @@
     "difficulty": "hard",
     "strength": 82,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Belveth_0.jpg",
-    "description": "Empress of the Void",
-    "win_rate": 49.4,
-    "pick_rate": 8.5,
-    "ban_rate": 12.7
+    "description": "Empress of the Void"
   },
 
   {
@@ -1097,10 +893,7 @@
     "difficulty": "hard",
     "strength": 78,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Nilah_0.jpg",
-    "description": "The Joy Unbound",
-    "win_rate": 50.1,
-    "pick_rate": 5.6,
-    "ban_rate": 7.8
+    "description": "The Joy Unbound"
   },
 
   {
@@ -1113,10 +906,7 @@
     "difficulty": "hard",
     "strength": 81,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/KSante_0.jpg",
-    "description": "The Pride of Nazumah",
-    "win_rate": 49.1,
-    "pick_rate": 7.9,
-    "ban_rate": 10.5
+    "description": "The Pride of Nazumah"
   },
 
   {
@@ -1129,10 +919,7 @@
     "difficulty": "easy",
     "strength": 66,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Milio_0.jpg",
-    "description": "The Gentle Flame",
-    "win_rate": 51.5,
-    "pick_rate": 6.8,
-    "ban_rate": 5.1
+    "description": "The Gentle Flame"
   },
 
   {
@@ -1145,10 +932,7 @@
     "difficulty": "easy",
     "strength": 72,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Naafiri_0.jpg",
-    "description": "The Hound of a Hundred Bites",
-    "win_rate": 50.0,
-    "pick_rate": 5.3,
-    "ban_rate": 6.6
+    "description": "The Hound of a Hundred Bites"
   },
 
   {
@@ -1161,10 +945,7 @@
     "difficulty": "medium",
     "strength": 77,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Briar_0.jpg",
-    "description": "The Restrained Hunger",
-    "win_rate": 49.6,
-    "pick_rate": 6.9,
-    "ban_rate": 8.2
+    "description": "The Restrained Hunger"
   },
 
   {
@@ -1177,10 +958,7 @@
     "difficulty": "hard",
     "strength": 80,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Hwei_0.jpg",
-    "description": "The Visionary",
-    "win_rate": 49.0,
-    "pick_rate": 5.7,
-    "ban_rate": 7.5
+    "description": "The Visionary"
   },
 
   {
@@ -1193,10 +971,7 @@
     "difficulty": "medium",
     "strength": 74,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Smolder_0.jpg",
-    "description": "The Fiery Fledgling",
-    "win_rate": 50.4,
-    "pick_rate": 12.7,
-    "ban_rate": 9.9
+    "description": "The Fiery Fledgling"
   },
 
   {
@@ -1209,10 +984,7 @@
     "difficulty": "medium",
     "strength": 78,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aurora_0.jpg",
-    "description": "The Witch Between Worlds",
-    "win_rate": 50.2,
-    "pick_rate": 8.1,
-    "ban_rate": 7.3
+    "description": "The Witch Between Worlds"
   },
 
   {
@@ -1225,10 +997,7 @@
     "difficulty": "medium",
     "strength": 76,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Gwen_0.jpg",
-    "description": "The Hallowed Seamstress",
-    "win_rate": 48.1,
-    "pick_rate": 6.8,
-    "ban_rate": 9.5
+    "description": "The Hallowed Seamstress"
   },
 
   {
@@ -1241,10 +1010,7 @@
     "difficulty": "easy",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Warwick_0.jpg",
-    "description": "The Uncaged Wrath of Zaun",
-    "win_rate": 52.3,
-    "pick_rate": 12.7,
-    "ban_rate": 6.9
+    "description": "The Uncaged Wrath of Zaun"
   },
 
   {
@@ -1257,10 +1023,7 @@
     "difficulty": "easy",
     "strength": 68,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MasterYi_0.jpg",
-    "description": "The Wuju Bladesman",
-    "win_rate": 51.8,
-    "pick_rate": 11.4,
-    "ban_rate": 19.7
+    "description": "The Wuju Bladesman"
   },
 
   {
@@ -1273,10 +1036,7 @@
     "difficulty": "easy",
     "strength": 72,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Tryndamere_0.jpg",
-    "description": "The Barbarian King",
-    "win_rate": 50.1,
-    "pick_rate": 8.3,
-    "ban_rate": 12.6
+    "description": "The Barbarian King"
   },
 
   {
@@ -1289,10 +1049,7 @@
     "difficulty": "easy",
     "strength": 69,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Nasus_0.jpg",
-    "description": "The Curator of the Sands",
-    "win_rate": 52.4,
-    "pick_rate": 9.6,
-    "ban_rate": 7.8
+    "description": "The Curator of the Sands"
   },
 
   {
@@ -1305,10 +1062,7 @@
     "difficulty": "medium",
     "strength": 75,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Vladimir_0.jpg",
-    "description": "The Crimson Reaper",
-    "win_rate": 51.2,
-    "pick_rate": 6.9,
-    "ban_rate": 8.4
+    "description": "The Crimson Reaper"
   },
 
   {
@@ -1321,10 +1075,7 @@
     "difficulty": "medium",
     "strength": 74,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Swain_0.jpg",
-    "description": "The Noxian Grand General",
-    "win_rate": 51.7,
-    "pick_rate": 5.8,
-    "ban_rate": 4.2
+    "description": "The Noxian Grand General"
   },
 
   {
@@ -1337,10 +1088,7 @@
     "difficulty": "medium",
     "strength": 67,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zilean_0.jpg",
-    "description": "The Chronokeeper",
-    "win_rate": 52.9,
-    "pick_rate": 3.4,
-    "ban_rate": 2.1
+    "description": "The Chronokeeper"
   },
 
   {
@@ -1353,10 +1101,7 @@
     "difficulty": "hard",
     "strength": 82,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Qiyana_0.jpg",
-    "description": "Empress of the Elements",
-    "win_rate": 48.3,
-    "pick_rate": 5.7,
-    "ban_rate": 14.9
+    "description": "Empress of the Elements"
   },
 
   {
@@ -1369,10 +1114,7 @@
     "difficulty": "medium",
     "strength": 73,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lillia_0.jpg",
-    "description": "The Bashful Bloom",
-    "win_rate": 49.4,
-    "pick_rate": 4.9,
-    "ban_rate": 5.8
+    "description": "The Bashful Bloom"
   },
 
   {
@@ -1385,10 +1127,7 @@
     "difficulty": "medium",
     "strength": 77,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg",
-    "description": "The Darkin Blade",
-    "win_rate": 49.7,
-    "pick_rate": 8.9,
-    "ban_rate": 13.2
+    "description": "The Darkin Blade"
   },
 
   {
@@ -1401,10 +1140,7 @@
     "difficulty": "hard",
     "strength": 74,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Bard_0.jpg",
-    "description": "The Wandering Caretaker",
-    "win_rate": 51.8,
-    "pick_rate": 6.4,
-    "ban_rate": 3.7
+    "description": "The Wandering Caretaker"
   },
 
   {
@@ -1417,10 +1153,7 @@
     "difficulty": "hard",
     "strength": 81,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Cassiopeia_0.jpg",
-    "description": "The Serpent Embrace",
-    "win_rate": 52.3,
-    "pick_rate": 4.1,
-    "ban_rate": 7.8
+    "description": "The Serpent Embrace"
   },
 
   {
@@ -1433,10 +1166,7 @@
     "difficulty": "easy",
     "strength": 68,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/DrMundo_0.jpg",
-    "description": "The Madman of Zaun",
-    "win_rate": 51.9,
-    "pick_rate": 7.2,
-    "ban_rate": 5.3
+    "description": "The Madman of Zaun"
   },
 
   {
@@ -1449,10 +1179,7 @@
     "difficulty": "hard",
     "strength": 79,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Elise_0.jpg",
-    "description": "The Spider Queen",
-    "win_rate": 49.4,
-    "pick_rate": 5.8,
-    "ban_rate": 9.1
+    "description": "The Spider Queen"
   },
 
   {
@@ -1465,10 +1192,7 @@
     "difficulty": "medium",
     "strength": 72,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Fiddlesticks_0.jpg",
-    "description": "The Ancient Fear",
-    "win_rate": 50.6,
-    "pick_rate": 4.7,
-    "ban_rate": 8.4
+    "description": "The Ancient Fear"
   },
 
   {
@@ -1481,10 +1205,7 @@
     "difficulty": "hard",
     "strength": 83,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Gangplank_0.jpg",
-    "description": "The Saltwater Scourge",
-    "win_rate": 48.1,
-    "pick_rate": 6.3,
-    "ban_rate": 11.7
+    "description": "The Saltwater Scourge"
   },
 
   {
@@ -1497,10 +1218,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Heimerdinger_0.jpg",
-    "description": "The Revered Inventor",
-    "win_rate": 52.7,
-    "pick_rate": 3.9,
-    "ban_rate": 4.2
+    "description": "The Revered Inventor"
   },
 
   {
@@ -1513,10 +1231,7 @@
     "difficulty": "medium",
     "strength": 69,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ivern_0.jpg",
-    "description": "The Green Father",
-    "win_rate": 51.4,
-    "pick_rate": 2.8,
-    "ban_rate": 1.9
+    "description": "The Green Father"
   },
 
   {
@@ -1529,10 +1244,7 @@
     "difficulty": "easy",
     "strength": 71,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/JarvanIV_0.jpg",
-    "description": "The Exemplar of Demacia",
-    "win_rate": 50.9,
-    "pick_rate": 8.7,
-    "ban_rate": 6.4
+    "description": "The Exemplar of Demacia"
   },
 
   {
@@ -1545,10 +1257,7 @@
     "difficulty": "easy",
     "strength": 66,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Karma_0.jpg",
-    "description": "The Enlightened One",
-    "win_rate": 50.8,
-    "pick_rate": 9.3,
-    "ban_rate": 4.7
+    "description": "The Enlightened One"
   },
 
   {
@@ -1561,10 +1270,7 @@
     "difficulty": "hard",
     "strength": 85,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Leblanc_0.jpg",
-    "description": "The Deceiver",
-    "win_rate": 48.9,
-    "pick_rate": 7.1,
-    "ban_rate": 17.3
+    "description": "The Deceiver"
   },
 
   {
@@ -1577,10 +1283,7 @@
     "difficulty": "easy",
     "strength": 67,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Maokai_0.jpg",
-    "description": "The Twisted Treant",
-    "win_rate": 52.1,
-    "pick_rate": 5.9,
-    "ban_rate": 3.8
+    "description": "The Twisted Treant"
   },
 
   {
@@ -1593,10 +1296,7 @@
     "difficulty": "easy",
     "strength": 73,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Nocturne_0.jpg",
-    "description": "The Eternal Nightmare",
-    "win_rate": 51.7,
-    "pick_rate": 9.2,
-    "ban_rate": 10.6
+    "description": "The Eternal Nightmare"
   },
 
   {
@@ -1609,10 +1309,7 @@
     "difficulty": "easy",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Olaf_0.jpg",
-    "description": "The Berserker",
-    "win_rate": 50.3,
-    "pick_rate": 6.8,
-    "ban_rate": 5.1
+    "description": "The Berserker"
   },
 
   {
@@ -1625,10 +1322,7 @@
     "difficulty": "easy",
     "strength": 74,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Pantheon_0.jpg",
-    "description": "The Unbreakable Spear",
-    "win_rate": 49.8,
-    "pick_rate": 7.4,
-    "ban_rate": 8.9
+    "description": "The Unbreakable Spear"
   },
 
   {
@@ -1641,10 +1335,7 @@
     "difficulty": "medium",
     "strength": 72,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Quinn_0.jpg",
-    "description": "Demacia Wings",
-    "win_rate": 51.6,
-    "pick_rate": 3.7,
-    "ban_rate": 4.8
+    "description": "Demacia Wings"
   },
 
   {
@@ -1657,10 +1348,7 @@
     "difficulty": "easy",
     "strength": 65,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Rammus_0.jpg",
-    "description": "The Armordillo",
-    "win_rate": 52.8,
-    "pick_rate": 4.9,
-    "ban_rate": 3.2
+    "description": "The Armordillo"
   },
 
   {
@@ -1673,10 +1361,7 @@
     "difficulty": "medium",
     "strength": 71,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Sion_0.jpg",
-    "description": "The Undead Juggernaut",
-    "win_rate": 51.4,
-    "pick_rate": 6.1,
-    "ban_rate": 4.6
+    "description": "The Undead Juggernaut"
   },
 
   {
@@ -1689,10 +1374,7 @@
     "difficulty": "hard",
     "strength": 76,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Taliyah_0.jpg",
-    "description": "The Stoneweaver",
-    "win_rate": 50.9,
-    "pick_rate": 3.4,
-    "ban_rate": 2.7
+    "description": "The Stoneweaver"
   },
 
   {
@@ -1705,10 +1387,7 @@
     "difficulty": "medium",
     "strength": 68,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Udyr_0.jpg",
-    "description": "The Spirit Walker",
-    "win_rate": 49.7,
-    "pick_rate": 4.2,
-    "ban_rate": 6.3
+    "description": "The Spirit Walker"
   },
 
   {
@@ -1721,10 +1400,7 @@
     "difficulty": "medium",
     "strength": 75,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Velkoz_0.jpg",
-    "description": "The Eye of the Void",
-    "win_rate": 52.4,
-    "pick_rate": 4.6,
-    "ban_rate": 3.1
+    "description": "The Eye of the Void"
   },
 
   {
@@ -1737,10 +1413,7 @@
     "difficulty": "easy",
     "strength": 71,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MonkeyKing_0.jpg",
-    "description": "The Monkey King",
-    "win_rate": 51.2,
-    "pick_rate": 7.8,
-    "ban_rate": 9.4
+    "description": "The Monkey King"
   },
 
   {
@@ -1753,10 +1426,7 @@
     "difficulty": "medium",
     "strength": 74,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Xerath_0.jpg",
-    "description": "The Magus Ascendant",
-    "win_rate": 50.7,
-    "pick_rate": 6.9,
-    "ban_rate": 5.8
+    "description": "The Magus Ascendant"
   },
 
   {
@@ -1769,10 +1439,7 @@
     "difficulty": "medium",
     "strength": 69,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yorick_0.jpg",
-    "description": "The Shepherd of Souls",
-    "win_rate": 52.6,
-    "pick_rate": 3.8,
-    "ban_rate": 4.1
+    "description": "The Shepherd of Souls"
   },
 
   {
@@ -1785,10 +1452,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Alistar_0.jpg",
-    "description": "the Minotaur",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Minotaur"
   },
 
   {
@@ -1801,10 +1465,7 @@
     "difficulty": "hard",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ambessa_0.jpg",
-    "description": "Matriarch of War",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "Matriarch of War"
   },
 
   {
@@ -1817,10 +1478,7 @@
     "difficulty": "easy",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Amumu_0.jpg",
-    "description": "the Sad Mummy",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Sad Mummy"
   },
 
   {
@@ -1833,10 +1491,7 @@
     "difficulty": "hard",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Anivia_0.jpg",
-    "description": "the Cryophoenix",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Cryophoenix"
   },
 
   {
@@ -1849,10 +1504,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ashe_0.jpg",
-    "description": "the Frost Archer",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Frost Archer"
   },
 
   {
@@ -1865,10 +1517,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/AurelionSol_0.jpg",
-    "description": "The Star Forger",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "The Star Forger"
   },
 
   {
@@ -1881,10 +1530,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Chogath_0.jpg",
-    "description": "the Terror of the Void",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Terror of the Void"
   },
 
   {
@@ -1897,10 +1543,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Corki_0.jpg",
-    "description": "the Daring Bombardier",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Daring Bombardier"
   },
 
   {
@@ -1913,10 +1556,7 @@
     "difficulty": "hard",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Evelynn_0.jpg",
-    "description": "Agony's Embrace",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "Agony's Embrace"
   },
 
   {
@@ -1929,10 +1569,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Fizz_0.jpg",
-    "description": "the Tidal Trickster",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Tidal Trickster"
   },
 
   {
@@ -1945,10 +1582,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Galio_0.jpg",
-    "description": "the Colossus",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Colossus"
   },
 
   {
@@ -1961,10 +1595,7 @@
     "difficulty": "hard",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Gnar_0.jpg",
-    "description": "the Missing Link",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Missing Link"
   },
 
   {
@@ -1977,10 +1608,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Gragas_0.jpg",
-    "description": "the Rabble Rouser",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Rabble Rouser"
   },
 
   {
@@ -1993,10 +1621,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Illaoi_0.jpg",
-    "description": "the Kraken Priestess",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Kraken Priestess"
   },
 
   {
@@ -2009,10 +1634,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Janna_0.jpg",
-    "description": "the Storm's Fury",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Storm's Fury"
   },
 
   {
@@ -2025,10 +1647,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jayce_0.jpg",
-    "description": "the Defender of Tomorrow",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Defender of Tomorrow"
   },
 
   {
@@ -2041,10 +1660,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kalista_0.jpg",
-    "description": "the Spear of Vengeance",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Spear of Vengeance"
   },
 
   {
@@ -2057,10 +1673,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Karthus_0.jpg",
-    "description": "the Deathsinger",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Deathsinger"
   },
 
   {
@@ -2073,10 +1686,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kayle_0.jpg",
-    "description": "the Righteous",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Righteous"
   },
 
   {
@@ -2089,10 +1699,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kennen_0.jpg",
-    "description": "the Heart of the Tempest",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Heart of the Tempest"
   },
 
   {
@@ -2105,10 +1712,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kindred_0.jpg",
-    "description": "The Eternal Hunters",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "The Eternal Hunters"
   },
 
   {
@@ -2121,10 +1725,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kled_0.jpg",
-    "description": "the Cantankerous Cavalier",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Cantankerous Cavalier"
   },
 
   {
@@ -2137,10 +1738,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/KogMaw_0.jpg",
-    "description": "the Mouth of the Abyss",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Mouth of the Abyss"
   },
 
   {
@@ -2153,10 +1751,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lissandra_0.jpg",
-    "description": "the Ice Witch",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Ice Witch"
   },
 
   {
@@ -2169,10 +1764,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lulu_0.jpg",
-    "description": "the Fae Sorceress",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Fae Sorceress"
   },
 
   {
@@ -2185,10 +1777,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Malzahar_0.jpg",
-    "description": "the Prophet of the Void",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Prophet of the Void"
   },
 
   {
@@ -2201,10 +1790,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Mel_0.jpg",
-    "description": "the Soul's Reflection",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Soul's Reflection"
   },
 
   {
@@ -2217,10 +1803,7 @@
     "difficulty": "easy",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MissFortune_0.jpg",
-    "description": "the Bounty Hunter",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Bounty Hunter"
   },
 
   {
@@ -2233,10 +1816,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Mordekaiser_0.jpg",
-    "description": "the Iron Revenant",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Iron Revenant"
   },
 
   {
@@ -2249,10 +1829,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Nautilus_0.jpg",
-    "description": "the Titan of the Depths",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Titan of the Depths"
   },
 
   {
@@ -2265,10 +1842,7 @@
     "difficulty": "hard",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Nidalee_0.jpg",
-    "description": "the Bestial Huntress",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Bestial Huntress"
   },
 
   {
@@ -2281,10 +1855,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Nunu_0.jpg",
-    "description": "the Boy and His Yeti",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Boy and His Yeti"
   },
 
   {
@@ -2297,10 +1868,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Poppy_0.jpg",
-    "description": "Keeper of the Hammer",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "Keeper of the Hammer"
   },
 
   {
@@ -2313,10 +1881,7 @@
     "difficulty": "easy",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/RekSai_0.jpg",
-    "description": "the Void Burrower",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Void Burrower"
   },
 
   {
@@ -2329,10 +1894,7 @@
     "difficulty": "easy",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Renekton_0.jpg",
-    "description": "the Butcher of the Sands",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Butcher of the Sands"
   },
 
   {
@@ -2345,10 +1907,7 @@
     "difficulty": "hard",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Rumble_0.jpg",
-    "description": "the Mechanized Menace",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Mechanized Menace"
   },
 
   {
@@ -2361,10 +1920,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ryze_0.jpg",
-    "description": "the Rune Mage",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Rune Mage"
   },
 
   {
@@ -2377,10 +1933,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Skarner_0.jpg",
-    "description": "the Primordial Sovereign",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Primordial Sovereign"
   },
 
   {
@@ -2393,10 +1946,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Sona_0.jpg",
-    "description": "Maven of the Strings",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "Maven of the Strings"
   },
 
   {
@@ -2409,10 +1959,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/TahmKench_0.jpg",
-    "description": "The River King",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "The River King"
   },
 
   {
@@ -2425,10 +1972,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Talon_0.jpg",
-    "description": "the Blade's Shadow",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Blade's Shadow"
   },
 
   {
@@ -2441,10 +1985,7 @@
     "difficulty": "easy",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Taric_0.jpg",
-    "description": "the Shield of Valoran",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Shield of Valoran"
   },
 
   {
@@ -2457,10 +1998,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Tristana_0.jpg",
-    "description": "the Yordle Gunner",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Yordle Gunner"
   },
 
   {
@@ -2473,10 +2011,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Trundle_0.jpg",
-    "description": "the Troll King",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Troll King"
   },
 
   {
@@ -2489,10 +2024,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Twitch_0.jpg",
-    "description": "the Plague Rat",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Plague Rat"
   },
 
   {
@@ -2505,10 +2037,7 @@
     "difficulty": "hard",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Urgot_0.jpg",
-    "description": "the Dreadnought",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Dreadnought"
   },
 
   {
@@ -2521,10 +2050,7 @@
     "difficulty": "easy",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Varus_0.jpg",
-    "description": "the Arrow of Retribution",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Arrow of Retribution"
   },
 
   {
@@ -2537,10 +2063,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Vi_0.jpg",
-    "description": "the Piltover Enforcer",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Piltover Enforcer"
   },
 
   {
@@ -2553,10 +2076,7 @@
     "difficulty": "easy",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Volibear_0.jpg",
-    "description": "the Relentless Storm",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Relentless Storm"
   },
 
   {
@@ -2569,10 +2089,7 @@
     "difficulty": "easy",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/XinZhao_0.jpg",
-    "description": "the Seneschal of Demacia",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Seneschal of Demacia"
   },
 
   {
@@ -2585,10 +2102,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yunara_0.jpg",
-    "description": "the Unbroken Faith",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Unbroken Faith"
   },
 
   {
@@ -2601,10 +2115,7 @@
     "difficulty": "hard",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zac_0.jpg",
-    "description": "the Secret Weapon",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Secret Weapon"
   },
 
   {
@@ -2617,10 +2128,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ziggs_0.jpg",
-    "description": "the Hexplosives Expert",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Hexplosives Expert"
   },
 
   {
@@ -2633,10 +2141,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zoe_0.jpg",
-    "description": "the Aspect of Twilight",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Aspect of Twilight"
   },
 
   {
@@ -2649,10 +2154,7 @@
     "difficulty": "easy",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Seraphine_0.jpg",
-    "description": "the Starry-Eyed Songstress",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Starry-Eyed Songstress"
   },
 
   {
@@ -2665,10 +2167,7 @@
     "difficulty": "easy",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Sett_0.jpg",
-    "description": "the Boss",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Boss"
   },
 
   {
@@ -2681,10 +2180,7 @@
     "difficulty": "hard",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Shaco_0.jpg",
-    "description": "the Demon Jester",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Demon Jester"
   },
 
   {
@@ -2697,10 +2193,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Shyvana_0.jpg",
-    "description": "the Half-Dragon",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Half-Dragon"
   },
 
   {
@@ -2713,10 +2206,7 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Singed_0.jpg",
-    "description": "the Mad Chemist",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Mad Chemist"
   },
 
   {
@@ -2729,9 +2219,6 @@
     "difficulty": "medium",
     "strength": 70,
     "image_path": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Sivir_0.jpg",
-    "description": "the Battle Mistress",
-    "win_rate": null,
-    "pick_rate": null,
-    "ban_rate": null
+    "description": "the Battle Mistress"
   }
 ]

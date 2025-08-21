@@ -1,0 +1,402 @@
+<!-- Player List Component - Receives data from /api/moba/players endpoint -->
+{% if players %}
+<!-- Grid View -->
+<div
+  x-show="view === 'grid'"
+  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-2"
+>
+  {% for player in players %}
+  <a
+    href="/players/{{ player.id }}"
+    class="group bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden flex flex-col border border-gray-100 dark:border-slate-600 transition-all duration-200 hover:shadow-xl hover:scale-[1.1] cursor-pointer"
+  >
+    <!-- Player Image -->
+    {% set overall = player.overall|default(50) %} {% if overall >= 90 %} {% set
+    img_bg_color = 'from-orange-500 to-gray-300' %} {% elif overall >= 80 %} {%
+    set img_bg_color = 'from-purple-500 to-orange-600' %} {% elif overall >= 70
+    %} {% set img_bg_color = 'from-green-500 to-purple-600' %} {% elif overall
+    >= 60 %} {% set img_bg_color = 'from-blue-500 to-green-600' %} {% elif
+    overall >= 50 %} {% set img_bg_color = 'from-indigo-500 to-blue-600' %} {%
+    else %} {% set img_bg_color = 'from-red-500 to-blue-600' %} {% endif %}
+    <div
+      class="relative bg-gradient-to-r {{ img_bg_color }} h-56 w-full overflow-hidden"
+    >
+      <img
+        src="/api/moba/players/images/{{ player.image_path }}"
+        alt="{{ player.nick_name }}"
+        class="w-full h-full object-cover"
+        loading="lazy"
+      />
+
+      <!-- Role & Region -->
+      <div
+        class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 text-white"
+      >
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            {% include "components/players/player_role_component.html" %}
+          </div>
+          <div class="flex items-center">
+            <i class="fi fi-{{ player.get_country_code() }}"></i>
+            <span class="text-xs ml-2">{{ player.nationality }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team Badge if applicable -->
+      {% if player.team %}
+      <div
+        class="absolute top-2 left-2 bg-white/90 dark:bg-slate-800/90 rounded-full p-1"
+      >
+        <img
+          src="/api/moba/teams/images/{{ player.team.logo_path }}"
+          alt="{{ player.team.name }} "
+          loading="lazy"
+          class="w-8 h-8 rounded-full"
+        />
+      </div>
+      {% endif %}
+
+      <!-- Contract Status Badge -->
+      <div class="absolute top-2 right-2">
+        {% if not player.is_active %} {% set bg_color = 'bg-purple-600
+        text-white' %} {% elif player.team %} {% set bg_color = 'bg-indigo-600
+        text-white' %} {% else %} {% set bg_color = 'bg-green-600 text-white' %}
+        {% endif %}
+        <span class="px-2 py-1 text-xs rounded-full {{ bg_color }}">
+          {% if not player.is_active %} Retired {% elif player.team %} Under
+          contract {% else %} Available {% endif %}
+        </span>
+      </div>
+    </div>
+
+    <!-- Player Details -->
+    <div class="p-5">
+      <!-- Name and Age -->
+      <div
+        class="flex justify-between items-center border-b border-b-gray-200 dark:border-b-slate-600 mb-3 pb-2"
+      >
+        <h3 class="text-xl font-semibold truncate">{{ player.nick_name }}</h3>
+        <span class="text-sm text-gray-500 dark:text-gray-400"
+          >{{ player.get_age() }} yrs</span
+        >
+      </div>
+
+      <!-- Details Grid -->
+      <div
+        class="flex justify-between items-center mb-2 text-sm text-gray-600 dark:text-gray-300"
+      >
+        {% if player.team %}
+        <div class="flex items-center">
+          <img
+            src="/api/moba/teams/images/{{ player.team.logo_path }}"
+            alt="{{ player.team.name }}"
+            class="w-8 h-8 mr-2 rounded-full border-2 border-white dark:border-slate-800"
+            loading="lazy"
+          />
+          <span class="font-semibold text-base">{{ player.team.name }}</span>
+        </div>
+        {% else %}
+        <div
+          class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full flex items-center"
+        >
+          <span class="font-semibold text-base">Free Agent</span>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Stats Bars -->
+      <div class="space-y-2 mb-3">
+        <!-- Overall Rating -->
+        <div class="flex items-center">
+          <span class="text-sm w-12 text-gray-500 dark:text-gray-400"
+            >Overall</span
+          >
+          <div class="ml-4">
+            {% include "components/players/player_stars_component.html" %}
+          </div>
+          <span class="text-xs font-semibold ml-2">{{ overall }}</span>
+        </div>
+
+        <!-- Form Rating -->
+        <div class="flex items-center">
+          <span class="text-sm w-12 text-gray-500 dark:text-gray-400"
+            >Form</span
+          >
+          <div
+            class="flex-grow bg-gray-200 dark:bg-gray-600 rounded-full h-2 ml-2"
+          >
+            {% set form = player.form|default(70) %} {% if form >= 95 %}
+            <div class="bg-purple-500 h-2 rounded-full w-11/12"></div>
+            {% elif form >= 90 %}
+            <div class="bg-purple-500 h-2 rounded-full w-10/12"></div>
+            {% elif form >= 80 %}
+            <div class="bg-purple-500 h-2 rounded-full w-4/5"></div>
+            {% elif form >= 70 %}
+            <div class="bg-purple-500 h-2 rounded-full w-7/10"></div>
+            {% elif form >= 60 %}
+            <div class="bg-purple-500 h-2 rounded-full w-3/5"></div>
+            {% elif form >= 50 %}
+            <div class="bg-purple-500 h-2 rounded-full w-1/2"></div>
+            {% elif form >= 40 %}
+            <div class="bg-purple-500 h-2 rounded-full w-2/5"></div>
+            {% elif form >= 30 %}
+            <div class="bg-purple-500 h-2 rounded-full w-3/10"></div>
+            {% elif form >= 20 %}
+            <div class="bg-purple-500 h-2 rounded-full w-1/5"></div>
+            {% elif form >= 10 %}
+            <div class="bg-purple-500 h-2 rounded-full w-1/10"></div>
+            {% else %}
+            <div class="bg-purple-500 h-2 rounded-full w-0"></div>
+            {% endif %}
+          </div>
+          <span class="text-xs font-semibold ml-2">{{ form }}</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-between text-sm">
+        <span class="text-gray-500 dark:text-gray-400">Value: </span>
+        <span class="font-semibold">
+          {{ player.get_value()|default('$850K') }}
+        </span>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+
+<!-- List View -->
+<div
+  x-show="view === 'list'"
+  class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-x-auto"
+>
+  <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+    <thead>
+      <tr class="bg-gray-50 dark:bg-slate-800">
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+        >
+          Player
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+        >
+          Role
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+        >
+          Team
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+        >
+          Region
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+        >
+          Overall
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+        >
+          Value
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+        >
+          Contract
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      class="bg-white dark:bg-slate-700 divide-y divide-gray-200 dark:divide-gray-600"
+    >
+      {% for player in players %}
+      <tr class="hover:bg-gray-50 dark:hover:bg-slate-600 cursor-pointer">
+        <td class="px-6 py-4 whitespace-nowrap">
+          <a href="/players/{{ player.id }}">
+            <div class="flex items-center">
+              <div
+                class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-600"
+              >
+                <img
+                  src="/api/moba/players/images/{{ player.image_path }}"
+                  alt="{{ player.nick_name }}"
+                  class="h-full w-full object-cover"
+                  onerror="this.onerror=null; this.src='/static/img/default_player.png';"
+                />
+              </div>
+              <div class="ml-4">
+                <div
+                  class="text-sm font-medium text-gray-900 dark:text-gray-100"
+                >
+                  {{ player.nick_name }}
+                </div>
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                  {{ player.get_age() }} years • {{ player.nationality }}
+                </div>
+              </div>
+            </div>
+          </a>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <a href="/players/{{ player.id }}">
+            <div class="flex flex-col">
+              <div class="flex items-center">
+                {% include "components/players/player_role_component.html" %}
+              </div>
+            </div>
+          </a>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <a href="/players/{{ player.id }}">
+            <div class="flex items-center">
+              {% if player.team %}
+              <img
+                src="/api/moba/teams/images/{{ player.team.logo_path }}"
+                alt="{{ player.team.name }}"
+                class="w-5 h-5 mr-2 rounded-full"
+                loading="lazy"
+              />
+              <span class="text-sm text-gray-900 dark:text-gray-100"
+                >{{ player.team.name }}</span
+              >
+              {% else %}
+              <span class="text-sm text-gray-900 dark:text-gray-100"
+                >Free Agent</span
+              >
+              {% endif %}
+            </div>
+          </a>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <a href="/players/{{ player.id }}">
+            <div class="flex items-center">
+              <i class="fi fi-{{ player.get_country_code() }}"></i>
+              <span class="text-sm text-gray-900 dark:text-gray-100"
+                >{{ player.region|default('LCK') }}</span
+              >
+            </div>
+          </a>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <a href="/players/{{ player.id }}">
+            <div class="flex items-center">
+              <div
+                class="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5 mr-2"
+              >
+                {% set overall = player.overall|default(75) %} {% if overall >=
+                95 %}
+                <div class="bg-blue-500 h-1.5 rounded-full w-11/12"></div>
+                {% elif overall >= 90 %}
+                <div class="bg-blue-500 h-1.5 rounded-full w-10/12"></div>
+                {% elif overall >= 80 %}
+                <div class="bg-blue-500 h-1.5 rounded-full w-4/5"></div>
+                {% elif overall >= 70 %}
+                <div class="bg-blue-500 h-1.5 rounded-full w-7/10"></div>
+                {% elif overall >= 60 %}
+                <div class="bg-blue-500 h-1.5 rounded-full w-3/5"></div>
+                {% elif overall >= 50 %}
+                <div class="bg-blue-500 h-1.5 rounded-full w-1/2"></div>
+                {% elif overall >= 40 %}
+                <div class="bg-blue-500 h-1.5 rounded-full w-2/5"></div>
+                {% elif overall >= 30 %}
+                <div class="bg-blue-500 h-1.5 rounded-full w-3/10"></div>
+                {% elif overall >= 20 %}
+                <div class="bg-blue-500 h-1.5 rounded-full w-1/5"></div>
+                {% elif overall >= 10 %}
+                <div class="bg-blue-500 h-1.5 rounded-full w-1/10"></div>
+                {% else %}
+                <div class="bg-blue-500 h-1.5 rounded-full w-0"></div>
+                {% endif %}
+              </div>
+              <span class="text-sm font-medium text-gray-900 dark:text-gray-100"
+                >{{ overall }}</span
+              >
+            </div>
+          </a>
+        </td>
+        <td
+          class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+        >
+          {{ player.get_value()|default('$850K') }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <a href="/players/{{ player.id }}">
+            <span
+              class="px-2 py-1 text-xs rounded-full {% if player.contract_status == 'free_agent' %} bg-green-500 text-white {% elif player.contract_status == 'transfer_listed' %} bg-yellow-500 text-black {% else %} bg-gray-600 text-white {% endif %}"
+            >
+              {{ player.contract_status|replace('_', '
+              ')|title|default('Contracted') }}
+            </span>
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination Controls -->
+<div class="flex justify-between items-center mt-6">
+  <div class="text-sm text-gray-600 dark:text-gray-400">
+    Showing
+    <span class="font-medium"
+      >{{ page_start|default(1) }}-{{ page_end|default(players|length) }}</span
+    >
+    of
+    <span class="font-medium">{{ total_players|default(players|length) }}</span>
+    players
+  </div>
+
+  <div class="flex space-x-1">
+    {% if pagination.page > 1 %}
+    <button
+      class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm"
+      hx-get="/api/moba/players"
+      hx-include="#player-filters-form"
+      hx-vals='{"page": {{ pagination.page - 1 }}}'
+      hx-target="#players-list"
+      hx-swap="innerHTML"
+    >
+      Previous
+    </button>
+    {% endif %} {% set page_range = range(1, pagination.total_pages + 1) if
+    pagination.total_pages <= 5 else [1, 2, 3, '...' , pagination.total_pages]
+    if pagination.page <=2 else [1, '...' , pagination.page - 1,
+    pagination.page, pagination.page + 1, '...' , pagination.total_pages] if
+    pagination.page < pagination.total_pages - 1 else [1, '...' ,
+    pagination.total_pages - 2, pagination.total_pages - 1,
+    pagination.total_pages] %} {% for page_num in page_range %} {% if
+    page_num=='...' %}
+    <span class="px-3 py-1 text-gray-600 dark:text-gray-400">...</span>
+    {% else %}
+    <button
+      class="px-3 py-1 rounded-md {% if pagination.page == page_num %}bg-blue-500 text-white{% else %}bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300{% endif %} text-sm"
+      hx-get="/api/moba/players"
+      hx-include="#player-filters-form"
+      hx-vals='{"page": {{ page_num }}}'
+      hx-target="#players-list"
+      hx-swap="innerHTML"
+    >
+      {{ page_num }}
+    </button>
+    {% endif %} {% endfor %} {% if pagination.page < pagination.total_pages %}
+    <button
+      class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm"
+      hx-get="/api/moba/players"
+      hx-include="#player-filters-form"
+      hx-vals='{"page": {{ pagination.page + 1 }}}'
+      hx-target="#players-list"
+      hx-swap="innerHTML"
+    >
+      Next
+    </button>
+    {% endif %}
+  </div>
+</div>
+{% else %} {% include "components/players/players_list_empty.html" %} {% endif
+%}

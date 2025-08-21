@@ -53,7 +53,7 @@ async def get_team(
     global current_page
     global sidebar
     current_page = "teams"
-    contentview = "components/team_info.html"
+    contentview = "components/teams/team_info.html"
     team = session.get(MobaTeam, id)
     if not team:
         raise HTTPException(

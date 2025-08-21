@@ -169,7 +169,7 @@ async def get_teams(request: Request, session: Session = Depends(get_session)):
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
-            "components/teams_list.html",
+            "components/teams/teams_list.html",
             {
                 "request": request,
                 "teams": result,

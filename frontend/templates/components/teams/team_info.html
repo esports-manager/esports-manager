@@ -1,0 +1,523 @@
+{% if team %}
+<!-- Team Information Page -->
+<div
+  class="container mx-auto px-4 py-6"
+  x-data="{
+  activeTab: 'overview',
+  teamStats: {
+    lastMatches: [
+      { opponent: 'T1', result: 'W', score: '2-0' },
+      { opponent: 'Gen.G', result: 'L', score: '0-2' },
+      { opponent: 'DRX', result: 'W', score: '2-1' }
+    ],
+    seasonStats: {
+      matches: 28,
+      winRate: 64.3,
+      championships: 2
+    }
+  }
+}"
+>
+  <!-- Page Header - Team Name -->
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">
+      {{ team.name }}
+    </h1>
+    <p class="text-lg text-gray-600 dark:text-gray-400">{{ team.region }}</p>
+  </header>
+
+  <!-- Main Content Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Left Column: Team Card -->
+    <div class="lg:col-span-1">
+      <div
+        class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden"
+      >
+        <!-- Team Info Header Section -->
+        <div class="p-6 flex">
+          <!-- Team Logo -->
+          <div class="mr-4">
+            <div
+              class="h-24 w-24 rounded-full bg-gray-200 dark:bg-slate-600 overflow-hidden border-4 border-white dark:border-slate-700 shadow-md"
+            >
+              <img
+                src="/api/moba/teams/images/{{ team.logo_path }}"
+                alt="{{ team.name }}"
+                class="h-full w-full object-cover"
+                loading="lazy"
+                onerror="this.src='/static/images/default_team.png'"
+              />
+            </div>
+          </div>
+
+          <!-- Team Name and Basic Info -->
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+              {{ team.name }}
+            </h2>
+            <div class="flex items-center mt-2 space-x-3">
+              <!-- Nationality with Flag -->
+              <div class="flex items-center">
+                <i class="fi fi-{{ team.get_country_code() }}"></i>
+                <span class="text-sm ml-2 text-gray-600 dark:text-gray-400"
+                  >{{ team.region }}</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Detailed Info Section -->
+        <div class="border-t border-gray-200 dark:border-slate-600 p-4">
+          <div class="grid grid-cols-2 gap-4">
+            <!-- League -->
+            <div>
+              <div
+                class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400"
+              >
+                League
+              </div>
+              <div class="font-medium text-gray-800 dark:text-gray-200">
+                {{ team.league }}
+              </div>
+            </div>
+
+            <!-- Championships -->
+            <div>
+              <div
+                class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400"
+              >
+                Championships
+              </div>
+              <div class="font-medium text-gray-800 dark:text-gray-200">
+                {{ team.championships }}
+              </div>
+            </div>
+
+            <!-- Tier -->
+            <div>
+              <div
+                class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400"
+              >
+                Tier
+              </div>
+              <div class="font-medium">
+                {% set tier = team.tier.value|lower %} {% if tier == "sp" %}
+                <span class="text-yellow-600 dark:text-yellow-400"
+                  >SP Tier</span
+                >
+                {% elif tier == "s" %}
+                <span class="text-amber-600 dark:text-amber-400">S Tier</span>
+                {% elif tier == "a" %}
+                <span class="text-blue-600 dark:text-blue-400">A Tier</span>
+                {% elif tier == "b" %}
+                <span class="text-green-600 dark:text-green-400">B Tier</span>
+                {% elif tier == "c" %}
+                <span class="text-orange-600 dark:text-orange-400">C Tier</span>
+                {% elif tier == "d" %}
+                <span class="text-red-600 dark:text-red-400">D Tier</span>
+                {% else %}
+                <span class="text-gray-600 dark:text-gray-400">Unrated</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Overall Rating -->
+            <div>
+              <div
+                class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400"
+              >
+                Overall Rating
+              </div>
+              <div class="font-medium text-gray-800 dark:text-gray-200">
+                {{ team.overall }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Description Section -->
+        <div class="border-t border-gray-200 dark:border-slate-600 p-4">
+          <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            About
+          </h3>
+          <div class="text-sm text-gray-600 dark:text-gray-400">
+            {% if team.description %} {{ team.description }} {% else %}
+            <p class="italic">No information available for this team.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Team Tabs -->
+    <div class="lg:col-span-2">
+      <div
+        class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden"
+      >
+        <!-- Tab Navigation -->
+        <div class="border-b border-gray-200 dark:border-slate-600">
+          <nav class="flex" x-cloak>
+            <button
+              @click="activeTab = 'overview'"
+              class="px-4 py-3 text-sm font-medium transition-colors duration-150"
+              :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'overview', 
+                                'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'overview'}"
+            >
+              <i class="bi bi-grid mr-1"></i> Overview
+            </button>
+            <button
+              @click="activeTab = 'roster'"
+              class="px-4 py-3 text-sm font-medium transition-colors duration-150"
+              :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'roster', 
+                                'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'roster'}"
+            >
+              <i class="bi bi-people mr-1"></i> Roster
+            </button>
+            <button
+              @click="activeTab = 'matches'"
+              class="px-4 py-3 text-sm font-medium transition-colors duration-150"
+              :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'matches', 
+                                'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'matches'}"
+            >
+              <i class="bi bi-trophy mr-1"></i> Matches
+            </button>
+            <button
+              @click="activeTab = 'stats'"
+              class="px-4 py-3 text-sm font-medium transition-colors duration-150"
+              :class="{'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'stats', 
+                                'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'stats'}"
+            >
+              <i class="bi bi-bar-chart mr-1"></i> Stats
+            </button>
+          </nav>
+        </div>
+
+        <!-- Tab Contents -->
+        <!-- Overview Tab Content -->
+        <div x-show="activeTab === 'overview'" class="p-6">
+          <div class="mb-6">
+            <h3
+              class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4"
+            >
+              Team Overview
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <!-- Team Win Rate -->
+              <div class="bg-gray-50 dark:bg-slate-800 p-4 rounded-lg">
+                <h4
+                  class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                >
+                  Win Rate
+                </h4>
+                <div
+                  class="text-2xl font-bold text-blue-600 dark:text-blue-400"
+                >
+                  {{ team.win_rate|default('64.3') }}%
+                </div>
+              </div>
+
+              <!-- Championships -->
+              <div class="bg-gray-50 dark:bg-slate-800 p-4 rounded-lg">
+                <h4
+                  class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                >
+                  Championships
+                </h4>
+                <div
+                  class="text-2xl font-bold text-amber-600 dark:text-amber-400"
+                >
+                  {{ team.championships|default('2') }}
+                </div>
+              </div>
+
+              <!-- Fan Base -->
+              <div class="bg-gray-50 dark:bg-slate-800 p-4 rounded-lg">
+                <h4
+                  class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                >
+                  Fan Base
+                </h4>
+                <div
+                  class="text-2xl font-bold text-purple-600 dark:text-purple-400"
+                >
+                  {{ team.fans|default('750K') }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Performance -->
+          <div class="mb-6">
+            <h3
+              class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4"
+            >
+              Recent Performance
+            </h3>
+            <div class="bg-gray-50 dark:bg-slate-800 p-4 rounded-lg">
+              <div class="flex space-x-1 mb-4">
+                <span
+                  class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold"
+                  >W</span
+                >
+                <span
+                  class="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white font-bold"
+                  >L</span
+                >
+                <span
+                  class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold"
+                  >W</span
+                >
+                <span
+                  class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold"
+                  >W</span
+                >
+                <span
+                  class="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white font-bold"
+                  >L</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roster Tab Content -->
+        <div x-show="activeTab === 'roster'" class="p-6">
+          <h3
+            class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4"
+          >
+            Current Roster
+          </h3>
+          {% if team.players %}
+          <div
+            class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+          >
+            {% for player in team.players %}
+            <a href="/players/{{ player.id }}" class="block cursor-pointer">
+              <div
+                class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg p-4 hover:shadow-md transition-shadow duration-200 hover:bg-gray-50 dark:hover:bg-slate-700"
+              >
+                <div class="flex items-center">
+                  <!-- Player Image -->
+                  <div
+                    class="h-14 w-14 rounded-full bg-gray-200 dark:bg-slate-700 overflow-hidden mr-3"
+                  >
+                    <img
+                      src="/api/moba/players/images/{{ player.image_path }}"
+                      alt="{{ player.nick_name }}"
+                      class="h-full w-full object-cover"
+                    />
+                  </div>
+
+                  <div>
+                    <!-- Nickname -->
+                    <div
+                      class="font-bold text-gray-800 dark:text-gray-200 text-lg"
+                    >
+                      {{ player.nick_name }}
+                    </div>
+
+                    <!-- Role & Rating -->
+                    <div class="flex items-center mt-1">
+                      {% include "components/player_role_component.html" %}
+
+                      <span
+                        class="ml-2 text-sm text-gray-600 dark:text-gray-400"
+                        >Rating:
+                        <span class="font-medium"
+                          >{{ player.overall }}</span
+                        ></span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+            <i class="bi bi-people-fill text-4xl mb-2"></i>
+            <p>No players found in this team.</p>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Matches Tab Content -->
+        <div x-show="activeTab === 'matches'" class="p-6">
+          <h3
+            class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4"
+          >
+            Match History
+          </h3>
+          <div class="space-y-4">
+            <!-- Recent Matches (Placeholder) -->
+            <template
+              x-for="(match, index) in teamStats.lastMatches"
+              :key="index"
+            >
+              <div
+                class="bg-gray-50 dark:bg-slate-800 rounded-lg p-4 flex items-center justify-between"
+              >
+                <div class="flex items-center">
+                  <div
+                    class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mr-3"
+                  >
+                    <span
+                      x-text="match.opponent.charAt(0)"
+                      class="font-bold"
+                    ></span>
+                  </div>
+                  <div>
+                    <div
+                      class="font-medium"
+                      x-text="'vs ' + match.opponent"
+                    ></div>
+                    <div
+                      class="text-sm text-gray-500 dark:text-gray-400"
+                      x-text="match.score"
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <span
+                    class="text-sm font-bold px-2 py-1 rounded-full"
+                    :class="{'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200': match.result === 'W',
+                                                'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200': match.result === 'L'}"
+                    x-text="match.result"
+                  ></span>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Stats Tab Content -->
+        <div x-show="activeTab === 'stats'" class="p-6">
+          <h3
+            class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4"
+          >
+            Team Statistics
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Season Stats -->
+            <div>
+              <h4 class="font-medium text-gray-700 dark:text-gray-300 mb-3">
+                Season Performance
+              </h4>
+              <table class="w-full text-sm">
+                <tbody>
+                  <tr class="border-b border-gray-200 dark:border-gray-700">
+                    <td class="py-2 text-gray-600 dark:text-gray-400">
+                      Matches Played
+                    </td>
+                    <td
+                      class="py-2 text-right font-medium"
+                      x-text="teamStats.seasonStats.matches"
+                    ></td>
+                  </tr>
+                  <tr class="border-b border-gray-200 dark:border-gray-700">
+                    <td class="py-2 text-gray-600 dark:text-gray-400">
+                      Win Rate
+                    </td>
+                    <td
+                      class="py-2 text-right font-medium"
+                      x-text="teamStats.seasonStats.winRate + '%'"
+                    ></td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 text-gray-600 dark:text-gray-400">
+                      Championships
+                    </td>
+                    <td
+                      class="py-2 text-right font-medium"
+                      x-text="teamStats.seasonStats.championships"
+                    ></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Team Style -->
+            <div>
+              <h4 class="font-medium text-gray-700 dark:text-gray-300 mb-3">
+                Team Style
+              </h4>
+              <div class="space-y-3">
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-xs text-gray-600 dark:text-gray-400"
+                      >Aggression</span
+                    >
+                    <span class="text-xs font-medium">75%</span>
+                  </div>
+                  <div
+                    class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5"
+                  >
+                    <div
+                      class="bg-red-500 h-1.5 rounded-full"
+                      style="width: 75%"
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-xs text-gray-600 dark:text-gray-400"
+                      >Objective Control</span
+                    >
+                    <span class="text-xs font-medium">60%</span>
+                  </div>
+                  <div
+                    class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5"
+                  >
+                    <div
+                      class="bg-blue-500 h-1.5 rounded-full"
+                      style="width: 60%"
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-xs text-gray-600 dark:text-gray-400"
+                      >Macro Strategy</span
+                    >
+                    <span class="text-xs font-medium">80%</span>
+                  </div>
+                  <div
+                    class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5"
+                  >
+                    <div
+                      class="bg-green-500 h-1.5 rounded-full"
+                      style="width: 80%"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="flex items-center justify-center h-full m-8">
+  <div
+    class="text-center p-6 max-w-sm mx-auto bg-white dark:bg-slate-700 rounded-xl shadow-md"
+  >
+    <i class="bi bi-exclamation-triangle text-yellow-500 text-5xl mb-4"></i>
+    <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">
+      Team Not Found
+    </h3>
+    <p class="text-gray-600 dark:text-gray-400 mb-4">
+      The team you're looking for could not be found or doesn't exist.
+    </p>
+    <a
+      href="/teams"
+      class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+    >
+      <i class="bi bi-arrow-left mr-2"></i> Back to Teams
+    </a>
+  </div>
+</div>
+{% endif %}

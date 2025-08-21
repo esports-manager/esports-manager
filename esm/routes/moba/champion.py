@@ -94,9 +94,10 @@ async def get_champions(
     # Map frontend sort fields to model attributes
     sort_map = {
         "name": MobaChampion.name,
-        "winrate": MobaChampion.win_rate,
-        "pickrate": MobaChampion.pick_rate,
-        "banrate": MobaChampion.ban_rate,
+        "tier": MobaChampion.champion_tier,
+        "strength": MobaChampion.strength,
+        "primary_role": MobaChampion.primary_role,
+        "secondary_role": MobaChampion.secondary_role,
     }
 
     # Apply sorting if the field exists in our mapping
@@ -130,7 +131,7 @@ async def get_champions(
     # Return HTMX response or regular API response
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
-            "components/champions_list.html",
+            "components/champions/champions_list.html",
             {
                 "request": request,
                 "champions": champions,
@@ -343,7 +344,7 @@ async def get_champion_meta(
     if request.headers.get("HX-Request"):
         selected_role = role if role else "overview"
         return templates.TemplateResponse(
-            "components/champions_meta.html",
+            "components/champions/champions_meta.html",
             {
                 "request": request,
                 "meta_data": meta_data,

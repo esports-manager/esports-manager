@@ -1,4 +1,6 @@
-<div class="m-8" x-data="{
+<div
+  class="m-8"
+  x-data="{
   view: 'calendar',
   currentDate: new Date().toISOString().slice(0, 10),
   selectedSession: null,
@@ -11,69 +13,106 @@
   searchQuery: '',
   sortBy: 'date',
   sortDirection: 'desc'
-}">
+}"
+>
   <!-- Page Header -->
-  <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+  <div
+    class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6"
+  >
     <div>
-      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Practice</h1>
-      <p class="text-sm text-gray-500 dark:text-gray-400">Manage team practice sessions and drills</p>
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">
+        Practice
+      </h1>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        Manage team practice sessions and drills
+      </p>
     </div>
-    
+
     <!-- Practice Quick Stats -->
     <div class="flex flex-wrap gap-3">
-      <div class="bg-blue-50 dark:bg-blue-900/30 px-3 py-2 rounded-md text-sm hover:shadow transition-shadow duration-150">
-        <span class="block text-blue-800 dark:text-blue-300 font-medium">3</span>
-        <span class="text-xs text-blue-600 dark:text-blue-400">Sessions This Week</span>
+      <div
+        class="bg-blue-50 dark:bg-blue-900/30 px-3 py-2 rounded-md text-sm hover:shadow transition-shadow duration-150"
+      >
+        <span class="block text-blue-800 dark:text-blue-300 font-medium"
+          >3</span
+        >
+        <span class="text-xs text-blue-600 dark:text-blue-400"
+          >Sessions This Week</span
+        >
       </div>
-      
-      <div class="bg-green-50 dark:bg-green-900/30 px-3 py-2 rounded-md text-sm hover:shadow transition-shadow duration-150">
-        <span class="block text-green-800 dark:text-green-300 font-medium">82%</span>
-        <span class="text-xs text-green-600 dark:text-green-400">Team Attendance</span>
+
+      <div
+        class="bg-green-50 dark:bg-green-900/30 px-3 py-2 rounded-md text-sm hover:shadow transition-shadow duration-150"
+      >
+        <span class="block text-green-800 dark:text-green-300 font-medium"
+          >82%</span
+        >
+        <span class="text-xs text-green-600 dark:text-green-400"
+          >Team Attendance</span
+        >
       </div>
-      
-      <div class="bg-purple-50 dark:bg-purple-900/30 px-3 py-2 rounded-md text-sm hover:shadow transition-shadow duration-150">
-        <span class="block text-purple-800 dark:text-purple-300 font-medium">12</span>
-        <span class="text-xs text-purple-600 dark:text-purple-400">Active Drills</span>
+
+      <div
+        class="bg-purple-50 dark:bg-purple-900/30 px-3 py-2 rounded-md text-sm hover:shadow transition-shadow duration-150"
+      >
+        <span class="block text-purple-800 dark:text-purple-300 font-medium"
+          >12</span
+        >
+        <span class="text-xs text-purple-600 dark:text-purple-400"
+          >Active Drills</span
+        >
       </div>
     </div>
   </div>
-  
+
   <!-- View Toggle -->
   <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4 mb-6">
     <div class="flex justify-between items-center">
-      <div class="flex items-center bg-gray-100 dark:bg-slate-600 rounded-lg p-1" role="group" aria-label="View toggle">
-        <button 
-          @click="view = 'calendar'" 
-          :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'calendar'}" 
+      <div
+        class="flex items-center bg-gray-100 dark:bg-slate-600 rounded-lg p-1"
+        role="group"
+        aria-label="View toggle"
+      >
+        <button
+          @click="view = 'calendar'"
+          :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'calendar'}"
           class="px-3 py-1 rounded-md text-sm font-medium transition-colors duration-150"
-          aria-label="Calendar view">
+          aria-label="Calendar view"
+        >
           <i class="bi bi-calendar3 mr-1"></i> Calendar
         </button>
-        <button 
-          @click="view = 'drills'" 
-          :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'drills'}" 
+        <button
+          @click="view = 'drills'"
+          :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'drills'}"
           class="px-3 py-1 rounded-md text-sm font-medium transition-colors duration-150"
-          aria-label="Drills view">
+          aria-label="Drills view"
+        >
           <i class="bi bi-list-check mr-1"></i> Drills
         </button>
-        <button 
-          @click="view = 'performance'" 
-          :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'performance'}" 
+        <button
+          @click="view = 'performance'"
+          :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'performance'}"
           class="px-3 py-1 rounded-md text-sm font-medium transition-colors duration-150"
-          aria-label="Performance view">
+          aria-label="Performance view"
+        >
           <i class="bi bi-graph-up mr-1"></i> Performance
         </button>
       </div>
 
       <!-- Action Button -->
-      <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm font-medium transition-colors duration-150">
+      <button
+        class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm font-medium transition-colors duration-150"
+      >
         <i class="bi bi-plus-circle mr-1"></i> New Session
       </button>
     </div>
   </div>
 
   <!-- Calendar View -->
-  <div x-show="view === 'calendar'" class="space-y-6" x-data="{
+  <div
+    x-show="view === 'calendar'"
+    class="space-y-6"
+    x-data="{
     currentMonth: new Date().getMonth(),
     currentYear: new Date().getFullYear(),
     today: new Date().getDate(),
@@ -139,51 +178,88 @@
       this.selectedSession = { day, session };
       this.showSessionModal = true;
     }
-  }">
+  }"
+  >
     <!-- Month Navigation -->
     <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
       <div class="flex justify-between items-center">
-        <button @click="previousMonth()" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-600">
+        <button
+          @click="previousMonth()"
+          class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-600"
+        >
           <i class="bi bi-chevron-left text-gray-600 dark:text-gray-300"></i>
         </button>
-        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200" x-text="getMonthName(currentMonth) + ' ' + currentYear">July 2025</h3>
-        <button @click="nextMonth()" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-600">
+        <h3
+          class="text-lg font-semibold text-gray-800 dark:text-gray-200"
+          x-text="getMonthName(currentMonth) + ' ' + currentYear"
+        >
+          July 2025
+        </h3>
+        <button
+          @click="nextMonth()"
+          class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-600"
+        >
           <i class="bi bi-chevron-right text-gray-600 dark:text-gray-300"></i>
         </button>
       </div>
-      
+
       <!-- Calendar Grid -->
       <div class="mt-4">
         <!-- Days of week header -->
         <div class="grid grid-cols-7 gap-1 text-center mb-2">
-          <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Sun</div>
-          <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Mon</div>
-          <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Tue</div>
-          <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Wed</div>
-          <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Thu</div>
-          <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Fri</div>
-          <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Sat</div>
+          <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            Sun
+          </div>
+          <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            Mon
+          </div>
+          <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            Tue
+          </div>
+          <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            Wed
+          </div>
+          <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            Thu
+          </div>
+          <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            Fri
+          </div>
+          <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            Sat
+          </div>
         </div>
-        
+
         <!-- Calendar days -->
         <div class="grid grid-cols-7 gap-1">
           <!-- Previous month days -->
-          <template x-for="day in getPreviousMonthDays(currentMonth, currentYear)" :key="'prev-'+day">
-            <div class="h-24 lg:h-28 border border-gray-200 dark:border-gray-600 rounded-md p-1 bg-gray-50 dark:bg-slate-800/50">
-              <div class="text-xs text-gray-400 dark:text-gray-500" x-text="day"></div>
+          <template
+            x-for="day in getPreviousMonthDays(currentMonth, currentYear)"
+            :key="'prev-'+day"
+          >
+            <div
+              class="h-24 lg:h-28 border border-gray-200 dark:border-gray-600 rounded-md p-1 bg-gray-50 dark:bg-slate-800/50"
+            >
+              <div
+                class="text-xs text-gray-400 dark:text-gray-500"
+                x-text="day"
+              ></div>
             </div>
           </template>
-          
+
           <!-- Current month days -->
-          <template x-for="day in getDaysInMonth(currentMonth, currentYear)" :key="day">
-            <div 
+          <template
+            x-for="day in getDaysInMonth(currentMonth, currentYear)"
+            :key="day"
+          >
+            <div
               :class="{
                 'h-24 lg:h-28 border rounded-md p-1 relative transition-colors duration-150': true,
                 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700': isToday(day),
                 'border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-slate-600/50': !isToday(day)
               }"
             >
-              <div 
+              <div
                 :class="{
                   'text-xs font-medium': true,
                   'text-blue-800 dark:text-blue-300': isToday(day),
@@ -191,11 +267,16 @@
                 }"
                 x-text="day"
               ></div>
-              
+
               <!-- Session indicators -->
-              <div class="absolute top-6 left-1 right-1 overflow-y-auto max-h-20">
-                <template x-for="(session, index) in getSessionsForDate(day)" :key="index">
-                  <div 
+              <div
+                class="absolute top-6 left-1 right-1 overflow-y-auto max-h-20"
+              >
+                <template
+                  x-for="(session, index) in getSessionsForDate(day)"
+                  :key="index"
+                >
+                  <div
                     @click="openSessionModal(day, session)"
                     :class="{
                       'text-xs p-1 rounded mb-1 truncate cursor-pointer': true,
@@ -211,71 +292,128 @@
               </div>
             </div>
           </template>
-          
+
           <!-- Next month days (if needed to fill out the grid) -->
-          <template x-for="(_, index) in Array.from({ length: (7 - ((getPreviousMonthDays(currentMonth, currentYear).length + getDaysInMonth(currentMonth, currentYear)) % 7)) % 7 })" :key="'next-'+index">
-            <div class="h-24 lg:h-28 border border-gray-200 dark:border-gray-600 rounded-md p-1 bg-gray-50 dark:bg-slate-800/50">
-              <div class="text-xs text-gray-400 dark:text-gray-500" x-text="index + 1"></div>
+          <template
+            x-for="(_, index) in Array.from({ length: (7 - ((getPreviousMonthDays(currentMonth, currentYear).length + getDaysInMonth(currentMonth, currentYear)) % 7)) % 7 })"
+            :key="'next-'+index"
+          >
+            <div
+              class="h-24 lg:h-28 border border-gray-200 dark:border-gray-600 rounded-md p-1 bg-gray-50 dark:bg-slate-800/50"
+            >
+              <div
+                class="text-xs text-gray-400 dark:text-gray-500"
+                x-text="index + 1"
+              ></div>
             </div>
           </template>
         </div>
       </div>
     </div>
-    
+
     <!-- Upcoming Sessions -->
     <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
-      <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Upcoming Sessions</h3>
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+        Upcoming Sessions
+      </h3>
       <div class="space-y-3">
         <!-- Session 1 -->
-        <div @click="showSessionModal = true" class="flex items-center p-3 bg-gray-50 dark:bg-slate-600 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-500 transition-colors cursor-pointer">
-          <div class="flex-shrink-0 h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/60 flex items-center justify-center">
-            <i class="bi bi-controller text-blue-600 dark:text-blue-400 text-xl"></i>
+        <div
+          @click="showSessionModal = true"
+          class="flex items-center p-3 bg-gray-50 dark:bg-slate-600 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-500 transition-colors cursor-pointer"
+        >
+          <div
+            class="flex-shrink-0 h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/60 flex items-center justify-center"
+          >
+            <i
+              class="bi bi-controller text-blue-600 dark:text-blue-400 text-xl"
+            ></i>
           </div>
           <div class="ml-4 flex-grow">
             <div class="flex justify-between">
-              <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100">Scrims vs G2 Esports</h4>
-              <span class="text-xs text-gray-500 dark:text-gray-400">July 14, 2025</span>
+              <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                Scrims vs G2 Esports
+              </h4>
+              <span class="text-xs text-gray-500 dark:text-gray-400"
+                >July 14, 2025</span
+              >
             </div>
-            <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <div
+              class="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1"
+            >
               <i class="bi bi-clock mr-1"></i> 10:00 AM - 1:00 PM
               <i class="bi bi-people ml-3 mr-1"></i> 6 Participants
-              <span class="ml-3 px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded">Scrim</span>
+              <span
+                class="ml-3 px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded"
+                >Scrim</span
+              >
             </div>
           </div>
         </div>
-        
+
         <!-- Session 2 -->
-        <div @click="showSessionModal = true" class="flex items-center p-3 bg-gray-50 dark:bg-slate-600 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-500 transition-colors cursor-pointer">
-          <div class="flex-shrink-0 h-12 w-12 rounded-full bg-green-100 dark:bg-green-900/60 flex items-center justify-center">
-            <i class="bi bi-clipboard-data text-green-600 dark:text-green-400 text-xl"></i>
+        <div
+          @click="showSessionModal = true"
+          class="flex items-center p-3 bg-gray-50 dark:bg-slate-600 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-500 transition-colors cursor-pointer"
+        >
+          <div
+            class="flex-shrink-0 h-12 w-12 rounded-full bg-green-100 dark:bg-green-900/60 flex items-center justify-center"
+          >
+            <i
+              class="bi bi-clipboard-data text-green-600 dark:text-green-400 text-xl"
+            ></i>
           </div>
           <div class="ml-4 flex-grow">
             <div class="flex justify-between">
-              <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100">Team Mechanics Drills</h4>
-              <span class="text-xs text-gray-500 dark:text-gray-400">July 16, 2025</span>
+              <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                Team Mechanics Drills
+              </h4>
+              <span class="text-xs text-gray-500 dark:text-gray-400"
+                >July 16, 2025</span
+              >
             </div>
-            <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <div
+              class="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1"
+            >
               <i class="bi bi-clock mr-1"></i> 2:00 PM - 5:00 PM
               <i class="bi bi-people ml-3 mr-1"></i> 5 Participants
-              <span class="ml-3 px-1.5 py-0.5 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded">Skills</span>
+              <span
+                class="ml-3 px-1.5 py-0.5 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded"
+                >Skills</span
+              >
             </div>
           </div>
         </div>
-        
+
         <!-- Session 3 -->
-        <div class="flex items-center p-3 bg-gray-50 dark:bg-slate-600 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-500 transition-colors cursor-pointer">
-          <div class="flex-shrink-0 h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900/60 flex items-center justify-center">
-            <i class="bi bi-film text-purple-600 dark:text-purple-400 text-xl"></i>
+        <div
+          class="flex items-center p-3 bg-gray-50 dark:bg-slate-600 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-500 transition-colors cursor-pointer"
+        >
+          <div
+            class="flex-shrink-0 h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900/60 flex items-center justify-center"
+          >
+            <i
+              class="bi bi-film text-purple-600 dark:text-purple-400 text-xl"
+            ></i>
           </div>
           <div class="ml-4 flex-grow">
             <div class="flex justify-between">
-              <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100">VOD Review - Recent Tournament</h4>
-              <span class="text-xs text-gray-500 dark:text-gray-400">July 18, 2025</span>
+              <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                VOD Review - Recent Tournament
+              </h4>
+              <span class="text-xs text-gray-500 dark:text-gray-400"
+                >July 18, 2025</span
+              >
             </div>
-            <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <div
+              class="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1"
+            >
               <i class="bi bi-clock mr-1"></i> 9:30 AM - 11:30 AM
               <i class="bi bi-people ml-3 mr-1"></i> 7 Participants
-              <span class="ml-3 px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded">Analysis</span>
+              <span
+                class="ml-3 px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded"
+                >Analysis</span
+              >
             </div>
           </div>
         </div>
@@ -289,34 +427,38 @@
       <div class="flex flex-col md:flex-row gap-4">
         <!-- Search -->
         <div class="relative flex-grow">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
             <i class="bi bi-search text-gray-500 dark:text-gray-400"></i>
           </div>
-          <input 
-            type="text" 
-            x-model="searchQuery" 
-            placeholder="Search drills..." 
+          <input
+            type="text"
+            x-model="searchQuery"
+            placeholder="Search drills..."
             class="pl-10 pr-4 py-2 w-full rounded-lg bg-gray-100 dark:bg-slate-600 border-0 focus:ring-2 focus:ring-blue-500 text-sm"
-          >
+          />
         </div>
-        
+
         <!-- Filters -->
         <div class="flex flex-wrap gap-2">
           <!-- Type Filter -->
-          <select 
-            x-model="drillType" 
-            class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <select
+            x-model="drillType"
+            class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          >
             <option value="all">All Types</option>
             <option value="mechanics">Mechanics</option>
             <option value="strategy">Strategy</option>
             <option value="teamfight">Teamfight</option>
             <option value="vision">Vision Control</option>
           </select>
-          
+
           <!-- Focus Filter -->
-          <select 
-            x-model="drillFocus" 
-            class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <select
+            x-model="drillFocus"
+            class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          >
             <option value="all">All Focus Areas</option>
             <option value="early">Early Game</option>
             <option value="mid">Mid Game</option>
@@ -324,63 +466,92 @@
             <option value="individual">Individual</option>
             <option value="team">Team</option>
           </select>
-          
+
           <!-- Sorting -->
-          <select 
-            x-model="sortBy" 
-            class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <select
+            x-model="sortBy"
+            class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          >
             <option value="name">Sort by Name</option>
             <option value="date">Sort by Date</option>
             <option value="effectiveness">Sort by Effectiveness</option>
             <option value="difficulty">Sort by Difficulty</option>
           </select>
-          
+
           <!-- Sort Direction Toggle -->
-          <button 
-            @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'" 
-            class="bg-gray-100 hover:bg-gray-200 dark:bg-slate-600 dark:hover:bg-slate-500 rounded-lg px-3 py-2 text-sm">
-            <i :class="sortDirection === 'asc' ? 'bi bi-sort-down' : 'bi bi-sort-up'"></i>
+          <button
+            @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'"
+            class="bg-gray-100 hover:bg-gray-200 dark:bg-slate-600 dark:hover:bg-slate-500 rounded-lg px-3 py-2 text-sm"
+          >
+            <i
+              :class="sortDirection === 'asc' ? 'bi bi-sort-down' : 'bi bi-sort-up'"
+            ></i>
           </button>
         </div>
       </div>
-      
+
       <!-- Active Filter Tags -->
       <div class="flex flex-wrap gap-2 mt-4">
-        <div class="text-xs text-gray-500 dark:text-gray-400 self-center">Active filters:</div>
-        <span class="bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full flex items-center">
+        <div class="text-xs text-gray-500 dark:text-gray-400 self-center">
+          Active filters:
+        </div>
+        <span
+          class="bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full flex items-center"
+        >
           Type: Mechanics
-          <button class="ml-1 text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100">
+          <button
+            class="ml-1 text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100"
+          >
             <i class="bi bi-x"></i>
           </button>
         </span>
-        <span class="bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200 text-xs px-2 py-1 rounded-full flex items-center">
+        <span
+          class="bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200 text-xs px-2 py-1 rounded-full flex items-center"
+        >
           Focus: Mid Game
-          <button class="ml-1 text-purple-600 dark:text-purple-300 hover:text-purple-800 dark:hover:text-purple-100">
+          <button
+            class="ml-1 text-purple-600 dark:text-purple-300 hover:text-purple-800 dark:hover:text-purple-100"
+          >
             <i class="bi bi-x"></i>
           </button>
         </span>
-        <button class="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 ml-2">
+        <button
+          class="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 ml-2"
+        >
           <i class="bi bi-x-circle mr-1"></i>Clear all
         </button>
       </div>
     </div>
-    
+
     <!-- Drills Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <!-- Drill Card 1 -->
-      <div @click="showDrillModal = true" class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+      <div
+        @click="showDrillModal = true"
+        class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+      >
         <div class="h-4 bg-blue-500"></div>
         <div class="p-4">
           <div class="flex justify-between">
-            <h3 class="font-semibold text-gray-800 dark:text-gray-100">Lane Pressure</h3>
-            <span class="px-2 py-1 rounded-full text-xs bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200">Mechanics</span>
+            <h3 class="font-semibold text-gray-800 dark:text-gray-100">
+              Lane Pressure
+            </h3>
+            <span
+              class="px-2 py-1 rounded-full text-xs bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200"
+              >Mechanics</span
+            >
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">Practice maintaining lane pressure through proper positioning and wave management.</p>
-          
+          <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">
+            Practice maintaining lane pressure through proper positioning and
+            wave management.
+          </p>
+
           <!-- Stats -->
           <div class="grid grid-cols-2 gap-2 mt-3">
             <div class="bg-gray-50 dark:bg-slate-600 p-2 rounded">
-              <span class="block text-xs text-gray-500 dark:text-gray-400">Difficulty</span>
+              <span class="block text-xs text-gray-500 dark:text-gray-400"
+                >Difficulty</span
+              >
               <div class="flex mt-1">
                 <i class="bi bi-star-fill text-yellow-500"></i>
                 <i class="bi bi-star-fill text-yellow-500"></i>
@@ -390,41 +561,63 @@
               </div>
             </div>
             <div class="bg-gray-50 dark:bg-slate-600 p-2 rounded">
-              <span class="block text-xs text-gray-500 dark:text-gray-400">Focus</span>
+              <span class="block text-xs text-gray-500 dark:text-gray-400"
+                >Focus</span
+              >
               <div class="flex items-center mt-1">
-                <span class="text-xs font-medium text-gray-700 dark:text-gray-200">Early Game</span>
+                <span
+                  class="text-xs font-medium text-gray-700 dark:text-gray-200"
+                  >Early Game</span
+                >
               </div>
             </div>
           </div>
-          
+
           <!-- Actions -->
           <div class="flex justify-between mt-4">
             <div class="flex items-center">
-              <span class="bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 text-xs rounded-full px-2 py-1 flex items-center">
+              <span
+                class="bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 text-xs rounded-full px-2 py-1 flex items-center"
+              >
                 <i class="bi bi-graph-up mr-1"></i> 78% Effective
               </span>
             </div>
-            <button class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium">
+            <button
+              class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium"
+            >
               <i class="bi bi-eye mr-1"></i> Details
             </button>
           </div>
         </div>
       </div>
-      
+
       <!-- Drill Card 2 -->
-      <div @click="showDrillModal = true" class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+      <div
+        @click="showDrillModal = true"
+        class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+      >
         <div class="h-4 bg-purple-500"></div>
         <div class="p-4">
           <div class="flex justify-between">
-            <h3 class="font-semibold text-gray-800 dark:text-gray-100">Baron Contesting</h3>
-            <span class="px-2 py-1 rounded-full text-xs bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200">Strategy</span>
+            <h3 class="font-semibold text-gray-800 dark:text-gray-100">
+              Baron Contesting
+            </h3>
+            <span
+              class="px-2 py-1 rounded-full text-xs bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200"
+              >Strategy</span
+            >
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">Team coordination and objective control for contesting Baron Nashor at critical moments.</p>
-          
+          <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">
+            Team coordination and objective control for contesting Baron Nashor
+            at critical moments.
+          </p>
+
           <!-- Stats -->
           <div class="grid grid-cols-2 gap-2 mt-3">
             <div class="bg-gray-50 dark:bg-slate-600 p-2 rounded">
-              <span class="block text-xs text-gray-500 dark:text-gray-400">Difficulty</span>
+              <span class="block text-xs text-gray-500 dark:text-gray-400"
+                >Difficulty</span
+              >
               <div class="flex mt-1">
                 <i class="bi bi-star-fill text-yellow-500"></i>
                 <i class="bi bi-star-fill text-yellow-500"></i>
@@ -434,41 +627,63 @@
               </div>
             </div>
             <div class="bg-gray-50 dark:bg-slate-600 p-2 rounded">
-              <span class="block text-xs text-gray-500 dark:text-gray-400">Focus</span>
+              <span class="block text-xs text-gray-500 dark:text-gray-400"
+                >Focus</span
+              >
               <div class="flex items-center mt-1">
-                <span class="text-xs font-medium text-gray-700 dark:text-gray-200">Late Game</span>
+                <span
+                  class="text-xs font-medium text-gray-700 dark:text-gray-200"
+                  >Late Game</span
+                >
               </div>
             </div>
           </div>
-          
+
           <!-- Actions -->
           <div class="flex justify-between mt-4">
             <div class="flex items-center">
-              <span class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300 text-xs rounded-full px-2 py-1 flex items-center">
+              <span
+                class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300 text-xs rounded-full px-2 py-1 flex items-center"
+              >
                 <i class="bi bi-graph-up mr-1"></i> 65% Effective
               </span>
             </div>
-            <button class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium">
+            <button
+              class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium"
+            >
               <i class="bi bi-eye mr-1"></i> Details
             </button>
           </div>
         </div>
       </div>
-      
+
       <!-- Drill Card 3 -->
-      <div @click="showDrillModal = true" class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+      <div
+        @click="showDrillModal = true"
+        class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+      >
         <div class="h-4 bg-green-500"></div>
         <div class="p-4">
           <div class="flex justify-between">
-            <h3 class="font-semibold text-gray-800 dark:text-gray-100">Vision Control</h3>
-            <span class="px-2 py-1 rounded-full text-xs bg-green-100 dark:bg-green-900/60 text-green-800 dark:text-green-200">Vision</span>
+            <h3 class="font-semibold text-gray-800 dark:text-gray-100">
+              Vision Control
+            </h3>
+            <span
+              class="px-2 py-1 rounded-full text-xs bg-green-100 dark:bg-green-900/60 text-green-800 dark:text-green-200"
+              >Vision</span
+            >
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">Optimal ward placement and map control techniques for securing vision around key objectives.</p>
-          
+          <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">
+            Optimal ward placement and map control techniques for securing
+            vision around key objectives.
+          </p>
+
           <!-- Stats -->
           <div class="grid grid-cols-2 gap-2 mt-3">
             <div class="bg-gray-50 dark:bg-slate-600 p-2 rounded">
-              <span class="block text-xs text-gray-500 dark:text-gray-400">Difficulty</span>
+              <span class="block text-xs text-gray-500 dark:text-gray-400"
+                >Difficulty</span
+              >
               <div class="flex mt-1">
                 <i class="bi bi-star-fill text-yellow-500"></i>
                 <i class="bi bi-star-fill text-yellow-500"></i>
@@ -478,41 +693,62 @@
               </div>
             </div>
             <div class="bg-gray-50 dark:bg-slate-600 p-2 rounded">
-              <span class="block text-xs text-gray-500 dark:text-gray-400">Focus</span>
+              <span class="block text-xs text-gray-500 dark:text-gray-400"
+                >Focus</span
+              >
               <div class="flex items-center mt-1">
-                <span class="text-xs font-medium text-gray-700 dark:text-gray-200">All Phases</span>
+                <span
+                  class="text-xs font-medium text-gray-700 dark:text-gray-200"
+                  >All Phases</span
+                >
               </div>
             </div>
           </div>
-          
+
           <!-- Actions -->
           <div class="flex justify-between mt-4">
             <div class="flex items-center">
-              <span class="bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 text-xs rounded-full px-2 py-1 flex items-center">
+              <span
+                class="bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 text-xs rounded-full px-2 py-1 flex items-center"
+              >
                 <i class="bi bi-graph-up mr-1"></i> 92% Effective
               </span>
             </div>
-            <button class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium">
+            <button
+              class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium"
+            >
               <i class="bi bi-eye mr-1"></i> Details
             </button>
           </div>
         </div>
       </div>
-      
+
       <!-- Drill Card 4 -->
-      <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow">
+      <div
+        class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow"
+      >
         <div class="h-4 bg-orange-500"></div>
         <div class="p-4">
           <div class="flex justify-between">
-            <h3 class="font-semibold text-gray-800 dark:text-gray-100">Team Fighting</h3>
-            <span class="px-2 py-1 rounded-full text-xs bg-orange-100 dark:bg-orange-900/60 text-orange-800 dark:text-orange-200">Teamfight</span>
+            <h3 class="font-semibold text-gray-800 dark:text-gray-100">
+              Team Fighting
+            </h3>
+            <span
+              class="px-2 py-1 rounded-full text-xs bg-orange-100 dark:bg-orange-900/60 text-orange-800 dark:text-orange-200"
+              >Teamfight</span
+            >
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">Practice positioning, target priority and coordination during 5v5 team fights.</p>
-          
+          <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">
+            Practice positioning, target priority and coordination during 5v5
+            team fights.
+          </p>
+
           <!-- Stats -->
           <div class="grid grid-cols-2 gap-2 mt-3">
             <div class="bg-gray-50 dark:bg-slate-600 p-2 rounded">
-              <span class="block text-xs text-gray-500 dark:text-gray-400">Difficulty</span>
+              <span class="block text-xs text-gray-500 dark:text-gray-400"
+                >Difficulty</span
+              >
               <div class="flex mt-1">
                 <i class="bi bi-star-fill text-yellow-500"></i>
                 <i class="bi bi-star-fill text-yellow-500"></i>
@@ -522,41 +758,62 @@
               </div>
             </div>
             <div class="bg-gray-50 dark:bg-slate-600 p-2 rounded">
-              <span class="block text-xs text-gray-500 dark:text-gray-400">Focus</span>
+              <span class="block text-xs text-gray-500 dark:text-gray-400"
+                >Focus</span
+              >
               <div class="flex items-center mt-1">
-                <span class="text-xs font-medium text-gray-700 dark:text-gray-200">Mid Game</span>
+                <span
+                  class="text-xs font-medium text-gray-700 dark:text-gray-200"
+                  >Mid Game</span
+                >
               </div>
             </div>
           </div>
-          
+
           <!-- Actions -->
           <div class="flex justify-between mt-4">
             <div class="flex items-center">
-              <span class="bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300 text-xs rounded-full px-2 py-1 flex items-center">
+              <span
+                class="bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300 text-xs rounded-full px-2 py-1 flex items-center"
+              >
                 <i class="bi bi-graph-down mr-1"></i> 45% Effective
               </span>
             </div>
-            <button class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium">
+            <button
+              class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium"
+            >
               <i class="bi bi-eye mr-1"></i> Details
             </button>
           </div>
         </div>
       </div>
-      
+
       <!-- Drill Card 5 -->
-      <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow">
+      <div
+        class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow"
+      >
         <div class="h-4 bg-blue-500"></div>
         <div class="p-4">
           <div class="flex justify-between">
-            <h3 class="font-semibold text-gray-800 dark:text-gray-100">Last Hitting</h3>
-            <span class="px-2 py-1 rounded-full text-xs bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200">Mechanics</span>
+            <h3 class="font-semibold text-gray-800 dark:text-gray-100">
+              Last Hitting
+            </h3>
+            <span
+              class="px-2 py-1 rounded-full text-xs bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200"
+              >Mechanics</span
+            >
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">Perfect your CS (creep score) timing and efficiency to maximize gold income.</p>
-          
+          <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">
+            Perfect your CS (creep score) timing and efficiency to maximize gold
+            income.
+          </p>
+
           <!-- Stats -->
           <div class="grid grid-cols-2 gap-2 mt-3">
             <div class="bg-gray-50 dark:bg-slate-600 p-2 rounded">
-              <span class="block text-xs text-gray-500 dark:text-gray-400">Difficulty</span>
+              <span class="block text-xs text-gray-500 dark:text-gray-400"
+                >Difficulty</span
+              >
               <div class="flex mt-1">
                 <i class="bi bi-star-fill text-yellow-500"></i>
                 <i class="bi bi-star text-gray-300 dark:text-gray-500"></i>
@@ -566,41 +823,62 @@
               </div>
             </div>
             <div class="bg-gray-50 dark:bg-slate-600 p-2 rounded">
-              <span class="block text-xs text-gray-500 dark:text-gray-400">Focus</span>
+              <span class="block text-xs text-gray-500 dark:text-gray-400"
+                >Focus</span
+              >
               <div class="flex items-center mt-1">
-                <span class="text-xs font-medium text-gray-700 dark:text-gray-200">Early Game</span>
+                <span
+                  class="text-xs font-medium text-gray-700 dark:text-gray-200"
+                  >Early Game</span
+                >
               </div>
             </div>
           </div>
-          
+
           <!-- Actions -->
           <div class="flex justify-between mt-4">
             <div class="flex items-center">
-              <span class="bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 text-xs rounded-full px-2 py-1 flex items-center">
+              <span
+                class="bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 text-xs rounded-full px-2 py-1 flex items-center"
+              >
                 <i class="bi bi-graph-up mr-1"></i> 88% Effective
               </span>
             </div>
-            <button class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium">
+            <button
+              class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium"
+            >
               <i class="bi bi-eye mr-1"></i> Details
             </button>
           </div>
         </div>
       </div>
-      
+
       <!-- Drill Card 6 -->
-      <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow">
+      <div
+        class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow"
+      >
         <div class="h-4 bg-purple-500"></div>
         <div class="p-4">
           <div class="flex justify-between">
-            <h3 class="font-semibold text-gray-800 dark:text-gray-100">Split Push Execution</h3>
-            <span class="px-2 py-1 rounded-full text-xs bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200">Strategy</span>
+            <h3 class="font-semibold text-gray-800 dark:text-gray-100">
+              Split Push Execution
+            </h3>
+            <span
+              class="px-2 py-1 rounded-full text-xs bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200"
+              >Strategy</span
+            >
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">Master split pushing tactics to create map pressure and secure objectives.</p>
-          
+          <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">
+            Master split pushing tactics to create map pressure and secure
+            objectives.
+          </p>
+
           <!-- Stats -->
           <div class="grid grid-cols-2 gap-2 mt-3">
             <div class="bg-gray-50 dark:bg-slate-600 p-2 rounded">
-              <span class="block text-xs text-gray-500 dark:text-gray-400">Difficulty</span>
+              <span class="block text-xs text-gray-500 dark:text-gray-400"
+                >Difficulty</span
+              >
               <div class="flex mt-1">
                 <i class="bi bi-star-fill text-yellow-500"></i>
                 <i class="bi bi-star-fill text-yellow-500"></i>
@@ -610,278 +888,479 @@
               </div>
             </div>
             <div class="bg-gray-50 dark:bg-slate-600 p-2 rounded">
-              <span class="block text-xs text-gray-500 dark:text-gray-400">Focus</span>
+              <span class="block text-xs text-gray-500 dark:text-gray-400"
+                >Focus</span
+              >
               <div class="flex items-center mt-1">
-                <span class="text-xs font-medium text-gray-700 dark:text-gray-200">Mid Game</span>
+                <span
+                  class="text-xs font-medium text-gray-700 dark:text-gray-200"
+                  >Mid Game</span
+                >
               </div>
             </div>
           </div>
-          
+
           <!-- Actions -->
           <div class="flex justify-between mt-4">
             <div class="flex items-center">
-              <span class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300 text-xs rounded-full px-2 py-1 flex items-center">
+              <span
+                class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300 text-xs rounded-full px-2 py-1 flex items-center"
+              >
                 <i class="bi bi-graph-up mr-1"></i> 72% Effective
               </span>
             </div>
-            <button class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium">
+            <button
+              class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium"
+            >
               <i class="bi bi-eye mr-1"></i> Details
             </button>
           </div>
         </div>
       </div>
     </div>
-    
+
     <!-- Pagination -->
-    <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4 flex justify-between items-center">
+    <div
+      class="bg-white dark:bg-slate-700 rounded-lg shadow p-4 flex justify-between items-center"
+    >
       <div class="text-sm text-gray-600 dark:text-gray-300">
-        Showing <span class="font-medium">1-6</span> of <span class="font-medium">12</span> drills
+        Showing <span class="font-medium">1-6</span> of
+        <span class="font-medium">12</span> drills
       </div>
       <div class="flex space-x-1">
-        <button class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-600 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-500 disabled:opacity-50" disabled>
+        <button
+          class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-600 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-500 disabled:opacity-50"
+          disabled
+        >
           <i class="bi bi-chevron-left"></i>
         </button>
-        <button class="px-3 py-1 rounded-md bg-blue-500 text-white hover:bg-blue-600">
+        <button
+          class="px-3 py-1 rounded-md bg-blue-500 text-white hover:bg-blue-600"
+        >
           1
         </button>
-        <button class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-600 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-500">
+        <button
+          class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-600 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-500"
+        >
           2
         </button>
-        <button class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-600 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-500">
+        <button
+          class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-600 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-500"
+        >
           <i class="bi bi-chevron-right"></i>
         </button>
       </div>
     </div>
   </div>
-  
+
   <!-- Performance View Placeholder -->
-  <div x-show="view === 'performance'" class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
+  <div
+    x-show="view === 'performance'"
+    class="bg-white dark:bg-slate-700 rounded-lg shadow p-4"
+  >
     <div class="text-center py-16">
-      <i class="bi bi-graph-up text-4xl text-gray-400 dark:text-gray-500 mb-3"></i>
-      <h3 class="text-lg font-medium text-gray-600 dark:text-gray-300">Performance Analytics</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-1">Track team progress and improvement over time</p>
-      <button class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-150">
+      <i
+        class="bi bi-graph-up text-4xl text-gray-400 dark:text-gray-500 mb-3"
+      ></i>
+      <h3 class="text-lg font-medium text-gray-600 dark:text-gray-300">
+        Performance Analytics
+      </h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-1">
+        Track team progress and improvement over time
+      </p>
+      <button
+        class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-150"
+      >
         <i class="bi bi-plus-circle mr-1"></i> Setup Performance Tracking
       </button>
     </div>
   </div>
 
   <!-- Session Detail Modal -->
-  <div x-show="showSessionModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+  <div
+    x-show="showSessionModal"
+    class="fixed inset-0 z-50 overflow-y-auto"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+    >
       <!-- Background overlay -->
-      <div 
-        x-show="showSessionModal" 
-        x-transition:enter="ease-out duration-300" 
-        x-transition:enter-start="opacity-0" 
-        x-transition:enter-end="opacity-100" 
-        x-transition:leave="ease-in duration-200" 
-        x-transition:leave-start="opacity-100" 
-        x-transition:leave-end="opacity-0" 
-        class="fixed inset-0 bg-gray-500 bg-opacity-75 dark:bg-slate-800 dark:bg-opacity-75 transition-opacity" 
-        @click="showSessionModal = false" 
-        aria-hidden="true">
-      </div>
+      <div
+        x-show="showSessionModal"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 dark:bg-slate-800 dark:bg-opacity-75 transition-opacity"
+        @click="showSessionModal = false"
+        aria-hidden="true"
+      ></div>
 
       <!-- Modal panel -->
-      <div 
-        x-show="showSessionModal" 
-        x-transition:enter="ease-out duration-300" 
-        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
-        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" 
-        x-transition:leave="ease-in duration-200" 
-        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" 
-        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
-        class="inline-block align-bottom bg-white dark:bg-slate-700 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-        
+      <div
+        x-show="showSessionModal"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        class="inline-block align-bottom bg-white dark:bg-slate-700 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full"
+      >
         <!-- Modal content -->
         <div class="bg-white dark:bg-slate-700 px-4 pt-5 pb-4 sm:p-6">
           <!-- Header with close button -->
           <div class="flex justify-between items-start mb-4">
-            <h3 class="text-lg leading-6 font-semibold text-gray-900 dark:text-gray-100" id="modal-title">
+            <h3
+              class="text-lg leading-6 font-semibold text-gray-900 dark:text-gray-100"
+              id="modal-title"
+            >
               Session Details
             </h3>
-            <button @click="showSessionModal = false" class="text-gray-400 hover:text-gray-500 dark:text-gray-300 dark:hover:text-gray-200">
+            <button
+              @click="showSessionModal = false"
+              class="text-gray-400 hover:text-gray-500 dark:text-gray-300 dark:hover:text-gray-200"
+            >
               <span class="sr-only">Close</span>
               <i class="bi bi-x-lg"></i>
             </button>
           </div>
-          
+
           <!-- Session Info -->
           <div class="space-y-6">
             <!-- Session Title and Status -->
             <div class="flex justify-between items-center">
-              <h4 class="text-xl font-bold text-gray-900 dark:text-gray-100" x-text="selectedSession ? selectedSession.session.title : 'Scrims vs G2 Esports'">Scrims vs G2 Esports</h4>
-              <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200 rounded-full text-sm">Upcoming</span>
+              <h4
+                class="text-xl font-bold text-gray-900 dark:text-gray-100"
+                x-text="selectedSession ? selectedSession.session.title : 'Scrims vs G2 Esports'"
+              >
+                Scrims vs G2 Esports
+              </h4>
+              <span
+                class="px-3 py-1 bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200 rounded-full text-sm"
+                >Upcoming</span
+              >
             </div>
-            
+
             <!-- Session Time and Location -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="bg-gray-50 dark:bg-slate-600 p-4 rounded-lg">
                 <div class="flex items-center">
-                  <i class="bi bi-calendar-event text-gray-600 dark:text-gray-300 mr-2"></i>
+                  <i
+                    class="bi bi-calendar-event text-gray-600 dark:text-gray-300 mr-2"
+                  ></i>
                   <div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">Date & Time</div>
-                    <div class="font-medium text-gray-900 dark:text-gray-100" x-text="selectedSession ? `${getMonthName(currentMonth)} ${selectedSession.day}, ${currentYear} • ${selectedSession.session.time} - ${(parseInt(selectedSession.session.time) + 3)}:00 PM` : 'July 14, 2025 • 10:00 AM - 1:00 PM'">July 14, 2025 • 10:00 AM - 1:00 PM</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                      Date & Time
+                    </div>
+                    <div
+                      class="font-medium text-gray-900 dark:text-gray-100"
+                      x-text="selectedSession ? `${getMonthName(currentMonth)} ${selectedSession.day}, ${currentYear} • ${selectedSession.session.time} - ${(parseInt(selectedSession.session.time) + 3)}:00 PM` : 'July 14, 2025 • 10:00 AM - 1:00 PM'"
+                    >
+                      July 14, 2025 • 10:00 AM - 1:00 PM
+                    </div>
                   </div>
                 </div>
               </div>
-              
+
               <div class="bg-gray-50 dark:bg-slate-600 p-4 rounded-lg">
                 <div class="flex items-center">
-                  <i class="bi bi-geo-alt text-gray-600 dark:text-gray-300 mr-2"></i>
+                  <i
+                    class="bi bi-geo-alt text-gray-600 dark:text-gray-300 mr-2"
+                  ></i>
                   <div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">Location</div>
-                    <div class="font-medium text-gray-900 dark:text-gray-100">Main Training Facility</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                      Location
+                    </div>
+                    <div class="font-medium text-gray-900 dark:text-gray-100">
+                      Main Training Facility
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <!-- Session Description -->
             <div>
-              <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</h5>
+              <h5
+                class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                Description
+              </h5>
               <p class="text-gray-600 dark:text-gray-400 text-sm">
-                Scheduled scrimmage against G2 Esports. Focus on early game strategies and mid-game objective control. All team members required to attend. VOD review will follow the next day.
+                Scheduled scrimmage against G2 Esports. Focus on early game
+                strategies and mid-game objective control. All team members
+                required to attend. VOD review will follow the next day.
               </p>
             </div>
-            
+
             <!-- Participants -->
             <div>
-              <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Participants (6)</h5>
+              <h5
+                class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                Participants (6)
+              </h5>
               <div class="flex flex-wrap gap-2">
-                <div class="flex items-center bg-gray-50 dark:bg-slate-600 px-3 py-2 rounded-lg">
-                  <img src="{{ url_for('static', path='img/players/caps.png') }}" alt="Player avatar" class="h-6 w-6 rounded-full mr-2">
-                  <span class="text-sm text-gray-800 dark:text-gray-200">Caps</span>
-                  <span class="ml-2 px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200 text-xs rounded">Mid</span>
+                <div
+                  class="flex items-center bg-gray-50 dark:bg-slate-600 px-3 py-2 rounded-lg"
+                >
+                  <img
+                    src="{{ url_for('static', path='img/players/caps.png') }}"
+                    alt="Player avatar"
+                    class="h-6 w-6 rounded-full mr-2"
+                  />
+                  <span class="text-sm text-gray-800 dark:text-gray-200"
+                    >Caps</span
+                  >
+                  <span
+                    class="ml-2 px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200 text-xs rounded"
+                    >Mid</span
+                  >
                 </div>
-                <div class="flex items-center bg-gray-50 dark:bg-slate-600 px-3 py-2 rounded-lg">
-                  <img src="{{ url_for('static', path='img/players/upset.png') }}" alt="Player avatar" class="h-6 w-6 rounded-full mr-2">
-                  <span class="text-sm text-gray-800 dark:text-gray-200">Upset</span>
-                  <span class="ml-2 px-1.5 py-0.5 bg-red-100 dark:bg-red-900/60 text-red-800 dark:text-red-200 text-xs rounded">ADC</span>
+                <div
+                  class="flex items-center bg-gray-50 dark:bg-slate-600 px-3 py-2 rounded-lg"
+                >
+                  <img
+                    src="{{ url_for('static', path='img/players/upset.png') }}"
+                    alt="Player avatar"
+                    class="h-6 w-6 rounded-full mr-2"
+                  />
+                  <span class="text-sm text-gray-800 dark:text-gray-200"
+                    >Upset</span
+                  >
+                  <span
+                    class="ml-2 px-1.5 py-0.5 bg-red-100 dark:bg-red-900/60 text-red-800 dark:text-red-200 text-xs rounded"
+                    >ADC</span
+                  >
                 </div>
-                <div class="flex items-center bg-gray-50 dark:bg-slate-600 px-3 py-2 rounded-lg">
-                  <img src="{{ url_for('static', path='img/players/brokenblade.png') }}" alt="Player avatar" class="h-6 w-6 rounded-full mr-2">
-                  <span class="text-sm text-gray-800 dark:text-gray-200">BrokenBlade</span>
-                  <span class="ml-2 px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200 text-xs rounded">Top</span>
+                <div
+                  class="flex items-center bg-gray-50 dark:bg-slate-600 px-3 py-2 rounded-lg"
+                >
+                  <img
+                    src="{{ url_for('static', path='img/players/brokenblade.png') }}"
+                    alt="Player avatar"
+                    class="h-6 w-6 rounded-full mr-2"
+                  />
+                  <span class="text-sm text-gray-800 dark:text-gray-200"
+                    >BrokenBlade</span
+                  >
+                  <span
+                    class="ml-2 px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200 text-xs rounded"
+                    >Top</span
+                  >
                 </div>
-                <div class="flex items-center bg-gray-50 dark:bg-slate-600 px-3 py-2 rounded-lg">
-                  <img src="{{ url_for('static', path='img/players/hylissang.png') }}" alt="Player avatar" class="h-6 w-6 rounded-full mr-2">
-                  <span class="text-sm text-gray-800 dark:text-gray-200">Hylissang</span>
-                  <span class="ml-2 px-1.5 py-0.5 bg-green-100 dark:bg-green-900/60 text-green-800 dark:text-green-200 text-xs rounded">Support</span>
+                <div
+                  class="flex items-center bg-gray-50 dark:bg-slate-600 px-3 py-2 rounded-lg"
+                >
+                  <img
+                    src="{{ url_for('static', path='img/players/hylissang.png') }}"
+                    alt="Player avatar"
+                    class="h-6 w-6 rounded-full mr-2"
+                  />
+                  <span class="text-sm text-gray-800 dark:text-gray-200"
+                    >Hylissang</span
+                  >
+                  <span
+                    class="ml-2 px-1.5 py-0.5 bg-green-100 dark:bg-green-900/60 text-green-800 dark:text-green-200 text-xs rounded"
+                    >Support</span
+                  >
                 </div>
-                <div class="flex items-center bg-gray-50 dark:bg-slate-600 px-3 py-2 rounded-lg">
-                  <img src="{{ url_for('static', path='img/players/razork.png') }}" alt="Player avatar" class="h-6 w-6 rounded-full mr-2">
-                  <span class="text-sm text-gray-800 dark:text-gray-200">Razork</span>
-                  <span class="ml-2 px-1.5 py-0.5 bg-yellow-100 dark:bg-yellow-900/60 text-yellow-800 dark:text-yellow-200 text-xs rounded">Jungle</span>
+                <div
+                  class="flex items-center bg-gray-50 dark:bg-slate-600 px-3 py-2 rounded-lg"
+                >
+                  <img
+                    src="{{ url_for('static', path='img/players/razork.png') }}"
+                    alt="Player avatar"
+                    class="h-6 w-6 rounded-full mr-2"
+                  />
+                  <span class="text-sm text-gray-800 dark:text-gray-200"
+                    >Razork</span
+                  >
+                  <span
+                    class="ml-2 px-1.5 py-0.5 bg-yellow-100 dark:bg-yellow-900/60 text-yellow-800 dark:text-yellow-200 text-xs rounded"
+                    >Jungle</span
+                  >
                 </div>
-                <div class="flex items-center bg-gray-50 dark:bg-slate-600 px-3 py-2 rounded-lg">
-                  <i class="bi bi-person-circle text-gray-500 dark:text-gray-400 mr-2"></i>
-                  <span class="text-sm text-gray-800 dark:text-gray-200">Coach Yamato</span>
-                  <span class="ml-2 px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs rounded">Coach</span>
+                <div
+                  class="flex items-center bg-gray-50 dark:bg-slate-600 px-3 py-2 rounded-lg"
+                >
+                  <i
+                    class="bi bi-person-circle text-gray-500 dark:text-gray-400 mr-2"
+                  ></i>
+                  <span class="text-sm text-gray-800 dark:text-gray-200"
+                    >Coach Yamato</span
+                  >
+                  <span
+                    class="ml-2 px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs rounded"
+                    >Coach</span
+                  >
                 </div>
               </div>
             </div>
-            
+
             <!-- Drills Included -->
             <div>
-              <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Drills Included</h5>
+              <h5
+                class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                Drills Included
+              </h5>
               <ul class="space-y-2">
-                <li class="flex items-center justify-between bg-gray-50 dark:bg-slate-600 p-3 rounded-lg">
+                <li
+                  class="flex items-center justify-between bg-gray-50 dark:bg-slate-600 p-3 rounded-lg"
+                >
                   <div>
-                    <span class="font-medium text-gray-800 dark:text-gray-200">Team Fighting</span>
-                    <span class="ml-2 px-2 py-0.5 text-xs bg-orange-100 dark:bg-orange-900/60 text-orange-800 dark:text-orange-200 rounded-full">Teamfight</span>
+                    <span class="font-medium text-gray-800 dark:text-gray-200"
+                      >Team Fighting</span
+                    >
+                    <span
+                      class="ml-2 px-2 py-0.5 text-xs bg-orange-100 dark:bg-orange-900/60 text-orange-800 dark:text-orange-200 rounded-full"
+                      >Teamfight</span
+                    >
                   </div>
-                  <span class="text-xs text-gray-500 dark:text-gray-400">30 minutes</span>
+                  <span class="text-xs text-gray-500 dark:text-gray-400"
+                    >30 minutes</span
+                  >
                 </li>
-                <li class="flex items-center justify-between bg-gray-50 dark:bg-slate-600 p-3 rounded-lg">
+                <li
+                  class="flex items-center justify-between bg-gray-50 dark:bg-slate-600 p-3 rounded-lg"
+                >
                   <div>
-                    <span class="font-medium text-gray-800 dark:text-gray-200">Baron Contesting</span>
-                    <span class="ml-2 px-2 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200 rounded-full">Strategy</span>
+                    <span class="font-medium text-gray-800 dark:text-gray-200"
+                      >Baron Contesting</span
+                    >
+                    <span
+                      class="ml-2 px-2 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200 rounded-full"
+                      >Strategy</span
+                    >
                   </div>
-                  <span class="text-xs text-gray-500 dark:text-gray-400">45 minutes</span>
+                  <span class="text-xs text-gray-500 dark:text-gray-400"
+                    >45 minutes</span
+                  >
                 </li>
               </ul>
             </div>
           </div>
         </div>
-        
+
         <!-- Modal footer -->
-        <div class="bg-gray-50 dark:bg-slate-600 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+        <div
+          class="bg-gray-50 dark:bg-slate-600 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"
+        >
+          <button
+            type="button"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm"
+          >
             Edit Session
           </button>
-          <button @click="showSessionModal = false" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">
+          <button
+            @click="showSessionModal = false"
+            type="button"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm"
+          >
             Close
           </button>
         </div>
       </div>
     </div>
   </div>
-  
+
   <!-- Drill Detail Modal -->
-  <div x-show="showDrillModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+  <div
+    x-show="showDrillModal"
+    class="fixed inset-0 z-50 overflow-y-auto"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+    >
       <!-- Background overlay -->
-      <div 
-        x-show="showDrillModal" 
-        x-transition:enter="ease-out duration-300" 
-        x-transition:enter-start="opacity-0" 
-        x-transition:enter-end="opacity-100" 
-        x-transition:leave="ease-in duration-200" 
-        x-transition:leave-start="opacity-100" 
-        x-transition:leave-end="opacity-0" 
-        class="fixed inset-0 bg-gray-500 bg-opacity-75 dark:bg-slate-800 dark:bg-opacity-75 transition-opacity" 
-        @click="showDrillModal = false" 
-        aria-hidden="true">
-      </div>
+      <div
+        x-show="showDrillModal"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 dark:bg-slate-800 dark:bg-opacity-75 transition-opacity"
+        @click="showDrillModal = false"
+        aria-hidden="true"
+      ></div>
 
       <!-- Modal panel -->
-      <div 
-        x-show="showDrillModal" 
-        x-transition:enter="ease-out duration-300" 
-        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
-        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" 
-        x-transition:leave="ease-in duration-200" 
-        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" 
-        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
-        class="inline-block align-bottom bg-white dark:bg-slate-700 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-        
+      <div
+        x-show="showDrillModal"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        class="inline-block align-bottom bg-white dark:bg-slate-700 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full"
+      >
         <!-- Modal content -->
         <div class="bg-white dark:bg-slate-700 px-4 pt-5 pb-4 sm:p-6">
           <!-- Header with close button -->
           <div class="flex justify-between items-start mb-4">
-            <h3 class="text-lg leading-6 font-semibold text-gray-900 dark:text-gray-100" id="modal-title">
+            <h3
+              class="text-lg leading-6 font-semibold text-gray-900 dark:text-gray-100"
+              id="modal-title"
+            >
               Drill Details
             </h3>
-            <button @click="showDrillModal = false" class="text-gray-400 hover:text-gray-500 dark:text-gray-300 dark:hover:text-gray-200">
+            <button
+              @click="showDrillModal = false"
+              class="text-gray-400 hover:text-gray-500 dark:text-gray-300 dark:hover:text-gray-200"
+            >
               <span class="sr-only">Close</span>
               <i class="bi bi-x-lg"></i>
             </button>
           </div>
-          
+
           <!-- Drill Info -->
           <div class="space-y-6">
             <!-- Drill Header -->
             <div class="flex items-center justify-between">
               <div>
-                <h4 class="text-xl font-bold text-gray-900 dark:text-gray-100">Team Fighting</h4>
+                <h4 class="text-xl font-bold text-gray-900 dark:text-gray-100">
+                  Team Fighting
+                </h4>
                 <div class="flex items-center mt-1">
-                  <span class="px-2 py-1 rounded-full text-xs bg-orange-100 dark:bg-orange-900/60 text-orange-800 dark:text-orange-200 mr-2">Teamfight</span>
-                  <span class="text-xs text-gray-500 dark:text-gray-400">Created on July 5, 2025</span>
+                  <span
+                    class="px-2 py-1 rounded-full text-xs bg-orange-100 dark:bg-orange-900/60 text-orange-800 dark:text-orange-200 mr-2"
+                    >Teamfight</span
+                  >
+                  <span class="text-xs text-gray-500 dark:text-gray-400"
+                    >Created on July 5, 2025</span
+                  >
                 </div>
               </div>
               <div class="flex items-center">
-                <span class="bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300 text-sm rounded-full px-3 py-1 flex items-center">
+                <span
+                  class="bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300 text-sm rounded-full px-3 py-1 flex items-center"
+                >
                   <i class="bi bi-graph-down mr-1"></i> 45% Effective
                 </span>
               </div>
             </div>
-            
+
             <!-- Drill Stats -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div class="bg-gray-50 dark:bg-slate-600 p-3 rounded-lg text-center">
-                <div class="text-xs text-gray-500 dark:text-gray-400">Difficulty</div>
+              <div
+                class="bg-gray-50 dark:bg-slate-600 p-3 rounded-lg text-center"
+              >
+                <div class="text-xs text-gray-500 dark:text-gray-400">
+                  Difficulty
+                </div>
                 <div class="mt-1 flex justify-center">
                   <i class="bi bi-star-fill text-yellow-500"></i>
                   <i class="bi bi-star-fill text-yellow-500"></i>
@@ -889,34 +1368,76 @@
                   <i class="bi bi-star-fill text-yellow-500"></i>
                   <i class="bi bi-star-fill text-yellow-500"></i>
                 </div>
-                <div class="text-xs font-medium text-gray-700 dark:text-gray-300 mt-1">Expert</div>
+                <div
+                  class="text-xs font-medium text-gray-700 dark:text-gray-300 mt-1"
+                >
+                  Expert
+                </div>
               </div>
-              <div class="bg-gray-50 dark:bg-slate-600 p-3 rounded-lg text-center">
-                <div class="text-xs text-gray-500 dark:text-gray-400">Focus</div>
-                <div class="text-sm font-medium text-gray-800 dark:text-gray-200 mt-1">Mid Game</div>
+              <div
+                class="bg-gray-50 dark:bg-slate-600 p-3 rounded-lg text-center"
+              >
+                <div class="text-xs text-gray-500 dark:text-gray-400">
+                  Focus
+                </div>
+                <div
+                  class="text-sm font-medium text-gray-800 dark:text-gray-200 mt-1"
+                >
+                  Mid Game
+                </div>
               </div>
-              <div class="bg-gray-50 dark:bg-slate-600 p-3 rounded-lg text-center">
-                <div class="text-xs text-gray-500 dark:text-gray-400">Duration</div>
-                <div class="text-sm font-medium text-gray-800 dark:text-gray-200 mt-1">30-45 mins</div>
+              <div
+                class="bg-gray-50 dark:bg-slate-600 p-3 rounded-lg text-center"
+              >
+                <div class="text-xs text-gray-500 dark:text-gray-400">
+                  Duration
+                </div>
+                <div
+                  class="text-sm font-medium text-gray-800 dark:text-gray-200 mt-1"
+                >
+                  30-45 mins
+                </div>
               </div>
-              <div class="bg-gray-50 dark:bg-slate-600 p-3 rounded-lg text-center">
-                <div class="text-xs text-gray-500 dark:text-gray-400">Times Practiced</div>
-                <div class="text-sm font-medium text-gray-800 dark:text-gray-200 mt-1">12</div>
+              <div
+                class="bg-gray-50 dark:bg-slate-600 p-3 rounded-lg text-center"
+              >
+                <div class="text-xs text-gray-500 dark:text-gray-400">
+                  Times Practiced
+                </div>
+                <div
+                  class="text-sm font-medium text-gray-800 dark:text-gray-200 mt-1"
+                >
+                  12
+                </div>
               </div>
             </div>
-            
+
             <!-- Drill Description -->
             <div>
-              <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</h5>
+              <h5
+                class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                Description
+              </h5>
               <p class="text-gray-600 dark:text-gray-400 text-sm">
-                This drill focuses on positioning, target priority, and coordination during 5v5 team fights. Players practice different teamfighting scenarios including choke points, open areas, and objective-focused fights. The drill emphasizes communication, cooldown tracking, and quick decision making under pressure.
+                This drill focuses on positioning, target priority, and
+                coordination during 5v5 team fights. Players practice different
+                teamfighting scenarios including choke points, open areas, and
+                objective-focused fights. The drill emphasizes communication,
+                cooldown tracking, and quick decision making under pressure.
               </p>
             </div>
-            
+
             <!-- Drill Objectives -->
             <div>
-              <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Objectives</h5>
-              <ul class="list-disc list-inside space-y-1 text-sm text-gray-600 dark:text-gray-400">
+              <h5
+                class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                Objectives
+              </h5>
+              <ul
+                class="list-disc list-inside space-y-1 text-sm text-gray-600 dark:text-gray-400"
+              >
                 <li>Improve team coordination in high-pressure situations</li>
                 <li>Develop target selection and prioritization</li>
                 <li>Practice proper positioning based on team compositions</li>
@@ -924,42 +1445,75 @@
                 <li>Build muscle memory for key combos and interactions</li>
               </ul>
             </div>
-            
+
             <!-- Performance History -->
             <div>
               <div class="flex justify-between items-center mb-2">
-                <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300">Performance History</h5>
-                <button class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">
+                <h5
+                  class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Performance History
+                </h5>
+                <button
+                  class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+                >
                   <i class="bi bi-bar-chart-line mr-1"></i> View Detailed Stats
                 </button>
               </div>
-              <div class="h-32 bg-gray-50 dark:bg-slate-600 rounded-lg p-3 flex items-center justify-center">
+              <div
+                class="h-32 bg-gray-50 dark:bg-slate-600 rounded-lg p-3 flex items-center justify-center"
+              >
                 <div class="text-center">
-                  <i class="bi bi-bar-chart-line text-2xl text-gray-400 dark:text-gray-500 mb-2"></i>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">Performance chart would display here</p>
+                  <i
+                    class="bi bi-bar-chart-line text-2xl text-gray-400 dark:text-gray-500 mb-2"
+                  ></i>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Performance chart would display here
+                  </p>
                 </div>
               </div>
             </div>
-            
+
             <!-- Coach Notes -->
             <div>
-              <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Coach Notes</h5>
-              <div class="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 dark:border-yellow-700 p-4 rounded-r-lg">
+              <h5
+                class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                Coach Notes
+              </h5>
+              <div
+                class="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 dark:border-yellow-700 p-4 rounded-r-lg"
+              >
                 <p class="text-sm text-yellow-800 dark:text-yellow-200">
-                  Team is struggling with fight coordination when abilities are on cooldown. Need to focus more on cooldown tracking and communication. Razork and Caps showing improvement in engage timing, but overall team is still too hesitant in crucial moments.
+                  Team is struggling with fight coordination when abilities are
+                  on cooldown. Need to focus more on cooldown tracking and
+                  communication. Razork and Caps showing improvement in engage
+                  timing, but overall team is still too hesitant in crucial
+                  moments.
                 </p>
-                <p class="text-xs text-yellow-600 dark:text-yellow-300 mt-2">— Coach Yamato, July 8, 2025</p>
+                <p class="text-xs text-yellow-600 dark:text-yellow-300 mt-2">
+                  — Coach Yamato, July 8, 2025
+                </p>
               </div>
             </div>
           </div>
         </div>
-        
+
         <!-- Modal footer -->
-        <div class="bg-gray-50 dark:bg-slate-600 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+        <div
+          class="bg-gray-50 dark:bg-slate-600 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"
+        >
+          <button
+            type="button"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm"
+          >
             Edit Drill
           </button>
-          <button @click="showDrillModal = false" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">
+          <button
+            @click="showDrillModal = false"
+            type="button"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm"
+          >
             Close
           </button>
         </div>

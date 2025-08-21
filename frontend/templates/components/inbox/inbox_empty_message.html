@@ -1,0 +1,42 @@
+<!-- Inbox Empty Message -->
+<div class="h-full flex flex-col">
+  <!-- Sticky Header -->
+  <div
+    class="p-4 border-b border-t border-gray-200 dark:border-slate-600 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-700 z-10"
+  >
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
+      No message selected
+    </h2>
+  </div>
+
+  <!-- Centered Empty State -->
+  <div class="p-6 overflow-y-auto flex-grow">
+    <div class="h-full min-h-[18rem] flex items-center justify-center">
+      <div class="text-center max-w-md">
+        <div
+          class="mx-auto mb-4 h-14 w-14 rounded-full bg-gray-100 dark:bg-slate-600 flex items-center justify-center"
+        >
+          <i class="bi bi-inbox text-2xl text-gray-500 dark:text-gray-300"></i>
+        </div>
+
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+          Select a message
+        </h3>
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+          Choose a message from the left to view details.
+        </p>
+
+        <div class="mt-4">
+          <button
+            class="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm"
+            hx-get="/api/moba/inbox"
+            hx-target="#inbox-list"
+            hx-swap="innerHTML"
+          >
+            Refresh Inbox
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

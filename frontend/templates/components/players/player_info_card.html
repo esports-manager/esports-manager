@@ -1,0 +1,167 @@
+<div class="lg:col-span-1">
+  <div class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden">
+    <!-- Player Info Header Section -->
+    <div class="p-6 flex">
+      <!-- Player Image -->
+      <div
+        class="mr-4 h-24 w-24 rounded-full bg-gray-200 dark:bg-slate-600 overflow-hidden border-4 border-white dark:border-slate-700 shadow-md"
+      >
+        <img
+          src="/api/moba/players/images/{{ player.image_path }}"
+          alt="{{ player.nick_name }}"
+          class="h-full w-full object-cover"
+          loading="lazy"
+          onerror="this.src='/static/images/default_avatar.png'"
+        />
+      </div>
+
+      <!-- Player Name and Basic Info -->
+      <div>
+        <h2 class="text-3xl font-semibold text-gray-800 dark:text-gray-100">
+          {{ player.nick_name }}
+        </h2>
+        <p class="text-lg text-gray-600 dark:text-gray-400 text-wrap">
+          {{ player.first_name }} {{ player.last_name }}
+        </p>
+        <div class="flex items-center mt-2 space-x-3">
+          {% include "components/players/player_role_component.html" %}
+
+          <!-- Nationality with Flag -->
+          <div class="flex items-center">
+            <i class="fi fi-{{ player.get_country_code() }}"></i>
+            <span class="text-sm ml-2 text-gray-600 dark:text-gray-400"
+              >{{ player.nationality }}</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Player Detailed Info Section -->
+    <div class="border-t border-gray-200 dark:border-slate-600 p-4">
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Date of Birth -->
+        <div>
+          <div
+            class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400"
+          >
+            Date of Birth
+          </div>
+          <div class="font-medium text-gray-800 dark:text-gray-200">
+            {{ player.date_of_birth.strftime('%d %b %Y') }}
+          </div>
+        </div>
+
+        <!-- Age -->
+        <div>
+          <div
+            class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400"
+          >
+            Age
+          </div>
+          <div class="font-medium text-gray-800 dark:text-gray-200">
+            {{ player.get_age() }} years
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div>
+          <div
+            class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400"
+          >
+            Form
+          </div>
+          <div class="flex flex-col">
+            {% set form_color = "text-red-500" if player.form < 40 else
+            "text-yellow-500" if player.form < 70 else "text-green-500" %}
+            <span class="font-medium {{ form_color }}">{{ player.form}}%</span>
+            <div
+              class="ml-2 w-16 bg-gray-200 dark:bg-slate-600 rounded-full h-1.5 overflow-hidden"
+            >
+              {% set width_percent = player.form|default(0) %} {% set percent =
+              width_percent %} {% set color = form_color %} {% include
+              "components/progress_bar.html" %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div>
+          <div
+            class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400"
+          >
+            Status
+          </div>
+          <div class="font-medium">
+            {% if player.is_active %}
+            <span class="text-green-600 dark:text-green-400">Active</span>
+            {% else %}
+            <span class="text-red-500 dark:text-red-400">Retired</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Current Team -->
+        <div>
+          <div
+            class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400"
+          >
+            Team
+          </div>
+          <div
+            class="flex items-center font-medium text-gray-800 dark:text-gray-200"
+          >
+            {% if player.team %}
+            <a href="/teams/{{ player.team.id }}">
+              <img
+                src="/api/moba/teams/images/{{ player.team.logo_path }}"
+                alt="{{ player.team.name }}"
+                class="h-4 w-4 mr-1.5 rounded-full object-contain"
+              />
+              {{ player.team.name }}
+            </a>
+            {% else %}
+            <span class="text-yellow-500">Free Agent</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Player Value -->
+        <div>
+          <div
+            class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400"
+          >
+            Value
+          </div>
+          <div class="font-medium text-gray-800 dark:text-gray-200">
+            ${{ '{:,}'.format(player.value) }}
+          </div>
+        </div>
+
+        <!-- Transfer Status (Placeholder for future) -->
+        <div class="col-span-2">
+          <div
+            class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400"
+          >
+            Transfer Status
+          </div>
+          <div class="font-medium text-gray-800 dark:text-gray-200">
+            <!-- This will be dynamic once backend support is added -->
+            <span class="text-blue-500">Not on transfer list</span>
+            <!-- Alternative: <span class="text-amber-500">Listed for transfer</span> -->
+          </div>
+        </div>
+        <div>
+          <div
+            class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400"
+          >
+            Overall Rating
+          </div>
+          <div class="font-bold text-3xl text-gray-800 dark:text-gray-100">
+            {{ player.overall }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

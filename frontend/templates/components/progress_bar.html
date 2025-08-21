@@ -1,0 +1,23 @@
+{% if percent < 5 %}
+<div class="bg-{{ color }}-500 h-2 rounded-full w-0"></div>
+{% elif percent < 15 %}
+<div class="bg-{{ color }}-500 h-2 rounded-full w-1/12"></div>
+{% elif percent < 25 %}
+<div class="bg-{{ color }}-500 h-2 rounded-full w-1/4"></div>
+{% elif percent < 35 %}
+<div class="bg-{{ color }}-500 h-2 rounded-full w-1/3"></div>
+{% elif percent < 45 %}
+<div class="bg-{{ color }}-500 h-2 rounded-full w-5/12"></div>
+{% elif percent < 55 %}
+<div class="bg-{{ color }}-500 h-2 rounded-full w-1/2"></div>
+{% elif percent < 65 %}
+<div class="bg-{{ color }}-500 h-2 rounded-full w-7/12"></div>
+{% elif percent < 75 %}
+<div class="bg-{{ color }}-500 h-2 rounded-full w-3/4"></div>
+{% elif percent < 85 %}
+<div class="bg-{{ color }}-500 h-2 rounded-full w-10/12"></div>
+{% elif percent < 95 %}
+<div class="bg-{{ color }}-500 h-2 rounded-full w-11/12"></div>
+{% else %}
+<div class="bg-{{ color }}-500 h-2 rounded-full w-full"></div>
+{% endif %}

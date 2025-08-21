@@ -1,9 +1,12 @@
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 pb-12" x-data="{
+<div
+  class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 pb-12"
+  x-data="{
   selectedCategory: 'all',
   searchQuery: '',
   newsCategories: ['All', 'Team', 'Matches', 'Events', 'Transfers', 'Strategy'],
   visibleCards: {}
-}" x-init="
+}"
+  x-init="
   // More efficient filtering logic
   $watch('selectedCategory', value => {
     updateVisibleCards();
@@ -28,88 +31,141 @@
   
   // Initial calculation
   updateVisibleCards();
-">
+"
+>
   <!-- Page Header -->
   <div class="border-b border-gray-200 dark:border-gray-700 pb-5 mb-8">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div
+      class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+    >
       <div>
         <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-50">News</h1>
-        <p class="text-gray-600 dark:text-gray-300 mt-1">The latest updates from the world of esports</p>
+        <p class="text-gray-600 dark:text-gray-300 mt-1">
+          The latest updates from the world of esports
+        </p>
       </div>
-      
+
       <!-- Search -->
       <div class="w-full md:w-72">
         <div class="relative">
-          <input 
-            type="text" 
-            placeholder="Search news..." 
+          <input
+            type="text"
+            placeholder="Search news..."
             class="w-full pl-10 pr-4 py-2.5 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-800/90 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
             x-model="searchQuery"
+          />
+          <div
+            class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none"
           >
-          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
             <i class="bi bi-search text-gray-500 dark:text-gray-400"></i>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+
   <!-- Featured News -->
-  <div class="relative grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 rounded-xl overflow-hidden bg-white dark:bg-slate-800/95 shadow-sm dark:shadow-blue-900/20 border border-gray-100 dark:border-slate-700/60">
+  <div
+    class="relative grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 rounded-xl overflow-hidden bg-white dark:bg-slate-800/95 shadow-sm dark:shadow-blue-900/20 border border-gray-100 dark:border-slate-700/60"
+  >
     <!-- Featured card glow effect - dark mode only -->
-    <div class="absolute inset-0 bg-gradient-to-tr from-blue-500/0 via-transparent to-purple-500/0 dark:from-blue-500/5 dark:via-transparent dark:to-purple-500/5 blur-md opacity-0 dark:opacity-100"></div>
+    <div
+      class="absolute inset-0 bg-gradient-to-tr from-blue-500/0 via-transparent to-purple-500/0 dark:from-blue-500/5 dark:via-transparent dark:to-purple-500/5 blur-md opacity-0 dark:opacity-100"
+    ></div>
     <div class="md:col-span-2 relative h-72 md:h-auto overflow-hidden">
-      <img src="https://placehold.co/800x400/1e40af/FFFFFF/webp?text=G2+Championship+Victory&font=montserrat" alt="Featured News" 
-           class="absolute inset-0 w-full h-full object-cover">
-      <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent md:bg-gradient-to-t md:from-black/70 md:to-transparent">
+      <img
+        src="https://placehold.co/800x400/1e40af/FFFFFF/webp?text=G2+Championship+Victory&font=montserrat"
+        alt="Featured News"
+        class="absolute inset-0 w-full h-full object-cover"
+      />
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent md:bg-gradient-to-t md:from-black/70 md:to-transparent"
+      >
         <div class="p-6 md:p-8 absolute bottom-0 left-0 right-0">
-          <span class="inline-flex items-center bg-blue-100 dark:bg-blue-600 text-blue-800 dark:text-blue-50 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+          <span
+            class="inline-flex items-center bg-blue-100 dark:bg-blue-600 text-blue-800 dark:text-blue-50 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm"
+          >
             <i class="bi bi-trophy mr-1.5"></i>Championship
           </span>
         </div>
       </div>
       <div class="p-6 relative z-10">
-        <div class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3">
+        <div
+          class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3"
+        >
           <i class="bi bi-calendar-event mr-1.5"></i>
           <span>July 14, 2025</span>
           <span class="mx-2">•</span>
           <i class="bi bi-clock mr-1.5"></i>
           <span>10 min read</span>
         </div>
-        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-50 mb-4 leading-tight">G2 Esports Claims Victory at the Summer Split Finals</h2>
-        <p class="text-gray-600 dark:text-gray-300 mb-6">An impressive performance leads G2 to their 10th LEC title, setting records for the upcoming Worlds Championship.</p>
+        <h2
+          class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-50 mb-4 leading-tight"
+        >
+          G2 Esports Claims Victory at the Summer Split Finals
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+          An impressive performance leads G2 to their 10th LEC title, setting
+          records for the upcoming Worlds Championship.
+        </p>
         <div class="flex items-center">
-          <img src="https://placehold.co/200x200/475569/FFFFFF/webp?text=ESM&font=montserrat" alt="Author" class="h-10 w-10 rounded-full border-2 border-white dark:border-gray-600 mr-3">
+          <img
+            src="https://placehold.co/200x200/475569/FFFFFF/webp?text=ESM&font=montserrat"
+            alt="Author"
+            class="h-10 w-10 rounded-full border-2 border-white dark:border-gray-600 mr-3"
+          />
           <div>
-            <p class="font-medium text-gray-800 dark:text-gray-200">ESM Editorial Team</p>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">July 14, 2025 • 10 min read</p>
+            <p class="font-medium text-gray-800 dark:text-gray-200">
+              ESM Editorial Team
+            </p>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">
+              July 14, 2025 • 10 min read
+            </p>
           </div>
         </div>
-        <a href="#" class="mt-5 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <a
+          href="#"
+          class="mt-5 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
           Read Article
           <i class="bi bi-arrow-right ml-2"></i>
         </a>
       </div>
     </div>
-    <div class="p-6 md:p-8 md:col-span-1 lg:col-span-1 flex flex-col justify-center">
+    <div
+      class="p-6 md:p-8 md:col-span-1 lg:col-span-1 flex flex-col justify-center"
+    >
       <div>
-        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-50 mb-4">G2's Road to Victory</h3>
-        <p class="text-gray-600 dark:text-gray-300 mb-6">A brief overview of G2's journey to the top, including their most notable wins and strategies.</p>
-        <a href="#" class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center">
+        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-50 mb-4">
+          G2's Road to Victory
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+          A brief overview of G2's journey to the top, including their most
+          notable wins and strategies.
+        </p>
+        <a
+          href="#"
+          class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center"
+        >
           Read more
-          <i class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+          <i
+            class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"
+          ></i>
         </a>
       </div>
     </div>
   </div>
-  
+
   <!-- Category Tabs -->
   <div class="mb-8">
     <div class="border-b border-gray-200 dark:border-gray-700">
-      <nav class="-mb-px flex space-x-6 overflow-x-auto pb-1" aria-label="News categories">
+      <nav
+        class="-mb-px flex space-x-6 overflow-x-auto pb-1"
+        aria-label="News categories"
+      >
         <template x-for="category in newsCategories" :key="category">
-          <button 
-            @click="selectedCategory = category.toLowerCase()" 
+          <button
+            @click="selectedCategory = category.toLowerCase()"
             :class="{
               'whitespace-nowrap px-1 py-3 text-sm font-medium border-b-2 transition-colors duration-200': true,
               'border-blue-500 text-blue-600 dark:text-blue-400': selectedCategory === category.toLowerCase(),
@@ -121,13 +177,17 @@
       </nav>
     </div>
   </div>
-  
+
   <!-- News Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10 mb-12 relative z-10">
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10 mb-12 relative z-10"
+  >
     <!-- Card glow effects - visible in both modes but more pronounced in dark mode -->
-    <div class="absolute inset-0 bg-gradient-to-tr from-blue-900/0 via-transparent to-purple-900/0 dark:from-blue-900/10 dark:via-transparent dark:to-purple-900/10 blur-3xl -z-10 opacity-0 dark:opacity-30"></div>
+    <div
+      class="absolute inset-0 bg-gradient-to-tr from-blue-900/0 via-transparent to-purple-900/0 dark:from-blue-900/10 dark:via-transparent dark:to-purple-900/10 blur-3xl -z-10 opacity-0 dark:opacity-30"
+    ></div>
     <!-- News Card 1 -->
-    <div 
+    <div
       id="news-card-1"
       data-category="team"
       data-title="G2 Esports Renews Contract with Star Mid Laner Caps"
@@ -135,33 +195,52 @@
       x-show="visibleCards['news-card-1']"
     >
       <div class="relative overflow-hidden">
-        <img src="https://placehold.co/800x400/7c3aed/FFFFFF/webp?text=Team+News&font=montserrat" alt="News" 
-             class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105">
+        <img
+          src="https://placehold.co/800x400/7c3aed/FFFFFF/webp?text=Team+News&font=montserrat"
+          alt="News"
+          class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105"
+        />
         <div class="absolute top-4 left-4">
-          <span class="inline-flex items-center bg-purple-100 dark:bg-purple-600 text-purple-800 dark:text-purple-50 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+          <span
+            class="inline-flex items-center bg-purple-100 dark:bg-purple-600 text-purple-800 dark:text-purple-50 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm"
+          >
             <i class="bi bi-people mr-1.5"></i>Team
           </span>
         </div>
       </div>
       <div class="p-6">
-        <div class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3">
+        <div
+          class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3"
+        >
           <i class="bi bi-calendar-event mr-1.5"></i>
           <span>July 12, 2025</span>
           <span class="mx-2">•</span>
           <i class="bi bi-clock mr-1.5"></i>
           <span>4 min read</span>
         </div>
-        <h3 class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">G2 Esports Renews Contract with Star Mid Laner Caps</h3>
-        <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">The organization announced today that they have extended their contract with mid laner Rasmus "Caps" Winther for another two years.</p>
-        <a href="#" class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center">
+        <h3
+          class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+        >
+          G2 Esports Renews Contract with Star Mid Laner Caps
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+          The organization announced today that they have extended their
+          contract with mid laner Rasmus "Caps" Winther for another two years.
+        </p>
+        <a
+          href="#"
+          class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center"
+        >
           Read more
-          <i class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+          <i
+            class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"
+          ></i>
         </a>
       </div>
     </div>
-    
+
     <!-- News Card 2 -->
-    <div 
+    <div
       id="news-card-2"
       data-category="matches"
       data-title="Match Analysis: G2 vs T1 Showdown at MSI"
@@ -169,34 +248,55 @@
       x-show="visibleCards['news-card-2']"
     >
       <div class="relative overflow-hidden">
-        <img src="https://placehold.co/800x400/dc2626/FFFFFF/webp?text=Match+Analysis&font=montserrat" alt="News" 
-             class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <img
+          src="https://placehold.co/800x400/dc2626/FFFFFF/webp?text=Match+Analysis&font=montserrat"
+          alt="News"
+          class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+        ></div>
         <div class="absolute top-4 left-4">
-          <span class="inline-flex items-center bg-red-100 dark:bg-red-600 text-red-800 dark:text-red-50 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+          <span
+            class="inline-flex items-center bg-red-100 dark:bg-red-600 text-red-800 dark:text-red-50 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm"
+          >
             <i class="bi bi-controller mr-1.5"></i>Matches
           </span>
         </div>
       </div>
       <div class="p-6">
-        <div class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3">
+        <div
+          class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3"
+        >
           <i class="bi bi-calendar-event mr-1.5"></i>
           <span>July 10, 2025</span>
           <span class="mx-2">•</span>
           <i class="bi bi-clock mr-1.5"></i>
           <span>6 min read</span>
         </div>
-        <h3 class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Match Analysis: G2 vs T1 Showdown at MSI</h3>
-        <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">A deep dive into the strategic decisions that led to G2's victory against the Korean champions in a thrilling five-game series.</p>
-        <a href="#" class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center">
+        <h3
+          class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+        >
+          Match Analysis: G2 vs T1 Showdown at MSI
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+          A deep dive into the strategic decisions that led to G2's victory
+          against the Korean champions in a thrilling five-game series.
+        </p>
+        <a
+          href="#"
+          class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center"
+        >
           Read more
-          <i class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+          <i
+            class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"
+          ></i>
         </a>
       </div>
     </div>
-    
+
     <!-- News Card 3 -->
-    <div 
+    <div
       id="news-card-3"
       data-category="events"
       data-title="Worlds 2025: Everything You Need to Know"
@@ -204,34 +304,56 @@
       x-show="visibleCards['news-card-3']"
     >
       <div class="relative overflow-hidden">
-        <img src="https://placehold.co/800x400/16a34a/FFFFFF/webp?text=Worlds+2025&font=montserrat" alt="News" 
-             class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <img
+          src="https://placehold.co/800x400/16a34a/FFFFFF/webp?text=Worlds+2025&font=montserrat"
+          alt="News"
+          class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+        ></div>
         <div class="absolute top-4 left-4">
-          <span class="inline-flex items-center bg-green-100 dark:bg-green-600 text-green-800 dark:text-green-50 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+          <span
+            class="inline-flex items-center bg-green-100 dark:bg-green-600 text-green-800 dark:text-green-50 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm"
+          >
             <i class="bi bi-calendar-event mr-1.5"></i>Events
           </span>
         </div>
       </div>
       <div class="p-6">
-        <div class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3">
+        <div
+          class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3"
+        >
           <i class="bi bi-calendar-event mr-1.5"></i>
           <span>July 8, 2025</span>
           <span class="mx-2">•</span>
           <i class="bi bi-clock mr-1.5"></i>
           <span>8 min read</span>
         </div>
-        <h3 class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Worlds 2025: Everything You Need to Know</h3>
-        <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">The biggest tournament of the year is approaching. Here's our comprehensive guide to the teams, format, and schedule for Worlds 2025.</p>
-        <a href="#" class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center">
+        <h3
+          class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+        >
+          Worlds 2025: Everything You Need to Know
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+          The biggest tournament of the year is approaching. Here's our
+          comprehensive guide to the teams, format, and schedule for Worlds
+          2025.
+        </p>
+        <a
+          href="#"
+          class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center"
+        >
           Read more
-          <i class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+          <i
+            class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"
+          ></i>
         </a>
       </div>
     </div>
-    
+
     <!-- News Card 4 -->
-    <div 
+    <div
       id="news-card-4"
       data-category="transfers"
       data-title="Transfer Rumor: Top NA Talent Looking to Join European Teams"
@@ -239,34 +361,56 @@
       x-show="visibleCards['news-card-4']"
     >
       <div class="relative overflow-hidden">
-        <img src="https://placehold.co/800x400/ca8a04/FFFFFF/webp?text=Transfer+News&font=montserrat" alt="News" 
-             class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <img
+          src="https://placehold.co/800x400/ca8a04/FFFFFF/webp?text=Transfer+News&font=montserrat"
+          alt="News"
+          class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+        ></div>
         <div class="absolute top-4 left-4">
-          <span class="inline-flex items-center bg-yellow-100 dark:bg-yellow-600 text-yellow-800 dark:text-yellow-50 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+          <span
+            class="inline-flex items-center bg-yellow-100 dark:bg-yellow-600 text-yellow-800 dark:text-yellow-50 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm"
+          >
             <i class="bi bi-arrow-left-right mr-1.5"></i>Transfers
           </span>
         </div>
       </div>
       <div class="p-6">
-        <div class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3">
+        <div
+          class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3"
+        >
           <i class="bi bi-calendar-event mr-1.5"></i>
           <span>July 5, 2025</span>
           <span class="mx-2">•</span>
           <i class="bi bi-clock mr-1.5"></i>
           <span>5 min read</span>
         </div>
-        <h3 class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Transfer Rumor: Top NA Talent Looking to Join European Teams</h3>
-        <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">Several North American players are reportedly in talks with LEC organizations for the upcoming season. G2 might be one of the destinations.</p>
-        <a href="#" class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center">
+        <h3
+          class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+        >
+          Transfer Rumor: Top NA Talent Looking to Join European Teams
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+          Several North American players are reportedly in talks with LEC
+          organizations for the upcoming season. G2 might be one of the
+          destinations.
+        </p>
+        <a
+          href="#"
+          class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center"
+        >
           Read more
-          <i class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+          <i
+            class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"
+          ></i>
         </a>
       </div>
     </div>
-    
+
     <!-- News Card 5 -->
-    <div 
+    <div
       id="news-card-5"
       data-category="strategy"
       data-title="Pro Coach Reveals Advanced Practice Techniques for Climbing the Ranks"
@@ -274,34 +418,56 @@
       x-show="visibleCards['news-card-5']"
     >
       <div class="relative overflow-hidden">
-        <img src="https://placehold.co/800x400/0369a1/FFFFFF/webp?text=Pro+Coach+Tips&font=montserrat" alt="News" 
-             class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <img
+          src="https://placehold.co/800x400/0369a1/FFFFFF/webp?text=Pro+Coach+Tips&font=montserrat"
+          alt="News"
+          class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+        ></div>
         <div class="absolute top-4 left-4">
-          <span class="inline-flex items-center bg-blue-100 dark:bg-blue-600 text-blue-800 dark:text-blue-50 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+          <span
+            class="inline-flex items-center bg-blue-100 dark:bg-blue-600 text-blue-800 dark:text-blue-50 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm"
+          >
             <i class="bi bi-lightbulb mr-1.5"></i>Strategy
           </span>
         </div>
       </div>
       <div class="p-6">
-        <div class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3">
+        <div
+          class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3"
+        >
           <i class="bi bi-calendar-event mr-1.5"></i>
           <span>July 3, 2025</span>
           <span class="mx-2">•</span>
           <i class="bi bi-clock mr-1.5"></i>
           <span>7 min read</span>
         </div>
-        <h3 class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Pro Coach Reveals Advanced Practice Techniques for Climbing the Ranks</h3>
-        <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">Former G2 coach shares detailed practice routines and mental preparation techniques that can help players improve their performance in competitive matches.</p>
-        <a href="#" class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center">
+        <h3
+          class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+        >
+          Pro Coach Reveals Advanced Practice Techniques for Climbing the Ranks
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+          Former G2 coach shares detailed practice routines and mental
+          preparation techniques that can help players improve their performance
+          in competitive matches.
+        </p>
+        <a
+          href="#"
+          class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center"
+        >
           Read more
-          <i class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+          <i
+            class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"
+          ></i>
         </a>
       </div>
     </div>
-    
+
     <!-- News Card 6 -->
-    <div 
+    <div
       id="news-card-6"
       data-category="team"
       data-title="Inside G2's Training Facility: The Technology Behind Champions"
@@ -309,53 +475,91 @@
       x-show="visibleCards['news-card-6']"
     >
       <div class="relative overflow-hidden">
-        <img src="https://placehold.co/800x400/9333ea/FFFFFF/webp?text=Training+Facility&font=montserrat" alt="News" 
-             class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <img
+          src="https://placehold.co/800x400/9333ea/FFFFFF/webp?text=Training+Facility&font=montserrat"
+          alt="News"
+          class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+        ></div>
         <div class="absolute top-4 left-4">
-          <span class="inline-flex items-center bg-purple-100 dark:bg-purple-600 text-purple-800 dark:text-purple-50 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+          <span
+            class="inline-flex items-center bg-purple-100 dark:bg-purple-600 text-purple-800 dark:text-purple-50 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm"
+          >
             <i class="bi bi-people mr-1.5"></i>Team
           </span>
         </div>
       </div>
       <div class="p-6">
-        <div class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3">
+        <div
+          class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3"
+        >
           <i class="bi bi-calendar-event mr-1.5"></i>
           <span>July 1, 2025</span>
           <span class="mx-2">•</span>
           <i class="bi bi-clock mr-1.5"></i>
           <span>9 min read</span>
         </div>
-        <h3 class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Inside G2's Training Facility: The Technology Behind Champions</h3>
-        <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">An exclusive look at the cutting-edge technology and facilities that help G2 Esports maintain their competitive edge.</p>
-        <a href="#" class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center">
+        <h3
+          class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+        >
+          Inside G2's Training Facility: The Technology Behind Champions
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+          An exclusive look at the cutting-edge technology and facilities that
+          help G2 Esports maintain their competitive edge.
+        </p>
+        <a
+          href="#"
+          class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center"
+        >
           Read more
-          <i class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+          <i
+            class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"
+          ></i>
         </a>
       </div>
     </div>
   </div>
-  
+
   <!-- Game Tips Section -->
   <div class="mb-12">
-    <div class="bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-900 dark:to-purple-900 rounded-xl shadow-lg overflow-hidden relative">
-      <div class="absolute inset-0 bg-pattern-circuit bg-no-repeat bg-cover opacity-10 mix-blend-overlay"></div>
+    <div
+      class="bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-900 dark:to-purple-900 rounded-xl shadow-lg overflow-hidden relative"
+    >
+      <div
+        class="absolute inset-0 bg-pattern-circuit bg-no-repeat bg-cover opacity-10 mix-blend-overlay"
+      ></div>
       <div class="px-6 py-8 md:p-10 flex items-center relative z-10">
         <div class="w-full md:max-w-2xl">
           <div class="flex items-center mb-3">
-            <i class="bi bi-lightning-charge text-yellow-300 text-xl mr-2 drop-shadow"></i>
-            <h3 class="text-xl md:text-2xl font-bold text-white drop-shadow-sm">Manager Tip of the Day</h3>
+            <i
+              class="bi bi-lightning-charge text-yellow-300 text-xl mr-2 drop-shadow"
+            ></i>
+            <h3 class="text-xl md:text-2xl font-bold text-white drop-shadow-sm">
+              Manager Tip of the Day
+            </h3>
           </div>
-          <p class="text-blue-50 mb-4 leading-relaxed">Building team chemistry is just as important as individual player skill. Schedule team-building activities between practice sessions to improve communication and synergy on the virtual battlefield.</p>
-          <div class="flex items-center text-sm text-blue-100 bg-blue-500/20 dark:bg-blue-800/30 px-3 py-2 rounded-lg">
+          <p class="text-blue-50 mb-4 leading-relaxed">
+            Building team chemistry is just as important as individual player
+            skill. Schedule team-building activities between practice sessions
+            to improve communication and synergy on the virtual battlefield.
+          </p>
+          <div
+            class="flex items-center text-sm text-blue-100 bg-blue-500/20 dark:bg-blue-800/30 px-3 py-2 rounded-lg"
+          >
             <i class="bi bi-info-circle mr-2"></i>
-            <span>Tips are updated daily based on your team's performance metrics</span>
+            <span
+              >Tips are updated daily based on your team's performance
+              metrics</span
+            >
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+
   <!-- Your Weekly Reports -->
   <div class="mb-12">
     <div class="flex items-center justify-between mb-6">
@@ -363,145 +567,219 @@
         <i class="bi bi-graph-up text-blue-600 dark:text-blue-400 mr-2"></i>
         Your Team Reports
       </h2>
-      <a href="#" class="text-blue-600 dark:text-blue-400 font-medium hover:underline flex items-center">
+      <a
+        href="#"
+        class="text-blue-600 dark:text-blue-400 font-medium hover:underline flex items-center"
+      >
         View all reports
         <i class="bi bi-arrow-right ml-1"></i>
       </a>
     </div>
-    
+
     <div class="space-y-4">
       <!-- Report 1 - Performance Analysis -->
-      <div class="group bg-white dark:bg-slate-800/95 rounded-xl border border-gray-100 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/30 overflow-hidden hover:shadow-md dark:hover:shadow-slate-900/50 transition-all duration-300">
+      <div
+        class="group bg-white dark:bg-slate-800/95 rounded-xl border border-gray-100 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/30 overflow-hidden hover:shadow-md dark:hover:shadow-slate-900/50 transition-all duration-300"
+      >
         <div class="p-5 flex flex-col md:flex-row gap-4">
           <div class="md:w-48 lg:w-64 flex-shrink-0">
-            <div class="aspect-[4/3] bg-blue-50 dark:bg-slate-700 rounded-lg flex items-center justify-center">
-              <i class="bi bi-bar-chart-line text-blue-500 dark:text-blue-400 text-4xl"></i>
+            <div
+              class="aspect-[4/3] bg-blue-50 dark:bg-slate-700 rounded-lg flex items-center justify-center"
+            >
+              <i
+                class="bi bi-bar-chart-line text-blue-500 dark:text-blue-400 text-4xl"
+              ></i>
             </div>
           </div>
-          
+
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-2">
-              <span class="inline-flex items-center bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 text-xs font-semibold px-2.5 py-1 rounded-full">
+              <span
+                class="inline-flex items-center bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 text-xs font-semibold px-2.5 py-1 rounded-full"
+              >
                 <i class="bi bi-graph-up mr-1"></i>Performance
               </span>
-              <span class="text-sm text-gray-500 dark:text-gray-400">Updated 2 hours ago</span>
+              <span class="text-sm text-gray-500 dark:text-gray-400"
+                >Updated 2 hours ago</span
+              >
             </div>
-            
-            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+
+            <h3
+              class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+            >
               Weekly Performance Analysis: Areas for Improvement
             </h3>
-            
+
             <p class="text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">
-              Your team's performance data shows improvement in early game presence but struggles in objective control. Focus practice on Baron and Dragon setups.
+              Your team's performance data shows improvement in early game
+              presence but struggles in objective control. Focus practice on
+              Baron and Dragon setups.
             </p>
-            
-            <a href="#" class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center">
+
+            <a
+              href="#"
+              class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center"
+            >
               View full report
-              <i class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+              <i
+                class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"
+              ></i>
             </a>
           </div>
         </div>
       </div>
-      
+
       <!-- Report 2 - Scouting Report -->
-      <div class="group bg-white dark:bg-slate-800/95 rounded-xl border border-gray-100 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/30 overflow-hidden hover:shadow-md dark:hover:shadow-slate-900/50 transition-all duration-300">
+      <div
+        class="group bg-white dark:bg-slate-800/95 rounded-xl border border-gray-100 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/30 overflow-hidden hover:shadow-md dark:hover:shadow-slate-900/50 transition-all duration-300"
+      >
         <div class="p-5 flex flex-col md:flex-row gap-4">
           <div class="md:w-48 lg:w-64 flex-shrink-0">
-            <div class="aspect-[4/3] bg-purple-50 dark:bg-slate-700 rounded-lg flex items-center justify-center">
-              <i class="bi bi-eye text-purple-500 dark:text-purple-400 text-4xl"></i>
+            <div
+              class="aspect-[4/3] bg-purple-50 dark:bg-slate-700 rounded-lg flex items-center justify-center"
+            >
+              <i
+                class="bi bi-eye text-purple-500 dark:text-purple-400 text-4xl"
+              ></i>
             </div>
           </div>
-          
+
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-2">
-              <span class="inline-flex items-center bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300 text-xs font-semibold px-2.5 py-1 rounded-full">
+              <span
+                class="inline-flex items-center bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300 text-xs font-semibold px-2.5 py-1 rounded-full"
+              >
                 <i class="bi bi-binoculars mr-1"></i>Scouting
               </span>
-              <span class="text-sm text-gray-500 dark:text-gray-400">Updated yesterday</span>
+              <span class="text-sm text-gray-500 dark:text-gray-400"
+                >Updated yesterday</span
+              >
             </div>
-            
-            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+
+            <h3
+              class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+            >
               Upcoming Opponent Analysis: Fnatic's New Strategies
             </h3>
-            
+
             <p class="text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">
-              Our scouting team has analyzed Fnatic's recent matches and identified new champion priorities and jungle pathing. Review before your next match.
+              Our scouting team has analyzed Fnatic's recent matches and
+              identified new champion priorities and jungle pathing. Review
+              before your next match.
             </p>
-            
-            <a href="#" class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center">
+
+            <a
+              href="#"
+              class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center"
+            >
               View full report
-              <i class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+              <i
+                class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"
+              ></i>
             </a>
           </div>
         </div>
       </div>
-      
+
       <!-- Report 3 - Player Development -->
-      <div class="group bg-white dark:bg-slate-800/95 rounded-xl border border-gray-100 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/30 overflow-hidden hover:shadow-md dark:hover:shadow-slate-900/50 transition-all duration-300">
+      <div
+        class="group bg-white dark:bg-slate-800/95 rounded-xl border border-gray-100 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/30 overflow-hidden hover:shadow-md dark:hover:shadow-slate-900/50 transition-all duration-300"
+      >
         <div class="p-5 flex flex-col md:flex-row gap-4">
           <div class="md:w-48 lg:w-64 flex-shrink-0">
-            <div class="aspect-[4/3] bg-green-50 dark:bg-slate-700 rounded-lg flex items-center justify-center">
-              <i class="bi bi-person-up text-green-500 dark:text-green-400 text-4xl"></i>
+            <div
+              class="aspect-[4/3] bg-green-50 dark:bg-slate-700 rounded-lg flex items-center justify-center"
+            >
+              <i
+                class="bi bi-person-up text-green-500 dark:text-green-400 text-4xl"
+              ></i>
             </div>
           </div>
-          
+
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-2">
-              <span class="inline-flex items-center bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">
+              <span
+                class="inline-flex items-center bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full"
+              >
                 <i class="bi bi-star mr-1"></i>Development
               </span>
-              <span class="text-sm text-gray-500 dark:text-gray-400">Updated 3 days ago</span>
+              <span class="text-sm text-gray-500 dark:text-gray-400"
+                >Updated 3 days ago</span
+              >
             </div>
-            
-            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+
+            <h3
+              class="font-bold text-lg text-gray-800 dark:text-gray-50 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+            >
               Player Development Update: Mid and Top Synergy
             </h3>
-            
+
             <p class="text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">
-              Your mid and top laners have shown marked improvement in coordinated plays. Recommended to continue the duo practice sessions with focus on timing.
+              Your mid and top laners have shown marked improvement in
+              coordinated plays. Recommended to continue the duo practice
+              sessions with focus on timing.
             </p>
-            
-            <a href="#" class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center">
+
+            <a
+              href="#"
+              class="text-blue-600 dark:text-blue-400 font-medium inline-flex items-center"
+            >
               View full report
-              <i class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+              <i
+                class="bi bi-arrow-right ml-2 transition-transform group-hover:translate-x-1"
+              ></i>
             </a>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+
   <!-- Pagination -->
   <div class="flex justify-center mb-12">
     <nav class="inline-flex shadow-sm rounded-md overflow-hidden">
-      <button class="flex items-center justify-center px-3 h-10 bg-white dark:bg-slate-800/90 border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+      <button
+        class="flex items-center justify-center px-3 h-10 bg-white dark:bg-slate-800/90 border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+      >
         <span class="sr-only">Previous</span>
         <i class="bi bi-chevron-left"></i>
       </button>
-      <button class="px-4 h-10 font-medium text-sm bg-blue-500 border border-blue-500 text-white relative inline-flex items-center hover:bg-blue-600 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+      <button
+        class="px-4 h-10 font-medium text-sm bg-blue-500 border border-blue-500 text-white relative inline-flex items-center hover:bg-blue-600 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+      >
         1
       </button>
-      <button class="px-4 h-10 font-medium text-sm bg-white dark:bg-slate-800/90 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 relative inline-flex items-center hover:bg-gray-50 dark:hover:bg-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+      <button
+        class="px-4 h-10 font-medium text-sm bg-white dark:bg-slate-800/90 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 relative inline-flex items-center hover:bg-gray-50 dark:hover:bg-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+      >
         2
       </button>
-      <button class="px-4 h-10 font-medium text-sm bg-white dark:bg-slate-800/90 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 relative inline-flex items-center hover:bg-gray-50 dark:hover:bg-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+      <button
+        class="px-4 h-10 font-medium text-sm bg-white dark:bg-slate-800/90 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 relative inline-flex items-center hover:bg-gray-50 dark:hover:bg-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+      >
         3
       </button>
-      <button class="px-4 h-10 font-medium text-sm bg-white dark:bg-slate-800/90 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 relative inline-flex items-center hover:bg-gray-50 dark:hover:bg-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+      <button
+        class="px-4 h-10 font-medium text-sm bg-white dark:bg-slate-800/90 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 relative inline-flex items-center hover:bg-gray-50 dark:hover:bg-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+      >
         4
       </button>
-      <button class="px-4 h-10 font-medium text-sm bg-white dark:bg-slate-800/90 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 relative inline-flex items-center hover:bg-gray-50 dark:hover:bg-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+      <button
+        class="px-4 h-10 font-medium text-sm bg-white dark:bg-slate-800/90 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 relative inline-flex items-center hover:bg-gray-50 dark:hover:bg-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+      >
         5
       </button>
-      <button class="flex items-center justify-center px-3 h-10 bg-white dark:bg-slate-800/90 border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+      <button
+        class="flex items-center justify-center px-3 h-10 bg-white dark:bg-slate-800/90 border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+      >
         <span class="sr-only">Next</span>
         <i class="bi bi-chevron-right"></i>
       </button>
     </nav>
   </div>
-  
+
   <!-- No Results Message -->
-  <div 
+  <div
     class="flex-col items-center justify-center py-16 px-4 bg-white dark:bg-slate-800/95 rounded-xl border border-gray-100 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/30 text-center"
     x-show="Object.values(visibleCards).every(v => !v)"
     x-cloak
@@ -509,10 +787,15 @@
     <div class="text-gray-400 dark:text-gray-500 mb-4">
       <i class="bi bi-search text-5xl"></i>
     </div>
-    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">No esports news found</h3>
-    <p class="text-gray-600 dark:text-gray-300 mb-6 max-w-md">We couldn't find any news matching your current filters. Try adjusting your category selection or search query.</p>
-    <button 
-      @click="selectedCategory = 'all'; searchQuery = ''; updateVisibleCards()" 
+    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+      No esports news found
+    </h3>
+    <p class="text-gray-600 dark:text-gray-300 mb-6 max-w-md">
+      We couldn't find any news matching your current filters. Try adjusting
+      your category selection or search query.
+    </p>
+    <button
+      @click="selectedCategory = 'all'; searchQuery = ''; updateVisibleCards()"
       class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
     >
       Clear all filters

@@ -3,39 +3,57 @@
   <!-- Players -->
   {% if results.players %}
   <div>
-    <div class="px-3 py-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+    <div
+      class="px-3 py-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+    >
       Players
     </div>
     {% for p in results.players %}
-    <a href="/players/{{ p.id }}" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+    <a
+      href="/players/{{ p.id }}"
+      class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+    >
       {% if p.image_path %}
-      <img src="/api/moba/players/images/{{ p.image_path }}" alt="{{ p.nick_name }}" class="h-6 w-6 rounded-full mr-2">
+      <img
+        src="/api/moba/players/images/{{ p.image_path }}"
+        alt="{{ p.nick_name }}"
+        class="h-6 w-6 rounded-full mr-2"
+      />
       {% else %}
       <div class="h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
       {% endif %}
       <span class="text-gray-800 dark:text-gray-200">{{ p.nick_name }}</span>
       {% if p.role %}
-      <span class="ml-2 text-xs text-gray-500 dark:text-gray-400 uppercase">{{ p.role.value }}</span>
+      <span class="ml-2 text-xs text-gray-500 dark:text-gray-400 uppercase"
+        >{{ p.role.value }}</span
+      >
       {% endif %}
     </a>
     {% endfor %}
   </div>
-  {% endif %}
-
-  {% if results.players and (results.teams or results.champions) %}
+  {% endif %} {% if results.players and (results.teams or results.champions) %}
   <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
   {% endif %}
 
   <!-- Teams -->
   {% if results.teams %}
   <div>
-    <div class="px-3 py-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+    <div
+      class="px-3 py-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+    >
       Teams
     </div>
     {% for t in results.teams %}
-    <a href="/teams/{{ t.id }}" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+    <a
+      href="/teams/{{ t.id }}"
+      class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+    >
       {% if t.logo_path %}
-      <img src="/api/moba/teams/images/{{ t.logo_path }}" alt="{{ t.name }}" class="h-6 w-6 rounded-full mr-2">
+      <img
+        src="/api/moba/teams/images/{{ t.logo_path }}"
+        alt="{{ t.name }}"
+        class="h-6 w-6 rounded-full mr-2"
+      />
       {% else %}
       <div class="h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
       {% endif %}
@@ -43,28 +61,37 @@
     </a>
     {% endfor %}
   </div>
-  {% endif %}
-
-  {% if results.teams and results.champions %}
+  {% endif %} {% if results.teams and results.champions %}
   <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
   {% endif %}
 
   <!-- Champions -->
   {% if results.champions %}
   <div>
-    <div class="px-3 py-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+    <div
+      class="px-3 py-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+    >
       Champions
     </div>
     {% for c in results.champions %}
-    <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+    <a
+      href="#"
+      class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+    >
       {% if c.image_path %}
-      <img src="{{ c.image_path }}" alt="{{ c.name }}" class="h-6 w-6 rounded-full mr-2">
+      <img
+        src="{{ c.image_path }}"
+        alt="{{ c.name }}"
+        class="h-6 w-6 rounded-full mr-2"
+      />
       {% else %}
       <div class="h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
       {% endif %}
       <span class="text-gray-800 dark:text-gray-200">{{ c.name }}</span>
       {% if c.primary_role %}
-      <span class="ml-2 text-xs text-gray-500 dark:text-gray-400 uppercase">{{ c.primary_role.value }}</span>
+      <span class="ml-2 text-xs text-gray-500 dark:text-gray-400 uppercase"
+        >{{ c.primary_role.value }}</span
+      >
       {% endif %}
     </a>
     {% endfor %}
@@ -72,12 +99,15 @@
   {% endif %}
 
   <!-- Empty State -->
-  {% if results.query and (not results.players) and (not results.teams) and (not results.champions) %}
+  {% if results.query and (not results.players) and (not results.teams) and (not
+  results.champions) %}
   <div class="px-4 py-6 text-center">
     <div class="text-gray-400 dark:text-gray-500 mb-1">
       <i class="bi bi-search text-2xl"></i>
     </div>
-    <p class="text-gray-500 dark:text-gray-400">No results found for "{{ results.query }}"</p>
+    <p class="text-gray-500 dark:text-gray-400">
+      No results found for "{{ results.query }}"
+    </p>
   </div>
   {% endif %}
 </div>

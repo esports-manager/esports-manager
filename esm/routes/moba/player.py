@@ -192,7 +192,7 @@ async def get_players(
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
-            "components/players_list.html",
+            "components/players/players_list.html",
             {
                 "request": request,
                 "players": result,
@@ -223,9 +223,10 @@ async def create_player(
     return db_player
 
 
-@player_routes.get("/{id}", response_model=MobaPlayerPublic)
-async def get_player(*, session: Session = Depends(get_session), request: Request):
-    id = int(request.path_params.get("id"))
+@player_routes.get("/{id}", response_model=MobaPlayerWithTeam)
+async def get_player(
+    *, session: Session = Depends(get_session), id: int, request: Request
+):
     player = session.get(MobaPlayer, id)
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")
@@ -295,6 +296,9 @@ async def get_player_champion_pool(
     champions = []
     for champion in player.champion_pool:
         champions.append(MobaChampionMasteryPublic.model_validate(champion))
+
+    champions = sorted(champions, key=lambda x: (x.tier.value, x.points), reverse=True)
+
     return champions
 
 

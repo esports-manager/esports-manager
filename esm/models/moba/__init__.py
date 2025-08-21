@@ -4,7 +4,13 @@
 from .player_contract import MobaPlayerContract
 from .player import MobaPlayer
 from .team import MobaTeam
-from .champion import MobaChampion
+from .champion import (
+    MobaChampion,
+    MobaChampionPublic,
+    MobaChampionRole,
+    MobaChampionType,
+    MobaChampionDifficulty,
+)
 from .moba_match import MobaMatch
 from .tournament import (
     MobaTournament,
@@ -19,12 +25,34 @@ from .champion_mastery import (
     MobaChampionMasteryUpdate,
     MobaChampionMasteryPublic,
 )
+from .inbox import (
+    MobaInbox,
+    MobaInboxBase,
+    MobaInboxCreate,
+    MobaInboxUpdate,
+    MobaInboxPublic,
+    MobaInboxCategory,
+    MobaInboxStatus,
+    MobaInboxPriority,
+)
+from .staff import (
+    MobaStaff,
+    MobaStaffBase,
+    MobaStaffCreate,
+    MobaStaffUpdate,
+    MobaStaffPublic,
+    MobaStaffRole,
+)
 
 __all__ = [
     "MobaPlayerContract",
     "MobaPlayer",
     "MobaTeam",
     "MobaChampion",
+    "MobaChampionPublic",
+    "MobaChampionRole",
+    "MobaChampionType",
+    "MobaChampionDifficulty",
     "MobaMatch",
     "MobaTournament",
     "MobaTournamentBase",
@@ -35,4 +63,18 @@ __all__ = [
     "MobaChampionMasteryCreate",
     "MobaChampionMasteryUpdate",
     "MobaChampionMasteryPublic",
+    "MobaInbox",
+    "MobaInboxBase",
+    "MobaInboxCreate",
+    "MobaInboxUpdate",
+    "MobaInboxPublic",
+    "MobaInboxCategory",
+    "MobaInboxStatus",
+    "MobaInboxPriority",
+    "MobaStaff",
+    "MobaStaffBase",
+    "MobaStaffCreate",
+    "MobaStaffUpdate",
+    "MobaStaffPublic",
+    "MobaStaffRole",
 ]

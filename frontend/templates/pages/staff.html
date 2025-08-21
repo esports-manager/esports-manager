@@ -1,4 +1,6 @@
-<div class="m-8" x-data="{
+<div
+  class="m-8"
+  x-data="{
   activeTab: 'all',
   selectedStaff: null,
   showStaffDetail: false,
@@ -206,15 +208,20 @@
     if (value >= 70) return 'bg-yellow-500';
     return 'bg-gray-500';
   }
-}">
+}"
+>
   <!-- Page Header -->
   <div class="flex justify-between items-center mb-6">
     <div>
-      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Staff Management</h1>
-      <p class="text-sm text-gray-500 dark:text-gray-400">Manage your coaching and support staff</p>
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">
+        Staff Management
+      </h1>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        Manage your coaching and support staff
+      </p>
     </div>
     <div>
-      <button 
+      <button
         @click="isHiring = true"
         class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150"
       >
@@ -222,38 +229,49 @@
       </button>
     </div>
   </div>
-  
+
   <!-- Stats Overview -->
   <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
     <div class="bg-white dark:bg-slate-800 rounded-lg shadow p-4">
       <div class="flex items-center">
-        <div class="p-3 rounded-full bg-blue-500 bg-opacity-10 text-blue-500 mr-4">
+        <div
+          class="p-3 rounded-full bg-blue-500 bg-opacity-10 text-blue-500 mr-4"
+        >
           <i class="bi bi-people-fill text-2xl"></i>
         </div>
         <div>
           <p class="text-sm text-gray-500 dark:text-gray-400">Total Staff</p>
-          <p class="text-xl font-bold text-gray-800 dark:text-gray-100" x-text="staff.length"></p>
+          <p
+            class="text-xl font-bold text-gray-800 dark:text-gray-100"
+            x-text="staff.length"
+          ></p>
         </div>
       </div>
     </div>
-    
+
     <div class="bg-white dark:bg-slate-800 rounded-lg shadow p-4">
       <div class="flex items-center">
-        <div class="p-3 rounded-full bg-green-500 bg-opacity-10 text-green-500 mr-4">
+        <div
+          class="p-3 rounded-full bg-green-500 bg-opacity-10 text-green-500 mr-4"
+        >
           <i class="bi bi-currency-dollar text-2xl"></i>
         </div>
         <div>
           <p class="text-sm text-gray-500 dark:text-gray-400">Monthly Wages</p>
           <p class="text-xl font-bold text-gray-800 dark:text-gray-100">
-            €<span x-text="Math.round(staff.reduce((sum, s) => sum + s.salary, 0) / 12).toLocaleString()"></span>
+            €<span
+              x-text="Math.round(staff.reduce((sum, s) => sum + s.salary, 0) / 12).toLocaleString()"
+            ></span>
           </p>
         </div>
       </div>
     </div>
-    
+
     <div class="bg-white dark:bg-slate-800 rounded-lg shadow p-4">
       <div class="flex items-center">
-        <div class="p-3 rounded-full bg-purple-500 bg-opacity-10 text-purple-500 mr-4">
+        <div
+          class="p-3 rounded-full bg-purple-500 bg-opacity-10 text-purple-500 mr-4"
+        >
           <i class="bi bi-trophy-fill text-2xl"></i>
         </div>
         <div>
@@ -262,15 +280,21 @@
         </div>
       </div>
     </div>
-    
+
     <div class="bg-white dark:bg-slate-800 rounded-lg shadow p-4">
       <div class="flex items-center">
-        <div class="p-3 rounded-full bg-orange-500 bg-opacity-10 text-orange-500 mr-4">
+        <div
+          class="p-3 rounded-full bg-orange-500 bg-opacity-10 text-orange-500 mr-4"
+        >
           <i class="bi bi-clipboard-data-fill text-2xl"></i>
         </div>
         <div>
-          <p class="text-sm text-gray-500 dark:text-gray-400">Avg. Experience</p>
-          <p class="text-xl font-bold text-gray-800 dark:text-gray-100">6.2 years</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Avg. Experience
+          </p>
+          <p class="text-xl font-bold text-gray-800 dark:text-gray-100">
+            6.2 years
+          </p>
         </div>
       </div>
     </div>
@@ -279,85 +303,118 @@
   <!-- Main Content -->
   <div class="flex flex-col md:flex-row gap-6">
     <!-- Staff List Section -->
-    <div class="w-full md:w-2/5 lg:w-1/3 bg-white dark:bg-slate-800 rounded-lg shadow">
+    <div
+      class="w-full md:w-2/5 lg:w-1/3 bg-white dark:bg-slate-800 rounded-lg shadow"
+    >
       <!-- Filters -->
       <div class="p-4 border-b border-gray-200 dark:border-slate-700">
         <div class="flex flex-col space-y-3">
           <!-- Search -->
           <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
               <i class="bi bi-search text-gray-500 dark:text-gray-400"></i>
             </div>
-            <input 
-              type="text" 
-              placeholder="Search staff..." 
+            <input
+              type="text"
+              placeholder="Search staff..."
               class="pl-10 pr-4 py-2 w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 focus:ring-2 focus:ring-blue-500"
               x-model="searchQuery"
-            >
+            />
           </div>
-          
+
           <!-- Department Filter -->
           <div class="flex overflow-x-auto py-1 gap-2">
-            <button 
-              @click="departmentFilter = 'all'" 
+            <button
+              @click="departmentFilter = 'all'"
               :class="{'bg-blue-500 text-white': departmentFilter === 'all', 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300': departmentFilter !== 'all'}"
               class="px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap"
-            >All</button>
-            <button 
-              @click="departmentFilter = 'coaching'" 
+            >
+              All
+            </button>
+            <button
+              @click="departmentFilter = 'coaching'"
               :class="{'bg-blue-500 text-white': departmentFilter === 'coaching', 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300': departmentFilter !== 'coaching'}"
               class="px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap"
-            >Coaching</button>
-            <button 
-              @click="departmentFilter = 'performance'" 
+            >
+              Coaching
+            </button>
+            <button
+              @click="departmentFilter = 'performance'"
               :class="{'bg-blue-500 text-white': departmentFilter === 'performance', 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300': departmentFilter !== 'performance'}"
               class="px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap"
-            >Performance</button>
-            <button 
-              @click="departmentFilter = 'analysis'" 
+            >
+              Performance
+            </button>
+            <button
+              @click="departmentFilter = 'analysis'"
               :class="{'bg-blue-500 text-white': departmentFilter === 'analysis', 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300': departmentFilter !== 'analysis'}"
               class="px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap"
-            >Analysis</button>
-            <button 
-              @click="departmentFilter = 'medical'" 
+            >
+              Analysis
+            </button>
+            <button
+              @click="departmentFilter = 'medical'"
               :class="{'bg-blue-500 text-white': departmentFilter === 'medical', 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300': departmentFilter !== 'medical'}"
               class="px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap"
-            >Medical</button>
-            <button 
-              @click="departmentFilter = 'scouting'" 
+            >
+              Medical
+            </button>
+            <button
+              @click="departmentFilter = 'scouting'"
               :class="{'bg-blue-500 text-white': departmentFilter === 'scouting', 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300': departmentFilter !== 'scouting'}"
               class="px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap"
-            >Scouting</button>
+            >
+              Scouting
+            </button>
           </div>
         </div>
       </div>
 
       <!-- Staff List -->
-      <div class="overflow-y-auto" style="max-height: 600px;">
+      <div class="overflow-y-auto" style="max-height: 600px">
         <template x-for="member in filteredStaff" :key="member.id">
-          <div 
-            @click="selectStaff(member)" 
+          <div
+            @click="selectStaff(member)"
             class="p-4 border-b border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer flex items-center gap-4 transition-colors duration-150"
             :class="{'bg-blue-50 dark:bg-blue-900/10': selectedStaff && selectedStaff.id === member.id}"
           >
             <!-- Avatar with fallback -->
             <div class="flex-shrink-0">
-              <div class="h-12 w-12 rounded-full bg-gray-300 dark:bg-slate-600 flex items-center justify-center overflow-hidden">
+              <div
+                class="h-12 w-12 rounded-full bg-gray-300 dark:bg-slate-600 flex items-center justify-center overflow-hidden"
+              >
                 <template x-if="member.avatar">
-                  <img :src="member.avatar" alt="Staff avatar" class="h-full w-full object-cover">
+                  <img
+                    :src="member.avatar"
+                    alt="Staff avatar"
+                    class="h-full w-full object-cover"
+                  />
                 </template>
                 <template x-if="!member.avatar">
-                  <i class="bi bi-person-fill text-xl text-gray-500 dark:text-gray-400"></i>
+                  <i
+                    class="bi bi-person-fill text-xl text-gray-500 dark:text-gray-400"
+                  ></i>
                 </template>
               </div>
             </div>
-            
+
             <!-- Info -->
             <div class="flex-grow">
-              <h3 class="font-bold text-gray-800 dark:text-gray-200" x-text="member.name"></h3>
+              <h3
+                class="font-bold text-gray-800 dark:text-gray-200"
+                x-text="member.name"
+              ></h3>
               <div class="flex items-center">
-                <span class="text-sm text-gray-600 dark:text-gray-400" x-text="member.role"></span>
-                <span class="text-xs bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded ml-2" x-text="member.nationality"></span>
+                <span
+                  class="text-sm text-gray-600 dark:text-gray-400"
+                  x-text="member.role"
+                ></span>
+                <span
+                  class="text-xs bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded ml-2"
+                  x-text="member.nationality"
+                ></span>
               </div>
             </div>
           </div>
@@ -368,63 +425,106 @@
           <div class="text-gray-400 dark:text-gray-500 mb-4">
             <i class="bi bi-people text-5xl"></i>
           </div>
-          <h3 class="text-xl font-medium text-gray-700 dark:text-gray-300 mb-2">No staff found</h3>
-          <p class="text-gray-500 dark:text-gray-400">Try changing your search or filters</p>
+          <h3 class="text-xl font-medium text-gray-700 dark:text-gray-300 mb-2">
+            No staff found
+          </h3>
+          <p class="text-gray-500 dark:text-gray-400">
+            Try changing your search or filters
+          </p>
         </div>
       </div>
     </div>
-    
+
     <!-- Staff Details Section -->
-    <div class="w-full md:w-3/5 lg:w-2/3 bg-white dark:bg-slate-800 rounded-lg shadow flex flex-col h-full">
+    <div
+      class="w-full md:w-3/5 lg:w-2/3 bg-white dark:bg-slate-800 rounded-lg shadow flex flex-col h-full"
+    >
       <!-- Empty State -->
-      <div x-show="!selectedStaff" class="h-full flex flex-col items-center justify-center text-center p-8">
+      <div
+        x-show="!selectedStaff"
+        class="h-full flex flex-col items-center justify-center text-center p-8"
+      >
         <div class="text-gray-400 dark:text-gray-500 mb-4">
           <i class="bi bi-person-badge text-6xl"></i>
         </div>
-        <h3 class="text-xl font-medium text-gray-700 dark:text-gray-300 mb-2">No staff member selected</h3>
-        <p class="text-gray-500 dark:text-gray-400">Select a staff member from the list to view details</p>
+        <h3 class="text-xl font-medium text-gray-700 dark:text-gray-300 mb-2">
+          No staff member selected
+        </h3>
+        <p class="text-gray-500 dark:text-gray-400">
+          Select a staff member from the list to view details
+        </p>
       </div>
 
       <!-- Staff Details -->
       <div x-show="selectedStaff" class="flex flex-col h-full">
         <!-- Mobile Back Button -->
-        <div class="md:hidden p-3 border-b border-gray-200 dark:border-slate-700">
-          <button @click="showStaffDetail = false" class="text-gray-700 dark:text-gray-300">
+        <div
+          class="md:hidden p-3 border-b border-gray-200 dark:border-slate-700"
+        >
+          <button
+            @click="showStaffDetail = false"
+            class="text-gray-700 dark:text-gray-300"
+          >
             <i class="bi bi-arrow-left mr-1"></i> Back to list
           </button>
         </div>
 
         <div class="overflow-y-auto p-6 flex-grow">
           <!-- Header/Intro -->
-          <div class="flex flex-col sm:flex-row items-start sm:items-center mb-6 gap-4">
-            <div class="h-24 w-24 rounded-full bg-gray-300 dark:bg-slate-600 flex items-center justify-center overflow-hidden">
+          <div
+            class="flex flex-col sm:flex-row items-start sm:items-center mb-6 gap-4"
+          >
+            <div
+              class="h-24 w-24 rounded-full bg-gray-300 dark:bg-slate-600 flex items-center justify-center overflow-hidden"
+            >
               <template x-if="selectedStaff.avatar">
-                <img :src="selectedStaff.avatar" alt="Staff portrait" class="h-full w-full object-cover">
+                <img
+                  :src="selectedStaff.avatar"
+                  alt="Staff portrait"
+                  class="h-full w-full object-cover"
+                />
               </template>
               <template x-if="!selectedStaff.avatar">
-                <i class="bi bi-person-fill text-4xl text-gray-500 dark:text-gray-400"></i>
+                <i
+                  class="bi bi-person-fill text-4xl text-gray-500 dark:text-gray-400"
+                ></i>
               </template>
             </div>
 
             <div>
-              <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100" x-text="selectedStaff.name"></h2>
+              <h2
+                class="text-2xl font-bold text-gray-800 dark:text-gray-100"
+                x-text="selectedStaff.name"
+              ></h2>
               <div class="flex flex-wrap gap-2 items-center mt-2">
-                <span class="font-medium text-gray-600 dark:text-gray-300" x-text="selectedStaff.role"></span>
-                <span class="text-sm px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300" x-text="selectedStaff.department.charAt(0).toUpperCase() + selectedStaff.department.slice(1)"></span>
+                <span
+                  class="font-medium text-gray-600 dark:text-gray-300"
+                  x-text="selectedStaff.role"
+                ></span>
+                <span
+                  class="text-sm px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300"
+                  x-text="selectedStaff.department.charAt(0).toUpperCase() + selectedStaff.department.slice(1)"
+                ></span>
                 <span class="text-sm text-gray-500 dark:text-gray-400">
-                  <i class="bi bi-geo-alt"></i> <span x-text="selectedStaff.nationality"></span>
+                  <i class="bi bi-geo-alt"></i>
+                  <span x-text="selectedStaff.nationality"></span>
                 </span>
                 <span class="text-sm text-gray-500 dark:text-gray-400">
-                  <i class="bi bi-calendar3"></i> <span x-text="selectedStaff.age"></span> years old
+                  <i class="bi bi-calendar3"></i>
+                  <span x-text="selectedStaff.age"></span> years old
                 </span>
               </div>
             </div>
 
             <div class="sm:ml-auto flex gap-2">
-              <button class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded">
+              <button
+                class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded"
+              >
                 <i class="bi bi-pencil-fill"></i>
               </button>
-              <button class="bg-red-500 hover:bg-red-600 text-white p-2 rounded">
+              <button
+                class="bg-red-500 hover:bg-red-600 text-white p-2 rounded"
+              >
                 <i class="bi bi-trash-fill"></i>
               </button>
             </div>
@@ -432,10 +532,13 @@
 
           <!-- Tabs -->
           <div class="border-b border-gray-200 dark:border-slate-700 mb-6">
-            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" x-data="{tab: 'overview'}">
+            <ul
+              class="flex flex-wrap -mb-px text-sm font-medium text-center"
+              x-data="{tab: 'overview'}"
+            >
               <li class="mr-2">
-                <button 
-                  @click="tab = 'overview'" 
+                <button
+                  @click="tab = 'overview'"
                   :class="{'border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400': tab === 'overview', 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': tab !== 'overview'}"
                   class="inline-block p-4 border-b-2 transition-colors"
                 >
@@ -443,8 +546,8 @@
                 </button>
               </li>
               <li class="mr-2">
-                <button 
-                  @click="tab = 'attributes'" 
+                <button
+                  @click="tab = 'attributes'"
                   :class="{'border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400': tab === 'attributes', 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': tab !== 'attributes'}"
                   class="inline-block p-4 border-b-2 transition-colors"
                 >
@@ -452,8 +555,8 @@
                 </button>
               </li>
               <li class="mr-2">
-                <button 
-                  @click="tab = 'achievements'" 
+                <button
+                  @click="tab = 'achievements'"
                   :class="{'border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400': tab === 'achievements', 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': tab !== 'achievements'}"
                   class="inline-block p-4 border-b-2 transition-colors"
                 >
@@ -461,8 +564,8 @@
                 </button>
               </li>
               <li class="mr-2">
-                <button 
-                  @click="tab = 'contract'" 
+                <button
+                  @click="tab = 'contract'"
                   :class="{'border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400': tab === 'contract', 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300': tab !== 'contract'}"
                   class="inline-block p-4 border-b-2 transition-colors"
                 >
@@ -475,23 +578,52 @@
             <div class="py-4" x-data="{tab: 'overview'}">
               <!-- Overview Tab -->
               <div x-show="tab === 'overview'">
-                <h3 class="font-bold text-lg text-gray-800 dark:text-gray-200 mb-2">Biography</h3>
-                <p class="text-gray-600 dark:text-gray-400 mb-4" x-text="selectedStaff.bio"></p>
-                
-                <h3 class="font-bold text-lg text-gray-800 dark:text-gray-200 mb-2">Experience</h3>
-                <p class="text-gray-600 dark:text-gray-400" x-text="selectedStaff.experience"></p>
+                <h3
+                  class="font-bold text-lg text-gray-800 dark:text-gray-200 mb-2"
+                >
+                  Biography
+                </h3>
+                <p
+                  class="text-gray-600 dark:text-gray-400 mb-4"
+                  x-text="selectedStaff.bio"
+                ></p>
+
+                <h3
+                  class="font-bold text-lg text-gray-800 dark:text-gray-200 mb-2"
+                >
+                  Experience
+                </h3>
+                <p
+                  class="text-gray-600 dark:text-gray-400"
+                  x-text="selectedStaff.experience"
+                ></p>
               </div>
 
               <!-- Attributes Tab -->
               <div x-show="tab === 'attributes'" class="space-y-4">
-                <template x-for="(value, attribute) in selectedStaff.attributes" :key="attribute">
+                <template
+                  x-for="(value, attribute) in selectedStaff.attributes"
+                  :key="attribute"
+                >
                   <div>
                     <div class="flex justify-between mb-1">
-                      <span class="text-gray-700 dark:text-gray-300 capitalize" x-text="attribute"></span>
-                      <span class="text-gray-600 dark:text-gray-400 font-medium" x-text="value"></span>
+                      <span
+                        class="text-gray-700 dark:text-gray-300 capitalize"
+                        x-text="attribute"
+                      ></span>
+                      <span
+                        class="text-gray-600 dark:text-gray-400 font-medium"
+                        x-text="value"
+                      ></span>
                     </div>
-                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                      <div class="h-2.5 rounded-full" :style="`width: ${value}%`" :class="getRatingClass(value)"></div>
+                    <div
+                      class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5"
+                    >
+                      <div
+                        class="h-2.5 rounded-full"
+                        :style="`width: ${value}%`"
+                        :class="getRatingClass(value)"
+                      ></div>
                     </div>
                   </div>
                 </template>
@@ -500,10 +632,18 @@
               <!-- Achievements Tab -->
               <div x-show="tab === 'achievements'">
                 <ul class="space-y-3">
-                  <template x-for="achievement in selectedStaff.achievements" :key="achievement">
+                  <template
+                    x-for="achievement in selectedStaff.achievements"
+                    :key="achievement"
+                  >
                     <li class="flex items-start">
-                      <i class="bi bi-trophy-fill text-yellow-500 mr-2 mt-1"></i>
-                      <span class="text-gray-700 dark:text-gray-300" x-text="achievement"></span>
+                      <i
+                        class="bi bi-trophy-fill text-yellow-500 mr-2 mt-1"
+                      ></i>
+                      <span
+                        class="text-gray-700 dark:text-gray-300"
+                        x-text="achievement"
+                      ></span>
                     </li>
                   </template>
                 </ul>
@@ -513,24 +653,50 @@
               <div x-show="tab === 'contract'" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg">
-                    <h4 class="text-sm text-gray-500 dark:text-gray-400 mb-1">Annual Salary</h4>
-                    <p class="text-xl font-bold text-gray-800 dark:text-gray-100">€<span x-text="selectedStaff.salary.toLocaleString()"></span></p>
+                    <h4 class="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                      Annual Salary
+                    </h4>
+                    <p
+                      class="text-xl font-bold text-gray-800 dark:text-gray-100"
+                    >
+                      €<span
+                        x-text="selectedStaff.salary.toLocaleString()"
+                      ></span>
+                    </p>
                   </div>
-                  
+
                   <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg">
-                    <h4 class="text-sm text-gray-500 dark:text-gray-400 mb-1">Monthly Wage</h4>
-                    <p class="text-xl font-bold text-gray-800 dark:text-gray-100">€<span x-text="Math.round(selectedStaff.salary / 12).toLocaleString()"></span></p>
+                    <h4 class="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                      Monthly Wage
+                    </h4>
+                    <p
+                      class="text-xl font-bold text-gray-800 dark:text-gray-100"
+                    >
+                      €<span
+                        x-text="Math.round(selectedStaff.salary / 12).toLocaleString()"
+                      ></span>
+                    </p>
                   </div>
                 </div>
 
                 <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg">
-                  <h4 class="text-sm text-gray-500 dark:text-gray-400 mb-1">Contract Period</h4>
+                  <h4 class="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                    Contract Period
+                  </h4>
                   <div class="flex items-center justify-between">
                     <div>
-                      <p class="text-gray-700 dark:text-gray-300">Started: <span x-text="selectedStaff.contract.started"></span></p>
-                      <p class="text-gray-700 dark:text-gray-300">Expires: <span x-text="selectedStaff.contract.expires"></span></p>
+                      <p class="text-gray-700 dark:text-gray-300">
+                        Started:
+                        <span x-text="selectedStaff.contract.started"></span>
+                      </p>
+                      <p class="text-gray-700 dark:text-gray-300">
+                        Expires:
+                        <span x-text="selectedStaff.contract.expires"></span>
+                      </p>
                     </div>
-                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm">
+                    <button
+                      class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm"
+                    >
                       Extend Contract
                     </button>
                   </div>

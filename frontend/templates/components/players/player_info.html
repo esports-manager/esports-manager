@@ -1,0 +1,140 @@
+{% if player %}
+<!-- Player Information Page -->
+<div
+  class="container mx-auto px-4 py-6"
+  x-data="{
+  activeTab: 'overview',
+  playerStats: {
+    lastMatches: [
+      { opponent: 'T1', result: 'W', kda: '3/1/8', cs: 245, vision: 28 },
+      { opponent: 'Gen.G', result: 'L', kda: '2/4/3', cs: 210, vision: 24 },
+      { opponent: 'DRX', result: 'W', kda: '5/2/9', cs: 267, vision: 31 },
+      { opponent: 'KT Rolster', result: 'W', kda: '4/0/6', cs: 258, vision: 27 },
+      { opponent: 'Dplus KIA', result: 'L', kda: '1/3/2', cs: 201, vision: 22 }
+    ],
+    seasonStats: {
+      games: 28,
+      winRate: 64.3,
+      kda: '3.8/2.2/5.1',
+      csPerMin: 9.2,
+      goldShare: 26.5,
+      dmgShare: 28.7
+    },
+    careerHighlights: [
+      '2024 Summer Split Champion',
+      '2023 Worlds Semifinalist',
+      'LCK Spring 2023 All-Pro Team',
+      '2022 Rookie of the Year'
+    ]
+  }
+}"
+>
+  <!-- Page Header - Player Name/Nickname -->
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+      {{ player.nick_name }}
+    </h1>
+    <p class="text-lg text-gray-600 dark:text-gray-400">
+      {{ player.first_name }} {{ player.last_name }}
+    </p>
+  </header>
+
+  <!-- Main Content Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Left Column: Player Card -->
+    {% include "components/players/player_info_card.html" %}
+
+    <!-- Right Column: Playe Info Tabs-->
+    {% include "components/players/player_info_tabs.html" %}
+  </div>
+
+  <!-- Bottom Section -->
+  <div class="grid grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    <!-- Past Teams -->
+    <div
+      class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden"
+    >
+      <div class="border-b border-gray-200 dark:border-slate-600 px-4 py-3">
+        <h3
+          class="font-semibold text-gray-800 dark:text-gray-200 flex items-center"
+        >
+          <i class="bi bi-building mr-2 text-indigo-500"></i>
+          Past Teams
+        </h3>
+      </div>
+      <div class="p-4">
+        <div
+          class="text-center text-gray-500 dark:text-gray-400 text-sm italic py-4"
+        >
+          Past teams data will be displayed here
+        </div>
+      </div>
+    </div>
+
+    <!-- Achievements -->
+    <div
+      class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden"
+    >
+      <div class="border-b border-gray-200 dark:border-slate-600 px-4 py-3">
+        <h3
+          class="font-semibold text-gray-800 dark:text-gray-200 flex items-center"
+        >
+          <i class="bi bi-trophy-fill mr-2 text-yellow-500"></i>
+          Achievements
+        </h3>
+      </div>
+      <div class="p-4">
+        <!-- Placeholder for achievements data -->
+        <div
+          class="text-center text-gray-500 dark:text-gray-400 text-sm italic py-4"
+        >
+          Achievements data will be displayed here
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div
+      class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden"
+    >
+      <div class="border-b border-gray-200 dark:border-slate-600 px-4 py-3">
+        <h3
+          class="font-semibold text-gray-800 dark:text-gray-200 flex items-center"
+        >
+          <i class="bi bi-lightning mr-2 text-blue-500"></i>
+          Actions
+        </h3>
+      </div>
+      <div class="p-4 space-y-3">
+        <button
+          class="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150"
+        >
+          <i class="bi bi-cash-coin mr-2"></i>
+          Approach for Transfer
+        </button>
+        <button
+          class="w-full flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150"
+        >
+          <i class="bi bi-clipboard-plus mr-2"></i>
+          Add to Scout List
+        </button>
+        <button
+          class="w-full flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150"
+        >
+          <i class="bi bi-arrow-left-right mr-2"></i>
+          Compare Player
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="flex items-center justify-center h-full m-8">
+  <div class="text-center">
+    <i class="bi bi-people text-4xl text-gray-400 dark:text-gray-500"></i>
+    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+      No player selected. Please select a player from the list.
+    </p>
+  </div>
+</div>
+{% endif %}

@@ -200,6 +200,7 @@ async def get_inbox(
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
+            request,
             "components/inbox/inbox_list.html",
             {
                 "request": request,
@@ -236,6 +237,7 @@ async def get_inbox_message(
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
+            request,
             "components/inbox/inbox_message.html",
             {"request": request, "message": public},
         )

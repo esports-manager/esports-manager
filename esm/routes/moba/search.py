@@ -73,6 +73,7 @@ async def omni_search(
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
+            request,
             "components/search_results.html",
             {"request": request, "results": results},
         )

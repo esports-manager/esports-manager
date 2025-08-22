@@ -69,6 +69,7 @@ async def get_team(
         ]
     team_public = MobaTeamWithPlayers.model_validate(team_data)
     return templates.TemplateResponse(
+        request,
         "layout.html",
         {
             "sidebar": sidebar,

@@ -37,6 +37,7 @@ async def players(request: Request):
     contentview = "components/players/players_list.html"
 
     return templates.TemplateResponse(
+        request,
         "layout.html",
         {
             "request": request,
@@ -83,6 +84,7 @@ async def player(
     player_with_team = MobaPlayerWithTeam.model_validate(player_data)
 
     return templates.TemplateResponse(
+        request,
         "layout.html",
         {
             "request": request,

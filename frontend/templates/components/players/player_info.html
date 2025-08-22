@@ -29,15 +29,17 @@
   }
 }"
 >
-  <!-- Page Header - Player Name/Nickname -->
-  <header class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">
-      {{ player.nick_name }}
-    </h1>
-    <p class="text-lg text-gray-600 dark:text-gray-400">
-      {{ player.first_name }} {{ player.last_name }}
-    </p>
-  </header>
+  <div class="flex items-center justify-between mb-4">
+    <div class="text-lg">
+      <a
+        href="/page/players"
+        class="text-blue-600 dark:text-blue-400 hover:underline"
+        >Players</a
+      >
+      <span class="mx-1 text-gray-400">/</span>
+      <span class="text-gray-600 dark:text-gray-300">Details</span>
+    </div>
+  </div>
 
   <!-- Main Content Grid -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

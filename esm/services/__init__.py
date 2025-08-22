@@ -1,14 +1,19 @@
 from fastapi.responses import FileResponse
 from pathlib import Path
+from typing import Optional
 
 
-def serve_image(image_path: Path, default_image: Path):
+def serve_image(
+    image_path: Path, default_image: Optional[Path]
+) -> Optional[FileResponse]:
     if (
         not image_path.exists()
         or not image_path.is_file()
         or image_path.suffix not in [".png", ".jpg", ".jpeg", ".gif", ".webp"]
     ):
-        # Return default image with cache headers
+        if not default_image:
+            return None
+
         return FileResponse(
             default_image,
             media_type="image/webp",
@@ -19,7 +24,6 @@ def serve_image(image_path: Path, default_image: Path):
             },
         )
 
-    # Generate a simple ETag based on filename and modification time
     stat = image_path.stat()
     etag = f"{image_path.name}-{stat.st_mtime}"
 

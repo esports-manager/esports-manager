@@ -1,17 +1,21 @@
 <div
   class="m-8"
   x-data="{
-activeTournamentsTab: $persist('current').using(sessionStorage),
-view: $persist('grid').using(sessionStorage),
-searchQuery: '',
-regionFilter: '',
-tierFilter: '',
-sortBy: 'start_date',
-sortDirection: 'asc',
-page: 1,
-perPage: 12,
-}"
-  x-init="init()"
+  activeTournamentsTab: $persist('current').using(sessionStorage),
+  view: $persist('grid').using(sessionStorage),
+  searchQuery: '',
+  regionFilter: '',
+  tierFilter: '',
+  sortBy: 'start_date',
+  sortDirection: 'asc',
+  page: 1,
+  perPage: '12',
+  setView(v) { this.view = v },
+  toggleSortDirection() { this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'; this.onControlsChanged(); },
+  onControlsChanged() { this.page = 1; this.$nextTick(() => { htmx.trigger('#tournament-filters-form', 'submit'); }); },
+  goToPage(p) { this.page = p; this.$nextTick(() => { htmx.trigger('#tournament-filters-form', 'submit'); }); }
+  }"
+  x-init="htmx.trigger('#tournament-filters-form', 'submit')"
 >
   <div
     class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6"
@@ -28,7 +32,15 @@ perPage: 12,
 
   <!-- Filters Section -->
   <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4 mb-6">
-    <div class="flex flex-col md:flex-row gap-4 items-start">
+    <form
+      id="tournament-filters-form"
+      hx-get="/api/moba/tournaments"
+      hx-trigger="submit"
+      hx-include="#tournament-filters-form"
+      hx-swap="innerHTML"
+      hx-target="#tournaments-container"
+      class="flex flex-col md:flex-row gap-4 items-start w-full"
+    >
       <!-- Search -->
       <div class="relative flex-grow">
         <div
@@ -38,6 +50,7 @@ perPage: 12,
         </div>
         <input
           type="text"
+          name="search"
           x-model.debounce.300ms="searchQuery"
           @input="onControlsChanged()"
           placeholder="Search tournaments..."
@@ -49,33 +62,39 @@ perPage: 12,
       <div class="flex flex-wrap gap-2">
         <!-- Region Filter -->
         <select
+          name="location"
           x-model="regionFilter"
           @change="onControlsChanged()"
           class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         >
-          <option value="all">All Regions</option>
-          <option value="lck">LCK (Korea)</option>
-          <option value="lpl">LPL (China)</option>
-          <option value="lec">LEC (Europe)</option>
-          <option value="lcs">LCS (North America)</option>
+          <option value="">All Regions</option>
+          <option value="korea">LCK (Korea)</option>
+          <option value="china">LPL (China)</option>
+          <option value="europe">LEC (Europe)</option>
+          <option value="north_america">LCS (North America)</option>
           <option value="international">International</option>
         </select>
 
         <!-- Tournament Tier Filter -->
         <select
+          name="tier"
           x-model="tierFilter"
           @change="onControlsChanged()"
           class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         >
-          <option value="all">All Tiers</option>
-          <option value="s">S-Tier (Major)</option>
-          <option value="a">A-Tier (Premier)</option>
-          <option value="b">B-Tier (Minor)</option>
-          <option value="c">C-Tier (Regional)</option>
+          <option value="">All Tiers</option>
+          <option value="premier">Premier</option>
+          <option value="major">Major</option>
+          <option value="league">League</option>
+          <option value="minor">Minor</option>
+          <option value="academy">Academy</option>
+          <option value="semipro">Semi-pro</option>
+          <option value="amateur">Amateur</option>
         </select>
 
         <!-- Sort By -->
         <select
+          name="sort"
           x-model="sortBy"
           @change="onControlsChanged()"
           class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -87,6 +106,7 @@ perPage: 12,
 
         <!-- Sort Direction Toggle -->
         <button
+          type="button"
           @click="toggleSortDirection()"
           class="bg-gray-100 hover:bg-gray-200 dark:bg-slate-600 dark:hover:bg-slate-500 rounded-lg px-3 py-2 text-sm"
         >
@@ -102,14 +122,16 @@ perPage: 12,
           aria-label="View toggle"
         >
           <button
-            @click="setView('cards')"
-            :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'cards'}"
+            type="button"
+            @click="setView('grid')"
+            :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'grid'}"
             class="px-2 py-1 rounded-md text-sm transition-colors duration-150"
-            aria-label="Cards view"
+            aria-label="Grid view"
           >
             <i class="bi bi-grid"></i>
           </button>
           <button
+            type="button"
             @click="setView('list')"
             :class="{'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400': view === 'list'}"
             class="px-2 py-1 rounded-md text-sm transition-colors duration-150"
@@ -119,12 +141,16 @@ perPage: 12,
           </button>
         </div>
       </div>
-    </div>
+      <!-- Hidden inputs -->
+      <input type="hidden" name="direction" x-model="sortDirection" />
+      <input type="hidden" name="per_page" x-model="perPage" />
+      <input type="hidden" name="page" x-model="page" />
+    </form>
 
     <!-- Active Filters Display -->
     <div
       class="mt-3 flex flex-wrap gap-2"
-      x-show="regionFilter !== 'all' || tierFilter !== 'all' || searchQuery !== ''"
+      x-show="regionFilter !== '' || tierFilter !== '' || searchQuery !== ''"
     >
       <span class="text-xs text-gray-500 dark:text-gray-400 self-center"
         >Active filters:</span
@@ -132,7 +158,7 @@ perPage: 12,
 
       <!-- Region Filter Tag -->
       <div
-        x-show="regionFilter !== 'all'"
+        x-show="regionFilter !== ''"
         class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full flex items-center"
       >
         Region:
@@ -141,7 +167,7 @@ perPage: 12,
           class="font-medium mx-1"
         ></span>
         <button
-          @click="regionFilter = 'all'"
+          @click="regionFilter = ''; onControlsChanged()"
           class="ml-1 hover:text-blue-600 dark:hover:text-blue-100"
         >
           <i class="bi bi-x-circle-fill"></i>
@@ -150,16 +176,16 @@ perPage: 12,
 
       <!-- Tier Filter Tag -->
       <div
-        x-show="tierFilter !== 'all'"
+        x-show="tierFilter !== ''"
         class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full flex items-center"
       >
         Tier:
         <span
-          x-text="tierFilter.toUpperCase() + '-Tier'"
+          x-text="tierFilter.charAt(0).toUpperCase() + tierFilter.slice(1)"
           class="font-medium mx-1"
         ></span>
         <button
-          @click="tierFilter = 'all'"
+          @click="tierFilter = ''; onControlsChanged()"
           class="ml-1 hover:text-green-600 dark:hover:text-green-100"
         >
           <i class="bi bi-x-circle-fill"></i>
@@ -173,7 +199,7 @@ perPage: 12,
       >
         Search: <span x-text="searchQuery" class="font-medium mx-1"></span>
         <button
-          @click="searchQuery = ''"
+          @click="searchQuery = ''; onControlsChanged()"
           class="ml-1 hover:text-purple-600 dark:hover:text-purple-100"
         >
           <i class="bi bi-x-circle-fill"></i>
@@ -183,35 +209,35 @@ perPage: 12,
   </div>
 
   <!-- Main Navigation Tabs -->
-  <div class="mb-6 border-b border-gray-200 dark:border-gray-600">
-    <div class="flex overflow-x-auto scrollbar-hide">
+  <div class="mb-6 border-b border-gray-200 dark:border-gray-600 p-4">
+    <div class="flex overflow-x-auto overflow-y-hidden">
       <button
-        @click="activeTab = 'current'"
-        :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'current', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'current'}"
+        @click="activeTournamentsTab = 'current'"
+        :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTournamentsTab === 'current', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTournamentsTab !== 'current'}"
         class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none"
       >
         <i class="bi bi-trophy mr-2"></i>
         Current Season
       </button>
       <button
-        @click="activeTab = 'standings'"
-        :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'standings', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'standings'}"
+        @click="activeTournamentsTab = 'standings'"
+        :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTournamentsTab === 'standings', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTournamentsTab !== 'standings'}"
         class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none"
       >
         <i class="bi bi-table mr-2"></i>
         Standings
       </button>
       <button
-        @click="activeTab = 'history'"
-        :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'history', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'history'}"
+        @click="activeTournamentsTab = 'history'"
+        :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTournamentsTab === 'history', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTournamentsTab !== 'history'}"
         class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none"
       >
         <i class="bi bi-clock-history mr-2"></i>
         Past Tournaments
       </button>
       <button
-        @click="activeTab = 'calendar'"
-        :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTab === 'calendar', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'calendar'}"
+        @click="activeTournamentsTab = 'calendar'"
+        :class="{'border-blue-500 text-blue-600 dark:text-blue-400': activeTournamentsTab === 'calendar', 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTournamentsTab !== 'calendar'}"
         class="flex items-center h-14 px-4 -mb-px text-sm font-medium border-b-2 whitespace-nowrap focus:outline-none"
       >
         <i class="bi bi-calendar-event mr-2"></i>
@@ -219,28 +245,28 @@ perPage: 12,
       </button>
     </div>
     <!-- Tournament List -->
-    <div x-show="activeTab === 'current'" class="space-y-8">
+    <div x-show="activeTournamentsTab === 'current'" class="space-y-8">
       <div id="tournaments-container">
         {% include "components/tournaments/tournaments_skeleton.html" %}
       </div>
     </div>
 
     <!-- Standings Tab -->
-    <div x-show="activeTab === 'standings'" class="py-6">
+    <div x-show="activeTournamentsTab === 'standings'" class="py-6">
       <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
         Standings placeholder
       </div>
     </div>
 
     <!-- Past Tournaments Tab Content -->
-    <div x-show="activeTab === 'history'" class="space-y-6 py-6">
+    <div x-show="activeTournamentsTab === 'history'" class="space-y-6 py-6">
       <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
         Past tournaments placeholder
       </div>
     </div>
 
     <!-- Calendar Tab Content -->
-    <div x-show="activeTab === 'calendar'" class="space-y-6 py-6">
+    <div x-show="activeTournamentsTab === 'calendar'" class="space-y-6 py-6">
       <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
         Tournament calendar placeholder
       </div>

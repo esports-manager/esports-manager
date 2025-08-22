@@ -1,49 +1,153 @@
 <div class="m-8">
-  <div class="flex items-center justify-between mb-6">
-    <div>
-      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">Tournament</h1>
-      <div class="text-sm text-gray-500 dark:text-gray-400">
-        <span>Tournament information</span>
-      </div>
-    </div>
-    <div class="flex items-center gap-3">
-      <span
-        class="px-2 py-1 rounded text-xs font-semibold bg-amber-200 dark:bg-amber-800 text-gray-700 dark:text-gray-200">{{
-        tournament.tier.value.upper() }}</span>
-      <span
-        class="px-2 py-1 rounded text-xs font-medium bg-blue-200 dark:bg-blue-800 text-gray-700 dark:text-gray-200">{{
-        tournament.type.value.upper() }}</span>
-      <span
-        class="px-2 py-1 rounded text-xs font-medium bg-green-200 dark:bg-green-800 text-gray-700 dark:text-gray-200">{{
-        tournament.format.value.upper().replace("_", " ") }}</span>
+  <!-- Header / Breadcrumbs -->
+  <div class="flex items-center justify-between mb-4">
+    <div class="text-lg">
+      <a
+        href="/page/tournaments"
+        class="text-blue-600 dark:text-blue-400 hover:underline"
+        >Tournaments</a
+      >
+      <span class="mx-1 text-gray-400">/</span>
+      <span class="text-gray-600 dark:text-gray-300">Details</span>
     </div>
   </div>
 
-  <!-- Banner / Logo -->
+  <!-- Hero: Banner, Logo, Title, Badges -->
   <div
-    class="relative rounded-xl overflow-hidden mb-6 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+    class="relative rounded-xl overflow-hidden mb-6 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800"
+  >
     {% if tournament.banner_path %}
-    <img src="/api/moba/tournaments/images/{{ tournament.banner_path }}" alt="{{ tournament.name }} banner"
-      class="w-full h-48 object-cover" onerror="replaceWithColor(this)">
+    <img
+      src="/api/moba/tournaments/images/{{ tournament.banner_path }}"
+      alt="{{ tournament.name }} banner"
+      class="w-full h-48 md:h-64 object-cover"
+      onerror="replaceWithColor(this)"
+    />
     {% else %}
-    <div class="w-full h-40 md:h-48 bg-gradient-to-r from-slate-600 to-slate-700"></div>
+    <div
+      class="w-full h-48 md:h-64 bg-gradient-to-r from-slate-600 to-slate-700"
+    ></div>
     {% endif %}
     <div
-      class="absolute top-6 left-2 h-20 w-20 rounded-xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-lg bg-white dark:bg-slate-700 flex items-center justify-center">
-      {% if tournament.logo_path %}
-      <img src="/api/moba/tournaments/images/{{ tournament.logo_path }}"
-        alt="{{ tournament.abbreviation or tournament.name }} logo" class="w-full h-full object-cover"
-        onerror="replaceWithLogo(this)">
-      {% else %}
-      <i class="bi bi-trophy-fill text-yellow-500 text-5xl opacity-80"></i>
-      {% endif %}
+      class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"
+    ></div>
+
+    <div
+      class="absolute inset-0 flex flex-col md:flex-row items-end md:items-center justify-between px-4 md:px-6 py-4"
+    >
+      <!-- Left: Logo + Title -->
+      <div class="flex items-end md:items-center gap-4">
+        <div
+          class="h-24 w-24 md:h-28 md:w-28 rounded-xl overflow-hidden border-4 border-white/90 dark:border-slate-900 shadow-xl bg-white dark:bg-slate-700 flex items-center justify-center"
+        >
+          {% if tournament.logo_path %}
+          <img
+            src="/api/moba/tournaments/images/{{ tournament.logo_path }}"
+            alt="{{ tournament.abbreviation or tournament.name }} logo"
+            class="w-full h-full object-cover"
+            onerror="replaceWithLogo(this)"
+          />
+          {% else %}
+          <i class="bi bi-trophy-fill text-yellow-400 text-5xl opacity-90"></i>
+          {% endif %}
+        </div>
+
+        <div class="pb-1 md:pb-0">
+          <h1 class="text-2xl md:text-3xl font-bold text-white">
+            {{ tournament.name }}
+          </h1>
+          {% if tournament.abbreviation %}
+          <div class="text-sm text-gray-200">{{ tournament.abbreviation }}</div>
+          {% endif %}
+          <div class="mt-2 flex flex-wrap gap-2">
+            <span
+              class="px-2 py-1 rounded text-xs font-semibold bg-amber-200/90 text-gray-800"
+              >{{ tournament.tier.value.upper() }}</span
+            >
+            <span
+              class="px-2 py-1 rounded text-xs font-medium bg-blue-200/90 text-gray-800"
+              >{{ tournament.type.value.upper() }}</span
+            >
+            <span
+              class="px-2 py-1 rounded text-xs font-medium bg-green-200/90 text-gray-800"
+              >{{ tournament.format.value.upper().replace("_", " ") }}</span
+            >
+            <span
+              class="px-2 py-1 rounded text-xs font-medium bg-purple-200/90 text-gray-800"
+              >{{ tournament.status.value.upper().replace("_", " ") }}</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Quick Info -->
+      <div class="text-right hidden md:block">
+        <div class="text-sm text-gray-200">
+          {{ tournament.location or '—' }}
+        </div>
+        <div class="text-sm text-gray-100">
+          {% if tournament.start_date and tournament.end_date %} {{
+          tournament.start_date.strftime('%d %b %Y') }} - {{
+          tournament.end_date.strftime('%d %b %Y') }} {% elif
+          tournament.start_date %} Starts {{ tournament.start_date.strftime('%d
+          %b %Y') }} {% else %} Dates TBA {% endif %}
+        </div>
+      </div>
     </div>
-    <div class="absolute top-6 left-24">
-      <div class="flex flex-col">
-        <span class="text-xl text-gray-500 dark:text-gray-400 mb-2">{{ tournament.name }}</span>
-        <span class="text-sm text-gray-500 dark:text-gray-400">{{ tournament.location }} <span
-            class="text-gray-500 dark:text-gray-400">|</span> {{ tournament.start_date.strftime('%d %b %Y') }} - {{
-          tournament.end_date.strftime('%d %b %Y') }}</span>
+  </div>
+
+  <!-- Key Facts -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+    <div
+      class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4"
+    >
+      <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">Dates</div>
+      <div class="text-sm text-gray-800 dark:text-gray-200">
+        {% if tournament.start_date and tournament.end_date %} {{
+        tournament.start_date.strftime('%d %b %Y') }} - {{
+        tournament.end_date.strftime('%d %b %Y') }} {% elif
+        tournament.start_date %} Starts {{ tournament.start_date.strftime('%d %b
+        %Y') }} {% else %} TBA {% endif %}
+      </div>
+    </div>
+    <div
+      class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4"
+    >
+      <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">Location</div>
+      <div class="text-sm text-gray-800 dark:text-gray-200">
+        {{ tournament.location or '—' }}
+      </div>
+    </div>
+    <div
+      class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4"
+    >
+      <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">Tier</div>
+      <div class="text-sm font-semibold text-gray-800 dark:text-gray-200">
+        {{ tournament.tier.value.upper() }}
+      </div>
+    </div>
+    <div
+      class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4"
+    >
+      <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">Type</div>
+      <div class="text-sm text-gray-800 dark:text-gray-200">
+        {{ tournament.type.value.upper() }}
+      </div>
+    </div>
+    <div
+      class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4"
+    >
+      <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">Format</div>
+      <div class="text-sm text-gray-800 dark:text-gray-200">
+        {{ tournament.format.value.upper().replace('_', ' ') }}
+      </div>
+    </div>
+    <div
+      class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4"
+    >
+      <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">Status</div>
+      <div class="text-sm text-gray-800 dark:text-gray-200">
+        {{ tournament.status.value.upper().replace('_',' ') }}
       </div>
     </div>
   </div>
@@ -56,43 +160,72 @@
   {% endif %}
 
   <!-- Participating Teams -->
-  <div class="bg-white dark:bg-slate-800 rounded-lg shadow border border-gray-200 dark:border-slate-700">
-    <div class="px-4 py-3 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
-      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Participating Teams</h2>
-      <div class="text-xs text-gray-500 dark:text-gray-400">{{ teams|length }} teams</div>
+  <div
+    class="bg-white dark:bg-slate-800 rounded-lg shadow border border-gray-200 dark:border-slate-700"
+  >
+    <div
+      class="px-4 py-3 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between"
+    >
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+        Participating Teams
+      </h2>
+      <div class="text-xs text-gray-500 dark:text-gray-400">
+        {{ teams|length }} teams
+      </div>
     </div>
 
     {% if teams %}
     <div class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {% for team in teams %}
-      <a href="/teams/{{ team.id }}"
-        class="block bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-4 hover:shadow-md transition">
+      <a
+        href="/teams/{{ team.id }}"
+        class="group block bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-4 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 transition"
+      >
         <div class="flex items-center">
-          <div class="h-12 w-12 rounded-full bg-gray-200 dark:bg-slate-700 overflow-hidden mr-3">
+          <div
+            class="h-12 w-12 rounded-full bg-white dark:bg-slate-900 overflow-hidden mr-3 border border-gray-200 dark:border-slate-700 flex items-center justify-center"
+          >
             {% if team.logo_path %}
-            <img src="/api/moba/teams/images/{{ team.logo_path }}" alt="{{ team.name }}"
-              class="h-full w-full object-cover" onerror="replaceWithLogo(this)">
+            <img
+              src="/api/moba/teams/images/{{ team.logo_path }}"
+              alt="{{ team.name }}"
+              class="h-10 w-10 object-contain"
+              onerror="replaceWithLogo(this)"
+            />
             {% else %}
-            <i class="bi bi-shield-fill text-blue-500 text-5xl opacity-80"></i>
+            <i class="bi bi-shield-fill text-blue-500 text-3xl opacity-80"></i>
             {% endif %}
           </div>
-          <div>
-            <div class="font-medium text-gray-800 dark:text-gray-200">{{ team.name }}</div>
-            <div class="text-xs text-gray-500 dark:text-gray-400">{{ team.region or '—' }}</div>
+          <div class="flex-1">
+            <div class="font-medium text-gray-800 dark:text-gray-200">
+              {{ team.name }}
+            </div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">
+              {{ team.region or '—' }}
+            </div>
           </div>
+          {% if team.tier %}
+          <span
+            class="ml-2 text-[10px] font-bold px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+            >{{ team.tier.value.upper() }}</span
+          >
+          {% endif %}
         </div>
       </a>
       {% endfor %}
     </div>
     {% else %}
-    <div class="p-6 text-center text-sm text-gray-500 dark:text-gray-400">No teams linked to this tournament yet.</div>
+    <div class="p-6 text-center text-sm text-gray-500 dark:text-gray-400">
+      No teams linked to this tournament yet.
+    </div>
     {% endif %}
   </div>
 </div>
 <script>
   function replaceWithColor(img) {
     const div = document.createElement("div");
-    div.className = "h-40 w-full object-cover bg-gray-200 dark:bg-slate-700 overflow-hidden mr-3";
+    div.className =
+      "h-40 w-full object-cover bg-gray-200 dark:bg-slate-700 overflow-hidden mr-3";
     img.replaceWith(div);
   }
   function replaceWithLogo(img) {

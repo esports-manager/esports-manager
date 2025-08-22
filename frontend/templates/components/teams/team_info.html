@@ -18,14 +18,17 @@
   }
 }"
 >
-  <!-- Page Header - Team Name -->
-  <header class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">
-      {{ team.name }}
-    </h1>
-    <p class="text-lg text-gray-600 dark:text-gray-400">{{ team.region }}</p>
-  </header>
-
+  <div class="flex items-center justify-between mb-4">
+    <div class="text-lg">
+      <a
+        href="/page/teams"
+        class="text-blue-600 dark:text-blue-400 hover:underline"
+        >Teams</a
+      >
+      <span class="mx-1 text-gray-400">/</span>
+      <span class="text-gray-600 dark:text-gray-300">Details</span>
+    </div>
+  </div>
   <!-- Main Content Grid -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Left Column: Team Card -->
@@ -319,7 +322,7 @@
 
                     <!-- Role & Rating -->
                     <div class="flex items-center mt-1">
-                      {% include "components/player_role_component.html" %}
+                      {% include "components/players/player_role_component.html" %}
 
                       <span
                         class="ml-2 text-sm text-gray-600 dark:text-gray-400"

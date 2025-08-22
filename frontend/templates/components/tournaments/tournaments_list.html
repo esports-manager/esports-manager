@@ -1,118 +1,185 @@
-<!-- Tournament Grid View -->
+<!-- Tournaments List Partial -->
 {% if tournaments %}
 <h3 class="text-xl font-semibold mb-4 mt-2 text-slate-800 dark:text-white">
   Current Season Tournaments
 </h3>
-<div
-  x-show="view === 'list'"
-  class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-x-auto mb-6"
->
+
+<!-- List view -->
+<div x-show="view === 'list'" class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-x-auto mb-6">
   <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
     <thead>
       <tr class="bg-gray-50 dark:bg-slate-800">
-        <th
-          class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-        >
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
           Tournament
         </th>
-        <th
-          class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-        >
-          Region
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          Location
         </th>
-        <th
-          class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-        >
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
           Tier
         </th>
-        <th
-          class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-        >
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
           Dates
         </th>
-        <th
-          class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-        >
-          Prize Pool
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          Status
         </th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="bg-white dark:bg-slate-700 divide-y divide-gray-200 dark:divide-gray-600">
       {% for tournament in tournaments %}
       <tr class="hover:bg-gray-50 dark:hover:bg-slate-600">
         <td class="px-6 py-4 whitespace-nowrap">
-          <div class="flex items-center">
-            <div class="flex-shrink-0 h-10 w-10">
-              {% if tournament.image_path %}
-              <img
-                class="h-10 w-10 rounded-full object-cover"
-                src="{{ tournament.image_path }}"
-                alt="{{ tournament.name }}"
-              />
-              {% else %}
-              <img
-                class="h-10 w-10 rounded-full object-cover"
-                src="{{ url_for('static', filename='img/placeholders/tournament_default.webp') }}"
-                alt="{{ tournament.name }}"
-              />
-              {% endif %}
-              <div
-                class="ml-4 text-sm font-medium text-gray-900 dark:text-gray-100"
-              >
-                {{ tournament.name }}
+          <a href="/tournaments/{{ tournament.id }}">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10">
+                {% if tournament.logo_path %}
+                <img class="h-10 w-10 rounded-full object-cover" src="/api/moba/tournaments/images/{{ tournament.logo_path }}" alt="{{ tournament.name }}">
+                {% else %}
+                <img class="h-10 w-10 rounded-full object-cover" src="{{ url_for('static', filename='img/default-avatar.svg') }}" alt="{{ tournament.name }}">
+                {% endif %}
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ tournament.name }}</div>
+                {% if tournament.abbreviation %}
+                <div class="text-xs text-gray-500 dark:text-gray-400">{{ tournament.abbreviation }}</div>
+                {% endif %}
               </div>
             </div>
-          </div>
+          </a>
         </td>
-        <td>
-          {% if tournament.region %}
-          <div class="text-xs text-gray-500 dark:text-gray-400">
-            Region: {{ tournament.region }}
-          </div>
-          {% else %}
-          <div class="text-xs text-gray-500 dark:text-gray-400">
-            Region: None
-          </div>
-          {% endif %}
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+          {{ tournament.location or '—' }}
         </td>
-        <td class="px-6 py-4 whitespace-nowrap">{{ tournament.tier }}</td>
-        <td class="px-6 py-4 whitespace-nowrap">
-          {{ tournament.start_date }} - {{ tournament.end_date }}
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap">{{ tournament.prize_pool }}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{{ tournament.tier }}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{{ tournament.start_date }}{% if tournament.end_date %} - {{ tournament.end_date }}{% endif %}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{{ tournament.status }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
 
-<!-- Tournaments Grid View -->
-<div
-  x-show="view === 'grid'"
-  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-8 p-2"
->
+<!-- Grid view -->
+<div x-show="view === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-8 p-2">
   {% for tournament in tournaments %}
-  <div
-    class="group bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden border border-gray-100 dark:border-slate-600 transition-all duration-200 hover:shadow-xl hover:scale-[1.1] cursor-pointer"
-  >
-    <div class="relative">
-      {% if tournament.banner_path %}
-      <img src="{{ tournament.banner_path }}" alt="{{ tournament.name }}"
-        class="w-full h-48 object-cover">
-      {% else %}
-      <img src="{{ url_for('static', filename='img/placeholders/tournament_default.webp') }}"
-        alt="{{ tournament.name }}" class="w-full h-48 object-cover">
-      {% endif %}
+  <a href="/tournaments/{{ tournament.id }}" class="group transition-all duration-200 hover:shadow-xl hover:scale-[1.1] cursor-pointer">
+    <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden border border-gray-100 dark:border-slate-600 transition-shadow duration-300 flex flex-col">
+      <div class="relative h-32">
+        {% if tournament.banner_path %}
+        <img src="/api/moba/tournaments/images/{{ tournament.banner_path }}" alt="{{ tournament.name }} banner" class="w-full h-full object-cover opacity-70">
+        {% else %}
+          {% if tournament.default_color %}
+          <div class="w-full h-full" style="background-color: {{ tournament.default_color }}"></div>
+          {% else %}
+          <div class="w-full h-full bg-gradient-to-r from-slate-600 to-slate-700"></div>
+          {% endif %}
+        {% endif %}
+        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+
+        <!-- Tier Badge -->
+        <div class="absolute top-2 right-2">
+          <span class="px-2 py-1 rounded text-xs font-semibold bg-amber-200 dark:bg-amber-800 text-gray-700 dark:text-gray-200">{{ tournament.tier.value.upper() }}</span>
+        </div>
+
+        <!-- Tournament Logo -->
+        <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-white dark:bg-slate-800 rounded-full h-20 w-20 flex items-center justify-center border-4 border-white dark:border-slate-700 shadow-lg">
+          {% if tournament.logo_path %}
+          <img src="/api/moba/tournaments/images/{{ tournament.logo_path }}" alt="{{ tournament.name }} logo" class="h-16 w-16 object-contain">
+          {% else %}
+          <img src="{{ url_for('static', filename='img/default-avatar.svg') }}" alt="{{ tournament.name }}" class="h-16 w-16 object-contain">
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="p-4 pt-12">
+        <div class="text-center mb-2">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ tournament.name }}</h3>
+          <div class="text-xs text-gray-600 dark:text-gray-400">{{ tournament.location or '—' }}</div>
+        </div>
+        <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400">
+          <span>
+            {{ tournament.start_date }}
+          </span>
+          <span>
+          {% if tournament.end_date %} - 
+          </span>
+          <span>
+            {{ tournament.end_date }}
+          </span>
+          {% endif %}
+        </div>
+      </div>
     </div>
-    <div class="p-4">
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ tournament.name }}</h3>
-      <div class="text-sm text-gray-500 dark:text-gray-400">{{ tournament.region }}</div>
-      <div class="text-sm text-gray-500 dark:text-gray-400">{{ tournament.tier }}</div>
-      <div class="text-sm text-gray-500 dark:text-gray-400">{{ tournament.start_date }} - {{ tournament.end_date }}</div>
-      <div class="text-sm text-gray-500 dark:text-gray-400">{{ tournament.prize_pool }}</div>
-    </div>
-</div> 
+  </a>
   {% endfor %}
 </div>
-{% else %} {% include "components/tournaments/tournaments_empty.html" %} { %
-endif % }
+
+<!-- Pagination -->
+{% if pagination %}
+<div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
+  <div class="text-sm text-gray-600 dark:text-gray-400">
+    {% if pagination.total_tournaments > 0 %}
+    Showing <span class="font-medium">{{ pagination.showing_start }}-{{ pagination.showing_end }}</span> of <span class="font-medium">{{ pagination.total_tournaments }}</span> tournaments
+    {% else %}
+    No tournaments found
+    {% endif %}
+  </div>
+
+  {% if pagination.total_pages > 1 %}
+  <div class="flex flex-wrap justify-center gap-1">
+    <!-- Previous Button -->
+    <button {% if pagination.has_prev %} hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": {{ pagination.page - 1 }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}" }' hx-target="#tournaments-container" hx-swap="innerHTML"
+      class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
+      {% else %} disabled
+      class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500 text-sm cursor-not-allowed"
+      {% endif %}>
+      Previous
+    </button>
+
+    <!-- First Page (if not near the beginning) -->
+    {% if pagination.page > 3 %}
+    <button hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": 1, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}" }' hx-target="#tournaments-container" hx-swap="innerHTML" class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150">
+      1
+    </button>
+
+    <!-- Ellipsis if needed -->
+    {% if pagination.page > 4 %}
+    <span class="px-3 py-1 text-gray-500 dark:text-gray-400 text-sm">...</span>
+    {% endif %}
+  {% endif %}
+
+    <!-- Page Numbers -->
+    {% set start_page = [pagination.page - 2, 1]|max %}
+    {% set end_page = [pagination.page + 2, pagination.total_pages]|min %}
+    {% for page_num in range(start_page, end_page + 1) %}
+    <button {% if page_num==pagination.page %} class="px-3 py-1 rounded-md bg-blue-500 text-white text-sm" disabled {% else %}
+      hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": {{ page_num }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}" }' hx-target="#tournaments-container" hx-swap="innerHTML" class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
+      {% endif %}>
+      {{ page_num }}
+    </button>
+    {% endfor %}
+
+    <!-- Ellipsis if needed and Last Page -->
+    {% if pagination.page < pagination.total_pages - 3 %}
+    <span class="px-3 py-1 text-gray-500 dark:text-gray-400 text-sm">...</span>
+    <button hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": {{ pagination.total_pages }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}" }' hx-target="#tournaments-container" hx-swap="innerHTML" class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150">
+      {{ pagination.total_pages }}
+    </button>
+    {% endif %}
+
+    <!-- Next Button -->
+    <button {% if pagination.has_next %} hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": {{ pagination.page + 1 }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}" }' hx-target="#tournaments-container" hx-swap="innerHTML"
+      class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
+      {% else %} disabled
+      class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500 text-sm cursor-not-allowed"
+      {% endif %}>
+      Next
+    </button>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+{% else %}
+{% include "components/tournaments/tournaments_empty.html" %}
+{% endif %}

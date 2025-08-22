@@ -169,6 +169,7 @@ async def get_teams(request: Request, session: Session = Depends(get_session)):
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
+            request,
             "components/teams/teams_list.html",
             {
                 "request": request,
@@ -193,6 +194,7 @@ async def get_team_options(request: Request, session: Session = Depends(get_sess
     teams = session.exec(select(MobaTeam).order_by(MobaTeam.name)).all()
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
+            request,
             "components/team_options.html",
             {
                 "request": request,
@@ -240,6 +242,7 @@ async def get_team(
             team_data["image_banner"] = f"/api/moba/teams/images/{filename}"
         team_public = MobaTeamWithPlayers.model_validate(team_data)
         return templates.TemplateResponse(
+            request,
             "components/team_info.html",
             {
                 "request": request,
@@ -283,6 +286,7 @@ async def get_team_players(
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
+            request,
             "components/team_players.html",
             {
                 "request": request,

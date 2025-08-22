@@ -192,6 +192,7 @@ async def get_players(
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
+            request,
             "components/players/players_list.html",
             {
                 "request": request,
@@ -240,6 +241,7 @@ async def get_player(
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
+            request,
             "components/player_info.html",
             {
                 "request": request,

@@ -2,10 +2,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
 from fastapi import APIRouter, status, Depends, HTTPException, Request
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from sqlmodel import Session, select
 from pathlib import Path
-from esm.config import ESM_DIR
+from esm.config import ESM_DIR, FRONTEND_DIR
 from esm.db import get_session
 from esm.services import serve_image
 from esm.models.moba.tournament import (
@@ -23,6 +24,9 @@ tournament_routes = APIRouter(
     tags=["moba_tournaments"],
     responses={404: {"description": "Tournament not found"}},
 )
+
+templates_dir = FRONTEND_DIR / "templates"
+templates = Jinja2Templates(directory=templates_dir)
 
 
 @tournament_routes.get("/", response_model=list[MobaTournamentPublic])
@@ -48,6 +52,14 @@ async def get_tournaments(
         query = query.where(MobaTournament.format == request.query_params.get("format"))
         count_query = count_query.where(
             MobaTournament.format == request.query_params.get("format")
+        )
+    # Optional location filter (maps from frontend region/location controls)
+    if request.query_params.get("location"):
+        query = query.where(
+            MobaTournament.location == request.query_params.get("location")
+        )
+        count_query = count_query.where(
+            MobaTournament.location == request.query_params.get("location")
         )
     if request.query_params.get("search"):
         search = request.query_params.get("search")
@@ -85,6 +97,44 @@ async def get_tournaments(
     skip = (page - 1) * per_page
 
     tournaments = session.exec(query.offset(skip).limit(per_page)).all()
+
+    # Pagination metadata
+    total_tournaments = len(session.exec(count_query).all())
+    total_pages = (total_tournaments + per_page - 1) // per_page
+    pagination = {
+        "page": page,
+        "per_page": per_page,
+        "total_tournaments": total_tournaments,
+        "total_pages": total_pages,
+        "has_next": page < total_pages,
+        "has_prev": page > 1,
+        "showing_start": min(skip + 1, total_tournaments)
+        if total_tournaments > 0
+        else 0,
+        "showing_end": min(skip + per_page, total_tournaments),
+    }
+
+    # HTMX partial rendering support
+    if request.headers.get("HX-Request"):
+        return templates.TemplateResponse(
+            request,
+            "components/tournaments/tournaments_list.html",
+            {
+                "request": request,
+                "tournaments": tournaments,
+                "pagination": pagination,
+                "current_filters": {
+                    "tier": request.query_params.get("tier", ""),
+                    "type": request.query_params.get("type", ""),
+                    "format": request.query_params.get("format", ""),
+                    "location": request.query_params.get("location", ""),
+                    "search": request.query_params.get("search", ""),
+                    "sort": sort_by,
+                    "direction": sort_direction,
+                },
+            },
+        )
+
     return tournaments
 
 

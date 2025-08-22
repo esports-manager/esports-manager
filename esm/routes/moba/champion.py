@@ -131,6 +131,7 @@ async def get_champions(
     # Return HTMX response or regular API response
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
+            request,
             "components/champions/champions_list.html",
             {
                 "request": request,
@@ -344,6 +345,7 @@ async def get_champion_meta(
     if request.headers.get("HX-Request"):
         selected_role = role if role else "overview"
         return templates.TemplateResponse(
+            request,
             "components/champions/champions_meta.html",
             {
                 "request": request,

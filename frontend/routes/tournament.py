@@ -54,6 +54,7 @@ async def get_tournament_page(
     ]
 
     return templates.TemplateResponse(
+        request,
         "layout.html",
         {
             "request": request,

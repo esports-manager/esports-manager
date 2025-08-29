@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
 from .player_contract import MobaPlayerContract
-from .player import MobaPlayer
+from .player import MobaPlayerRole, MobaPlayer
 from .team import MobaTeam
 from .champion import (
     MobaChampion,
@@ -43,6 +43,22 @@ from .staff import (
     MobaStaffPublic,
     MobaStaffRole,
 )
+from .events import (
+    MobaEventBase,
+    MobaFightEvent,
+    MobaJungleEvent,
+    MobaInhibitorEvent,
+    MobaNothingEvent,
+    MobaTowerEvent,
+    MobaNexusEvent,
+)
+from .moba_match_simulation import (
+    MobaMatchSimulation,
+    MobaMatchState,
+    MobaJungleObjective,
+)
+from .player_simulation import MobaPlayerSimulation
+from .team_simulation import MobaTeamSimulation
 
 __all__ = [
     "MobaPlayerContract",
@@ -77,4 +93,17 @@ __all__ = [
     "MobaStaffUpdate",
     "MobaStaffPublic",
     "MobaStaffRole",
+    "MobaEventBase",
+    "MobaFightEvent",
+    "MobaJungleEvent",
+    "MobaInhibitorEvent",
+    "MobaNothingEvent",
+    "MobaTowerEvent",
+    "MobaNexusEvent",
+    "MobaMatchSimulation",
+    "MobaMatchState",
+    "MobaJungleObjective",
+    "MobaPlayerSimulation",
+    "MobaPlayerRole",
+    "MobaTeamSimulation",
 ]

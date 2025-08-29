@@ -1,11 +1,7 @@
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, Field
 import enum
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional
-
-if TYPE_CHECKING:
-    from esm.models.moba.team_simulation import MobaTeamSimulation
-    from esm.models.moba.moba_match_simulation import MobaMatchState
+from typing import Optional, Tuple, Any
 
 
 class MobaEventType(str, enum.Enum):
@@ -26,14 +22,16 @@ class MobaJungleType(str, enum.Enum):
 
 
 class MobaEventBase(SQLModel, ABC):
-    name: str
-    event_type: MobaEventType
+    name: str = ""
+    event_type: Optional[MobaEventType] = None
     jungle_type: Optional[MobaJungleType] = None
-    team1: "MobaTeamSimulation"
-    team2: "MobaTeamSimulation"
-    state: "MobaMatchState"
+    team1: Optional[Any] = None
+    team2: Optional[Any] = None
+    state: Optional[Any] = None
     duration: int = 0
+    follow_up: Optional[Tuple[MobaEventType, Optional[MobaJungleType]]] = None
+    commentary: list[str] = Field(default_factory=list)
 
     @abstractmethod
-    def calculate(self) -> "MobaMatchState":
+    def calculate(self) -> Any:
         raise NotImplementedError

@@ -1,9 +1,6 @@
 from sqlmodel import SQLModel, Field
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from esm.models.moba.team import MobaTeam
-    from esm.models.moba.player_simulation import MobaPlayerSimulation
+from esm.models.moba.team import MobaTeam
+from esm.models.moba.player_simulation import MobaPlayerSimulation
 
 
 class MobaTowers(SQLModel):
@@ -31,8 +28,8 @@ class MobaTeamState(SQLModel):
 
 
 class MobaTeamSimulation(SQLModel):
-    team: "MobaTeam"
-    players: list["MobaPlayerSimulation"] = Field(default_factory=list)
+    team: MobaTeam
+    players: list[MobaPlayerSimulation] = Field(default_factory=list)
     state: MobaTeamState = Field(default_factory=MobaTeamState)
 
     @property
@@ -56,3 +53,62 @@ class MobaTeamSimulation(SQLModel):
     @property
     def points(self) -> int:
         return sum(player.points for player in self.players)
+
+    @property
+    def towers_remaining(self) -> int:
+        return (
+            self.state.towers.top
+            + self.state.towers.mid
+            + self.state.towers.bot
+            + self.state.towers.base
+        )
+
+    @property
+    def are_inhibitors_exposed(self) -> bool:
+        return len(self.get_exposed_inhibitors()) > 0
+
+    def get_exposed_inhibitors(self) -> list[str]:
+        exposed = []
+        if self.state.towers.top == 0 and self.state.inhibitors.top == 1:
+            exposed.append("top")
+        if self.state.towers.mid == 0 and self.state.inhibitors.mid == 1:
+            exposed.append("mid")
+        if self.state.towers.bot == 0 and self.state.inhibitors.bot == 1:
+            exposed.append("bot")
+        return exposed
+
+    def are_base_towers_exposed(self) -> bool:
+        towers = [self.state.towers.top, self.state.towers.mid, self.state.towers.bot]
+        inhibitors = [
+            self.state.inhibitors.top,
+            self.state.inhibitors.mid,
+            self.state.inhibitors.bot,
+        ]
+        return (
+            any(t == 0 and i == 1 for t, i in zip(towers, inhibitors))
+            and self.state.towers.base > 0
+        )
+
+    def get_remaining_towers(self) -> list[str]:
+        remaining = []
+        if self.state.towers.top > 0:
+            remaining.append("top")
+        if self.state.towers.mid > 0:
+            remaining.append("mid")
+        if self.state.towers.bot > 0:
+            remaining.append("bot")
+
+        if self.are_base_towers_exposed():
+            remaining.append("base")
+        return remaining
+
+    def is_nexus_exposed(self) -> bool:
+        inhibitors = [
+            self.state.inhibitors.top,
+            self.state.inhibitors.mid,
+            self.state.inhibitors.bot,
+        ]
+        return any(i == 0 for i in inhibitors) and self.state.towers.base == 0
+
+    def score(self) -> int:
+        return sum(player.get_score() for player in self.players)

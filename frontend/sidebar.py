@@ -57,6 +57,16 @@ sidebar = {
         "icon": "bi bi-trophy-fill",
         "url": "tournaments",
     },
+    "simulator": {
+        "name": "Simulator",
+        "icon": "bi bi-controller",
+        "url": "simulator",
+    },
+    "lineups": {
+        "name": "Lineups",
+        "icon": "bi bi-people",
+        "url": "lineups",
+    },
 }
 
 current_page = "home"

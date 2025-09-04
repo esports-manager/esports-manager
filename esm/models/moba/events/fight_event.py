@@ -39,7 +39,7 @@ class MobaFightEvent(MobaEventBase):
                 killer = random.choice(winning_team.players)
                 victim = random.choice(losing_team.players)
                 killer.kills += 1
-                killer.points += 10
+                killer.points += self.points
                 victim.deaths += 1
                 if not state.first_blood:
                     state.first_blood = True

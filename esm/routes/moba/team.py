@@ -7,7 +7,7 @@ from pathlib import Path
 from sqlmodel import SQLModel, Field
 from esm.config import FRONTEND_DIR, ESM_DIR
 from esm.db import get_session
-from esm.services import serve_image
+from esm.services import serve_image_async
 from esm.models.moba.team import (
     MobaTeam,
     MobaTeamCreate,
@@ -344,6 +344,5 @@ async def add_player_to_team(
 @team_routes.get("/images/{filename}")
 async def get_team_image(filename: str):
     image_path = Path(ESM_DIR) / "res" / "img" / "teams" / filename
-    return serve_image(
-        image_path, Path(ESM_DIR) / "res" / "img" / "teams" / "default_team.webp"
-    )
+    default_image = Path(ESM_DIR) / "res" / "img" / "teams" / "default_team.webp"
+    return await serve_image_async(image_path, default_image)

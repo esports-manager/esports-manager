@@ -21,6 +21,8 @@ dependencies = [
     "pytailwindcss>=0.2.0",
     "httpx>=0.26.1",
     "pycountry>=24.6.1",
+    "aiofiles>=24.1.0",
+    "aiosqlite>=0.21.0",
 ]
 
 [dependency-groups]

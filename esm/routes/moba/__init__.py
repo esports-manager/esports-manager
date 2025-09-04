@@ -8,6 +8,7 @@ from .champion import champion_routes
 from .search import search_routes
 from .tournament import tournament_routes
 from .inbox import inbox_routes
+from .simulation import simulation_routes
 from .staff import staff_routes
 
 moba_router = APIRouter(
@@ -23,3 +24,4 @@ moba_router.include_router(search_routes)
 moba_router.include_router(tournament_routes)
 moba_router.include_router(inbox_routes)
 moba_router.include_router(staff_routes)
+moba_router.include_router(simulation_routes)

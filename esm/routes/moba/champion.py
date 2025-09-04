@@ -13,6 +13,8 @@ from esm.models.moba.champion import (
     MobaChampionPublic,
     MobaChampionRole,
     MobaChampionTier,
+    MobaChampionType,
+    MobaChampionDifficulty,
 )
 from sqlmodel import Session, select
 from fastapi import Depends, HTTPException
@@ -50,35 +52,74 @@ async def get_champions(
     skip = (page - 1) * per_page
 
     # Apply filters
-    if request.query_params.get("role"):
-        query = query.where(
-            MobaChampion.primary_role == request.query_params.get("role")
-        )
-        count_query = count_query.where(
-            MobaChampion.primary_role == request.query_params.get("role")
-        )
-    if request.query_params.get("type"):
-        query = query.where(
-            MobaChampion.champion_type1 == request.query_params.get("type")
-        )
-        count_query = count_query.where(
-            MobaChampion.champion_type1 == request.query_params.get("type")
-        )
-    if request.query_params.get("difficulty"):
-        query = query.where(
-            MobaChampion.difficulty == request.query_params.get("difficulty")
-        )
-        count_query = count_query.where(
-            MobaChampion.difficulty == request.query_params.get("difficulty")
-        )
+    role_param = request.query_params.get("role")
+    if role_param:
+        role_enum = None
+        try:
+            role_enum = MobaChampionRole(role_param)
+        except Exception:
+            try:
+                role_enum = MobaChampionRole[role_param.upper()]
+            except Exception:
+                role_enum = None
+        if role_enum is not None:
+            query = query.where(MobaChampion.primary_role == role_enum)
+            count_query = count_query.where(MobaChampion.primary_role == role_enum)
+
+    type_param = request.query_params.get("type")
+    if type_param:
+        type_enum = None
+        try:
+            type_enum = MobaChampionType(type_param)
+        except Exception:
+            try:
+                type_enum = MobaChampionType[type_param.upper()]
+            except Exception:
+                type_enum = None
+        if type_enum is not None:
+            query = query.where(MobaChampion.champion_type1 == type_enum)
+            count_query = count_query.where(MobaChampion.champion_type1 == type_enum)
+
+    difficulty_param = request.query_params.get("difficulty")
+    if difficulty_param:
+        diff_enum = None
+        try:
+            diff_enum = MobaChampionDifficulty(difficulty_param)
+        except Exception:
+            try:
+                diff_enum = MobaChampionDifficulty[difficulty_param.upper()]
+            except Exception:
+                diff_enum = None
+        if diff_enum is not None:
+            query = query.where(MobaChampion.difficulty == diff_enum)
+            count_query = count_query.where(MobaChampion.difficulty == diff_enum)
+
     # Handle tier filtering based on strength ranges
-    if request.query_params.get("tier"):
-        query = query.where(
-            MobaChampion.champion_tier == request.query_params.get("tier")
-        )
-        count_query = count_query.where(
-            MobaChampion.champion_tier == request.query_params.get("tier")
-        )
+    tier_param = request.query_params.get("tier")
+    if tier_param:
+        tier_param = tier_param.lower()
+        strength_min, strength_max = None, None
+        if tier_param == "s+" or tier_param == "sp":
+            strength_min, strength_max = 95, 100
+        elif tier_param == "s":
+            strength_min, strength_max = 90, 94
+        elif tier_param == "a":
+            strength_min, strength_max = 80, 89
+        elif tier_param == "b":
+            strength_min, strength_max = 70, 79
+        elif tier_param == "c":
+            strength_min, strength_max = 60, 69
+        elif tier_param == "d":
+            strength_min, strength_max = 50, 59
+        elif tier_param == "f":
+            strength_min, strength_max = 0, 49
+
+        if strength_min is not None:
+            query = query.where(MobaChampion.strength >= strength_min)
+            count_query = count_query.where(MobaChampion.strength >= strength_min)
+        if strength_max is not None:
+            query = query.where(MobaChampion.strength <= strength_max)
+            count_query = count_query.where(MobaChampion.strength <= strength_max)
     if request.query_params.get("search"):
         query = query.where(
             MobaChampion.name.icontains(request.query_params.get("search"))

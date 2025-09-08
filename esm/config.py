@@ -46,8 +46,6 @@ class Config:
             self.port = default_config["port"]
             self.api_url = default_config["api_url"]
 
-        print(self)
-
     def save_config(self):
         config_path = ESM_DIR / "config.json"
         with open(config_path, "w") as f:

@@ -1,142 +1,29 @@
 from sqlmodel import SQLModel, Field
-from typing import TYPE_CHECKING, Optional, Tuple
-import enum
+from typing import Optional, Tuple
 from datetime import datetime
 import random
 
-from esm.models.moba.events.event import (
-    MobaEventType,
-    MobaJungleType,
-)
 from esm.models.moba.events.event_factory import get_event_from_type
 from esm.models.moba.player import MobaPlayerRole
 from esm.models.moba.team_simulation import MobaTeamSimulation
 from esm.models.moba.events.event import MobaEventBase
-
-
-if TYPE_CHECKING:
-    # No TYPE_CHECKING-only imports needed currently
-    pass
-
-
-class MobaJungleObjective(SQLModel):
-    name: str
-    type: MobaJungleType
-    enabled: bool = True  # If the objective is on this patch
-    available: bool = False  # Spawning window says it can be taken now
-    first_spawn_at: int = 0
-    respawn_seconds: int = 0
-    next_spawn_at: int = 0
-    despawn_at: Optional[int] = None
-
-    def refresh(self, current_time: int) -> None:
-        if not self.enabled:
-            return
-
-        if self.despawn_at is not None and current_time >= self.despawn_at:
-            self.available = False
-            return
-
-        self.available = current_time >= self.next_spawn_at
-
-    def taken(self, current_time: int) -> None:
-        self.available = False
-        self.next_spawn_at = current_time + self.respawn_seconds
-
-
-class MobaMatchStatus(str, enum.Enum):
-    NOT_STARTED = "not started"
-    IN_PROGRESS = "in progress"
-    ENDED = "ended"
-
-
-class MobaMatchState(SQLModel):
-    team1_towers_taken: int = 0
-    team2_towers_taken: int = 0
-    team1_inhibitors_taken: int = 0
-    team2_inhibitors_taken: int = 0
-    team1_nexus_exposed: bool = False
-    team2_nexus_exposed: bool = False
-    jungle_objectives: list[MobaJungleObjective] = Field(default_factory=list)
-    first_blood: bool = False
-    first_tower: bool = False
-    winner: int | None = None
-    time: int = 0
-    status: MobaMatchStatus = Field(default=MobaMatchStatus.NOT_STARTED)
-
-    def update_jungle_objectives(self) -> None:
-        self.jungle_objectives = [
-            MobaJungleObjective(
-                name="Dragon",
-                type=MobaJungleType.DRAGON,
-                first_spawn_at=5 * 60,
-                respawn_seconds=5 * 60,
-                next_spawn_at=5 * 60,
-            ),
-            MobaJungleObjective(
-                name="Rift Herald",
-                type=MobaJungleType.RIFT_HERALD,
-                first_spawn_at=8 * 60,
-                respawn_seconds=6 * 60,
-                next_spawn_at=8 * 60,
-                despawn_at=20 * 60,
-            ),
-            MobaJungleObjective(
-                name="Grub",
-                type=MobaJungleType.GRUB,
-                first_spawn_at=5 * 60,
-                respawn_seconds=3 * 60,
-                next_spawn_at=5 * 60,
-                despawn_at=14 * 60,
-            ),
-            MobaJungleObjective(
-                name="Baron",
-                type=MobaJungleType.BARON,
-                first_spawn_at=20 * 60,
-                respawn_seconds=6 * 60,
-                next_spawn_at=20 * 60,
-            ),
-            MobaJungleObjective(
-                name="Atakhan",
-                type=MobaJungleType.ATAKHAN,
-                first_spawn_at=25 * 60,
-                respawn_seconds=6 * 60,
-                next_spawn_at=25 * 60,
-            ),
-        ]
-
-    def reset(self) -> None:
-        self.team1_towers_taken = 0
-        self.team2_towers_taken = 0
-        self.team1_inhibitors_taken = 0
-        self.team2_inhibitors_taken = 0
-        self.team1_nexus_exposed = False
-        self.team2_nexus_exposed = False
-        self.first_blood = False
-        self.first_tower = False
-        self.winner = None
-        self.time = 0
-        self.status = MobaMatchStatus.NOT_STARTED
-        self.update_jungle_objectives()
-
-    @property
-    def minutes_played(self) -> int:
-        return self.time // 60
-
-    @property
-    def seconds_played(self) -> int:
-        return self.time % 60
+from esm.models.moba.moba_match_state import (
+    MobaMatchState,
+    MobaMatchStatus,
+    MobaJungleObjective,
+)
+from esm.models.moba.events.event_types import MobaEventType, MobaJungleType
 
 
 class MobaMatchSimulation(SQLModel):
     team1: MobaTeamSimulation
     team2: MobaTeamSimulation
-    state: MobaMatchState = Field(default_factory=MobaMatchState)
+    state: "MobaMatchState" = MobaMatchState()
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
     started_at: datetime | None = None
     ended_at: datetime | None = None
-    events: list[MobaEventBase] = Field(default_factory=list)
+    events: list["MobaEventBase"] = Field(default_factory=list)
     enabled_events: list[Tuple[MobaEventType, Optional[MobaJungleType]]] = Field(
         default_factory=list
     )
@@ -304,7 +191,7 @@ class MobaMatchSimulation(SQLModel):
         # For others, just ensure event type is enabled
         return any(e == ev for e, _ in enabled)
 
-    def _execute_event(self, event: MobaEventBase) -> MobaMatchState:
+    def _execute_event(self, event: MobaEventBase) -> "MobaMatchState":
         # Calculate result state and commit
         new_state = event.calculate()
         self.state = new_state
@@ -366,13 +253,6 @@ class MobaMatchSimulation(SQLModel):
                     p.farm += gain
                     # Small points from farming
                     p.points += max(0, gain // 20)
-                    # Occasional commentary for notable farm spikes
-                    if gain >= 12 and random.random() < 0.15:
-                        name = (
-                            p.player.nick_name
-                            or f"{p.player.first_name} {p.player.last_name}"
-                        )
-                        self.commentary_log.append(f"{name} farms {gain} CS.")
 
     def step(self) -> Optional[MobaEventBase]:
         if self.state.status == MobaMatchStatus.ENDED:

@@ -1,15 +1,16 @@
 import random
 from typing import TYPE_CHECKING
 
-from esm.models.moba.events.event import MobaEventBase, MobaJungleType, MobaEventType
+from esm.models.moba.events.event import MobaEventBase
 from esm.models.moba.team_simulation import MobaTeamSimulation
+from esm.models.moba.events.event_types import MobaEventType, MobaJungleType
 
 if TYPE_CHECKING:
     from esm.models.moba.moba_match_simulation import MobaMatchState
 
 
 class MobaJungleEvent(MobaEventBase):
-    def get_poins(self) -> int:
+    def get_points(self) -> int:
         if self.jungle_type == MobaJungleType.DRAGON:
             return 15
         elif self.jungle_type == MobaJungleType.GRUB:
@@ -26,35 +27,101 @@ class MobaJungleEvent(MobaEventBase):
         # Capturing an objective takes some time
         return random.randint(20, 60)
 
+    def get_team_to_win_objective(
+        self,
+    ) -> tuple[MobaTeamSimulation, MobaTeamSimulation, bool]:
+        """
+        Calculates which team will win the objective and which will lose it
+
+        Returns:
+            tuple[MobaTeamSimulation, MobaTeamSimulation, bool]: The team that will win the objective, the team that will lose it,
+                and whether it was stolen.
+        """
+        teams: list[MobaTeamSimulation] = [self.team1, self.team2]
+        win_prob = [t.state.win_probability for t in teams]
+        acting_team = random.choices(teams, win_prob)[0]
+        defending_team = [t for t in teams if t != acting_team][0]
+
+        acting_team_stats = sum(
+            [
+                (
+                    player.player.communication
+                    + player.player.leadership
+                    + player.player.teamwork
+                    + player.player.decisions
+                    + player.points
+                )
+                for player in acting_team.players
+            ]
+        )
+
+        defending_team_stats = sum(
+            [
+                (
+                    player.player.communication
+                    + player.player.leadership
+                    + player.player.teamwork
+                    + player.player.decisions
+                    + player.points
+                )
+                for player in defending_team.players
+            ]
+        )
+
+        steal_chance = defending_team_stats / (acting_team_stats + defending_team_stats)
+        steal = random.random() > steal_chance
+
+        if steal:
+            return defending_team, acting_team
+        return acting_team, defending_team
+
     def calculate(self) -> "MobaMatchState":
         state = self.state.model_copy()
         self.duration = self.get_duration()
         self.points = self.get_points()
 
-        teams: list[MobaTeamSimulation] = [self.team1, self.team2]
-        win_prob = [t.state.win_probability for t in teams]
-        acting_team = random.choices(teams, win_prob)[0]
-        target_team = [t for t in teams if t != acting_team][0]
+        acting_team, defending_team, steal = self.get_team_to_win_objective()
 
         # Apply objective effects
         if self.jungle_type == MobaJungleType.DRAGON:
-            acting_team.state.dragons += 1
-            self.commentary.append(f"{acting_team.team.name} secures Dragon.")
+            if steal:
+                defending_team.state.dragons += 1
+                self.commentary.append(f"{defending_team.team.name} stole the! Dragon.")
+            else:
+                acting_team.state.dragons += 1
+                self.commentary.append(f"{acting_team.team.name} secures Dragon.")
         elif self.jungle_type == MobaJungleType.BARON:
-            acting_team.state.barons += 1
-            self.commentary.append(f"{acting_team.team.name} has taken Baron!")
+            if steal:
+                defending_team.state.barons += 1
+                self.commentary.append(f"{defending_team.team.name} stole the! Baron.")
+            else:
+                acting_team.state.barons += 1
+                self.commentary.append(f"{acting_team.team.name} secures Baron.")
         elif self.jungle_type == MobaJungleType.GRUB:
-            acting_team.state.grubs += 1
-            self.commentary.append(f"{acting_team.team.name} secures Voidgrubs.")
+            if steal:
+                defending_team.state.grubs += 1
+                self.commentary.append(
+                    f"{defending_team.team.name} stole the! Voidgrubs."
+                )
+            else:
+                acting_team.state.grubs += 1
+                self.commentary.append(f"{acting_team.team.name} secures Voidgrubs.")
         elif self.jungle_type == MobaJungleType.RIFT_HERALD:
-            # Deterministic for tests: Herald pressure converts into a tower for team2
-            # (the enemy of team1 in our test setups). This avoids randomness.
-            self.commentary.append(f"{acting_team.team.name} secures Rift Herald.")
-            self._take_random_tower(acting_team, target_team)
+            if steal:
+                self.commentary.append(
+                    f"{defending_team.team.name} stole the! Rift Herald."
+                )
+                self._take_random_tower(defending_team, acting_team)
+            else:
+                self.commentary.append(f"{acting_team.team.name} secures Rift Herald.")
+                self._take_random_tower(acting_team, defending_team)
         elif self.jungle_type == MobaJungleType.ATAKHAN:
-            # Treat as a powerful late-game buff similar to baron for scoring
-            acting_team.state.barons += 1
-            self.commentary.append(f"{acting_team.team.name} secures Atakhan!")
+            if steal:
+                self.commentary.append(
+                    f"{defending_team.team.name} stole the! Atakhan."
+                )
+            else:
+                self.commentary.append(f"{acting_team.team.name} secures Atakhan!")
 
         for player in acting_team.players:
             player.points += self.points
@@ -68,8 +135,20 @@ class MobaJungleEvent(MobaEventBase):
         # Advance clock
         state.time = end_time
 
-        # Chance to trigger a follow-up fight after objective
-        if random.random() < 0.35:
+        acting_team_aggression = sum(
+            [player.player.aggression + player.points for player in acting_team.players]
+        )
+        defending_team_aggression = sum(
+            [
+                player.player.aggression + player.points
+                for player in defending_team.players
+            ]
+        )
+
+        acting_team_fight_chance = acting_team_aggression / (
+            acting_team_aggression + defending_team_aggression
+        )
+        if random.random() < acting_team_fight_chance:
             self.follow_up = (MobaEventType.FIGHT_EVENT, None)
 
         return state

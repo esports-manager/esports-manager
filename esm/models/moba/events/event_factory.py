@@ -1,5 +1,6 @@
 from typing import Optional
-from esm.models.moba.events.event import MobaEventBase, MobaEventType, MobaJungleType
+from esm.models.moba.events.event_types import MobaEventType, MobaJungleType
+from esm.models.moba.events.event import MobaEventBase
 from esm.models.moba.events.nothing_event import MobaNothingEvent
 from esm.models.moba.events.fight_event import MobaFightEvent
 from esm.models.moba.events.jungle_event import MobaJungleEvent

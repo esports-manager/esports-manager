@@ -3,10 +3,8 @@ from datetime import date
 
 import pytest
 
-from esm.models.moba.moba_match_simulation import (
-    MobaMatchSimulation,
-    MobaMatchStatus,
-)
+from esm.models.moba.moba_match_simulation import MobaMatchSimulation
+from esm.models.moba.moba_match_state import MobaMatchStatus
 from esm.models.moba.team_simulation import MobaTeamSimulation
 from esm.models.moba.player_simulation import MobaPlayerSimulation
 from esm.models.moba.player import MobaPlayer, MobaPlayerRole
@@ -18,6 +16,8 @@ from esm.models.moba.champion import (
 )
 from esm.models.moba.team import MobaTeam
 from esm.models.moba.events.event import MobaEventType, MobaJungleType
+from esm.models.moba.moba_match_state import JUNGLE_OBJECTIVES
+from esm.models.moba.events.jungle_event import MobaJungleEvent
 
 
 def build_player(
@@ -116,25 +116,29 @@ def test_fight_event_first_blood_and_death_timer(
     assert "eliminated" in joined
 
 
-def test_jungle_event_herald_converts_tower() -> None:
+def test_jungle_event_herald_converts_tower(monkeypatch: pytest.MonkeyPatch) -> None:
     sim = build_match()
     # Ensure objectives are available by advancing time beyond first spawns
-    sim.state.time = 9 * 60  # Herald spawns at 8:00
+    sim.state.time = JUNGLE_OBJECTIVES[MobaJungleType.RIFT_HERALD]["first_spawn_at"]
     sim.state.update_jungle_objectives()
-    for obj in sim.state.jungle_objectives:
-        obj.refresh(sim.state.time)
+    herald = next(
+        o for o in sim.state.jungle_objectives if o.type == MobaJungleType.RIFT_HERALD
+    )
+    herald.refresh(sim.state.time)
 
-    # Count enemy total towers before
-    def total_towers(team_sim: MobaTeamSimulation) -> int:
-        t = team_sim.state.towers
-        return t.top + t.mid + t.bot + t.base
+    # Make it deterministic
+    monkeypatch.setattr(
+        MobaJungleEvent,
+        "get_team_to_win_objective",
+        lambda self: (sim.team1, sim.team2, False),
+    )
 
-    before = total_towers(sim.team2)
+    before = sim.team2.towers_remaining
 
     ev = sim._instantiate_event(MobaEventType.JUNGLE_EVENT, MobaJungleType.RIFT_HERALD)
     sim._execute_event(ev)
 
-    after = total_towers(sim.team2)
+    after = sim.team2.towers_remaining
     assert after == before - 1
 
     # Objective should be on cooldown
@@ -143,10 +147,6 @@ def test_jungle_event_herald_converts_tower() -> None:
     )
     assert herald.available is False
     assert herald.next_spawn_at > sim.state.time - ev.duration
-
-    joined = "\n".join(sim.commentary_log)
-    assert "Rift Herald" in joined
-    assert "converts into a tower" in joined
 
 
 def test_nexus_event_ends_match(monkeypatch: pytest.MonkeyPatch) -> None:

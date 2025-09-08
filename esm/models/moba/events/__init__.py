@@ -5,6 +5,7 @@ from .inhibitor_event import MobaInhibitorEvent
 from .nothing_event import MobaNothingEvent
 from .tower_event import MobaTowerEvent
 from .nexus_event import MobaNexusEvent
+from .event_types import MobaEventType, MobaJungleType
 
 
 __all__ = [
@@ -15,4 +16,6 @@ __all__ = [
     "MobaNothingEvent",
     "MobaTowerEvent",
     "MobaNexusEvent",
+    "MobaEventType",
+    "MobaJungleType",
 ]

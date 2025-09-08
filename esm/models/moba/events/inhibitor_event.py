@@ -1,7 +1,8 @@
 import random
 from typing import TYPE_CHECKING
 
-from esm.models.moba.events.event import MobaEventBase, MobaEventType
+from esm.models.moba.events.event import MobaEventBase
+from esm.models.moba.events.event_types import MobaEventType
 
 if TYPE_CHECKING:
     from esm.models.moba.moba_match_simulation import MobaMatchState

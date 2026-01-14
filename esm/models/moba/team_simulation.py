@@ -89,6 +89,42 @@ class MobaTeamSimulation(SQLModel):
             and self.state.towers.base > 0
         )
 
+    def take_inhibitor(self, lane: str) -> bool:
+        if lane not in ["top", "mid", "bot"]:
+            raise ValueError(f"Invalid lane: {lane}")
+
+        # Set the corresponding inhibitor to 0 (destroyed)
+        if lane == "top" and self.state.inhibitors.top > 0:
+            self.state.inhibitors.top = 0
+            return True
+        elif lane == "mid" and self.state.inhibitors.mid > 0:
+            self.state.inhibitors.mid = 0
+            return True
+        elif lane == "bot" and self.state.inhibitors.bot > 0:
+            self.state.inhibitors.bot = 0
+            return True
+
+        return False
+
+    def take_tower(self, lane: str) -> bool:
+        if lane not in ["top", "mid", "bot", "base"]:
+            raise ValueError(f"Invalid lane: {lane}")
+
+        if lane == "top" and self.state.towers.top > 0:
+            self.state.towers.top -= 1
+            return True
+        elif lane == "mid" and self.state.towers.mid > 0:
+            self.state.towers.mid -= 1
+            return True
+        elif lane == "bot" and self.state.towers.bot > 0:
+            self.state.towers.bot -= 1
+            return True
+        elif lane == "base" and self.state.towers.base > 0:
+            self.state.towers.base -= 1
+            return True
+
+        return False
+
     def get_remaining_towers(self) -> list[str]:
         remaining = []
         if self.state.towers.top > 0:

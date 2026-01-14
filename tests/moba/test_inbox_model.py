@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
 import pytest
-from sqlmodel import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from esm.models.moba.inbox import (
     MobaInbox,
@@ -26,7 +26,7 @@ def inbox_msg() -> MobaInbox:
     )
 
 
-def test_create_moba_inbox(inbox_msg: MobaInbox):
+async def test_create_moba_inbox(inbox_msg: MobaInbox):
     assert inbox_msg.subject == "Welcome"
     assert inbox_msg.body == "Welcome to the league!"
     assert inbox_msg.category == MobaInboxCategory.GENERAL
@@ -38,7 +38,7 @@ def test_create_moba_inbox(inbox_msg: MobaInbox):
     assert inbox_msg.labels == "intro,system"
 
 
-def test_moba_inbox_defaults():
+async def test_moba_inbox_defaults():
     msg = MobaInbox(
         subject="Test",
         body="Body",
@@ -52,7 +52,7 @@ def test_moba_inbox_defaults():
     assert msg.updated_at is None
 
 
-def test_enum_assignment(inbox_msg: MobaInbox):
+async def test_enum_assignment(inbox_msg: MobaInbox):
     for cat in MobaInboxCategory:
         inbox_msg.category = cat
         assert inbox_msg.category == cat
@@ -64,23 +64,23 @@ def test_enum_assignment(inbox_msg: MobaInbox):
         assert inbox_msg.priority == prio
 
 
-def test_persist_inbox_instance(inbox_msg: MobaInbox, session: Session):
+async def test_persist_inbox_instance(inbox_msg: MobaInbox, session: AsyncSession):
     session.add(inbox_msg)
-    session.commit()
-    session.refresh(inbox_msg)
+    await session.commit()
+    await session.refresh(inbox_msg)
     assert inbox_msg.id is not None
     assert inbox_msg.created_at is not None
     # No auto-update for updated_at at model level
     assert inbox_msg.updated_at is None
-    db_obj = session.get(MobaInbox, inbox_msg.id)
+    db_obj = await session.get(MobaInbox, inbox_msg.id)
     assert db_obj is not None
 
 
-def test_inbox_sender_team_relationship(session: Session):
+async def test_inbox_sender_team_relationship(session: AsyncSession):
     team = MobaTeam(name="Org A", nationality="X", region="NA")
     session.add(team)
-    session.commit()
-    session.refresh(team)
+    await session.commit()
+    await session.refresh(team)
 
     msg = MobaInbox(
         subject="Offer",
@@ -89,9 +89,9 @@ def test_inbox_sender_team_relationship(session: Session):
         sender_team_id=team.id,
     )
     session.add(msg)
-    session.commit()
-    session.refresh(msg)
+    await session.commit()
+    await session.refresh(msg)
 
     assert msg.sender_team_id == team.id
-    fetched = session.get(MobaInbox, msg.id)
+    fetched = await session.get(MobaInbox, msg.id)
     assert fetched.sender_team_id == team.id

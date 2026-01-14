@@ -3,7 +3,8 @@
 # License-Filename: LICENSES/GPL-3.0-or-later
 from fastapi import APIRouter, Request, Depends
 from fastapi.templating import Jinja2Templates
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Dict, Any
 
 from esm.db import get_session
@@ -24,7 +25,7 @@ templates = Jinja2Templates(directory=templates_dir)
 @search_routes.get("/")
 async def omni_search(
     request: Request,
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     q = (request.query_params.get("q") or "").strip()
     results: Dict[str, Any] = {
@@ -42,7 +43,8 @@ async def omni_search(
             .order_by(MobaPlayer.nick_name.asc(), MobaPlayer.id.asc())
             .limit(5)
         )
-        players = session.exec(player_query).all()
+        player_result = await session.execute(player_query)
+        players = player_result.scalars().all()
         results["players"] = [
             MobaPlayerPublic.model_validate(p.model_dump()) for p in players
         ]
@@ -54,7 +56,8 @@ async def omni_search(
             .order_by(MobaTeam.name.asc(), MobaTeam.id.asc())
             .limit(5)
         )
-        teams = session.exec(team_query).all()
+        team_result = await session.execute(team_query)
+        teams = team_result.scalars().all()
         results["teams"] = [
             MobaTeamPublic.model_validate(t.model_dump()) for t in teams
         ]
@@ -66,7 +69,8 @@ async def omni_search(
             .order_by(MobaChampion.name.asc(), MobaChampion.id.asc())
             .limit(5)
         )
-        champions = session.exec(champ_query).all()
+        champ_result = await session.execute(champ_query)
+        champions = champ_result.scalars().all()
         results["champions"] = [
             MobaChampionPublic.model_validate(c.model_dump()) for c in champions
         ]

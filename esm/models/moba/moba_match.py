@@ -51,11 +51,10 @@ class MobaMatch(MobaMatchBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     blue_team_id: int = Field(foreign_key="moba_teams.id")
     red_team_id: int = Field(foreign_key="moba_teams.id")
-
-    # Relationships
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = Field(default=None)
 
+    # Relationships
     blue_team: "MobaTeam" = Relationship(
         sa_relationship_kwargs={"foreign_keys": "MobaMatch.blue_team_id"}
     )

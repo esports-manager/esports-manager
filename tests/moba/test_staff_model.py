@@ -3,7 +3,7 @@
 # License-Filename: LICENSES/GPL-3.0-or-later
 from datetime import date
 import pytest
-from sqlmodel import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from esm.models.moba.staff import MobaStaff, MobaStaffRole
 from esm.models.moba.team import MobaTeam
@@ -22,7 +22,7 @@ def staff() -> MobaStaff:
     )
 
 
-def test_create_moba_staff(staff: MobaStaff):
+async def test_create_moba_staff(staff: MobaStaff):
     assert staff.first_name == "John"
     assert staff.last_name == "Doe"
     assert staff.nick_name == "JD"
@@ -34,7 +34,7 @@ def test_create_moba_staff(staff: MobaStaff):
     assert staff.display_name() == "JD"
 
 
-def test_display_name_fallback():
+async def test_display_name_fallback():
     s = MobaStaff(
         first_name="Foo",
         last_name="Bar",
@@ -45,39 +45,39 @@ def test_display_name_fallback():
     assert s.display_name() == "Foo Bar"
 
 
-def test_update_moba_staff(staff: MobaStaff):
+async def test_update_moba_staff(staff: MobaStaff):
     staff.first_name = "Jane"
     staff.years_experience = 7
     assert staff.first_name == "Jane"
     assert staff.years_experience == 7
 
 
-def test_staff_role_assignment(staff: MobaStaff):
+async def test_staff_role_assignment(staff: MobaStaff):
     for role in MobaStaffRole:
         staff.role = role
         assert staff.role == role
 
 
-def test_create_moba_staff_instance(staff: MobaStaff, session: Session):
+async def test_create_moba_staff_instance(staff: MobaStaff, session: AsyncSession):
     session.add(staff)
-    session.commit()
-    session.refresh(staff)
+    await session.commit()
+    await session.refresh(staff)
     assert staff.id is not None
     assert staff.created_at is not None
     # updated_at is None until explicitly updated
     assert staff.updated_at is None
-    assert session.get(MobaStaff, staff.id) == staff
+    assert await session.get(MobaStaff, staff.id) == staff
 
 
-def test_staff_team_relationship(session: Session):
+async def test_staff_team_relationship(session: AsyncSession):
     team = MobaTeam(
         name="Test Team",
         nationality="Testland",
         region="NA",
     )
     session.add(team)
-    session.commit()
-    session.refresh(team)
+    await session.commit()
+    await session.refresh(team)
 
     staff = MobaStaff(
         first_name="Sam",
@@ -90,13 +90,13 @@ def test_staff_team_relationship(session: Session):
     # Assign staff to team
     staff.team_id = team.id
     session.add(staff)
-    session.commit()
-    session.refresh(staff)
+    await session.commit()
+    await session.refresh(staff)
 
     assert staff.team_id == team.id
 
     # Verify reverse relation lists staff
-    t = session.get(MobaTeam, team.id)
-    session.refresh(t)
+    t = await session.get(MobaTeam, team.id)
+    await session.refresh(t, ["staff"])
     assert len(t.staff) == 1
     assert t.staff[0].id == staff.id

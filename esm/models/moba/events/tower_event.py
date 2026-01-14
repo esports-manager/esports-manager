@@ -16,42 +16,31 @@ class MobaTowerEvent(MobaEventBase):
         state = self.state.model_copy()
         self.duration = self.get_duration()
 
-        # Decide which team secures the tower (biased by win_probability)
-        p_team1 = self.team1.state.win_probability
-        acting_team = self.team1 if random.random() < p_team1 else self.team2
-        target_team = self.team2 if acting_team is self.team1 else self.team1
+        team1_towers = self.team1.towers_remaining
+        team2_towers = self.team2.towers_remaining
 
-        # Destroy a tower on the target side: prioritize lane towers, then base
-        destroyed = False
-        destroyed_lane = None
-        for lane in ["top", "mid", "bot"]:
-            count = getattr(target_team.state.towers, lane)
-            if count > 0:
-                setattr(target_team.state.towers, lane, count - 1)
-                destroyed = True
-                destroyed_lane = lane
-                break
-        if not destroyed and target_team.state.towers.base > 0:
-            target_team.state.towers.base -= 1
-            destroyed = True
-            destroyed_lane = "base"
+        if team1_towers == 0 and team2_towers == 0:
+            raise ValueError("No towers remaining")
+        elif team1_towers == 0:
+            acting_team = self.team2
+        elif team2_towers == 0:
+            acting_team = self.team1
+        else:
+            acting_team = random.choices(
+                [self.team1, self.team2],
+                [self.team1.state.win_probability, self.team2.state.win_probability],
+            )[0]
 
-        # Track first tower and totals
-        if destroyed:
-            if not state.first_tower:
-                state.first_tower = True
-                acting_team.state.first_tower = True
-            if acting_team is self.team1:
-                state.team1_towers_taken += 1
-            else:
-                state.team2_towers_taken += 1
-            lane_txt = (
-                f" {destroyed_lane}"
-                if destroyed_lane and destroyed_lane != "base"
-                else ""
-            )
+        defending_team = self.team1 if acting_team is self.team2 else self.team2
+
+        taken = random.random() < acting_team.state.win_probability
+        if taken:
+            tower = random.choice(defending_team.get_remaining_towers())
+            defending_team.take_tower(tower)
+            self.commentary.append(f"{acting_team.team.name} took {tower} tower!")
+        else:
             self.commentary.append(
-                f"{acting_team.team.name} destroyed a{lane_txt} tower."
+                f"{defending_team.team.name} is defending {defending_team.get_remaining_towers()} tower!"
             )
 
         # Advance clock

@@ -14,6 +14,7 @@ async def lifespan(app: FastAPI):
     config = Config()
     config.load_config()
     db.db_manager = DatabaseManager(config.database_url)
+    await db.db_manager.create_db_and_tables()
     yield
 
 

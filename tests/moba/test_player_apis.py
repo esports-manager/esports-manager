@@ -1,6 +1,6 @@
 from datetime import date
-from sqlmodel import Session
-from fastapi.testclient import TestClient
+from sqlalchemy.ext.asyncio import AsyncSession
+from httpx import AsyncClient
 from esm.models.moba.player import (
     MobaPlayer,
     MobaPlayerRole,
@@ -11,13 +11,13 @@ from esm.models.moba.champion_mastery import (
 )
 
 
-def test_get_players_empty(client: TestClient):
-    response = client.get("/api/moba/players")
+async def test_get_players_empty(client: AsyncClient):
+    response = await client.get("/api/moba/players")
     assert response.status_code == 200
     assert response.json() == []
 
 
-def test_get_players(client: TestClient, session: Session):
+async def test_get_players(client: AsyncClient, session: AsyncSession):
     player = MobaPlayer(
         first_name="Test",
         last_name="Player",
@@ -26,16 +26,16 @@ def test_get_players(client: TestClient, session: Session):
         role=MobaPlayerRole.TOP,
     )
     session.add(player)
-    session.commit()
-    session.refresh(player)
-    response = client.get("/api/moba/players")
+    await session.commit()
+    await session.refresh(player)
+    response = await client.get("/api/moba/players")
     assert response.status_code == 200
     assert response.json()[0]["id"] == player.id
     assert response.json()[0]["first_name"] == player.first_name
     assert response.json()[0]["last_name"] == player.last_name
 
 
-def test_get_player_by_id(client: TestClient, session: Session):
+async def test_get_player_by_id(client: AsyncClient, session: AsyncSession):
     player = MobaPlayer(
         first_name="Test",
         last_name="Player",
@@ -44,23 +44,23 @@ def test_get_player_by_id(client: TestClient, session: Session):
         role=MobaPlayerRole.TOP,
     )
     session.add(player)
-    session.commit()
-    session.refresh(player)
-    response = client.get(f"/api/moba/players/{player.id}")
+    await session.commit()
+    await session.refresh(player)
+    response = await client.get(f"/api/moba/players/{player.id}")
     assert response.status_code == 200
     assert response.json()["id"] == player.id
     assert response.json()["first_name"] == player.first_name
     assert response.json()["last_name"] == player.last_name
 
 
-def test_get_player_by_id_not_found(client: TestClient):
-    response = client.get("/api/moba/players/1")
+async def test_get_player_by_id_not_found(client: AsyncClient):
+    response = await client.get("/api/moba/players/1")
     assert response.status_code == 404
     assert response.json() == {"detail": "Player not found"}
 
 
-def test_create_player(client: TestClient, session: Session):
-    response = client.post(
+async def test_create_player(client: AsyncClient, session: AsyncSession):
+    response = await client.post(
         "/api/moba/players",
         json={
             "first_name": "Test",
@@ -71,7 +71,7 @@ def test_create_player(client: TestClient, session: Session):
         },
     )
     assert response.status_code == 201
-    player = session.get(MobaPlayer, response.json()["id"])
+    player = await session.get(MobaPlayer, response.json()["id"])
     assert isinstance(player, MobaPlayer)
     assert player.first_name == "Test"
     assert player.last_name == "Player"
@@ -80,7 +80,7 @@ def test_create_player(client: TestClient, session: Session):
     assert player.role == MobaPlayerRole.TOP
 
 
-def test_update_player(client: TestClient, session: Session):
+async def test_update_player(client: AsyncClient, session: AsyncSession):
     player = MobaPlayer(
         first_name="Test",
         last_name="Player",
@@ -89,9 +89,9 @@ def test_update_player(client: TestClient, session: Session):
         role=MobaPlayerRole.TOP,
     )
     session.add(player)
-    session.commit()
-    session.refresh(player)
-    response = client.patch(
+    await session.commit()
+    await session.refresh(player)
+    response = await client.patch(
         f"/api/moba/players/{player.id}",
         json={
             "first_name": "Updated",
@@ -102,7 +102,7 @@ def test_update_player(client: TestClient, session: Session):
         },
     )
     assert response.status_code == 200
-    player = session.get(MobaPlayer, response.json()["id"])
+    player = await session.get(MobaPlayer, response.json()["id"])
     assert isinstance(player, MobaPlayer)
     assert player.first_name == "Updated"
     assert player.last_name == "Player"
@@ -111,7 +111,7 @@ def test_update_player(client: TestClient, session: Session):
     assert player.role == MobaPlayerRole.TOP
 
 
-def test_delete_player(client: TestClient, session: Session):
+async def test_delete_player(client: AsyncClient, session: AsyncSession):
     player = MobaPlayer(
         first_name="Test",
         last_name="Player",
@@ -120,15 +120,15 @@ def test_delete_player(client: TestClient, session: Session):
         role=MobaPlayerRole.TOP,
     )
     session.add(player)
-    session.commit()
-    session.refresh(player)
-    response = client.delete(f"/api/moba/players/{player.id}")
+    await session.commit()
+    await session.refresh(player)
+    response = await client.delete(f"/api/moba/players/{player.id}")
     assert response.status_code == 200
-    player = session.get(MobaPlayer, player.id)
+    player = await session.get(MobaPlayer, player.id)
     assert player is None
 
 
-def test_get_empty_champion_pool(client: TestClient, session: Session):
+async def test_get_empty_champion_pool(client: AsyncClient, session: AsyncSession):
     player = MobaPlayer(
         first_name="Test",
         last_name="Player",
@@ -137,14 +137,14 @@ def test_get_empty_champion_pool(client: TestClient, session: Session):
         role=MobaPlayerRole.TOP,
     )
     session.add(player)
-    session.commit()
-    session.refresh(player)
-    response = client.get(f"/api/moba/players/{player.id}/champion_pool")
+    await session.commit()
+    await session.refresh(player)
+    response = await client.get(f"/api/moba/players/{player.id}/champion_pool")
     assert response.status_code == 200
     assert response.json() == []
 
 
-def test_get_champion_pool(client: TestClient, session: Session):
+async def test_get_champion_pool(client: AsyncClient, session: AsyncSession):
     player = MobaPlayer(
         first_name="Test",
         last_name="Player",
@@ -153,8 +153,8 @@ def test_get_champion_pool(client: TestClient, session: Session):
         role=MobaPlayerRole.TOP,
     )
     session.add(player)
-    session.commit()
-    session.refresh(player)
+    await session.commit()
+    await session.refresh(player)
     champion = MobaChampion(
         name="Test Champion",
         release_date=date(2025, 1, 1),
@@ -162,13 +162,12 @@ def test_get_champion_pool(client: TestClient, session: Session):
         role=MobaChampionRole.TOP,
     )
     session.add(champion)
-    session.commit()
-    session.refresh(champion)
-    session.add(player)
-    session.commit()
-    session.refresh(player)
-    client.post(f"/api/moba/players/{player.id}/champion_pool/{champion.id}")
-    response = client.get(f"/api/moba/players/{player.id}/champion_pool/{champion.id}")
+    await session.commit()
+    await session.refresh(champion)
+    await session.close()
+    post_response = await client.post(f"/api/moba/players/{player.id}/champion_pool/{champion.id}")
+    assert post_response.status_code == 200
+    response = await client.get(f"/api/moba/players/{player.id}/champion_pool/{champion.id}")
     expected_response = {
         "player_id": player.id,
         "champion_id": champion.id,
@@ -179,7 +178,7 @@ def test_get_champion_pool(client: TestClient, session: Session):
     assert response.json() == expected_response
 
 
-def test_get_champion_pool_not_found(client: TestClient, session: Session):
+async def test_get_champion_pool_not_found(client: AsyncClient, session: AsyncSession):
     player = MobaPlayer(
         first_name="Test",
         last_name="Player",
@@ -188,8 +187,8 @@ def test_get_champion_pool_not_found(client: TestClient, session: Session):
         role=MobaPlayerRole.TOP,
     )
     session.add(player)
-    session.commit()
-    session.refresh(player)
+    await session.commit()
+    await session.refresh(player)
     champion = MobaChampion(
         name="Test Champion",
         release_date=date(2025, 1, 1),
@@ -197,8 +196,8 @@ def test_get_champion_pool_not_found(client: TestClient, session: Session):
         role=MobaChampionRole.TOP,
     )
     session.add(champion)
-    session.commit()
-    session.refresh(champion)
-    response = client.get(f"/api/moba/players/{player.id}/champion_pool/{champion.id}")
+    await session.commit()
+    await session.refresh(champion)
+    response = await client.get(f"/api/moba/players/{player.id}/champion_pool/{champion.id}")
     assert response.status_code == 404
     assert response.json() == {"detail": "Champion not found in pool"}

@@ -7,7 +7,8 @@ from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import or_
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from esm.config import FRONTEND_DIR
 from esm.db import get_session
@@ -57,7 +58,7 @@ def _resolve_tab(
 @inbox_routes.get("/", response_model=List[MobaInboxPublic])
 async def get_inbox(
     request: Request,
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     # Pagination
     page = max(1, int(request.query_params.get("page", 1)))
@@ -145,10 +146,12 @@ async def get_inbox(
     else:
         query = query.order_by(sort_field.desc(), MobaInbox.id.desc())
 
-    total_messages = len(session.exec(count_query).all())
+    count_result = await session.execute(count_query)
+    total_messages = len(count_result.scalars().all())
     total_pages = (total_messages + per_page - 1) // per_page
 
-    messages = session.exec(query.offset(skip).limit(per_page)).all()
+    result_query = await session.execute(query.offset(skip).limit(per_page))
+    messages = result_query.scalars().all()
     messages_public: List[MobaInboxPublic] = [
         MobaInboxPublic.model_validate(m.model_dump()) for m in messages
     ]
@@ -158,7 +161,7 @@ async def get_inbox(
     if selected_id_param:
         try:
             selected_id = int(selected_id_param)
-            db_selected = session.get(MobaInbox, selected_id)
+            db_selected = await session.get(MobaInbox, selected_id)
             if db_selected:
                 # Mark as read if requested
                 if mark_read and db_selected.status == MobaInboxStatus.UNREAD:
@@ -166,8 +169,8 @@ async def get_inbox(
                     db_selected.read_at = datetime.now()
                     db_selected.updated_at = datetime.now()
                     session.add(db_selected)
-                    session.commit()
-                    session.refresh(db_selected)
+                    await session.commit()
+                    await session.refresh(db_selected)
                 selected_message_public = MobaInboxPublic.model_validate(
                     db_selected.model_dump()
                 )
@@ -217,9 +220,9 @@ async def get_inbox(
 
 @inbox_routes.get("/{id}", response_model=MobaInboxPublic)
 async def get_inbox_message(
-    *, session: Session = Depends(get_session), id: int, request: Request
+    *, session: AsyncSession = Depends(get_session), id: int, request: Request
 ):
-    message = session.get(MobaInbox, id)
+    message = await session.get(MobaInbox, id)
     if not message:
         raise HTTPException(status_code=404, detail="Inbox message not found")
 
@@ -230,8 +233,8 @@ async def get_inbox_message(
         message.read_at = datetime.now()
         message.updated_at = datetime.now()
         session.add(message)
-        session.commit()
-        session.refresh(message)
+        await session.commit()
+        await session.refresh(message)
 
     public = MobaInboxPublic.model_validate(message.model_dump())
 
@@ -249,24 +252,24 @@ async def get_inbox_message(
     "/", response_model=MobaInboxPublic, status_code=status.HTTP_201_CREATED
 )
 async def create_inbox_message(
-    *, session: Session = Depends(get_session), inbox: MobaInboxCreate
+    *, session: AsyncSession = Depends(get_session), inbox: MobaInboxCreate
 ):
     db_message = MobaInbox.model_validate(inbox)
     session.add(db_message)
-    session.commit()
-    session.refresh(db_message)
+    await session.commit()
+    await session.refresh(db_message)
     return db_message
 
 
 @inbox_routes.patch("/{id}")
 async def update_inbox_message(
     *,
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
     id: int,
     request: Request,
     inbox: MobaInboxUpdate | None = None,
 ):
-    db_message = session.get(MobaInbox, id)
+    db_message = await session.get(MobaInbox, id)
     if not db_message:
         raise HTTPException(status_code=404, detail="Inbox message not found")
 
@@ -338,8 +341,8 @@ async def update_inbox_message(
 
     db_message.sqlmodel_update(data)
     session.add(db_message)
-    session.commit()
-    session.refresh(db_message)
+    await session.commit()
+    await session.refresh(db_message)
 
     if request.headers.get("HX-Request"):
         # After update, re-render list preserving filters and selection
@@ -350,13 +353,13 @@ async def update_inbox_message(
 
 @inbox_routes.delete("/{id}")
 async def delete_inbox_message(
-    *, session: Session = Depends(get_session), id: int, request: Request
+    *, session: AsyncSession = Depends(get_session), id: int, request: Request
 ):
-    db_message = session.get(MobaInbox, id)
+    db_message = await session.get(MobaInbox, id)
     if not db_message:
         raise HTTPException(status_code=404, detail="Inbox message not found")
-    session.delete(db_message)
-    session.commit()
+    await session.delete(db_message)
+    await session.commit()
 
     if request.headers.get("HX-Request"):
         return await get_inbox(request=request, session=session)

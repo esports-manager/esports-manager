@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
 import pytest
-from sqlmodel import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime
 
 from esm.models.tournament import (
@@ -49,7 +49,7 @@ def tournament_instance(tournament_base: TournamentBase) -> MobaTournament:
     )
 
 
-def test_create_tournament_base(tournament_base: TournamentBase):
+async def test_create_tournament_base(tournament_base: TournamentBase):
     assert tournament_base.name == "League of Legends World Championship 2025"
     assert tournament_base.abbreviation == "Worlds 2025"
     assert tournament_base.type == TournamentType.INTERNATIONAL
@@ -64,7 +64,7 @@ def test_create_tournament_base(tournament_base: TournamentBase):
     assert tournament_base.end_date == datetime(2025, 8, 10)
 
 
-def test_tournament_enums_assignment(tournament_base: TournamentBase):
+async def test_tournament_enums_assignment(tournament_base: TournamentBase):
     # Type enum
     for t in list(TournamentType):
         tournament_base.type = t
@@ -79,16 +79,16 @@ def test_tournament_enums_assignment(tournament_base: TournamentBase):
         assert tournament_base.tier == tr
 
 
-def test_tournament_instance_persistence(
-    session: Session, tournament_instance: MobaTournament
+async def test_tournament_instance_persistence(
+    session: AsyncSession, tournament_instance: MobaTournament
 ):
     session.add(tournament_instance)
-    session.commit()
-    session.refresh(tournament_instance)
+    await session.commit()
+    await session.refresh(tournament_instance)
 
     assert tournament_instance.id is not None
     assert tournament_instance.created_at is not None
     assert isinstance(tournament_instance.created_at, datetime)
 
-    fetched = session.get(MobaTournament, tournament_instance.id)
+    fetched = await session.get(MobaTournament, tournament_instance.id)
     assert fetched == tournament_instance

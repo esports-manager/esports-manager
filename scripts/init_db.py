@@ -9,10 +9,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any
 import random
+import asyncio
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from sqlmodel import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from esm.db import DatabaseManager
 from esm.config import Config
 from esm.models.tournament import (
@@ -46,8 +47,8 @@ def load_json_file(file_path: str) -> list[dict[str, Any]]:
         return []
 
 
-def add_tournaments(
-    session: Session, data: list[dict[str, Any]]
+async def add_tournaments(
+    session: AsyncSession, data: list[dict[str, Any]]
 ) -> dict[int, MobaTournament]:
     """Import tournament data into the database."""
     print("Importing tournaments...")
@@ -80,16 +81,16 @@ def add_tournaments(
         )
 
         session.add(tournament)
-        session.flush()  # Flush to get the ID
+        await session.flush()  # Flush to get the ID
         tournament_map[item["name"]] = tournament.id
         print(f"  Added tournament: {item['name']}")
 
-    session.commit()
+    await session.commit()
     print(f"Imported {len(tournament_map)} tournaments")
     return tournament_map
 
 
-def add_teams(session: Session, data: list[dict[str, Any]]) -> dict[int, MobaTeam]:
+async def add_teams(session: AsyncSession, data: list[dict[str, Any]]) -> dict[int, MobaTeam]:
     """Import team data into the database."""
     print("Importing teams...")
     team_map = {}  # Map team names to IDs
@@ -105,17 +106,17 @@ def add_teams(session: Session, data: list[dict[str, Any]]) -> dict[int, MobaTea
         )
 
         session.add(team)
-        session.flush()
+        await session.flush()
         team_map[team.id] = team
         print(f"  Added team: {team.name}")
 
-    session.commit()
+    await session.commit()
     print(f"Imported {len(team_map)} teams")
     return team_map
 
 
-def add_champions(
-    session: Session, data: list[dict[str, Any]]
+async def add_champions(
+    session: AsyncSession, data: list[dict[str, Any]]
 ) -> dict[int, MobaChampion]:
     """Import champion data into the database."""
     print("Importing champions...")
@@ -152,17 +153,17 @@ def add_champions(
         )
 
         session.add(champion)
-        session.flush()
+        await session.flush()
         champion_map[champion.id] = champion
         print(f"  Added champion: {champion.name}")
 
-    session.commit()
+    await session.commit()
     print(f"Imported {len(champion_map)} champions")
     return champion_map
 
 
-def add_players(
-    session: Session,
+async def add_players(
+    session: AsyncSession,
     data: List[Dict[str, Any]],
 ) -> Dict[str, int]:
     """Import player data into the database."""
@@ -201,17 +202,17 @@ def add_players(
         )
 
         session.add(player)
-        session.flush()
+        await session.flush()
         player_map[player.id] = player
         print(f"  Added player: {player.nick_name}")
 
-    session.commit()
+    await session.commit()
     print(f"Imported {len(player_map)} players")
     return player_map
 
 
-def create_player_contracts(
-    session: Session,
+async def create_player_contracts(
+    session: AsyncSession,
     player_map: Dict[int, MobaPlayer],
     team_map: Dict[int, MobaTeam],
 ) -> None:
@@ -236,7 +237,7 @@ def create_player_contracts(
             )
 
             session.add(contract)
-            session.commit()
+            await session.commit()
             contracts_created += 1
             print(
                 f"  Created contract: {player_map[player_id].nick_name} -> {team_map[team_id].name}"
@@ -245,8 +246,8 @@ def create_player_contracts(
     print(f"Created {contracts_created} player contracts")
 
 
-def add_champions_to_champion_pool(
-    session: Session,
+async def add_champions_to_champion_pool(
+    session: AsyncSession,
     champion_map: dict[int, MobaChampion],
     player_map: dict[int, MobaPlayer],
 ):
@@ -274,26 +275,27 @@ def add_champions_to_champion_pool(
                 points=0,
             )
             session.add(mastery)
-            session.commit()
+            await session.commit()
             print(
                 f"Added champion {champion.name} to player {player.nick_name} with tier {tier}"
             )
-        player.champion_pool = sorted(player.champion_pool, key=lambda x: x.tier.value)
     print("Added champions to champion pool")
 
 
-def main():
+async def main():
     """Main function to import all data."""
     print("Starting data import...")
 
     config = Config()
     config.load_config()
 
-    if os.path.exists(config.database_url):
+    database_path = config.database_url.replace('sqlite+aiosqlite:///', '')
+    if os.path.exists(database_path):
         print("Database already exists. Please remove it before running this script.")
         return
 
     db_manager = DatabaseManager(config.database_url)
+    await db_manager.create_db_and_tables()
 
     script_dir = Path(__file__).parent
 
@@ -313,19 +315,20 @@ def main():
     champions_data = load_json_file(champions_file)
 
     # Import data into the database
-    with Session(db_manager.engine) as session:
+    async for session in db_manager.get_session():
         # Import data in order of dependencies
-        add_tournaments(session, tournaments_data)
-        team_map = add_teams(session, teams_data)
-        champions_map = add_champions(session, champions_data)
-        player_map = add_players(session, players_data)
+        await add_tournaments(session, tournaments_data)
+        team_map = await add_teams(session, teams_data)
+        champions_map = await add_champions(session, champions_data)
+        player_map = await add_players(session, players_data)
 
         # Create player contracts
-        create_player_contracts(session, player_map, team_map)
-        add_champions_to_champion_pool(session, champions_map, player_map)
+        await create_player_contracts(session, player_map, team_map)
+        await add_champions_to_champion_pool(session, champions_map, player_map)
+        break  # Only iterate once
 
     print("Data import completed successfully!")
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

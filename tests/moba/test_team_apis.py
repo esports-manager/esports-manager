@@ -1,21 +1,21 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
-from fastapi.testclient import TestClient
-from sqlmodel import Session
+from httpx import AsyncClient
+from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import date
 from esm.models.moba.team import MobaTeam
 from esm.models.moba.player import MobaPlayer, MobaPlayerRole
 from esm.models.moba.player_contract import MobaPlayerContract
 
 
-def test_get_teams_empty(client: TestClient):
-    response = client.get("/api/moba/teams")
+async def test_get_teams_empty(client: AsyncClient):
+    response = await client.get("/api/moba/teams")
     assert response.status_code == 200
     assert response.json() == []
 
 
-def test_get_teams(client: TestClient, session: Session):
+async def test_get_teams(client: AsyncClient, session: AsyncSession):
     team = MobaTeam(
         name="Test Team",
         nationality="Test",
@@ -24,9 +24,9 @@ def test_get_teams(client: TestClient, session: Session):
         logo_path="test-logo.png",
     )
     session.add(team)
-    session.commit()
-    session.refresh(team)
-    response = client.get("/api/moba/teams")
+    await session.commit()
+    await session.refresh(team)
+    response = await client.get("/api/moba/teams")
     assert response.status_code == 200
     assert response.json()[0]["id"] == team.id
     assert response.json()[0]["name"] == team.name
@@ -36,7 +36,7 @@ def test_get_teams(client: TestClient, session: Session):
     assert response.json()[0]["logo_path"] == team.logo_path
 
 
-def test_get_team_by_id(client: TestClient, session: Session):
+async def test_get_team_by_id(client: AsyncClient, session: AsyncSession):
     team = MobaTeam(
         name="Test Team",
         nationality="Test",
@@ -45,9 +45,9 @@ def test_get_team_by_id(client: TestClient, session: Session):
         logo_path="test-logo.png",
     )
     session.add(team)
-    session.commit()
-    session.refresh(team)
-    response = client.get(f"/api/moba/teams/{team.id}")
+    await session.commit()
+    await session.refresh(team)
+    response = await client.get(f"/api/moba/teams/{team.id}")
     assert response.status_code == 200
     assert response.json()["id"] == team.id
     assert response.json()["name"] == team.name
@@ -57,14 +57,14 @@ def test_get_team_by_id(client: TestClient, session: Session):
     assert response.json()["logo_path"] == team.logo_path
 
 
-def test_get_team_by_id_not_found(client: TestClient):
-    response = client.get("/api/moba/teams/1")
+async def test_get_team_by_id_not_found(client: AsyncClient):
+    response = await client.get("/api/moba/teams/1")
     assert response.status_code == 404
     assert response.json() == {"detail": "Team not found"}
 
 
-def test_create_team(client: TestClient, session: Session):
-    response = client.post(
+async def test_create_team(client: AsyncClient, session: AsyncSession):
+    response = await client.post(
         "/api/moba/teams",
         json={
             "name": "Test Team",
@@ -75,7 +75,7 @@ def test_create_team(client: TestClient, session: Session):
         },
     )
     assert response.status_code == 201
-    team = session.get(MobaTeam, response.json()["id"])
+    team = await session.get(MobaTeam, response.json()["id"])
     assert isinstance(team, MobaTeam)
     assert team.name == "Test Team"
     assert team.nationality == "Test"
@@ -84,7 +84,7 @@ def test_create_team(client: TestClient, session: Session):
     assert team.logo_path == "test-logo.png"
 
 
-def test_update_team(client: TestClient, session: Session):
+async def test_update_team(client: AsyncClient, session: AsyncSession):
     team = MobaTeam(
         name="Test Team",
         nationality="Test",
@@ -93,9 +93,9 @@ def test_update_team(client: TestClient, session: Session):
         logo_path="test-logo.png",
     )
     session.add(team)
-    session.commit()
-    session.refresh(team)
-    response = client.patch(
+    await session.commit()
+    await session.refresh(team)
+    response = await client.patch(
         f"/api/moba/teams/{team.id}",
         json={
             "name": "Updated Team",
@@ -106,7 +106,7 @@ def test_update_team(client: TestClient, session: Session):
         },
     )
     assert response.status_code == 200
-    team = session.get(MobaTeam, response.json()["id"])
+    team = await session.get(MobaTeam, response.json()["id"])
     assert isinstance(team, MobaTeam)
     assert team.name == "Updated Team"
     assert team.nationality == "Test"
@@ -115,7 +115,7 @@ def test_update_team(client: TestClient, session: Session):
     assert team.logo_path == "test-logo.png"
 
 
-def test_delete_team(client: TestClient, session: Session):
+async def test_delete_team(client: AsyncClient, session: AsyncSession):
     team = MobaTeam(
         name="Test Team",
         nationality="Test",
@@ -124,15 +124,15 @@ def test_delete_team(client: TestClient, session: Session):
         logo_path="test-logo.png",
     )
     session.add(team)
-    session.commit()
-    session.refresh(team)
-    response = client.delete(f"/api/moba/teams/{team.id}")
+    await session.commit()
+    await session.refresh(team)
+    response = await client.delete(f"/api/moba/teams/{team.id}")
     assert response.status_code == 204
-    team = session.get(MobaTeam, team.id)
+    team = await session.get(MobaTeam, team.id)
     assert team is None
 
 
-def test_get_team_players(client: TestClient, session: Session):
+async def test_get_team_players(client: AsyncClient, session: AsyncSession):
     team = MobaTeam(
         name="Test Team",
         nationality="Test",
@@ -141,8 +141,8 @@ def test_get_team_players(client: TestClient, session: Session):
         logo_path="test-logo.png",
     )
     session.add(team)
-    session.commit()
-    session.refresh(team)
+    await session.commit()
+    await session.refresh(team, ["contracts"])
     player = MobaPlayer(
         first_name="Test",
         last_name="Player",
@@ -160,16 +160,16 @@ def test_get_team_players(client: TestClient, session: Session):
     )
     team.add_player(player, contract)
     session.add(team)
-    session.commit()
-    session.refresh(team)
-    response = client.get(f"/api/moba/teams/{team.id}/players")
+    await session.commit()
+    await session.refresh(team)
+    response = await client.get(f"/api/moba/teams/{team.id}/players")
     assert response.status_code == 200
     assert response.json()[0]["id"] == player.id
     assert response.json()[0]["first_name"] == player.first_name
     assert response.json()[0]["last_name"] == player.last_name
 
 
-def test_add_player_to_team(client: TestClient, session: Session):
+async def test_add_player_to_team(client: AsyncClient, session: AsyncSession):
     team = MobaTeam(
         name="Test Team",
         nationality="Test",
@@ -186,10 +186,10 @@ def test_add_player_to_team(client: TestClient, session: Session):
     )
     session.add(team)
     session.add(player)
-    session.commit()
-    session.refresh(team)
-    session.refresh(player)
-    response = client.post(
+    await session.commit()
+    await session.refresh(team, ["contracts"])
+    await session.refresh(player)
+    response = await client.post(
         "/api/moba/teams/add-player/",
         json={
             "contract": {
@@ -204,5 +204,5 @@ def test_add_player_to_team(client: TestClient, session: Session):
     )
     assert response.status_code == 201
     assert response.json()["id"] == team.id
-    t = session.get(MobaTeam, team.id)
+    t = await session.get(MobaTeam, team.id)
     assert t.current_players[0].id == player.id

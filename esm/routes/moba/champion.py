@@ -13,8 +13,11 @@ from esm.models.moba.champion import (
     MobaChampionPublic,
     MobaChampionRole,
     MobaChampionTier,
+    MobaChampionType,
+    MobaChampionDifficulty,
 )
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends, HTTPException
 import random
 
@@ -31,7 +34,7 @@ templates = Jinja2Templates(directory=templates_dir)
 @champion_routes.get("/", response_model=list[MobaChampionPublic])
 async def get_champions(
     request: Request,
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     query = select(MobaChampion)
     count_query = select(MobaChampion)
@@ -50,35 +53,74 @@ async def get_champions(
     skip = (page - 1) * per_page
 
     # Apply filters
-    if request.query_params.get("role"):
-        query = query.where(
-            MobaChampion.primary_role == request.query_params.get("role")
-        )
-        count_query = count_query.where(
-            MobaChampion.primary_role == request.query_params.get("role")
-        )
-    if request.query_params.get("type"):
-        query = query.where(
-            MobaChampion.champion_type1 == request.query_params.get("type")
-        )
-        count_query = count_query.where(
-            MobaChampion.champion_type1 == request.query_params.get("type")
-        )
-    if request.query_params.get("difficulty"):
-        query = query.where(
-            MobaChampion.difficulty == request.query_params.get("difficulty")
-        )
-        count_query = count_query.where(
-            MobaChampion.difficulty == request.query_params.get("difficulty")
-        )
+    role_param = request.query_params.get("role")
+    if role_param:
+        role_enum = None
+        try:
+            role_enum = MobaChampionRole(role_param)
+        except Exception:
+            try:
+                role_enum = MobaChampionRole[role_param.upper()]
+            except Exception:
+                role_enum = None
+        if role_enum is not None:
+            query = query.where(MobaChampion.primary_role == role_enum)
+            count_query = count_query.where(MobaChampion.primary_role == role_enum)
+
+    type_param = request.query_params.get("type")
+    if type_param:
+        type_enum = None
+        try:
+            type_enum = MobaChampionType(type_param)
+        except Exception:
+            try:
+                type_enum = MobaChampionType[type_param.upper()]
+            except Exception:
+                type_enum = None
+        if type_enum is not None:
+            query = query.where(MobaChampion.champion_type1 == type_enum)
+            count_query = count_query.where(MobaChampion.champion_type1 == type_enum)
+
+    difficulty_param = request.query_params.get("difficulty")
+    if difficulty_param:
+        diff_enum = None
+        try:
+            diff_enum = MobaChampionDifficulty(difficulty_param)
+        except Exception:
+            try:
+                diff_enum = MobaChampionDifficulty[difficulty_param.upper()]
+            except Exception:
+                diff_enum = None
+        if diff_enum is not None:
+            query = query.where(MobaChampion.difficulty == diff_enum)
+            count_query = count_query.where(MobaChampion.difficulty == diff_enum)
+
     # Handle tier filtering based on strength ranges
-    if request.query_params.get("tier"):
-        query = query.where(
-            MobaChampion.champion_tier == request.query_params.get("tier")
-        )
-        count_query = count_query.where(
-            MobaChampion.champion_tier == request.query_params.get("tier")
-        )
+    tier_param = request.query_params.get("tier")
+    if tier_param:
+        tier_param = tier_param.lower()
+        strength_min, strength_max = None, None
+        if tier_param == "s+" or tier_param == "sp":
+            strength_min, strength_max = 95, 100
+        elif tier_param == "s":
+            strength_min, strength_max = 90, 94
+        elif tier_param == "a":
+            strength_min, strength_max = 80, 89
+        elif tier_param == "b":
+            strength_min, strength_max = 70, 79
+        elif tier_param == "c":
+            strength_min, strength_max = 60, 69
+        elif tier_param == "d":
+            strength_min, strength_max = 50, 59
+        elif tier_param == "f":
+            strength_min, strength_max = 0, 49
+
+        if strength_min is not None:
+            query = query.where(MobaChampion.strength >= strength_min)
+            count_query = count_query.where(MobaChampion.strength >= strength_min)
+        if strength_max is not None:
+            query = query.where(MobaChampion.strength <= strength_max)
+            count_query = count_query.where(MobaChampion.strength <= strength_max)
     if request.query_params.get("search"):
         query = query.where(
             MobaChampion.name.icontains(request.query_params.get("search"))
@@ -110,11 +152,13 @@ async def get_champions(
             query = query.order_by(sort_field.asc(), MobaChampion.id.asc())
 
     # Count total champions matching filters
-    total_champions = len(session.exec(count_query).all())
+    count_result = await session.execute(count_query)
+    total_champions = len(count_result.scalars().all())
     total_pages = (total_champions + per_page - 1) // per_page  # Ceiling division
 
     # Execute query with pagination
-    champions = session.exec(query.offset(skip).limit(per_page)).all()
+    result_query = await session.execute(query.offset(skip).limit(per_page))
+    champions = result_query.scalars().all()
 
     # Calculate pagination metadata
     pagination = {
@@ -156,27 +200,27 @@ async def get_champions(
 )
 async def create_champion(
     *,
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
     champion: MobaChampionCreate,
 ):
     db_champion = MobaChampion.model_validate(champion)
     session.add(db_champion)
-    session.commit()
-    session.refresh(db_champion)
+    await session.commit()
+    await session.refresh(db_champion)
     return db_champion
 
 
 @champion_routes.get("/{id}/tier", response_model=MobaChampionTier)
-async def get_champion_tier(*, session: Session = Depends(get_session), id: int):
-    champion = session.get(MobaChampion, id)
+async def get_champion_tier(*, session: AsyncSession = Depends(get_session), id: int):
+    champion = await session.get(MobaChampion, id)
     if not champion:
         raise HTTPException(status_code=404, detail="Champion not found")
     return champion.champion_tier
 
 
 @champion_routes.get("/{id}", response_model=MobaChampionPublic)
-async def get_champion(*, session: Session = Depends(get_session), id: int):
-    champion = session.get(MobaChampion, id)
+async def get_champion(*, session: AsyncSession = Depends(get_session), id: int):
+    champion = await session.get(MobaChampion, id)
     if not champion:
         raise HTTPException(status_code=404, detail="Champion not found")
     return champion
@@ -184,26 +228,26 @@ async def get_champion(*, session: Session = Depends(get_session), id: int):
 
 @champion_routes.patch("/{id}", response_model=MobaChampionPublic)
 async def update_champion(
-    *, session: Session = Depends(get_session), id: int, champion: MobaChampionUpdate
+    *, session: AsyncSession = Depends(get_session), id: int, champion: MobaChampionUpdate
 ):
-    db_champion = session.get(MobaChampion, id)
+    db_champion = await session.get(MobaChampion, id)
     if not db_champion:
         raise HTTPException(status_code=404, detail="Champion not found")
     champion_data = champion.model_dump(exclude_unset=True)
     db_champion.sqlmodel_update(champion_data)
     session.add(db_champion)
-    session.commit()
-    session.refresh(db_champion)
+    await session.commit()
+    await session.refresh(db_champion)
     return db_champion
 
 
 @champion_routes.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_champion(*, session: Session = Depends(get_session), id: int):
-    champion = session.get(MobaChampion, id)
+async def delete_champion(*, session: AsyncSession = Depends(get_session), id: int):
+    champion = await session.get(MobaChampion, id)
     if not champion:
         raise HTTPException(status_code=404, detail="Champion not found")
-    session.delete(champion)
-    session.commit()
+    await session.delete(champion)
+    await session.commit()
     return None
 
 
@@ -211,7 +255,7 @@ async def delete_champion(*, session: Session = Depends(get_session), id: int):
 async def get_champion_meta(
     request: Request,
     role: Optional[str] = None,
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     """
     Get meta statistics and information for champions.
@@ -246,15 +290,18 @@ async def get_champion_meta(
     query = select(MobaChampion).order_by(MobaChampion.win_rate.desc())
     if role:
         query = query.where(MobaChampion.primary_role == role)
-    top_meta_champions = session.exec(query.limit(5)).all()
+    result = await session.execute(query.limit(5))
+    top_meta_champions = result.scalars().all()
 
     # Get most banned champions
     query_banned = select(MobaChampion).order_by(MobaChampion.ban_rate.desc())
-    most_banned_champions = session.exec(query_banned.limit(5)).all()
+    result_banned = await session.execute(query_banned.limit(5))
+    most_banned_champions = result_banned.scalars().all()
 
     # Get champion with highest pick rate
     query_picked = select(MobaChampion).order_by(MobaChampion.pick_rate.desc())
-    most_picked_champions = session.exec(query_picked.limit(5)).all()
+    result_picked = await session.execute(query_picked.limit(5))
+    most_picked_champions = result_picked.scalars().all()
 
     # Get top champions by role
     role_champions = {}
@@ -264,12 +311,14 @@ async def get_champion_meta(
             .where(MobaChampion.primary_role == role_type.value)
             .order_by(MobaChampion.win_rate.desc())
         )
-        role_champions[role_type.value] = session.exec(query_role.limit(3)).all()
+        result_role = await session.execute(query_role.limit(3))
+        role_champions[role_type.value] = result_role.scalars().all()
 
     # Get meta changes (champions rising/falling in meta)
     # In a real implementation, this would compare to previous patch data
     # Here we'll simulate with random data
-    all_champions = session.exec(select(MobaChampion)).all()
+    result_all = await session.execute(select(MobaChampion))
+    all_champions = result_all.scalars().all()
     rising_champions = random.sample(all_champions, min(3, len(all_champions)))
     falling_champions = random.sample(
         [c for c in all_champions if c not in rising_champions],

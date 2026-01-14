@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
-from fastapi.testclient import TestClient
-from sqlmodel import Session
+from httpx import AsyncClient
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from esm.models.moba.inbox import (
     MobaInbox,
@@ -12,7 +12,7 @@ from esm.models.moba.inbox import (
 )
 
 
-def seed_messages(session: Session):
+async def seed_messages(session: AsyncSession):
     m1 = MobaInbox(
         subject="A - transfer urgent",
         body="",
@@ -63,20 +63,20 @@ def seed_messages(session: Session):
     session.add(m3)
     session.add(m4)
     session.add(m5)
-    session.commit()
-    session.refresh(m1)
-    session.refresh(m2)
-    session.refresh(m3)
-    session.refresh(m4)
-    session.refresh(m5)
+    await session.commit()
+    await session.refresh(m1)
+    await session.refresh(m2)
+    await session.refresh(m3)
+    await session.refresh(m4)
+    await session.refresh(m5)
     return m1, m2, m3, m4, m5
 
 
-def test_inbox_list_filters_and_sort_pagination(client: TestClient, session: Session):
-    m1, m2, m3, m4, m5 = seed_messages(session)
+async def test_inbox_list_filters_and_sort_pagination(client: AsyncClient, session: AsyncSession):
+    m1, m2, m3, m4, m5 = await seed_messages(session)
 
     # Filter: category=transfer, status=unread, is_starred=true
-    r = client.get(
+    r = await client.get(
         "/api/moba/inbox",
         params={
             "category": "transfer",
@@ -90,7 +90,7 @@ def test_inbox_list_filters_and_sort_pagination(client: TestClient, session: Ses
     assert ids == [m3.id, m1.id]
 
     # Filter by labels contains 'ops'
-    r2 = client.get(
+    r2 = await client.get(
         "/api/moba/inbox",
         params={"labels": "ops", "sort": "subject", "direction": "asc"},
     )
@@ -105,13 +105,13 @@ def test_inbox_list_filters_and_sort_pagination(client: TestClient, session: Ses
     ]
 
     # Search term over subject
-    r3 = client.get("/api/moba/inbox", params={"search": "transfer"})
+    r3 = await client.get("/api/moba/inbox", params={"search": "transfer"})
     assert r3.status_code == 200
     ids3 = {it["id"] for it in r3.json()}
     assert ids3 == {m1.id, m3.id, m5.id}
 
     # Pagination with sorting by subject asc -> page 2 returns C and D
-    r4 = client.get(
+    r4 = await client.get(
         "/api/moba/inbox",
         params={"sort": "subject", "direction": "asc", "per_page": 2, "page": 2},
     )
@@ -122,70 +122,70 @@ def test_inbox_list_filters_and_sort_pagination(client: TestClient, session: Ses
     ]
 
 
-def test_inbox_list_selected_mark_read(client: TestClient, session: Session):
+async def test_inbox_list_selected_mark_read(client: AsyncClient, session: AsyncSession):
     m = MobaInbox(subject="Mark me", body="", category=MobaInboxCategory.GENERAL)
     session.add(m)
-    session.commit()
-    session.refresh(m)
+    await session.commit()
+    await session.refresh(m)
     assert m.status == MobaInboxStatus.UNREAD
 
-    r = client.get("/api/moba/inbox", params={"selected_id": m.id, "mark_read": "true"})
+    r = await client.get("/api/moba/inbox", params={"selected_id": m.id, "mark_read": "true"})
     assert r.status_code == 200
-    refreshed = session.get(MobaInbox, m.id)
+    refreshed = await session.get(MobaInbox, m.id)
     assert refreshed.status == MobaInboxStatus.READ
     assert refreshed.read_at is not None
 
 
-def test_inbox_htmx_list_returns_html(client: TestClient, session: Session):
+async def test_inbox_htmx_list_returns_html(client: AsyncClient, session: AsyncSession):
     # ensure at least one
     m = MobaInbox(subject="Hello", body="", category=MobaInboxCategory.GENERAL)
     session.add(m)
-    session.commit()
+    await session.commit()
 
-    r = client.get("/api/moba/inbox", headers={"HX-Request": "true"})
+    r = await client.get("/api/moba/inbox", headers={"HX-Request": "true"})
     assert r.status_code == 200
     assert r.headers["content-type"].startswith("text/html")
 
 
-def test_inbox_htmx_get_message_returns_html(client: TestClient, session: Session):
+async def test_inbox_htmx_get_message_returns_html(client: AsyncClient, session: AsyncSession):
     m = MobaInbox(subject="Hello", body="", category=MobaInboxCategory.GENERAL)
     session.add(m)
-    session.commit()
-    session.refresh(m)
+    await session.commit()
+    await session.refresh(m)
 
-    r = client.get(f"/api/moba/inbox/{m.id}", headers={"HX-Request": "true"})
+    r = await client.get(f"/api/moba/inbox/{m.id}", headers={"HX-Request": "true"})
     assert r.status_code == 200
     assert r.headers["content-type"].startswith("text/html")
 
 
-def test_inbox_htmx_patch_query_params_updates_and_rerenders(
-    client: TestClient, session: Session
+async def test_inbox_htmx_patch_query_params_updates_and_rerenders(
+    client: AsyncClient, session: AsyncSession
 ):
     m = MobaInbox(subject="Patch me", body="", category=MobaInboxCategory.GENERAL)
     session.add(m)
-    session.commit()
-    session.refresh(m)
+    await session.commit()
+    await session.refresh(m)
 
-    r = client.patch(
+    r = await client.patch(
         f"/api/moba/inbox/{m.id}",
         params={"status": "archived", "is_starred": "true", "labels": "ops"},
         headers={"HX-Request": "true"},
     )
     assert r.status_code == 200
     assert r.headers["content-type"].startswith("text/html")
-    updated = session.get(MobaInbox, m.id)
+    updated = await session.get(MobaInbox, m.id)
     assert updated.status == MobaInboxStatus.ARCHIVED
     assert updated.is_starred is True
     assert updated.labels == "ops"
 
 
-def test_inbox_htmx_delete_rerenders_list(client: TestClient, session: Session):
+async def test_inbox_htmx_delete_rerenders_list(client: AsyncClient, session: AsyncSession):
     m = MobaInbox(subject="Delete me", body="", category=MobaInboxCategory.GENERAL)
     session.add(m)
-    session.commit()
-    session.refresh(m)
+    await session.commit()
+    await session.refresh(m)
 
-    r = client.delete(f"/api/moba/inbox/{m.id}", headers={"HX-Request": "true"})
+    r = await client.delete(f"/api/moba/inbox/{m.id}", headers={"HX-Request": "true"})
     assert r.status_code == 200
     assert r.headers["content-type"].startswith("text/html")
-    assert session.get(MobaInbox, m.id) is None
+    assert await session.get(MobaInbox, m.id) is None

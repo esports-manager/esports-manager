@@ -3,7 +3,8 @@
 # License-Filename: LICENSES/GPL-3.0-or-later
 from fastapi import APIRouter, status, Request
 from fastapi import Depends, HTTPException
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from esm.db import get_session
 from esm.models.moba.staff import (
@@ -24,7 +25,7 @@ staff_routes = APIRouter(
 @staff_routes.get("/", response_model=list[MobaStaffPublic])
 async def get_staff(
     request: Request,
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     query = select(MobaStaff)
     count_query = select(MobaStaff)
@@ -97,7 +98,8 @@ async def get_staff(
         else:
             query = query.order_by(sort_field.asc())
 
-    items = session.exec(query.offset(skip).limit(per_page)).all()
+    result = await session.execute(query.offset(skip).limit(per_page))
+    items = result.scalars().all()
     return items
 
 
@@ -105,18 +107,18 @@ async def get_staff(
     "/", response_model=MobaStaffPublic, status_code=status.HTTP_201_CREATED
 )
 async def create_staff(
-    *, session: Session = Depends(get_session), staff: MobaStaffCreate
+    *, session: AsyncSession = Depends(get_session), staff: MobaStaffCreate
 ):
     db_staff = MobaStaff.model_validate(staff)
     session.add(db_staff)
-    session.commit()
-    session.refresh(db_staff)
+    await session.commit()
+    await session.refresh(db_staff)
     return db_staff
 
 
 @staff_routes.get("/{id}", response_model=MobaStaffPublic)
-async def get_staff_member(*, session: Session = Depends(get_session), id: int):
-    staff = session.get(MobaStaff, id)
+async def get_staff_member(*, session: AsyncSession = Depends(get_session), id: int):
+    staff = await session.get(MobaStaff, id)
     if not staff:
         raise HTTPException(status_code=404, detail="Staff not found")
     return staff
@@ -124,24 +126,24 @@ async def get_staff_member(*, session: Session = Depends(get_session), id: int):
 
 @staff_routes.patch("/{id}", response_model=MobaStaffPublic)
 async def update_staff(
-    *, session: Session = Depends(get_session), id: int, staff: MobaStaffUpdate
+    *, session: AsyncSession = Depends(get_session), id: int, staff: MobaStaffUpdate
 ):
-    db_staff = session.get(MobaStaff, id)
+    db_staff = await session.get(MobaStaff, id)
     if not db_staff:
         raise HTTPException(status_code=404, detail="Staff not found")
     staff_data = staff.model_dump(exclude_unset=True)
     db_staff.sqlmodel_update(staff_data)
     session.add(db_staff)
-    session.commit()
-    session.refresh(db_staff)
+    await session.commit()
+    await session.refresh(db_staff)
     return db_staff
 
 
 @staff_routes.delete("/{id}", response_model=dict[str, str])
-async def delete_staff(*, session: Session = Depends(get_session), id: int):
-    staff = session.get(MobaStaff, id)
+async def delete_staff(*, session: AsyncSession = Depends(get_session), id: int):
+    staff = await session.get(MobaStaff, id)
     if not staff:
         raise HTTPException(status_code=404, detail="Staff not found")
-    session.delete(staff)
-    session.commit()
+    await session.delete(staff)
+    await session.commit()
     return {"message": "Staff deleted"}

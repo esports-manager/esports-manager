@@ -1,7 +1,8 @@
 import random
 from typing import TYPE_CHECKING
 
-from esm.models.moba.events.event import MobaEventBase, MobaEventType
+from esm.models.moba.events.event import MobaEventBase
+from esm.models.moba.events.event_types import MobaEventType
 
 if TYPE_CHECKING:
     from esm.models.moba.moba_match_simulation import MobaMatchState
@@ -39,9 +40,8 @@ class MobaFightEvent(MobaEventBase):
                 killer = random.choice(winning_team.players)
                 victim = random.choice(losing_team.players)
                 killer.kills += 1
-                killer.points += 2
+                killer.points += self.points
                 victim.deaths += 1
-                # First blood detection
                 if not state.first_blood:
                     state.first_blood = True
                     winning_team.state.first_blood = True

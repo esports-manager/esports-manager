@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from esm.db import get_session
 from esm.models.moba.champion import MobaChampion
@@ -126,18 +126,18 @@ def _serialize_simulation(sim: MobaMatchSimulation) -> Dict[str, Any]:
     }
 
 
-def _build_team_sim(
-    db: Session,
+async def _build_team_sim(
+    db: AsyncSession,
     team_id: int,
     roster: list[dict[str, Any]],
 ) -> MobaTeamSimulation:
-    team = db.get(MobaTeam, team_id)
+    team = await db.get(MobaTeam, team_id)
     if not team:
         raise HTTPException(status_code=404, detail=f"Team {team_id} not found")
     players: list[MobaPlayerSimulation] = []
     for slot in roster:
-        player = db.get(MobaPlayer, int(slot["player_id"]))
-        champion = db.get(MobaChampion, int(slot["champion_id"]))
+        player = await db.get(MobaPlayer, int(slot["player_id"]))
+        champion = await db.get(MobaChampion, int(slot["champion_id"]))
         if not player or not champion:
             raise HTTPException(status_code=404, detail="Player or Champion not found")
         role_str = slot.get("role")
@@ -158,7 +158,7 @@ def _build_team_sim(
 
 @simulation_routes.post("/create")
 async def create_simulation(
-    payload: Dict[str, Any], session: Session = Depends(get_session)
+    payload: Dict[str, Any], session: AsyncSession = Depends(get_session)
 ):
     """
     Create a new simulation session.
@@ -171,8 +171,8 @@ async def create_simulation(
     }
     """
     try:
-        t1 = _build_team_sim(session, int(payload["team1_id"]), payload["team1_roster"])  # type: ignore[index]
-        t2 = _build_team_sim(session, int(payload["team2_id"]), payload["team2_roster"])  # type: ignore[index]
+        t1 = await _build_team_sim(session, int(payload["team1_id"]), payload["team1_roster"])  # type: ignore[index]
+        t2 = await _build_team_sim(session, int(payload["team2_id"]), payload["team2_roster"])  # type: ignore[index]
     except KeyError:
         raise HTTPException(status_code=400, detail="Invalid roster payload")
 

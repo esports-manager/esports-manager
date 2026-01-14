@@ -2,20 +2,20 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
 from datetime import date
-from fastapi.testclient import TestClient
-from sqlmodel import Session
+from httpx import AsyncClient
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from esm.models.moba.staff import MobaStaff, MobaStaffRole
 
 
-def test_get_staff_empty(client: TestClient):
-    response = client.get("/api/moba/staff")
+async def test_get_staff_empty(client: AsyncClient):
+    response = await client.get("/api/moba/staff")
     assert response.status_code == 200
     assert response.json() == []
 
 
-def test_create_staff(client: TestClient, session: Session):
-    response = client.post(
+async def test_create_staff(client: AsyncClient, session: AsyncSession):
+    response = await client.post(
         "/api/moba/staff",
         json={
             "first_name": "John",
@@ -29,7 +29,7 @@ def test_create_staff(client: TestClient, session: Session):
     )
     assert response.status_code == 201
     staff_id = response.json()["id"]
-    staff = session.get(MobaStaff, staff_id)
+    staff = await session.get(MobaStaff, staff_id)
     assert isinstance(staff, MobaStaff)
     assert staff.first_name == "John"
     assert staff.last_name == "Doe"
@@ -40,7 +40,7 @@ def test_create_staff(client: TestClient, session: Session):
     assert staff.years_experience == 5
 
 
-def test_get_staff_by_id(client: TestClient, session: Session):
+async def test_get_staff_by_id(client: AsyncClient, session: AsyncSession):
     staff = MobaStaff(
         first_name="Jane",
         last_name="Smith",
@@ -50,10 +50,10 @@ def test_get_staff_by_id(client: TestClient, session: Session):
         years_experience=3,
     )
     session.add(staff)
-    session.commit()
-    session.refresh(staff)
+    await session.commit()
+    await session.refresh(staff)
 
-    response = client.get(f"/api/moba/staff/{staff.id}")
+    response = await client.get(f"/api/moba/staff/{staff.id}")
     assert response.status_code == 200
     body = response.json()
     assert body["id"] == staff.id
@@ -62,13 +62,13 @@ def test_get_staff_by_id(client: TestClient, session: Session):
     assert body["role"] == MobaStaffRole.ANALYST.value
 
 
-def test_get_staff_by_id_not_found(client: TestClient):
-    response = client.get("/api/moba/staff/9999")
+async def test_get_staff_by_id_not_found(client: AsyncClient):
+    response = await client.get("/api/moba/staff/9999")
     assert response.status_code == 404
     assert response.json() == {"detail": "Staff not found"}
 
 
-def test_update_staff(client: TestClient, session: Session):
+async def test_update_staff(client: AsyncClient, session: AsyncSession):
     staff = MobaStaff(
         first_name="Alex",
         last_name="Johnson",
@@ -78,10 +78,10 @@ def test_update_staff(client: TestClient, session: Session):
         years_experience=2,
     )
     session.add(staff)
-    session.commit()
-    session.refresh(staff)
+    await session.commit()
+    await session.refresh(staff)
 
-    response = client.patch(
+    response = await client.patch(
         f"/api/moba/staff/{staff.id}",
         json={
             "first_name": "Alexander",
@@ -90,13 +90,13 @@ def test_update_staff(client: TestClient, session: Session):
         },
     )
     assert response.status_code == 200
-    updated = session.get(MobaStaff, staff.id)
+    updated = await session.get(MobaStaff, staff.id)
     assert updated.first_name == "Alexander"
     assert updated.years_experience == 4
     assert updated.role == MobaStaffRole.ANALYST
 
 
-def test_delete_staff(client: TestClient, session: Session):
+async def test_delete_staff(client: AsyncClient, session: AsyncSession):
     staff = MobaStaff(
         first_name="Taylor",
         last_name="Lee",
@@ -106,10 +106,10 @@ def test_delete_staff(client: TestClient, session: Session):
         years_experience=1,
     )
     session.add(staff)
-    session.commit()
-    session.refresh(staff)
+    await session.commit()
+    await session.refresh(staff)
 
-    response = client.delete(f"/api/moba/staff/{staff.id}")
+    response = await client.delete(f"/api/moba/staff/{staff.id}")
     assert response.status_code == 200
     assert response.json() == {"message": "Staff deleted"}
-    assert session.get(MobaStaff, staff.id) is None
+    assert await session.get(MobaStaff, staff.id) is None

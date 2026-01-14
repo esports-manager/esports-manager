@@ -23,7 +23,9 @@ from esm.models.moba.champion_mastery import (
     MobaChampionMasteryTier,
     MobaChampionMasteryUpdate,
 )
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 from fastapi import Depends, HTTPException
 from typing import Optional
 
@@ -44,11 +46,12 @@ class MobaPlayerWithTeam(MobaPlayerPublic):
 @player_routes.get("/", response_model=list[MobaPlayerPublic])
 async def get_players(
     request: Request,
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
-    # Base queries
+    # Base queries with eager loading
     query = (
         select(MobaPlayer)
+        .options(selectinload(MobaPlayer.contracts))
         .join(
             MobaPlayerContract,
             MobaPlayerContract.player_id == MobaPlayer.id,
@@ -163,17 +166,19 @@ async def get_players(
     query = query.distinct(MobaPlayer.id)
     count_query = count_query.distinct(MobaPlayer.id)
 
-    total_players = len(session.exec(count_query).all())
+    count_result = await session.execute(count_query)
+    total_players = len(count_result.scalars().all())
     total_pages = (total_players + per_page - 1) // per_page
 
-    players = session.exec(query.offset(skip).limit(per_page)).all()
+    result_query = await session.execute(query.offset(skip).limit(per_page))
+    players = result_query.scalars().all()
 
     result = []
     for player in players:
         team_data = None
         player_data = player.model_dump()
         if player.current_contract and player.current_contract.team_id:
-            team_data = session.get(MobaTeam, player.current_contract.team_id)
+            team_data = await session.get(MobaTeam, player.current_contract.team_id)
             player_data["team"] = MobaTeamPublic.model_validate(team_data).model_dump()
         player_with_team = MobaPlayerWithTeam.model_validate(player_data)
 
@@ -215,27 +220,32 @@ async def get_players(
     "/", response_model=MobaPlayerPublic, status_code=status.HTTP_201_CREATED
 )
 async def create_player(
-    *, session: Session = Depends(get_session), player: MobaPlayerCreate
+    *, session: AsyncSession = Depends(get_session), player: MobaPlayerCreate
 ):
     db_player = MobaPlayer.model_validate(player)
     session.add(db_player)
-    session.commit()
-    session.refresh(db_player)
+    await session.commit()
+    await session.refresh(db_player)
     return db_player
 
 
 @player_routes.get("/{id}", response_model=MobaPlayerWithTeam)
 async def get_player(
-    *, session: Session = Depends(get_session), id: int, request: Request
+    *, session: AsyncSession = Depends(get_session), id: int, request: Request
 ):
-    player = session.get(MobaPlayer, id)
+    result = await session.execute(
+        select(MobaPlayer)
+        .where(MobaPlayer.id == id)
+        .options(selectinload(MobaPlayer.contracts))
+    )
+    player = result.scalars().first()
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")
 
     player_data = player.model_dump()
     team_data = None
     if player.current_contract and player.current_contract.team_id:
-        team_data = session.get(MobaTeam, player.current_contract.team_id)
+        team_data = await session.get(MobaTeam, player.current_contract.team_id)
         player_data["team"] = MobaTeamPublic.model_validate(team_data.model_dump())
     player_with_team = MobaPlayerWithTeam.model_validate(player_data)
 
@@ -254,26 +264,26 @@ async def get_player(
 
 @player_routes.patch("/{id}", response_model=MobaPlayerPublic)
 async def update_player(
-    *, session: Session = Depends(get_session), id: int, player: MobaPlayerUpdate
+    *, session: AsyncSession = Depends(get_session), id: int, player: MobaPlayerUpdate
 ):
-    db_player = session.get(MobaPlayer, id)
+    db_player = await session.get(MobaPlayer, id)
     if not db_player:
         raise HTTPException(status_code=404, detail="Player not found")
     player_data = player.model_dump(exclude_unset=True)
     db_player.sqlmodel_update(player_data)
     session.add(db_player)
-    session.commit()
-    session.refresh(db_player)
+    await session.commit()
+    await session.refresh(db_player)
     return db_player
 
 
 @player_routes.delete("/{id}", response_model=dict[str, str])
-async def delete_player(*, session: Session = Depends(get_session), id: int):
-    player = session.get(MobaPlayer, id)
+async def delete_player(*, session: AsyncSession = Depends(get_session), id: int):
+    player = await session.get(MobaPlayer, id)
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")
-    session.delete(player)
-    session.commit()
+    await session.delete(player)
+    await session.commit()
     return {"message": "Player deleted"}
 
 
@@ -290,9 +300,14 @@ async def get_player_image(filename: str):
     "/{player_id}/champion_pool", response_model=list[MobaChampionMasteryPublic]
 )
 async def get_player_champion_pool(
-    *, session: Session = Depends(get_session), player_id: int
+    *, session: AsyncSession = Depends(get_session), player_id: int
 ):
-    player = session.get(MobaPlayer, player_id)
+    result = await session.execute(
+        select(MobaPlayer)
+        .where(MobaPlayer.id == player_id)
+        .options(selectinload(MobaPlayer.champion_pool))
+    )
+    player = result.scalars().first()
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")
     champions = []
@@ -308,12 +323,17 @@ async def get_player_champion_pool(
     "/{player_id}/champion_pool/{champion_id}", response_model=MobaChampionMasteryPublic
 )
 async def get_champion_pool(
-    *, session: Session = Depends(get_session), player_id: int, champion_id: int
+    *, session: AsyncSession = Depends(get_session), player_id: int, champion_id: int
 ):
-    player = session.get(MobaPlayer, player_id)
+    result = await session.execute(
+        select(MobaPlayer)
+        .where(MobaPlayer.id == player_id)
+        .options(selectinload(MobaPlayer.champion_pool))
+    )
+    player = result.scalars().first()
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")
-    champion = session.get(MobaChampion, champion_id)
+    champion = await session.get(MobaChampion, champion_id)
     if not champion:
         raise HTTPException(status_code=404, detail="Champion not found")
     for champion_mastery in player.champion_pool:
@@ -332,14 +352,19 @@ async def get_champion_pool(
 async def add_champion_to_player_pool(
     *,
     request: Request,
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
     player_id: int,
     champion_id: int,
 ):
-    player = session.get(MobaPlayer, player_id)
+    result = await session.execute(
+        select(MobaPlayer)
+        .where(MobaPlayer.id == player_id)
+        .options(selectinload(MobaPlayer.champion_pool))
+    )
+    player = result.scalars().first()
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")
-    champion = session.get(MobaChampion, champion_id)
+    champion = await session.get(MobaChampion, champion_id)
     if not champion:
         raise HTTPException(status_code=404, detail="Champion not found")
 
@@ -366,8 +391,8 @@ async def add_champion_to_player_pool(
 
     champion_mastery = MobaChampionMastery.model_validate(champion_mastery_data)
     session.add(champion_mastery)
-    session.commit()
-    session.refresh(champion_mastery)
+    await session.commit()
+    await session.refresh(champion_mastery)
     return champion_mastery
 
 
@@ -375,18 +400,23 @@ async def add_champion_to_player_pool(
     "/{player_id}/champion_pool/{champion_id}", response_model=dict[str, str]
 )
 async def remove_champion_from_player_pool(
-    *, session: Session = Depends(get_session), player_id: int, champion_id: int
+    *, session: AsyncSession = Depends(get_session), player_id: int, champion_id: int
 ):
-    player = session.get(MobaPlayer, player_id)
+    result = await session.execute(
+        select(MobaPlayer)
+        .where(MobaPlayer.id == player_id)
+        .options(selectinload(MobaPlayer.champion_pool))
+    )
+    player = result.scalars().first()
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")
-    champion = session.get(MobaChampion, champion_id)
+    champion = await session.get(MobaChampion, champion_id)
     if not champion:
         raise HTTPException(status_code=404, detail="Champion not found")
     for champion_mastery in player.champion_pool:
         if champion_mastery.champion_id == champion_id:
-            session.delete(champion_mastery)
-            session.commit()
+            await session.delete(champion_mastery)
+            await session.commit()
             return {"message": "Champion removed from pool"}
 
     raise HTTPException(status_code=404, detail="Champion not found in pool")
@@ -397,15 +427,20 @@ async def remove_champion_from_player_pool(
 )
 async def update_champion_in_player_pool(
     *,
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
     player_id: int,
     champion_id: int,
     champion_mastery: MobaChampionMasteryUpdate,
 ):
-    player = session.get(MobaPlayer, player_id)
+    result = await session.execute(
+        select(MobaPlayer)
+        .where(MobaPlayer.id == player_id)
+        .options(selectinload(MobaPlayer.champion_pool))
+    )
+    player = result.scalars().first()
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")
-    champion = session.get(MobaChampion, champion_id)
+    champion = await session.get(MobaChampion, champion_id)
     if not champion:
         raise HTTPException(status_code=404, detail="Champion not found")
     for champion_mastery in player.champion_pool:
@@ -418,8 +453,8 @@ async def update_champion_in_player_pool(
                 champion_mastery_update.model_dump(exclude_unset=True)
             )
             session.add(champion_mastery)
-            session.commit()
-            session.refresh(champion_mastery)
+            await session.commit()
+            await session.refresh(champion_mastery)
             return champion_mastery
 
     raise HTTPException(status_code=404, detail="Champion not found in pool")

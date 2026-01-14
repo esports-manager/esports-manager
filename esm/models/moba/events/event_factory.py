@@ -40,12 +40,11 @@ def get_event_from_type(
     event_type: MobaEventType, jungle_type: Optional[MobaJungleType] = None
 ) -> MobaEventBase:
     event_class = EVENT_MAP.get(event_type).get("type")
+    points = EVENT_MAP.get(event_type).get("points")
     if not event_class:
         raise ValueError(f"Unknown event type: {event_type}")
 
     if event_class == MobaJungleEvent:
-        return event_class(
-            jungle_type=jungle_type, points=EVENT_MAP[event_type]["points"]
-        )
+        return event_class(jungle_type=jungle_type, points=points)
 
-    return event_class(points=EVENT_MAP[event_type]["points"])
+    return event_class(points=points)

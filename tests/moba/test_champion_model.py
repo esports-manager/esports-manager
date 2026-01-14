@@ -4,7 +4,7 @@
 import pytest
 from datetime import date
 
-from sqlmodel import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from esm.models.moba.champion import (
     MobaChampionBase,
     MobaChampion,
@@ -45,7 +45,7 @@ def champion_instance(champion) -> MobaChampion:
     )
 
 
-def test_create_moba_champion(champion: MobaChampionBase):
+async def test_create_moba_champion(champion: MobaChampionBase):
     assert champion.name == "Test Champion"
     assert champion.description == "Test Champion Description"
     assert champion.release_date == date(2025, 1, 1)
@@ -58,19 +58,19 @@ def test_create_moba_champion(champion: MobaChampionBase):
     assert champion.image_path is None
 
 
-def test_update_moba_champion(champion: MobaChampionBase):
+async def test_update_moba_champion(champion: MobaChampionBase):
     champion.name = "Updated"
     assert champion.name == "Updated"
 
 
-def test_moba_champion_role_assignment(champion: MobaChampionBase):
+async def test_moba_champion_role_assignment(champion: MobaChampionBase):
     roles = list(MobaChampionRole)
     for role in roles:
         champion.primary_role = role
         assert champion.primary_role == role
 
 
-def test_moba_champion_type_assignment(champion: MobaChampionBase):
+async def test_moba_champion_type_assignment(champion: MobaChampionBase):
     types = list(MobaChampionType)
     for type in types:
         champion.champion_type1 = type
@@ -82,22 +82,22 @@ def test_moba_champion_type_assignment(champion: MobaChampionBase):
         assert champion.champion_type2 == type
 
 
-def test_moba_champion_difficulty_assignment(champion: MobaChampionBase):
+async def test_moba_champion_difficulty_assignment(champion: MobaChampionBase):
     difficulties = list(MobaChampionDifficulty)
     for difficulty in difficulties:
         champion.difficulty = difficulty
         assert champion.difficulty == difficulty
 
 
-def test_moba_champion_get_tier(champion: MobaChampionBase):
+async def test_moba_champion_get_tier(champion: MobaChampionBase):
     assert champion.champion_tier == MobaChampionTier.D
 
 
-def test_moba_champion_instance(session: Session, champion_instance: MobaChampion):
+async def test_moba_champion_instance(session: AsyncSession, champion_instance: MobaChampion):
     session.add(champion_instance)
-    session.commit()
-    session.refresh(champion_instance)
+    await session.commit()
+    await session.refresh(champion_instance)
     assert champion_instance.id is not None
     assert champion_instance.created_at is not None
-    assert session.get(MobaChampion, champion_instance.id) == champion_instance
+    assert await session.get(MobaChampion, champion_instance.id) == champion_instance
     assert champion_instance.champion_tier == MobaChampionTier.D

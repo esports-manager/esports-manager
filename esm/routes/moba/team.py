@@ -17,7 +17,9 @@ from esm.models.moba.team import (
 )
 from esm.models.moba.player import MobaPlayer, MobaPlayerPublic
 from esm.models.moba.player_contract import MobaPlayerContract, MobaPlayerContractCreate
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 from fastapi import Depends, HTTPException
 
 
@@ -59,8 +61,10 @@ class MobaTeamWithPlayers(MobaTeamPublic):
 
 
 @team_routes.get("/", response_model=list[MobaTeamWithPlayers])
-async def get_teams(request: Request, session: Session = Depends(get_session)):
-    query = select(MobaTeam)
+async def get_teams(request: Request, session: AsyncSession = Depends(get_session)):
+    query = select(MobaTeam).options(
+        selectinload(MobaTeam.contracts).selectinload(MobaPlayerContract.player)
+    )
     count_query = select(MobaTeam)
 
     page = 1
@@ -134,10 +138,12 @@ async def get_teams(request: Request, session: Session = Depends(get_session)):
         else:
             query = query.order_by(sort_field.asc())
 
-    total_teams = len(session.exec(count_query).all())
+    count_result = await session.execute(count_query)
+    total_teams = len(count_result.scalars().all())
     total_pages = (total_teams + per_page - 1) // per_page
 
-    teams = session.exec(query.offset(skip).limit(per_page)).all()
+    result_query = await session.execute(query.offset(skip).limit(per_page))
+    teams = result_query.scalars().all()
 
     result = []
     for team in teams:
@@ -190,8 +196,9 @@ async def get_teams(request: Request, session: Session = Depends(get_session)):
 
 
 @team_routes.get("/options")
-async def get_team_options(request: Request, session: Session = Depends(get_session)):
-    teams = session.exec(select(MobaTeam).order_by(MobaTeam.name)).all()
+async def get_team_options(request: Request, session: AsyncSession = Depends(get_session)):
+    result = await session.execute(select(MobaTeam).order_by(MobaTeam.name))
+    teams = result.scalars().all()
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
             request,
@@ -208,19 +215,19 @@ async def get_team_options(request: Request, session: Session = Depends(get_sess
 @team_routes.post(
     "/", response_model=MobaTeamPublic, status_code=status.HTTP_201_CREATED
 )
-async def create_team(*, session: Session = Depends(get_session), team: MobaTeamCreate):
+async def create_team(*, session: AsyncSession = Depends(get_session), team: MobaTeamCreate):
     db_team = MobaTeam.model_validate(team)
     session.add(db_team)
-    session.commit()
-    session.refresh(db_team)
+    await session.commit()
+    await session.refresh(db_team)
     return db_team
 
 
 @team_routes.get("/{id}", response_model=MobaTeamPublic)
 async def get_team(
-    *, request: Request, session: Session = Depends(get_session), id: int
+    *, request: Request, session: AsyncSession = Depends(get_session), id: int
 ):
-    team = session.get(MobaTeam, id)
+    team = await session.get(MobaTeam, id)
     if not team:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Team not found"
@@ -255,9 +262,9 @@ async def get_team(
 
 @team_routes.patch("/{id}", response_model=MobaTeam)
 async def update_team(
-    *, session: Session = Depends(get_session), id: int, team: MobaTeamUpdate
+    *, session: AsyncSession = Depends(get_session), id: int, team: MobaTeamUpdate
 ):
-    db_team = session.get(MobaTeam, id)
+    db_team = await session.get(MobaTeam, id)
     if not db_team:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Team not found"
@@ -265,16 +272,21 @@ async def update_team(
     team_data = team.model_dump(exclude_unset=True)
     db_team.sqlmodel_update(team_data)
     session.add(db_team)
-    session.commit()
-    session.refresh(db_team)
+    await session.commit()
+    await session.refresh(db_team)
     return db_team
 
 
 @team_routes.get("/{id}/players", response_model=list[MobaPlayerPublic])
 async def get_team_players(
-    *, request: Request, session: Session = Depends(get_session), id: int
+    *, request: Request, session: AsyncSession = Depends(get_session), id: int
 ):
-    team = session.get(MobaTeam, id)
+    result = await session.execute(
+        select(MobaTeam).where(MobaTeam.id == id).options(
+            selectinload(MobaTeam.contracts).selectinload(MobaPlayerContract.player)
+        )
+    )
+    team = result.scalars().first()
     if not team:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Team not found"
@@ -298,14 +310,14 @@ async def get_team_players(
 
 
 @team_routes.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_team(*, session: Session = Depends(get_session), id: int):
-    team = session.get(MobaTeam, id)
+async def delete_team(*, session: AsyncSession = Depends(get_session), id: int):
+    team = await session.get(MobaTeam, id)
     if not team:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Team not found"
         )
-    session.delete(team)
-    session.commit()
+    await session.delete(team)
+    await session.commit()
     return None
 
 
@@ -318,26 +330,34 @@ class AddPlayerToTeamRequest(SQLModel):
 )
 async def add_player_to_team(
     *,
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
     request: AddPlayerToTeamRequest,
 ):
-    team = session.get(MobaTeam, request.contract.team_id)
+    result = await session.execute(
+        select(MobaTeam).where(MobaTeam.id == request.contract.team_id).options(
+            selectinload(MobaTeam.contracts).selectinload(MobaPlayerContract.player)
+        )
+    )
+    team = result.scalars().first()
     if not team:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Team not found"
         )
-    player = session.get(MobaPlayer, request.contract.player_id)
+    player_result = await session.execute(
+        select(MobaPlayer).where(MobaPlayer.id == request.contract.player_id).options(selectinload(MobaPlayer.contracts))
+    )
+    player = player_result.scalars().first()
     if not player:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Player not found"
         )
     contract = MobaPlayerContract.model_validate(request.contract)
     session.add(contract)
-    session.commit()
-    session.refresh(contract)
+    await session.commit()
+    await session.refresh(contract)
     team.add_player(player, contract)
-    session.refresh(team)
-    session.refresh(player)
+    await session.refresh(team, ["contracts"])
+    await session.refresh(player)
     return team
 
 

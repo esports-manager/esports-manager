@@ -63,7 +63,7 @@ def build_match(farming1: int = 50, farming2: int = 50) -> MobaMatchSimulation:
     return sim
 
 
-def test_farming_and_death_timer_tick() -> None:
+async def test_farming_and_death_timer_tick() -> None:
     sim = build_match()
     # Pre-2:00, no farming
     sim.state.time = 100
@@ -85,7 +85,7 @@ def test_farming_and_death_timer_tick() -> None:
     assert p.farm == base_farm + 10
 
 
-def test_fight_event_first_blood_and_death_timer(
+async def test_fight_event_first_blood_and_death_timer(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     sim = build_match()
@@ -116,7 +116,7 @@ def test_fight_event_first_blood_and_death_timer(
     assert "eliminated" in joined
 
 
-def test_jungle_event_herald_converts_tower(monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_jungle_event_herald_converts_tower(monkeypatch: pytest.MonkeyPatch) -> None:
     sim = build_match()
     # Ensure objectives are available by advancing time beyond first spawns
     sim.state.time = JUNGLE_OBJECTIVES[MobaJungleType.RIFT_HERALD]["first_spawn_at"]
@@ -149,7 +149,7 @@ def test_jungle_event_herald_converts_tower(monkeypatch: pytest.MonkeyPatch) -> 
     assert herald.next_spawn_at > sim.state.time - ev.duration
 
 
-def test_nexus_event_ends_match(monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_nexus_event_ends_match(monkeypatch: pytest.MonkeyPatch) -> None:
     sim = build_match()
     # Make nexus attack conditions true for team1 by zeroing enemy base towers and one inhibitor
     sim.team2.state.towers.base = 0

@@ -1,9 +1,9 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
-from sqlmodel import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import date
-from fastapi.testclient import TestClient
+from httpx import AsyncClient
 from esm.models.moba.champion import (
     MobaChampion,
     MobaChampionRole,
@@ -12,13 +12,13 @@ from esm.models.moba.champion import (
 )
 
 
-def test_get_champions_empty(client: TestClient):
-    response = client.get("/api/moba/champions")
+async def test_get_champions_empty(client: AsyncClient):
+    response = await client.get("/api/moba/champions")
     assert response.status_code == 200
     assert response.json() == []
 
 
-def test_get_champions(client: TestClient, session: Session):
+async def test_get_champions(client: AsyncClient, session: AsyncSession):
     champion = MobaChampion(
         name="Test Champion",
         description="Test Champion Description",
@@ -31,9 +31,9 @@ def test_get_champions(client: TestClient, session: Session):
         strength=50,
     )
     session.add(champion)
-    session.commit()
-    session.refresh(champion)
-    response = client.get("/api/moba/champions")
+    await session.commit()
+    await session.refresh(champion)
+    response = await client.get("/api/moba/champions")
     assert response.status_code == 200
     assert response.json()[0]["id"] == champion.id
     assert response.json()[0]["name"] == champion.name
@@ -47,7 +47,7 @@ def test_get_champions(client: TestClient, session: Session):
     assert response.json()[0]["strength"] == champion.strength
 
 
-def test_get_champion_by_id(client: TestClient, session: Session):
+async def test_get_champion_by_id(client: AsyncClient, session: AsyncSession):
     champion = MobaChampion(
         name="Test Champion",
         description="Test Champion Description",
@@ -60,9 +60,9 @@ def test_get_champion_by_id(client: TestClient, session: Session):
         strength=50,
     )
     session.add(champion)
-    session.commit()
-    session.refresh(champion)
-    response = client.get(f"/api/moba/champions/{champion.id}")
+    await session.commit()
+    await session.refresh(champion)
+    response = await client.get(f"/api/moba/champions/{champion.id}")
     assert response.status_code == 200
     assert response.json()["id"] == champion.id
     assert response.json()["name"] == champion.name
@@ -76,14 +76,14 @@ def test_get_champion_by_id(client: TestClient, session: Session):
     assert response.json()["strength"] == champion.strength
 
 
-def test_get_champion_by_id_not_found(client: TestClient):
-    response = client.get("/api/moba/champions/1")
+async def test_get_champion_by_id_not_found(client: AsyncClient):
+    response = await client.get("/api/moba/champions/1")
     assert response.status_code == 404
     assert response.json() == {"detail": "Champion not found"}
 
 
-def test_create_champion(client: TestClient, session: Session):
-    response = client.post(
+async def test_create_champion(client: AsyncClient, session: AsyncSession):
+    response = await client.post(
         "/api/moba/champions",
         json={
             "name": "Test Champion",
@@ -98,7 +98,7 @@ def test_create_champion(client: TestClient, session: Session):
         },
     )
     assert response.status_code == 201
-    champion = session.get(MobaChampion, response.json()["id"])
+    champion = await session.get(MobaChampion, response.json()["id"])
     assert isinstance(champion, MobaChampion)
     assert champion.name == "Test Champion"
     assert champion.description == "Test Champion Description"
@@ -111,7 +111,7 @@ def test_create_champion(client: TestClient, session: Session):
     assert champion.strength == 50
 
 
-def test_update_champion(client: TestClient, session: Session):
+async def test_update_champion(client: AsyncClient, session: AsyncSession):
     champion = MobaChampion(
         name="Test Champion",
         description="Test Champion Description",
@@ -124,18 +124,18 @@ def test_update_champion(client: TestClient, session: Session):
         strength=50,
     )
     session.add(champion)
-    session.commit()
-    session.refresh(champion)
-    response = client.patch(
+    await session.commit()
+    await session.refresh(champion)
+    response = await client.patch(
         f"/api/moba/champions/{champion.id}", json={"name": "Test Champion Updated"}
     )
     assert response.status_code == 200
-    champion = session.get(MobaChampion, champion.id)
+    champion = await session.get(MobaChampion, champion.id)
     assert isinstance(champion, MobaChampion)
     assert champion.name == "Test Champion Updated"
 
 
-def test_get_champion_tier(client: TestClient, session: Session):
+async def test_get_champion_tier(client: AsyncClient, session: AsyncSession):
     champion = MobaChampion(
         name="Test Champion",
         description="Test Champion Description",
@@ -148,14 +148,14 @@ def test_get_champion_tier(client: TestClient, session: Session):
         strength=50,
     )
     session.add(champion)
-    session.commit()
-    session.refresh(champion)
-    response = client.get(f"/api/moba/champions/{champion.id}/tier")
+    await session.commit()
+    await session.refresh(champion)
+    response = await client.get(f"/api/moba/champions/{champion.id}/tier")
     assert response.status_code == 200
     assert response.json() == champion.champion_tier.value
 
 
-def test_delete_champion(client: TestClient, session: Session):
+async def test_delete_champion(client: AsyncClient, session: AsyncSession):
     champion = MobaChampion(
         name="Test Champion",
         description="Test Champion Description",
@@ -168,9 +168,9 @@ def test_delete_champion(client: TestClient, session: Session):
         strength=50,
     )
     session.add(champion)
-    session.commit()
-    session.refresh(champion)
-    response = client.delete(f"/api/moba/champions/{champion.id}")
+    await session.commit()
+    await session.refresh(champion)
+    response = await client.delete(f"/api/moba/champions/{champion.id}")
     assert response.status_code == 204
-    champion = session.get(MobaChampion, champion.id)
+    champion = await session.get(MobaChampion, champion.id)
     assert champion is None

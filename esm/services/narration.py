@@ -30,11 +30,11 @@ NARRATION_TEMPLATES = {
         "{victim} is eliminated by {killer}!",
     ],
     "first_blood": [
-        "FIRST BLOOD! {killer} from {team} draws first blood against {victim}!",
-        "First blood goes to {team}! {killer} strikes first!",
-        "{killer} secures first blood for {team}!",
-        "And there it is - first blood to {killer}!",
-        "The first kill of the game goes to {killer} from {team}!",
+        "First Blood! {killer} from {team} eliminated {victim}!",
+        "First Blood goes to {team}! {killer} eliminated {victim}!",
+        "{killer} secures First Blood for {team} and eliminated {victim}!",
+        "And there it is - First Blood! {killer} eliminated {victim}!",
+        "First Blood: {killer} from {team} eliminated {victim}!",
     ],
     "double_kill": [
         "DOUBLE KILL for {killer}!",
@@ -109,11 +109,11 @@ NARRATION_TEMPLATES = {
     ],
     "nexus": [
         "NEXUS DESTROYED! {team} wins the game!",
-        "Victory for {team}! The nexus falls!",
-        "{team} closes out the game!",
-        "It's over! {team} takes the victory!",
+        "Victory for {team}! The Nexus falls!",
+        "{team} wins as the Nexus falls!",
+        "It's over! {team} wins the game!",
         "GG! {team} wins!",
-        "{team} secures the W!",
+        "{team} wins and secures the Nexus!",
     ],
     "nothing": [
         "Teams continue to farm and position...",

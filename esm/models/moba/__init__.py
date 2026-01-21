@@ -4,6 +4,12 @@
 from .player_contract import MobaPlayerContract
 from .player import MobaPlayerRole, MobaPlayer
 from .team import MobaTeam
+from .game_session import (
+    MobaGameSession,
+    MobaGameSessionCreate,
+    MobaGameSessionPublic,
+    MobaGameSessionUpdate,
+)
 from .champion import (
     MobaChampion,
     MobaChampionPublic,
@@ -85,6 +91,10 @@ __all__ = [
     "MobaPlayerContract",
     "MobaPlayer",
     "MobaTeam",
+    "MobaGameSession",
+    "MobaGameSessionCreate",
+    "MobaGameSessionPublic",
+    "MobaGameSessionUpdate",
     "MobaChampion",
     "MobaChampionPublic",
     "MobaChampionRole",

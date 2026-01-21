@@ -204,7 +204,7 @@ async def get_team_options(
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
             request,
-            "components/team_options.html",
+            "components/teams/team_options.html",
             {
                 "request": request,
                 "teams": teams,

@@ -11,6 +11,75 @@
     </div>
   </div>
 
+  <div id="session-banner" class="mb-6">
+    <div
+      id="session-active"
+      class="hidden bg-white rounded-lg shadow p-4 dark:bg-slate-700 dark:border dark:border-gray-500"
+    >
+      <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p class="text-xs uppercase text-gray-500 dark:text-gray-300 font-semibold">
+            Active session
+          </p>
+          <h3
+            id="session-name"
+            class="text-xl font-semibold text-gray-800 dark:text-gray-100"
+          >
+            Loading...
+          </h3>
+          <p id="session-meta" class="text-sm text-gray-500 dark:text-gray-300"></p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <a
+            href="/load_game"
+            class="text-sm bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md"
+          >
+            Switch save
+          </a>
+          <button
+            id="session-refresh"
+            type="button"
+            class="text-sm bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+          >
+            Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      id="session-missing"
+      class="hidden bg-white rounded-lg shadow p-4 dark:bg-slate-700 dark:border dark:border-gray-500"
+    >
+      <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p class="text-xs uppercase text-gray-500 dark:text-gray-300 font-semibold">
+            No active session
+          </p>
+          <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+            Start your career to unlock the dashboard.
+          </h3>
+          <p class="text-sm text-gray-500 dark:text-gray-300">
+            Create a new save or load an existing one to continue.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <a
+            href="/new_game"
+            class="text-sm bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+          >
+            New game
+          </a>
+          <a
+            href="/load_game"
+            class="text-sm bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md"
+          >
+            Load save
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!--Next game section-->
   <div class="mb-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
@@ -1971,41 +2040,74 @@
 </div>
 
 <script>
-  // Handle fallback images for player avatars
-  document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".player-avatar").forEach(function (img) {
-      img.onerror = function () {
-        this.onerror = null;
-        this.src = this.getAttribute("data-fallback-src");
-      };
-    });
+  const sessionActiveEl = document.getElementById("session-active");
+  const sessionMissingEl = document.getElementById("session-missing");
+  const sessionNameEl = document.getElementById("session-name");
+  const sessionMetaEl = document.getElementById("session-meta");
+  const refreshButton = document.getElementById("session-refresh");
 
-    document.querySelectorAll(".country-flag").forEach(function (img) {
-      img.onerror = function () {
-        this.style.display = "none";
-      };
-    });
-  });
-  // Image fallback handling for player avatars and country flags
+  function resolveSessionId() {
+    const params = new URLSearchParams(window.location.search);
+    const urlSessionId = params.get("session_id");
+    if (urlSessionId) {
+      localStorage.setItem("activeSessionId", urlSessionId);
+      return urlSessionId;
+    }
+    return localStorage.getItem("activeSessionId");
+  }
+
+  function showMissingSession() {
+    sessionActiveEl.classList.add("hidden");
+    sessionMissingEl.classList.remove("hidden");
+  }
+
+  function showActiveSession(session) {
+    sessionNameEl.textContent = session.name || "Active save";
+    sessionMetaEl.textContent = `Manager: ${session.manager_name} • Team ID: ${session.team_id} • Day ${session.current_day}`;
+    sessionMissingEl.classList.add("hidden");
+    sessionActiveEl.classList.remove("hidden");
+  }
+
+  async function loadActiveSession() {
+    const sessionId = resolveSessionId();
+    if (!sessionId) {
+      showMissingSession();
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/moba/sessions/${sessionId}`);
+      if (!response.ok) {
+        throw new Error("Session not found");
+      }
+      const data = await response.json();
+      showActiveSession(data);
+    } catch (error) {
+      localStorage.removeItem("activeSessionId");
+      showMissingSession();
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
-    // Handle player avatar fallbacks
+    loadActiveSession();
+    if (refreshButton) {
+      refreshButton.addEventListener("click", loadActiveSession);
+    }
+
     const playerAvatars = document.querySelectorAll(".player-avatar");
     playerAvatars.forEach((img) => {
       img.addEventListener("error", function () {
         const fallbackSrc = this.getAttribute("data-fallback-src");
         if (fallbackSrc) {
           this.src = fallbackSrc;
-          // Prevent infinite error loop
           this.removeAttribute("data-fallback-src");
         }
       });
     });
 
-    // Handle country flag fallbacks
     const countryFlags = document.querySelectorAll(".country-flag");
     countryFlags.forEach((img) => {
       img.addEventListener("error", function () {
-        // Hide the flag on error to maintain layout
         this.style.display = "none";
       });
     });

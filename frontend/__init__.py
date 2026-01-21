@@ -44,6 +44,14 @@ def create_frontend(app: FastAPI) -> FastAPI:
             },
         )
 
+    @app.get("/new_game")
+    async def new_game(request: Request):
+        return templates.TemplateResponse("new_game.html", {"request": request})
+
+    @app.get("/load_game")
+    async def load_game(request: Request):
+        return templates.TemplateResponse("load_game.html", {"request": request})
+
     @app.get("/page/{page}")
     async def page(request: Request, page: str):
         global current_page

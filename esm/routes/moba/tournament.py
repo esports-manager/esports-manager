@@ -166,7 +166,9 @@ async def get_tournament(*, session: AsyncSession = Depends(get_session), id: in
 
 
 @tournament_routes.get("/{id}/teams", response_model=list[MobaTeamPublic])
-async def get_tournament_teams(*, session: AsyncSession = Depends(get_session), id: int):
+async def get_tournament_teams(
+    *, session: AsyncSession = Depends(get_session), id: int
+):
     # Ensure tournament exists
     tournament = await session.get(MobaTournament, id)
     if not tournament:
@@ -180,7 +182,9 @@ async def get_tournament_teams(*, session: AsyncSession = Depends(get_session), 
     team_ids = [tp.team_id for tp in result.scalars().all()]
     if not team_ids:
         return []
-    teams_result = await session.execute(select(MobaTeam).where(MobaTeam.id.in_(team_ids)))
+    teams_result = await session.execute(
+        select(MobaTeam).where(MobaTeam.id.in_(team_ids))
+    )
     teams = teams_result.scalars().all()
     return [MobaTeamPublic.model_validate(t.model_dump()) for t in teams]
 

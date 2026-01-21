@@ -8,7 +8,7 @@ class DatabaseManager:
         # Convert sqlite:/// to sqlite+aiosqlite:///
         if database_url.startswith("sqlite:///"):
             database_url = database_url.replace("sqlite:///", "sqlite+aiosqlite:///")
-        
+
         self.engine = create_async_engine(database_url, echo=True)
         self.async_session_maker = async_sessionmaker(
             self.engine, class_=AsyncSession, expire_on_commit=False

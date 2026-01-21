@@ -228,7 +228,10 @@ async def get_champion(*, session: AsyncSession = Depends(get_session), id: int)
 
 @champion_routes.patch("/{id}", response_model=MobaChampionPublic)
 async def update_champion(
-    *, session: AsyncSession = Depends(get_session), id: int, champion: MobaChampionUpdate
+    *,
+    session: AsyncSession = Depends(get_session),
+    id: int,
+    champion: MobaChampionUpdate,
 ):
     db_champion = await session.get(MobaChampion, id)
     if not db_champion:

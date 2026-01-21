@@ -98,9 +98,7 @@ async def _setup_draft(
 
     draft.current_phase = DraftPhase.PICK_1
     draft.turn_number = turn_number
-    draft.current_turn = (
-        DraftTeamSide.BLUE if turn_number == 0 else DraftTeamSide.RED
-    )
+    draft.current_turn = DraftTeamSide.BLUE if turn_number == 0 else DraftTeamSide.RED
     session.add(draft)
     await session.commit()
     await session.refresh(draft)

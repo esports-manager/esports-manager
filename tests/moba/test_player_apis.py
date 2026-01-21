@@ -165,9 +165,13 @@ async def test_get_champion_pool(client: AsyncClient, session: AsyncSession):
     await session.commit()
     await session.refresh(champion)
     await session.close()
-    post_response = await client.post(f"/api/moba/players/{player.id}/champion_pool/{champion.id}")
+    post_response = await client.post(
+        f"/api/moba/players/{player.id}/champion_pool/{champion.id}"
+    )
     assert post_response.status_code == 200
-    response = await client.get(f"/api/moba/players/{player.id}/champion_pool/{champion.id}")
+    response = await client.get(
+        f"/api/moba/players/{player.id}/champion_pool/{champion.id}"
+    )
     expected_response = {
         "player_id": player.id,
         "champion_id": champion.id,
@@ -198,6 +202,8 @@ async def test_get_champion_pool_not_found(client: AsyncClient, session: AsyncSe
     session.add(champion)
     await session.commit()
     await session.refresh(champion)
-    response = await client.get(f"/api/moba/players/{player.id}/champion_pool/{champion.id}")
+    response = await client.get(
+        f"/api/moba/players/{player.id}/champion_pool/{champion.id}"
+    )
     assert response.status_code == 404
     assert response.json() == {"detail": "Champion not found in pool"}

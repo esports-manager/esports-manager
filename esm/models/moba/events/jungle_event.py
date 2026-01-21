@@ -70,9 +70,7 @@ class MobaJungleEvent(MobaEventBase):
         )
 
         total_stats = acting_team_stats + defending_team_stats
-        steal_chance = (
-            defending_team_stats / total_stats if total_stats > 0 else 0.5
-        )
+        steal_chance = defending_team_stats / total_stats if total_stats > 0 else 0.5
         steal = random.random() < steal_chance
 
         return acting_team, defending_team, steal
@@ -85,14 +83,15 @@ class MobaJungleEvent(MobaEventBase):
         acting_team, defending_team, steal = self.get_team_to_win_objective()
 
         # Apply objective effects
-        obj_name = self.jungle_type.value if self.jungle_type else "objective"
         winner_team = defending_team if steal else acting_team
         stealer = random.choice(defending_team.players) if steal else None
-        
+
         if self.jungle_type == MobaJungleType.DRAGON:
             winner_team.state.dragons += 1
             count = winner_team.state.dragons
-            text, severity = narrate_objective("dragon", winner_team, stealer, steal, count)
+            text, severity = narrate_objective(
+                "dragon", winner_team, stealer, steal, count
+            )
             self.commentary.append(text)
         elif self.jungle_type == MobaJungleType.BARON:
             winner_team.state.barons += 1

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
 import random
-from typing import Optional, Dict, Any
+from typing import Optional, Any
 from enum import Enum
 
 
@@ -178,12 +178,12 @@ def narrate_kill(
             team=get_team_name(killer_team),
         )
         return text, EventSeverity.HIGHLIGHT
-    
+
     if is_double:
         template = random.choice(NARRATION_TEMPLATES["double_kill"])
         text = template.format(killer=get_player_name(killer))
         return text, EventSeverity.HIGHLIGHT
-    
+
     template = random.choice(NARRATION_TEMPLATES["kill"])
     text = template.format(
         killer=get_player_name(killer),
@@ -214,17 +214,17 @@ def narrate_objective(
             team=get_team_name(team),
         )
         return text, EventSeverity.HIGHLIGHT
-    
+
     templates = NARRATION_TEMPLATES.get(obj_type.lower(), [])
     if not templates:
         templates = ["{team} secures the objective!"]
-    
+
     template = random.choice(templates)
-    
+
     kwargs = {"team": get_team_name(team)}
     if count is not None:
         kwargs["number"] = count
-    
+
     text = template.format(**kwargs)
     return text, EventSeverity.OBJECTIVE
 
@@ -240,12 +240,12 @@ def narrate_tower(
         template = random.choice(NARRATION_TEMPLATES["first_tower"])
         text = template.format(team=get_team_name(team))
         return text, EventSeverity.HIGHLIGHT
-    
+
     if is_nexus_tower:
         template = random.choice(NARRATION_TEMPLATES["nexus_tower"])
         text = template.format(team=get_team_name(team))
         return text, EventSeverity.TOWER
-    
+
     template = random.choice(NARRATION_TEMPLATES["tower"])
     text = template.format(team=get_team_name(team), lane=lane)
     return text, EventSeverity.TOWER
@@ -271,7 +271,9 @@ def narrate_nothing() -> tuple[str, EventSeverity]:
     return template, EventSeverity.INFO
 
 
-def narrate_skirmish(team: Optional[Any] = None, lane: Optional[str] = None) -> tuple[str, EventSeverity]:
+def narrate_skirmish(
+    team: Optional[Any] = None, lane: Optional[str] = None
+) -> tuple[str, EventSeverity]:
     """Generate narration for small skirmishes."""
     template = random.choice(NARRATION_TEMPLATES["skirmish"])
     kwargs = {}

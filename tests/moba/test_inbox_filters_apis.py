@@ -72,7 +72,9 @@ async def seed_messages(session: AsyncSession):
     return m1, m2, m3, m4, m5
 
 
-async def test_inbox_list_filters_and_sort_pagination(client: AsyncClient, session: AsyncSession):
+async def test_inbox_list_filters_and_sort_pagination(
+    client: AsyncClient, session: AsyncSession
+):
     m1, m2, m3, m4, m5 = await seed_messages(session)
 
     # Filter: category=transfer, status=unread, is_starred=true
@@ -122,14 +124,18 @@ async def test_inbox_list_filters_and_sort_pagination(client: AsyncClient, sessi
     ]
 
 
-async def test_inbox_list_selected_mark_read(client: AsyncClient, session: AsyncSession):
+async def test_inbox_list_selected_mark_read(
+    client: AsyncClient, session: AsyncSession
+):
     m = MobaInbox(subject="Mark me", body="", category=MobaInboxCategory.GENERAL)
     session.add(m)
     await session.commit()
     await session.refresh(m)
     assert m.status == MobaInboxStatus.UNREAD
 
-    r = await client.get("/api/moba/inbox", params={"selected_id": m.id, "mark_read": "true"})
+    r = await client.get(
+        "/api/moba/inbox", params={"selected_id": m.id, "mark_read": "true"}
+    )
     assert r.status_code == 200
     refreshed = await session.get(MobaInbox, m.id)
     assert refreshed.status == MobaInboxStatus.READ
@@ -147,7 +153,9 @@ async def test_inbox_htmx_list_returns_html(client: AsyncClient, session: AsyncS
     assert r.headers["content-type"].startswith("text/html")
 
 
-async def test_inbox_htmx_get_message_returns_html(client: AsyncClient, session: AsyncSession):
+async def test_inbox_htmx_get_message_returns_html(
+    client: AsyncClient, session: AsyncSession
+):
     m = MobaInbox(subject="Hello", body="", category=MobaInboxCategory.GENERAL)
     session.add(m)
     await session.commit()
@@ -179,7 +187,9 @@ async def test_inbox_htmx_patch_query_params_updates_and_rerenders(
     assert updated.labels == "ops"
 
 
-async def test_inbox_htmx_delete_rerenders_list(client: AsyncClient, session: AsyncSession):
+async def test_inbox_htmx_delete_rerenders_list(
+    client: AsyncClient, session: AsyncSession
+):
     m = MobaInbox(subject="Delete me", body="", category=MobaInboxCategory.GENERAL)
     session.add(m)
     await session.commit()

@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
-from typing import Dict, Any, List
+from typing import Dict, Any
 from urllib.parse import parse_qs
 from datetime import datetime
 import json
@@ -75,14 +75,16 @@ DRAFT_ORDER = {
 ROLES = ["top", "jungle", "mid", "adc", "support"]
 
 
-def get_current_turn_info(draft: MobaMatchDraftSession) -> tuple[DraftTeamSide, DraftActionType]:
+def get_current_turn_info(
+    draft: MobaMatchDraftSession,
+) -> tuple[DraftTeamSide, DraftActionType]:
     if draft.current_phase == DraftPhase.COMPLETED:
         return None, None
-    
+
     phase_order = DRAFT_ORDER.get(draft.current_phase, [])
     if draft.turn_number < len(phase_order):
         return phase_order[draft.turn_number]
-    
+
     return None, None
 
 
@@ -94,29 +96,32 @@ async def initialize_draft(
     match = await session.get(MobaMatch, match_id)
     if not match:
         raise HTTPException(status_code=404, detail="Match not found")
-    
+
     lineup_result = await session.execute(
         select(MobaMatchLineup).where(MobaMatchLineup.match_id == match_id)
     )
     lineup = lineup_result.scalars().first()
-    
+
     if not lineup:
         raise HTTPException(status_code=404, detail="Lineup not initialized")
-    
-    if lineup.blue_team_status != LineupStatus.CONFIRMED or lineup.red_team_status != LineupStatus.CONFIRMED:
+
+    if (
+        lineup.blue_team_status != LineupStatus.CONFIRMED
+        or lineup.red_team_status != LineupStatus.CONFIRMED
+    ):
         raise HTTPException(status_code=400, detail="Both lineups must be confirmed")
-    
+
     existing = await session.execute(
         select(MobaMatchDraftSession).where(MobaMatchDraftSession.match_id == match_id)
     )
     if existing.scalars().first():
         raise HTTPException(status_code=400, detail="Draft already initialized")
-    
+
     draft = MobaMatchDraftSession(match_id=match_id)
     session.add(draft)
     await session.commit()
     await session.refresh(draft)
-    
+
     return MobaMatchDraftSessionPublic.model_validate(draft)
 
 
@@ -129,41 +134,41 @@ async def get_draft(
     match = await session.get(MobaMatch, match_id)
     if not match:
         raise HTTPException(status_code=404, detail="Match not found")
-    
+
     draft_result = await session.execute(
         select(MobaMatchDraftSession).where(MobaMatchDraftSession.match_id == match_id)
     )
     draft = draft_result.scalars().first()
-    
+
     if not draft:
         draft = await initialize_draft(match_id, session)
-    
+
     actions_result = await session.execute(
         select(MobaMatchDraftAction)
         .where(MobaMatchDraftAction.draft_session_id == draft.id)
         .order_by(MobaMatchDraftAction.order_index)
     )
     actions = actions_result.scalars().all()
-    
+
     blue_team = await session.get(MobaTeam, match.blue_team_id)
     red_team = await session.get(MobaTeam, match.red_team_id)
-    
+
     slots_result = await session.execute(
         select(MobaMatchLineupSlot)
         .where(MobaMatchLineupSlot.match_id == match_id)
         .order_by(MobaMatchLineupSlot.team_id, MobaMatchLineupSlot.slot_order)
     )
     slots = slots_result.scalars().all()
-    
+
     banned_actions = [a for a in actions if a.action_type == DraftActionType.BAN]
     pick_actions = [a for a in actions if a.action_type == DraftActionType.PICK]
     banned_champion_ids = [a.champion_id for a in banned_actions]
     picked_champion_ids = [a.champion_id for a in pick_actions]
-    
+
     champions_result = await session.execute(select(MobaChampion))
     all_champions = champions_result.scalars().all()
     champion_by_id = {c.id: c for c in all_champions}
-    
+
     available_champions = [
         c
         for c in all_champions
@@ -255,18 +260,16 @@ async def get_draft(
     blue_player_ids = [
         slot["player"]["id"] for slot in blue_slots if slot.get("player")
     ]
-    red_player_ids = [
-        slot["player"]["id"] for slot in red_slots if slot.get("player")
-    ]
+    red_player_ids = [slot["player"]["id"] for slot in red_slots if slot.get("player")]
     blue_player_ids_json = json.dumps(blue_player_ids)
     red_player_ids_json = json.dumps(red_player_ids)
-    
+
     current_turn, current_action = get_current_turn_info(draft)
     current_team_slots: list[dict[str, Any]] = []
     if current_turn:
         team_slots = blue_slots if current_turn == DraftTeamSide.BLUE else red_slots
         current_team_slots = [slot for slot in team_slots if not slot.get("pick")]
-    
+
     banned_champions = [
         {
             "team_side": a.team_side,
@@ -305,7 +308,7 @@ async def get_draft(
         "red_unassigned_picks": unassigned_picks[DraftTeamSide.RED],
         "current_team_slots": current_team_slots,
     }
-    
+
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
             request,
@@ -341,12 +344,15 @@ async def submit_draft_action(
         body = (await request.body()).decode("utf-8")
         if body:
             parsed = parse_qs(body, keep_blank_values=True)
-            payload = {key: values[0] if len(values) == 1 else values for key, values in parsed.items()}
+            payload = {
+                key: values[0] if len(values) == 1 else values
+                for key, values in parsed.items()
+            }
 
     draft = await session.get(MobaMatchDraftSession, draft_id)
     if not draft:
         raise HTTPException(status_code=404, detail="Draft session not found")
-    
+
     champion_id = payload.get("champion_id")
     if champion_id is None:
         raise HTTPException(status_code=400, detail="champion_id required")
@@ -354,18 +360,17 @@ async def submit_draft_action(
         champion_id = int(champion_id)
     except (TypeError, ValueError):
         raise HTTPException(status_code=400, detail="champion_id required")
-    
+
     champion = await session.get(MobaChampion, champion_id)
     if not champion:
         raise HTTPException(status_code=404, detail="Champion not found")
-    
+
     player_slot = payload.get("player_slot")
     if isinstance(player_slot, str):
         player_slot = player_slot.strip() or None
 
     existing_actions = await session.execute(
-        select(MobaMatchDraftAction)
-        .where(
+        select(MobaMatchDraftAction).where(
             MobaMatchDraftAction.draft_session_id == draft_id,
             MobaMatchDraftAction.champion_id == champion_id,
         )
@@ -373,7 +378,9 @@ async def submit_draft_action(
     existing_action = existing_actions.scalars().first()
     if existing_action:
         if existing_action.action_type != DraftActionType.PICK:
-            raise HTTPException(status_code=400, detail="Champion already banned or picked")
+            raise HTTPException(
+                status_code=400, detail="Champion already banned or picked"
+            )
         if not player_slot:
             raise HTTPException(
                 status_code=400, detail="player_slot required to assign pick"
@@ -440,12 +447,12 @@ async def submit_draft_action(
 
     if draft.is_completed:
         raise HTTPException(status_code=400, detail="Draft already completed")
-    
+
     current_turn, current_action = get_current_turn_info(draft)
-    
+
     if not current_turn or not current_action:
         raise HTTPException(status_code=400, detail="No valid turn available")
-    
+
     if current_action == DraftActionType.PICK:
         if player_slot:
             player_slot = str(player_slot).lower()
@@ -497,12 +504,14 @@ async def submit_draft_action(
             player_slot = None
     else:
         player_slot = None
-    
+
     total_actions = await session.execute(
-        select(MobaMatchDraftAction).where(MobaMatchDraftAction.draft_session_id == draft_id)
+        select(MobaMatchDraftAction).where(
+            MobaMatchDraftAction.draft_session_id == draft_id
+        )
     )
     order_index = len(total_actions.scalars().all())
-    
+
     action = MobaMatchDraftAction(
         draft_session_id=draft_id,
         action_type=current_action,
@@ -511,11 +520,11 @@ async def submit_draft_action(
         player_slot=player_slot,
         order_index=order_index,
     )
-    
+
     session.add(action)
-    
+
     draft.turn_number += 1
-    
+
     phase_order = DRAFT_ORDER.get(draft.current_phase, [])
     if draft.turn_number >= len(phase_order):
         if draft.current_phase == DraftPhase.BAN_1:
@@ -527,16 +536,16 @@ async def submit_draft_action(
         elif draft.current_phase == DraftPhase.PICK_2:
             draft.current_phase = DraftPhase.COMPLETED
             draft.is_completed = True
-        
+
         draft.turn_number = 0
-    
+
     next_turn, _ = get_current_turn_info(draft)
     if next_turn:
         draft.current_turn = next_turn
-    
+
     draft.updated_at = datetime.now()
     session.add(draft)
-    
+
     await session.commit()
     await session.refresh(action)
 
@@ -554,10 +563,10 @@ async def get_draft_composition(
     draft = await session.get(MobaMatchDraftSession, draft_id)
     if not draft:
         raise HTTPException(status_code=404, detail="Draft session not found")
-    
+
     if not draft.is_completed:
         raise HTTPException(status_code=400, detail="Draft not completed yet")
-    
+
     actions_result = await session.execute(
         select(MobaMatchDraftAction)
         .where(
@@ -567,46 +576,52 @@ async def get_draft_composition(
         .order_by(MobaMatchDraftAction.order_index)
     )
     picks = actions_result.scalars().all()
-    
+
     slots_result = await session.execute(
         select(MobaMatchLineupSlot)
         .where(MobaMatchLineupSlot.match_id == draft.match_id)
         .order_by(MobaMatchLineupSlot.team_id, MobaMatchLineupSlot.slot_order)
     )
     slots = slots_result.scalars().all()
-    
+
     match = await session.get(MobaMatch, draft.match_id)
-    
+
     composition = {
         "match_id": draft.match_id,
         "blue_team": [],
         "red_team": [],
     }
-    
+
     for pick in picks:
         champion = await session.get(MobaChampion, pick.champion_id)
-        
+
         slot = next(
             (
-                s for s in slots
-                if s.team_id == (match.blue_team_id if pick.team_side == DraftTeamSide.BLUE else match.red_team_id)
+                s
+                for s in slots
+                if s.team_id
+                == (
+                    match.blue_team_id
+                    if pick.team_side == DraftTeamSide.BLUE
+                    else match.red_team_id
+                )
                 and (pick.player_slot is None or s.slot_role == pick.player_slot)
             ),
             None,
         )
-        
+
         if not slot:
             continue
-        
+
         pick_data = {
             "player_id": slot.player_id,
             "champion_id": champion.id,
             "role": slot.assigned_role or slot.slot_role,
         }
-        
+
         if pick.team_side == DraftTeamSide.BLUE:
             composition["blue_team"].append(pick_data)
         else:
             composition["red_team"].append(pick_data)
-    
+
     return composition

@@ -16,20 +16,20 @@ async def session_fixture() -> AsyncGenerator[AsyncSession, None]:
         "sqlite+aiosqlite:///:memory:",
         connect_args={"check_same_thread": False},
     )
-    
+
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
 
     async_session_maker = async_sessionmaker(
         engine, class_=AsyncSession, expire_on_commit=False
     )
-    
+
     async with async_session_maker() as session:
         yield session
 
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.drop_all)
-    
+
     await engine.dispose()
 
 
@@ -41,10 +41,10 @@ async def client_fixture(session: AsyncSession) -> AsyncGenerator[AsyncClient, N
         yield session
 
     app.dependency_overrides[get_session] = override_get_session
-    
+
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://test", follow_redirects=True
     ) as client:
         yield client
-    
+
     app.dependency_overrides.clear()

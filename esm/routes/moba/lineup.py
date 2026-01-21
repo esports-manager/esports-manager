@@ -150,7 +150,7 @@ async def _build_lineup_context(
         .join(MobaPlayerContract, MobaPlayerContract.player_id == MobaPlayer.id)
         .where(
             MobaPlayerContract.team_id == match.blue_team_id,
-            MobaPlayerContract.is_active == True,
+            MobaPlayerContract.is_active,
         )
     )
     blue_roster = blue_roster_result.scalars().all()
@@ -160,7 +160,7 @@ async def _build_lineup_context(
         .join(MobaPlayerContract, MobaPlayerContract.player_id == MobaPlayer.id)
         .where(
             MobaPlayerContract.team_id == match.red_team_id,
-            MobaPlayerContract.is_active == True,
+            MobaPlayerContract.is_active,
         )
     )
     red_roster = red_roster_result.scalars().all()
@@ -172,7 +172,9 @@ async def _build_lineup_context(
     )
     slots = slots_result.scalars().all()
 
-    await _auto_assign_empty_slots(match, lineup, slots, blue_roster, red_roster, session)
+    await _auto_assign_empty_slots(
+        match, lineup, slots, blue_roster, red_roster, session
+    )
 
     blue_team = await session.get(MobaTeam, match.blue_team_id)
     red_team = await session.get(MobaTeam, match.red_team_id)
@@ -203,12 +205,8 @@ async def _build_lineup_context(
         else:
             red_slots.append(slot_data)
 
-    blue_assigned_ids = [
-        slot["player"]["id"] for slot in blue_slots if slot["player"]
-    ]
-    red_assigned_ids = [
-        slot["player"]["id"] for slot in red_slots if slot["player"]
-    ]
+    blue_assigned_ids = [slot["player"]["id"] for slot in blue_slots if slot["player"]]
+    red_assigned_ids = [slot["player"]["id"] for slot in red_slots if slot["player"]]
 
     blue_summary = _summarize_team_slots(blue_slots, lineup.blue_team_status)
     red_summary = _summarize_team_slots(red_slots, lineup.red_team_status)
@@ -239,17 +237,17 @@ async def initialize_lineup(
     match = await session.get(MobaMatch, match_id)
     if not match:
         raise HTTPException(status_code=404, detail="Match not found")
-    
+
     existing = await session.execute(
         select(MobaMatchLineup).where(MobaMatchLineup.match_id == match_id)
     )
     if existing.scalars().first():
         raise HTTPException(status_code=400, detail="Lineup already initialized")
-    
+
     lineup = MobaMatchLineup(match_id=match_id)
     session.add(lineup)
     await session.flush()
-    
+
     for team_id in [match.blue_team_id, match.red_team_id]:
         for idx, role in enumerate(ROLES):
             slot = MobaMatchLineupSlot(
@@ -260,7 +258,7 @@ async def initialize_lineup(
                 slot_order=idx,
             )
             session.add(slot)
-    
+
     await session.commit()
     await session.refresh(lineup)
     return MobaMatchLineupPublic.model_validate(lineup)
@@ -273,7 +271,7 @@ async def get_lineup(
     session: AsyncSession = Depends(get_session),
 ):
     context = await _build_lineup_context(match_id, session, request)
-    
+
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
             request,
@@ -305,25 +303,25 @@ async def assign_player_to_slot(
     slot = await session.get(MobaMatchLineupSlot, slot_id)
     if not slot:
         raise HTTPException(status_code=404, detail="Slot not found")
-    
+
     lineup_result = await session.execute(
         select(MobaMatchLineup).where(MobaMatchLineup.match_id == slot.match_id)
     )
     lineup = lineup_result.scalars().first()
-    
+
     if not lineup:
         raise HTTPException(status_code=404, detail="Lineup not found")
-    
+
     match = await session.get(MobaMatch, slot.match_id)
     team_status = (
         lineup.blue_team_status
         if slot.team_id == match.blue_team_id
         else lineup.red_team_status
     )
-    
+
     if team_status == LineupStatus.CONFIRMED:
         raise HTTPException(status_code=400, detail="Lineup already confirmed")
-    
+
     data = payload or await request.form()
     player_id = data.get("player_id")
     assigned_role = data.get("assigned_role") or slot.slot_role
@@ -358,7 +356,7 @@ async def assign_player_to_slot(
             raise HTTPException(status_code=400, detail="Cannot move across teams")
         if from_slot.player_id != player_id:
             raise HTTPException(status_code=400, detail="Source slot mismatch")
-    
+
     if player_id:
         player = await session.get(MobaPlayer, player_id)
         if not player:
@@ -384,14 +382,14 @@ async def assign_player_to_slot(
             select(MobaPlayerContract).where(
                 MobaPlayerContract.player_id == player_id,
                 MobaPlayerContract.team_id == slot.team_id,
-                MobaPlayerContract.is_active == True,
+                MobaPlayerContract.is_active,
             )
         )
         if not contract_result.scalars().first():
             raise HTTPException(
                 status_code=400, detail="Player does not belong to this team"
             )
-    
+
     if from_slot and from_slot.id != slot.id:
         from_slot.player_id = None
         from_slot.updated_at = datetime.now()
@@ -400,11 +398,11 @@ async def assign_player_to_slot(
     slot.player_id = player_id
     slot.assigned_role = assigned_role
     slot.updated_at = datetime.now()
-    
+
     session.add(slot)
     await session.commit()
     await session.refresh(slot)
-    
+
     if request.headers.get("HX-Request"):
         context = await _build_lineup_context(slot.match_id, session, request)
         return templates.TemplateResponse(
@@ -426,15 +424,15 @@ async def confirm_lineup(
     match = await session.get(MobaMatch, match_id)
     if not match:
         raise HTTPException(status_code=404, detail="Match not found")
-    
+
     lineup_result = await session.execute(
         select(MobaMatchLineup).where(MobaMatchLineup.match_id == match_id)
     )
     lineup = lineup_result.scalars().first()
-    
+
     if not lineup:
         raise HTTPException(status_code=404, detail="Lineup not initialized")
-    
+
     slots_result = await session.execute(
         select(MobaMatchLineupSlot).where(
             MobaMatchLineupSlot.match_id == match_id,
@@ -442,10 +440,10 @@ async def confirm_lineup(
         )
     )
     slots = slots_result.scalars().all()
-    
+
     if len(slots) != 5:
         raise HTTPException(status_code=400, detail="Must have exactly 5 slots")
-    
+
     player_ids = set()
     assigned_roles = []
     for slot in slots:
@@ -468,14 +466,14 @@ async def confirm_lineup(
         raise HTTPException(
             status_code=400, detail="Duplicate role assignments detected"
         )
-    
+
     if team_id == match.blue_team_id:
         lineup.blue_team_status = LineupStatus.CONFIRMED
     elif team_id == match.red_team_id:
         lineup.red_team_status = LineupStatus.CONFIRMED
     else:
         raise HTTPException(status_code=400, detail="Invalid team for this match")
-    
+
     lineup.updated_at = datetime.now()
     session.add(lineup)
     await session.commit()
@@ -502,22 +500,22 @@ async def unlock_lineup(
     match = await session.get(MobaMatch, match_id)
     if not match:
         raise HTTPException(status_code=404, detail="Match not found")
-    
+
     lineup_result = await session.execute(
         select(MobaMatchLineup).where(MobaMatchLineup.match_id == match_id)
     )
     lineup = lineup_result.scalars().first()
-    
+
     if not lineup:
         raise HTTPException(status_code=404, detail="Lineup not initialized")
-    
+
     if team_id == match.blue_team_id:
         lineup.blue_team_status = LineupStatus.DRAFT
     elif team_id == match.red_team_id:
         lineup.red_team_status = LineupStatus.DRAFT
     else:
         raise HTTPException(status_code=400, detail="Invalid team for this match")
-    
+
     lineup.updated_at = datetime.now()
     session.add(lineup)
     await session.commit()
@@ -530,5 +528,5 @@ async def unlock_lineup(
             "pages/lineup_setup.html",
             context,
         )
-    
+
     return MobaMatchLineupPublic.model_validate(lineup)

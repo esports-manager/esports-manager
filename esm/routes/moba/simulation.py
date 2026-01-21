@@ -14,11 +14,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from esm.db import get_session
 from esm.config import FRONTEND_DIR
-from esm.models.moba import (
-    MobaMatchSimulation,
-    MobaTeamSimulation,
-    MobaMatchDraftAction,
-)
 from frontend.sidebar import sidebar
 from esm.models.moba.champion import MobaChampion
 from esm.models.moba.moba_match_simulation import (
@@ -261,7 +256,7 @@ async def get_state(sim_id: str):
 
 @simulation_routes.get("/view/{sim_id}")
 async def view_simulation(sim_id: str, request: Request):
-    sess = _get_session_or_404(sim_id)
+    _get_session_or_404(sim_id)
 
     context = {
         "request": request,

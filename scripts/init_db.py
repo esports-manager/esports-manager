@@ -90,7 +90,9 @@ async def add_tournaments(
     return tournament_map
 
 
-async def add_teams(session: AsyncSession, data: list[dict[str, Any]]) -> dict[int, MobaTeam]:
+async def add_teams(
+    session: AsyncSession, data: list[dict[str, Any]]
+) -> dict[int, MobaTeam]:
     """Import team data into the database."""
     print("Importing teams...")
     team_map = {}  # Map team names to IDs
@@ -289,7 +291,7 @@ async def main():
     config = Config()
     config.load_config()
 
-    database_path = config.database_url.replace('sqlite+aiosqlite:///', '')
+    database_path = config.database_url.replace("sqlite+aiosqlite:///", "")
     if os.path.exists(database_path):
         print("Database already exists. Please remove it before running this script.")
         return

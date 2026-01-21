@@ -23,7 +23,9 @@ def _mk_staff(
     )
 
 
-async def test_staff_list_filters_pagination_sort(client: AsyncClient, session: AsyncSession):
+async def test_staff_list_filters_pagination_sort(
+    client: AsyncClient, session: AsyncSession
+):
     s1 = _mk_staff("A1", MobaStaffRole.ANALYST, 1, "X")
     s2 = _mk_staff("A2", MobaStaffRole.HEAD_COACH, 5, "Y")
     s3 = _mk_staff("A3", MobaStaffRole.ANALYST, 3, "X")
@@ -104,7 +106,9 @@ async def test_staff_list_search(client: AsyncClient, session: AsyncSession):
     assert [i["id"] for i in r3.json()] == [s3.id]
 
 
-async def test_staff_list_invalid_role_is_ignored(client: AsyncClient, session: AsyncSession):
+async def test_staff_list_invalid_role_is_ignored(
+    client: AsyncClient, session: AsyncSession
+):
     s1 = _mk_staff("A", MobaStaffRole.ANALYST, 1, "A")
     s2 = _mk_staff("B", MobaStaffRole.HEAD_COACH, 2, "A")
     session.add(s1)

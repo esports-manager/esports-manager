@@ -50,7 +50,9 @@ async def test_moba_team_instance(team_instance: MobaTeam, session: AsyncSession
     assert await session.get(MobaTeam, team_instance.id) == team_instance
 
 
-async def test_moba_team_instance_add_player(team_instance: MobaTeam, session: AsyncSession):
+async def test_moba_team_instance_add_player(
+    team_instance: MobaTeam, session: AsyncSession
+):
     player = MobaPlayer(
         first_name="Test",
         last_name="Player",
@@ -75,7 +77,9 @@ async def test_moba_team_instance_add_player(team_instance: MobaTeam, session: A
     assert await session.get(MobaPlayer, player.id) == player
 
 
-async def test_moba_team_instance_remove_player(team_instance: MobaTeam, session: AsyncSession):
+async def test_moba_team_instance_remove_player(
+    team_instance: MobaTeam, session: AsyncSession
+):
     player = MobaPlayer(
         first_name="Test",
         last_name="Player",

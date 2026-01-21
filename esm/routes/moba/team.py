@@ -196,7 +196,9 @@ async def get_teams(request: Request, session: AsyncSession = Depends(get_sessio
 
 
 @team_routes.get("/options")
-async def get_team_options(request: Request, session: AsyncSession = Depends(get_session)):
+async def get_team_options(
+    request: Request, session: AsyncSession = Depends(get_session)
+):
     result = await session.execute(select(MobaTeam).order_by(MobaTeam.name))
     teams = result.scalars().all()
     if request.headers.get("HX-Request"):
@@ -215,7 +217,9 @@ async def get_team_options(request: Request, session: AsyncSession = Depends(get
 @team_routes.post(
     "/", response_model=MobaTeamPublic, status_code=status.HTTP_201_CREATED
 )
-async def create_team(*, session: AsyncSession = Depends(get_session), team: MobaTeamCreate):
+async def create_team(
+    *, session: AsyncSession = Depends(get_session), team: MobaTeamCreate
+):
     db_team = MobaTeam.model_validate(team)
     session.add(db_team)
     await session.commit()
@@ -282,7 +286,9 @@ async def get_team_players(
     *, request: Request, session: AsyncSession = Depends(get_session), id: int
 ):
     result = await session.execute(
-        select(MobaTeam).where(MobaTeam.id == id).options(
+        select(MobaTeam)
+        .where(MobaTeam.id == id)
+        .options(
             selectinload(MobaTeam.contracts).selectinload(MobaPlayerContract.player)
         )
     )
@@ -334,7 +340,9 @@ async def add_player_to_team(
     request: AddPlayerToTeamRequest,
 ):
     result = await session.execute(
-        select(MobaTeam).where(MobaTeam.id == request.contract.team_id).options(
+        select(MobaTeam)
+        .where(MobaTeam.id == request.contract.team_id)
+        .options(
             selectinload(MobaTeam.contracts).selectinload(MobaPlayerContract.player)
         )
     )
@@ -344,7 +352,9 @@ async def add_player_to_team(
             status_code=status.HTTP_404_NOT_FOUND, detail="Team not found"
         )
     player_result = await session.execute(
-        select(MobaPlayer).where(MobaPlayer.id == request.contract.player_id).options(selectinload(MobaPlayer.contracts))
+        select(MobaPlayer)
+        .where(MobaPlayer.id == request.contract.player_id)
+        .options(selectinload(MobaPlayer.contracts))
     )
     player = player_result.scalars().first()
     if not player:

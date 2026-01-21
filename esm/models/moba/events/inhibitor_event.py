@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 from esm.models.moba.events.event import MobaEventBase
 from esm.models.moba.events.event_types import MobaEventType
+from esm.services.narration import narrate_inhibitor
 
 if TYPE_CHECKING:
     from esm.models.moba.moba_match_simulation import MobaMatchState
@@ -39,12 +40,11 @@ class MobaInhibitorEvent(MobaEventBase):
         if taken:
             inhibitor = random.choice(defending_team.get_exposed_inhibitors())
             defending_team.take_inhibitor(inhibitor)
-            self.commentary.append(
-                f"{acting_team.team.name} took {inhibitor} inhibitor!"
-            )
+            text, severity = narrate_inhibitor(acting_team, inhibitor)
+            self.commentary.append(text)
         else:
             self.commentary.append(
-                f"{defending_team.team.name} is defending {defending_team.get_exposed_inhibitors()} inhibitor!"
+                f"{defending_team.team.name} defends their inhibitor!"
             )
 
         state.time += self.duration

@@ -1,0 +1,129 @@
+<div class="py-6" x-data="{ status: null }" x-init="
+  fetch('/api/moba/match/{{ match.id }}/status').then(r => r.json()).then(data => status = data)
+">
+  <h1 class="text-3xl font-bold mb-6 dark:text-white">Match Setup</h1>
+  
+  <div class="bg-white dark:bg-slate-700 rounded-lg shadow-lg p-6 mb-6">
+    <div class="grid grid-cols-2 gap-8">
+      <div class="text-center">
+        <div class="text-2xl font-bold mb-2 text-blue-600 dark:text-blue-400">{{ blue_team.name }}</div>
+        <div class="text-sm text-gray-500 dark:text-gray-400">Blue Side</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl font-bold mb-2 text-red-600 dark:text-red-400">{{ red_team.name }}</div>
+        <div class="text-sm text-gray-500 dark:text-gray-400">Red Side</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <!-- Phase 1: Lineup Setup -->
+    <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
+               :class="status && status.lineup_confirmed ? 'bg-green-500 text-white' : 'bg-gray-300 dark:bg-slate-600 text-gray-600 dark:text-gray-400'">
+            <i class="bi" :class="status && status.lineup_confirmed ? 'bi-check-circle-fill' : 'bi-1-circle'"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold dark:text-white">Lineup Setup</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Select starting 5 players and assign roles</p>
+          </div>
+        </div>
+        <template x-if="status && !status.lineup_confirmed">
+          <a href="/api/moba/lineup/match/{{ match.id }}" 
+             class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-medium">
+            Configure Lineup
+          </a>
+        </template>
+        <template x-if="status && status.lineup_confirmed">
+          <span class="px-4 py-2 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded font-medium">
+            ✓ Complete
+          </span>
+        </template>
+      </div>
+    </div>
+
+    <!-- Phase 2: Champion Select -->
+    <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
+               :class="status && status.draft_completed ? 'bg-green-500 text-white' : (status && status.lineup_confirmed ? 'bg-blue-500 text-white' : 'bg-gray-300 dark:bg-slate-600 text-gray-600 dark:text-gray-400')">
+            <i class="bi" :class="status && status.draft_completed ? 'bi-check-circle-fill' : 'bi-2-circle'"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold dark:text-white">Champion Select</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Pick and ban champions in draft phase</p>
+          </div>
+        </div>
+        <template x-if="status && status.lineup_confirmed && !status.draft_completed">
+          <a href="/api/moba/draft/match/{{ match.id }}" 
+             class="px-6 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 font-medium">
+            Start Draft
+          </a>
+        </template>
+        <template x-if="status && status.draft_completed">
+          <span class="px-4 py-2 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded font-medium">
+            ✓ Complete
+          </span>
+        </template>
+        <template x-if="status && !status.lineup_confirmed">
+          <span class="px-4 py-2 bg-gray-100 dark:bg-slate-600 text-gray-500 dark:text-gray-400 rounded">
+            Locked
+          </span>
+        </template>
+      </div>
+    </div>
+
+    <!-- Phase 3: Match Simulation -->
+    <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
+               :class="status && status.ready_for_simulation ? 'bg-blue-500 text-white' : 'bg-gray-300 dark:bg-slate-600 text-gray-600 dark:text-gray-400'">
+            <i class="bi bi-3-circle"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold dark:text-white">Match Simulation</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Watch the match play out with live commentary</p>
+          </div>
+        </div>
+        <template x-if="status && status.ready_for_simulation">
+          <button 
+            @click="startSimulation()"
+            class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 font-medium">
+            Start Match
+          </button>
+        </template>
+        <template x-if="status && !status.ready_for_simulation">
+          <span class="px-4 py-2 bg-gray-100 dark:bg-slate-600 text-gray-500 dark:text-gray-400 rounded">
+            Locked
+          </span>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function startSimulation() {
+      const composition = await fetch('/api/moba/draft/session/{{ match.id }}/composition').then(r => r.json());
+      
+      const payload = {
+        team1_id: {{ match.blue_team_id }},
+        team2_id: {{ match.red_team_id }},
+        team1_roster: composition.blue_team,
+        team2_roster: composition.red_team
+      };
+      
+      const response = await fetch('/api/moba/simulation/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await response.json();
+      window.location.href = `/api/moba/simulation/view/${data.sim_id}`;
+    }
+  </script>
+</div>

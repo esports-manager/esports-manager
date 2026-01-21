@@ -1,0 +1,155 @@
+<!-- New Match Management Page -->
+<div class="m-8" x-data="matchesPage()" x-init="init()">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">Match Management</h1>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Create and manage matches with the new lineup → draft → simulation flow</p>
+    </div>
+    <button @click="showCreateModal = true" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2">
+      <i class="bi bi-plus-circle"></i>
+      Create New Match
+    </button>
+  </div>
+
+  <!-- Create Match Modal -->
+  <div x-show="showCreateModal" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click.self="showCreateModal = false">
+    <div class="bg-white dark:bg-slate-700 rounded-lg p-6 max-w-md w-full mx-4" @click.stop>
+      <h2 class="text-xl font-bold mb-4 dark:text-white">Create New Match</h2>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-2 dark:text-white">Blue Team</label>
+          <select x-model.number="newMatch.blueTeamId" class="w-full rounded border dark:bg-slate-800 dark:border-slate-600 px-3 py-2">
+            <option value="">-- Select Team --</option>
+            <template x-for="team in teams" :key="team.id">
+              <option :value="team.id" x-text="team.name"></option>
+            </template>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-2 dark:text-white">Red Team</label>
+          <select x-model.number="newMatch.redTeamId" class="w-full rounded border dark:bg-slate-800 dark:border-slate-600 px-3 py-2">
+            <option value="">-- Select Team --</option>
+            <template x-for="team in teams" :key="team.id">
+              <option :value="team.id" x-text="team.name" :disabled="team.id === newMatch.blueTeamId"></option>
+            </template>
+          </select>
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button @click="createMatch()" :disabled="!newMatch.blueTeamId || !newMatch.redTeamId" class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded disabled:opacity-50">
+            Create Match
+          </button>
+          <button @click="showCreateModal = false" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Matches List -->
+  <div class="grid gap-4">
+    <template x-for="match in matches" :key="match.id">
+      <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-6 hover:shadow-lg transition">
+        <div class="flex items-center justify-between">
+          <div class="flex-1">
+            <div class="flex items-center gap-4 mb-2">
+              <span class="text-lg font-bold text-blue-600 dark:text-blue-400" x-text="match.blue_team?.name || 'Team 1'"></span>
+              <span class="text-gray-400">vs</span>
+              <span class="text-lg font-bold text-red-600 dark:text-red-400" x-text="match.red_team?.name || 'Team 2'"></span>
+            </div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+              Status: <span class="capitalize" x-text="match.status?.replace('_', ' ')"></span>
+            </div>
+          </div>
+
+          <div class="flex gap-2">
+            <a :href="`/api/moba/match/${match.id}`" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded">
+              Open Match
+            </a>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template x-if="matches.length === 0">
+      <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-12 text-center">
+        <i class="bi bi-inbox text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
+        <p class="text-gray-500 dark:text-gray-400 mb-4">No matches yet</p>
+        <button @click="showCreateModal = true" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+          Create Your First Match
+        </button>
+      </div>
+    </template>
+  </div>
+</div>
+
+<script>
+function matchesPage() {
+  return {
+    teams: [],
+    matches: [],
+    showCreateModal: false,
+    newMatch: {
+      blueTeamId: '',
+      redTeamId: ''
+    },
+    
+    async init() {
+      await this.loadTeams();
+      await this.loadMatches();
+    },
+    
+    async loadTeams() {
+      try {
+        const response = await fetch('/api/moba/teams/');
+        if (response.ok) {
+          this.teams = await response.json();
+        }
+      } catch (error) {
+        console.error('Failed to load teams:', error);
+      }
+    },
+    
+    async loadMatches() {
+      try {
+        const response = await fetch('/api/moba/match/list');
+        if (response.ok) {
+          this.matches = await response.json();
+        }
+      } catch (error) {
+        console.error('Failed to load matches:', error);
+      }
+    },
+    
+    async createMatch() {
+      try {
+        const response = await fetch('/api/moba/match/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            blue_team_id: this.newMatch.blueTeamId,
+            red_team_id: this.newMatch.redTeamId
+          })
+        });
+        
+        if (response.ok) {
+          const match = await response.json();
+          window.location.href = `/api/moba/match/${match.id}`;
+        } else {
+          alert('Failed to create match');
+        }
+      } catch (error) {
+        console.error('Failed to create match:', error);
+        alert('Error creating match');
+      }
+    }
+  }
+}
+</script>
+
+<style>
+[x-cloak] { display: none !important; }
+</style>

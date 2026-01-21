@@ -36,6 +36,195 @@
   <script src="{{ url_for('static', path='js/htmx.min.js') }}"></script>
   <script defer src="{{ url_for('static', path='js/alpine.persist.min.js') }}"></script>
   <script defer src="{{ url_for('static', path='js/alpine.min.js') }}"></script>
+  <script>
+    window.continueActionState = {
+      label: "Continue",
+      href: "",
+      enabled: false,
+      tooltip: "Complete the current step to continue.",
+      onClick: "",
+    };
+
+    window.setContinueAction = function (action) {
+      window.continueActionState = {
+        ...window.continueActionState,
+        ...action,
+      };
+      if (document.readyState === "loading") {
+        return;
+      }
+      if (typeof window.applyContinueAction === "function") {
+        window.applyContinueAction();
+      }
+    };
+
+    window.resetContinueAction = function () {
+      window.setContinueAction({
+        label: "Continue",
+        href: "",
+        enabled: false,
+        tooltip: "Complete the current step to continue.",
+        onClick: "",
+      });
+    };
+
+    window.lineupBoard = function ({
+      blueTeamId,
+      redTeamId,
+      blueEditable,
+      redEditable,
+      matchId,
+      lineupReady,
+    }) {
+      return {
+        dragging: null,
+        dragTarget: null,
+        alertMessage: "",
+        matchId: matchId,
+        lineupReady: lineupReady,
+        updateContinueAction() {
+          const ready = this.lineupReady === true;
+          const resolvedMatchId =
+            this.matchId || document.getElementById("lineup-container")?.dataset.matchId;
+          if (window.setContinueAction && resolvedMatchId) {
+            window.setContinueAction({
+              label: "Champion Selection",
+              href: `/api/moba/draft/match/${resolvedMatchId}`,
+              enabled: ready,
+              tooltip: ready ? "" : "Confirm both lineups to continue.",
+            });
+          }
+        },
+        startDrag(payload, event) {
+          this.dragging = payload;
+          this.dragTarget = null;
+          if (event && event.dataTransfer) {
+            event.dataTransfer.effectAllowed = "move";
+            event.dataTransfer.setData("text/plain", payload.label || "player");
+          }
+        },
+        clearError() {
+          this.alertMessage = "";
+        },
+        handleError(event) {
+          const xhr = event && event.detail ? event.detail.xhr : null;
+          if (!xhr) {
+            return;
+          }
+          let message = "Unable to complete that action.";
+          try {
+            const data = JSON.parse(xhr.responseText);
+            if (data && data.detail) {
+              message = data.detail;
+            }
+          } catch (error) {
+            if (xhr.responseText) {
+              message = xhr.responseText;
+            }
+          }
+          this.alertMessage = message;
+        },
+        canEdit(teamId) {
+          if (teamId === blueTeamId && !blueEditable) {
+            this.alertMessage = "Blue lineup is locked.";
+            return false;
+          }
+          if (teamId === redTeamId && !redEditable) {
+            this.alertMessage = "Red lineup is locked.";
+            return false;
+          }
+          return true;
+        },
+        ensureTeam(teamId) {
+          if (!this.dragging) {
+            return false;
+          }
+          if (this.dragging.teamId !== teamId) {
+            this.alertMessage = "You can only move players within the same team.";
+            return false;
+          }
+          return true;
+        },
+        dropOnSlot(slotId, slotRole, teamId) {
+          if (!this.ensureTeam(teamId) || !this.canEdit(teamId)) {
+            this.dragTarget = null;
+            return;
+          }
+          this.clearError();
+          const payload = {
+            player_id: this.dragging.playerId || "",
+            assigned_role: slotRole,
+          };
+          if (this.dragging.fromSlotId) {
+            payload.from_slot_id = this.dragging.fromSlotId;
+          }
+          this.dragTarget = null;
+          htmx.ajax("POST", `/api/moba/lineup/slot/${slotId}/assign`, {
+            target: "#lineup-container",
+            swap: "outerHTML",
+            values: payload,
+          });
+        },
+        dropOnBench(teamId) {
+          if (!this.ensureTeam(teamId) || !this.canEdit(teamId)) {
+            this.dragTarget = null;
+            return;
+          }
+          if (!this.dragging.fromSlotId) {
+            this.alertMessage = "This player is already on the bench.";
+            return;
+          }
+          this.clearError();
+          const payload = {
+            player_id: "",
+            assigned_role: this.dragging.slotRole,
+            from_slot_id: this.dragging.fromSlotId,
+          };
+          this.dragTarget = null;
+          htmx.ajax(
+            "POST",
+            `/api/moba/lineup/slot/${this.dragging.fromSlotId}/assign`,
+            {
+              target: "#lineup-container",
+              swap: "outerHTML",
+              values: payload,
+            }
+          );
+        },
+        clearSlot(slotId, slotRole, teamId) {
+          this.dragging = {
+            playerId: null,
+            teamId: teamId,
+            fromSlotId: slotId,
+            slotRole: slotRole,
+            label: "",
+          };
+          this.dropOnBench(teamId);
+        },
+      };
+    };
+
+    document.addEventListener("continue:update", (event) => {
+      if (event.detail) {
+        window.setContinueAction(event.detail);
+      }
+    });
+
+    document.addEventListener("htmx:afterSwap", (event) => {
+      if (window.Alpine && event.detail && event.detail.target) {
+        window.Alpine.initTree(event.detail.target);
+      }
+      if (typeof window.applyContinueAction === "function") {
+        window.applyContinueAction();
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if (typeof window.applyContinueAction === "function") {
+        window.applyContinueAction();
+      }
+    });
+  </script>
 </head>
 
 <body class="bg-gray-100 dark:bg-slate-800 dark:text-white">

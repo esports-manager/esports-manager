@@ -1,7 +1,8 @@
 <nav
   class="text-black border-b border-b-gray-300 dark:border-b-gray-700 dark:text-white bg-slate-50 dark:bg-slate-900 justify-between transition-all items-center flex px-4 shadow-sm h-[90px] top-0"
   :class="{ 'ml-64': expanded, 'ml-16': !expanded }"
-  x-data="{ searchQuery: '', searchOpen: false }"
+  x-data="{ searchQuery: '', searchOpen: false, continueAction: window.continueActionState }"
+  x-init="window.applyContinueAction = () => { continueAction = { ...window.continueActionState }; }; window.applyContinueAction();"
 >
   <div class="flex flex-row items-center">
     <button
@@ -100,9 +101,29 @@
     </button>
 
     <button
-      class="flex rounded-xl px-5 py-4 bg-blue-500 hover:bg-blue-400 text-white font-bold uppercase"
+      class="flex rounded-xl px-5 py-4 font-bold uppercase transition"
+      :class="continueAction.enabled
+        ? 'bg-blue-500 hover:bg-blue-400 text-white'
+        : 'bg-slate-200 text-slate-400 dark:bg-slate-700 dark:text-slate-400 cursor-not-allowed'"
+      :disabled="!continueAction.enabled"
+      :title="continueAction.enabled ? '' : continueAction.tooltip"
+      @click="
+        if (!continueAction.enabled) { return; }
+        if (continueAction.onClick) {
+          const handler = typeof continueAction.onClick === 'function'
+            ? continueAction.onClick
+            : window[continueAction.onClick];
+          if (typeof handler === 'function') {
+            handler();
+            return;
+          }
+        }
+        if (continueAction.href) {
+          window.location.href = continueAction.href;
+        }
+      "
     >
-      Continue
+      <span x-text="continueAction.label"></span>
       <span class="ml-4 text-lg">
         <i class="bi bi-arrow-right-circle-fill"></i>
       </span>

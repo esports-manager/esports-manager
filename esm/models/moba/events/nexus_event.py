@@ -1,6 +1,7 @@
 import random
 from typing import TYPE_CHECKING
 from esm.models.moba.events.event import MobaEventBase
+from esm.services.narration import narrate_nexus
 
 if TYPE_CHECKING:
     from esm.models.moba.moba_match_simulation import MobaMatchState
@@ -25,8 +26,10 @@ class MobaNexusEvent(MobaEventBase):
 
         # Advance time and end
         state.time += self.duration
-        state.status = MobaMatchStatus.ENDED
-        # Commentary
+        state.status = MobaMatchStatus.COMPLETED
+        
         winner_team = self.team1 if winner_idx == 1 else self.team2
-        self.commentary.append(f"{winner_team.team.name} destroys the Nexus and wins!")
+        text, severity = narrate_nexus(winner_team)
+        self.commentary.append(text)
+        
         return state

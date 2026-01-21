@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 from esm.models.moba.events.event import MobaEventBase
 from esm.models.moba.events.event_types import MobaEventType
+from esm.services.narration import narrate_kill, narrate_ace, narrate_teamfight, EventSeverity
 
 if TYPE_CHECKING:
     from esm.models.moba.moba_match_simulation import MobaMatchState
@@ -34,6 +35,14 @@ class MobaFightEvent(MobaEventBase):
         else:
             kills = 0
 
+        # Track kill streak for double kill detection
+        kill_tracker = {}
+        
+        # Check for teamfight (4+ per side)
+        if size_per_side >= 4:
+            text, severity = narrate_teamfight()
+            self.commentary.append(text)
+        
         # Apply kills/deaths and simple points if we have players
         if kills > 0 and winning_team.players and losing_team.players:
             for _ in range(kills):
@@ -42,17 +51,28 @@ class MobaFightEvent(MobaEventBase):
                 killer.kills += 1
                 killer.points += self.points
                 victim.deaths += 1
-                if not state.first_blood:
+                
+                # Track for double kill
+                kill_tracker[killer.player.id] = kill_tracker.get(killer.player.id, 0) + 1
+                is_double = kill_tracker[killer.player.id] >= 2
+                
+                # First blood special commentary
+                is_first_blood = not state.first_blood
+                if is_first_blood:
                     state.first_blood = True
                     winning_team.state.first_blood = True
-                    name = (
-                        killer.player.nick_name
-                        or f"{killer.player.first_name} {killer.player.last_name}"
-                    )
-                    self.commentary.append(f"First Blood by {name}!")
+                
+                text, severity = narrate_kill(
+                    killer, victim, winning_team,
+                    is_first_blood=is_first_blood,
+                    is_double=is_double
+                )
+                self.commentary.append(text)
+                
                 # Death timer scales with game time
                 minutes = max(0, state.time // 60)
                 victim.death_timer = max(victim.death_timer, min(60, 10 + 2 * minutes))
+                
                 # Random assist from a teammate in the skirmish
                 if random.random() < 0.6 and len(winning_team.players) > 1:
                     assister = random.choice(
@@ -60,16 +80,11 @@ class MobaFightEvent(MobaEventBase):
                     )
                     assister.assists += 1
                     assister.points += 1
-                # Kill commentary
-                kname = (
-                    killer.player.nick_name
-                    or f"{killer.player.first_name} {killer.player.last_name}"
-                )
-                vname = (
-                    victim.player.nick_name
-                    or f"{victim.player.first_name} {victim.player.last_name}"
-                )
-                self.commentary.append(f"{kname} eliminated {vname}.")
+        
+        # Check for ace (all 5 dead)
+        if kills >= 5:
+            text, severity = narrate_ace(winning_team)
+            self.commentary.append(text)
 
         # Advance time
         state.time = end_time

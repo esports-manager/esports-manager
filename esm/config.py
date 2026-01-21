@@ -20,7 +20,7 @@ class Config:
     def get_default_config(self) -> dict[str, str]:
         port = 8000
         return {
-            "database_url": "sqlite:///" + os.path.join(ESM_DIR, "app.db"),
+            "database_url": "sqlite+aiosqlite:///" + os.path.join(ESM_DIR, "app.db"),
             "port": port,
             "api_url": "http://localhost:{port}",
         }

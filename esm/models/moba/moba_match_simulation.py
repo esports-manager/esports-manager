@@ -212,7 +212,7 @@ class MobaMatchSimulation(SQLModel):
         # Update win probabilities after state changes
         self._update_win_probability()
         # End time bookkeeping
-        if self.state.status == MobaMatchStatus.ENDED:
+        if self.state.status == MobaMatchStatus.COMPLETED:
             self.ended_at = datetime.now()
         return event
 
@@ -255,7 +255,7 @@ class MobaMatchSimulation(SQLModel):
                     p.points += max(0, gain // 20)
 
     def step(self) -> Optional[MobaEventBase]:
-        if self.state.status == MobaMatchStatus.ENDED:
+        if self.state.status == MobaMatchStatus.COMPLETED:
             return None
         if self.state.status == MobaMatchStatus.NOT_STARTED:
             self.start()
@@ -276,7 +276,7 @@ class MobaMatchSimulation(SQLModel):
         # Run until the match is ended. The max_steps parameter is accepted for
         # backward compatibility but is ignored to avoid imposing a hard cap.
         steps = 0
-        while self.state.status != MobaMatchStatus.ENDED:
+        while self.state.status != MobaMatchStatus.COMPLETED:
             executed = self.step()
             if executed is None:
                 break
@@ -284,7 +284,7 @@ class MobaMatchSimulation(SQLModel):
             chain = 0
             while (
                 executed.follow_up
-                and self.state.status != MobaMatchStatus.ENDED
+                and self.state.status != MobaMatchStatus.COMPLETED
                 and self._follow_up_is_valid(executed.follow_up)
             ):
                 executed = self._execute_event(

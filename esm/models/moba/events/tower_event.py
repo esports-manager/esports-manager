@@ -2,6 +2,7 @@ import random
 from typing import TYPE_CHECKING
 
 from esm.models.moba.events.event import MobaEventBase, MobaEventType
+from esm.services.narration import narrate_tower
 
 if TYPE_CHECKING:
     from esm.models.moba.moba_match_simulation import MobaMatchState
@@ -36,11 +37,20 @@ class MobaTowerEvent(MobaEventBase):
         taken = random.random() < acting_team.state.win_probability
         if taken:
             tower = random.choice(defending_team.get_remaining_towers())
+            is_first_tower = not self.state.first_tower
+            is_nexus = (tower == "base")
+            
             defending_team.take_tower(tower)
-            self.commentary.append(f"{acting_team.team.name} took {tower} tower!")
+            
+            if is_first_tower:
+                self.state.first_tower = True
+                acting_team.state.first_tower = True
+            
+            text, severity = narrate_tower(acting_team, tower, is_first_tower, is_nexus)
+            self.commentary.append(text)
         else:
             self.commentary.append(
-                f"{defending_team.team.name} is defending {defending_team.get_remaining_towers()} tower!"
+                f"{defending_team.team.name} defends their tower!"
             )
 
         # Advance clock

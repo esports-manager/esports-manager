@@ -116,7 +116,9 @@ async def test_fight_event_first_blood_and_death_timer(
     assert "eliminated" in joined
 
 
-async def test_jungle_event_herald_converts_tower(monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_jungle_event_herald_converts_tower(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     sim = build_match()
     # Ensure objectives are available by advancing time beyond first spawns
     sim.state.time = JUNGLE_OBJECTIVES[MobaJungleType.RIFT_HERALD]["first_spawn_at"]
@@ -165,6 +167,6 @@ async def test_nexus_event_ends_match(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(random, "choices", choose_nexus)
 
     sim.run_until_end(max_steps=5)
-    assert sim.state.status == MobaMatchStatus.ENDED
+    assert sim.state.status == MobaMatchStatus.COMPLETED
     assert sim.state.winner in (1, 2)
     assert any("wins" in line or "Nexus" in line for line in sim.commentary_log)

@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from esm.models.moba.events.event import MobaEventBase
 from esm.models.moba.team_simulation import MobaTeamSimulation
 from esm.models.moba.events.event_types import MobaEventType, MobaJungleType
+from esm.services.narration import narrate_objective, narrate_inhibitor
 
 if TYPE_CHECKING:
     from esm.models.moba.moba_match_simulation import MobaMatchState
@@ -68,12 +69,13 @@ class MobaJungleEvent(MobaEventBase):
             ]
         )
 
-        steal_chance = defending_team_stats / (acting_team_stats + defending_team_stats)
-        steal = random.random() > steal_chance
+        total_stats = acting_team_stats + defending_team_stats
+        steal_chance = (
+            defending_team_stats / total_stats if total_stats > 0 else 0.5
+        )
+        steal = random.random() < steal_chance
 
-        if steal:
-            return defending_team, acting_team
-        return acting_team, defending_team
+        return acting_team, defending_team, steal
 
     def calculate(self) -> "MobaMatchState":
         state = self.state.model_copy()
@@ -83,45 +85,33 @@ class MobaJungleEvent(MobaEventBase):
         acting_team, defending_team, steal = self.get_team_to_win_objective()
 
         # Apply objective effects
+        obj_name = self.jungle_type.value if self.jungle_type else "objective"
+        winner_team = defending_team if steal else acting_team
+        stealer = random.choice(defending_team.players) if steal else None
+        
         if self.jungle_type == MobaJungleType.DRAGON:
-            if steal:
-                defending_team.state.dragons += 1
-                self.commentary.append(f"{defending_team.team.name} stole the! Dragon.")
-            else:
-                acting_team.state.dragons += 1
-                self.commentary.append(f"{acting_team.team.name} secures Dragon.")
+            winner_team.state.dragons += 1
+            count = winner_team.state.dragons
+            text, severity = narrate_objective("dragon", winner_team, stealer, steal, count)
+            self.commentary.append(text)
         elif self.jungle_type == MobaJungleType.BARON:
-            if steal:
-                defending_team.state.barons += 1
-                self.commentary.append(f"{defending_team.team.name} stole the! Baron.")
-            else:
-                acting_team.state.barons += 1
-                self.commentary.append(f"{acting_team.team.name} secures Baron.")
+            winner_team.state.barons += 1
+            text, severity = narrate_objective("baron", winner_team, stealer, steal)
+            self.commentary.append(text)
         elif self.jungle_type == MobaJungleType.GRUB:
-            if steal:
-                defending_team.state.grubs += 1
-                self.commentary.append(
-                    f"{defending_team.team.name} stole the! Voidgrubs."
-                )
-            else:
-                acting_team.state.grubs += 1
-                self.commentary.append(f"{acting_team.team.name} secures Voidgrubs.")
+            winner_team.state.grubs += 1
+            text, severity = narrate_objective("grubs", winner_team, stealer, steal)
+            self.commentary.append(text)
         elif self.jungle_type == MobaJungleType.RIFT_HERALD:
+            text, severity = narrate_objective("herald", winner_team, stealer, steal)
+            self.commentary.append(text)
             if steal:
-                self.commentary.append(
-                    f"{defending_team.team.name} stole the! Rift Herald."
-                )
                 self._take_random_tower(defending_team, acting_team)
             else:
-                self.commentary.append(f"{acting_team.team.name} secures Rift Herald.")
                 self._take_random_tower(acting_team, defending_team)
         elif self.jungle_type == MobaJungleType.ATAKHAN:
-            if steal:
-                self.commentary.append(
-                    f"{defending_team.team.name} stole the! Atakhan."
-                )
-            else:
-                self.commentary.append(f"{acting_team.team.name} secures Atakhan!")
+            text, severity = narrate_objective("atakhan", winner_team, stealer, steal)
+            self.commentary.append(text)
 
         for player in acting_team.players:
             player.points += self.points
@@ -177,6 +167,5 @@ class MobaJungleEvent(MobaEventBase):
                 inhibitor = exposed_inhibitors[0]
 
             target_team.take_inhibitor(inhibitor)
-            self.commentary.append(
-                f"{acting_team.team.name} secures inhibitor {inhibitor}."
-            )
+            text, severity = narrate_inhibitor(acting_team, inhibitor)
+            self.commentary.append(text)

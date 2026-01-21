@@ -8,10 +8,18 @@ import uuid
 from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from esm.db import get_session
+from esm.config import FRONTEND_DIR
+from esm.models.moba import (
+    MobaMatchSimulation,
+    MobaTeamSimulation,
+    MobaMatchDraftAction,
+)
+from frontend.sidebar import sidebar
 from esm.models.moba.champion import MobaChampion
 from esm.models.moba.moba_match_simulation import (
     MobaMatchSimulation,
@@ -27,6 +35,9 @@ simulation_routes = APIRouter(
     tags=["moba_simulation"],
     responses={404: {"description": "Simulation not found"}},
 )
+
+templates_dir = FRONTEND_DIR / "templates"
+templates = Jinja2Templates(directory=templates_dir)
 
 
 @dataclass
@@ -44,7 +55,7 @@ _BASE_TICK_SECONDS = 0.5
 
 async def _run_simulation_loop(sess: SimulationSession):
     try:
-        while sess.simulation.state.status != MobaMatchStatus.ENDED:
+        while sess.simulation.state.status != MobaMatchStatus.COMPLETED:
             if sess.paused:
                 await asyncio.sleep(0.1)
                 continue
@@ -171,8 +182,12 @@ async def create_simulation(
     }
     """
     try:
-        t1 = await _build_team_sim(session, int(payload["team1_id"]), payload["team1_roster"])  # type: ignore[index]
-        t2 = await _build_team_sim(session, int(payload["team2_id"]), payload["team2_roster"])  # type: ignore[index]
+        t1 = await _build_team_sim(
+            session, int(payload["team1_id"]), payload["team1_roster"]
+        )  # type: ignore[index]
+        t2 = await _build_team_sim(
+            session, int(payload["team2_id"]), payload["team2_roster"]
+        )  # type: ignore[index]
     except KeyError:
         raise HTTPException(status_code=400, detail="Invalid roster payload")
 
@@ -194,7 +209,7 @@ def _get_session_or_404(sim_id: str) -> SimulationSession:
 @simulation_routes.post("/start/{sim_id}")
 async def start_simulation(sim_id: str):
     sess = _get_session_or_404(sim_id)
-    if sess.simulation.state.status == MobaMatchStatus.ENDED:
+    if sess.simulation.state.status == MobaMatchStatus.COMPLETED:
         raise HTTPException(status_code=400, detail="Simulation already ended")
     if sess.task and not sess.task.done():
         # Already running
@@ -242,6 +257,36 @@ async def get_state(sim_id: str):
     data = _serialize_simulation(sess.simulation)
     data.update({"paused": sess.paused, "speed": sess.speed, "sim_id": sim_id})
     return data
+
+
+@simulation_routes.get("/view/{sim_id}")
+async def view_simulation(sim_id: str, request: Request):
+    sess = _get_session_or_404(sim_id)
+
+    context = {
+        "request": request,
+        "sim_id": sim_id,
+    }
+
+    if request.headers.get("HX-Request"):
+        return templates.TemplateResponse(
+            request,
+            "pages/match_live.html",
+            context,
+        )
+
+    layout_context = {
+        **context,
+        "content": "pages/match_live.html",
+        "sidebar": sidebar,
+        "current_page": "matches",
+    }
+
+    return templates.TemplateResponse(
+        request,
+        "layout.html",
+        layout_context,
+    )
 
 
 @simulation_routes.delete("/{sim_id}")

@@ -1,7 +1,7 @@
-import enum
 from sqlmodel import SQLModel, Field
 from typing import Optional
 from esm.models.moba.events.event_types import MobaJungleType
+from esm.models.moba.moba_match import MobaMatchStatus
 
 
 JUNGLE_OBJECTIVES = {
@@ -36,12 +36,6 @@ JUNGLE_OBJECTIVES = {
         "despawn_at": None,
     },
 }
-
-
-class MobaMatchStatus(str, enum.Enum):
-    NOT_STARTED = "not started"
-    IN_PROGRESS = "in progress"
-    ENDED = "ended"
 
 
 class MobaJungleObjective(SQLModel):

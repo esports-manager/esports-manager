@@ -60,3 +60,30 @@ class MobaPlayerSimulation(SQLModel):
 
     def get_score(self) -> int:
         return self.get_strength() + self.points
+    
+    def get_off_role_factor(self) -> float:
+        """
+        Calculate performance factor based on role mismatch.
+        Returns 1.0 for on-role, reduced for off-role (0.7-0.9).
+        """
+        if not self.role or not self.player or not self.player.role:
+            return 1.0
+        
+        if self.role == self.player.role:
+            return 1.0
+        
+        similar_roles = {
+            MobaPlayerRole.TOP: [MobaPlayerRole.MID],
+            MobaPlayerRole.MID: [MobaPlayerRole.TOP, MobaPlayerRole.ADC],
+            MobaPlayerRole.ADC: [MobaPlayerRole.MID],
+            MobaPlayerRole.JUNGLE: [],
+            MobaPlayerRole.SUPPORT: [],
+        }
+        
+        primary_role = self.player.role
+        assigned_role = self.role
+        
+        if assigned_role in similar_roles.get(primary_role, []):
+            return 0.85
+        
+        return 0.70

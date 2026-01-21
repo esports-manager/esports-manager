@@ -11,7 +11,15 @@ from .champion import (
     MobaChampionType,
     MobaChampionDifficulty,
 )
-from .moba_match import MobaMatch
+from .moba_match import (
+    MobaMatch,
+    MobaMatchCreate,
+    MobaMatchPublic,
+    MobaMatchUpdate,
+    MobaMatchStatus,
+    MobaMatchFormat,
+    MobaMatchResult,
+)
 from .tournament import (
     MobaTournament,
     MobaTournamentBase,
@@ -53,9 +61,25 @@ from .events import (
     MobaNexusEvent,
 )
 from .moba_match_simulation import MobaMatchSimulation
-from .moba_match_state import MobaMatchState, MobaMatchStatus, MobaJungleObjective
+from .moba_match_state import MobaMatchState, MobaJungleObjective
 from .player_simulation import MobaPlayerSimulation
 from .team_simulation import MobaTeamSimulation
+from .match_lineup import (
+    MobaMatchLineup,
+    MobaMatchLineupSlot,
+    MobaMatchLineupPublic,
+    MobaMatchLineupSlotPublic,
+    LineupStatus,
+)
+from .match_draft import (
+    MobaMatchDraftSession,
+    MobaMatchDraftAction,
+    MobaMatchDraftSessionPublic,
+    MobaMatchDraftActionPublic,
+    DraftPhase,
+    DraftTeamSide,
+    DraftActionType,
+)
 
 __all__ = [
     "MobaPlayerContract",
@@ -67,6 +91,12 @@ __all__ = [
     "MobaChampionType",
     "MobaChampionDifficulty",
     "MobaMatch",
+    "MobaMatchCreate",
+    "MobaMatchPublic",
+    "MobaMatchUpdate",
+    "MobaMatchStatus",
+    "MobaMatchFormat",
+    "MobaMatchResult",
     "MobaTournament",
     "MobaTournamentBase",
     "MobaTournamentCreate",
@@ -104,4 +134,16 @@ __all__ = [
     "MobaPlayerSimulation",
     "MobaPlayerRole",
     "MobaTeamSimulation",
+    "MobaMatchLineup",
+    "MobaMatchLineupSlot",
+    "MobaMatchLineupPublic",
+    "MobaMatchLineupSlotPublic",
+    "LineupStatus",
+    "MobaMatchDraftSession",
+    "MobaMatchDraftAction",
+    "MobaMatchDraftSessionPublic",
+    "MobaMatchDraftActionPublic",
+    "DraftPhase",
+    "DraftTeamSide",
+    "DraftActionType",
 ]

@@ -1,0 +1,725 @@
+{% set is_pick = current_action and current_action.value == "pick" %}
+{% set role_filters = ["all", "top", "jungle", "mid", "adc", "support"] %}
+{% set tier_colors = {
+  's+': 'bg-amber-500',
+  's': 'bg-yellow-500',
+  'a': 'bg-emerald-500',
+  'b': 'bg-sky-500',
+  'c': 'bg-indigo-500',
+  'd': 'bg-slate-500',
+  'f': 'bg-rose-500'
+} %}
+{% set blue_active = current_turn and current_turn.value == "blue" %}
+{% set red_active = current_turn and current_turn.value == "red" %}
+<div
+  id="draft-root"
+  class="py-6"
+  data-draft-id="{{ draft.id }}"
+  data-blue-team-id="{{ match.blue_team_id }}"
+  data-red-team-id="{{ match.red_team_id }}"
+  x-data="{
+    selectedChampion: null,
+    selectedSlot: '',
+    searchQuery: '',
+    selectedRole: 'all',
+    isPick: {{ 'true' if is_pick else 'false' }},
+    draftId: '{{ draft.id }}',
+    currentTurn: '{{ current_turn.value if current_turn else '' }}',
+    playerMasteries: {{ player_masteries_json|safe }},
+    bluePlayerIds: {{ blue_player_ids_json|safe }},
+    redPlayerIds: {{ red_player_ids_json|safe }},
+    masteryRanks: {
+      bronze: 1,
+      silver: 2,
+      gold: 3,
+      platinum: 4,
+      diamond: 5,
+      master: 6,
+      grandmaster: 7,
+      challenger: 8
+    },
+    draggingChampion: null,
+    hoverSlot: '',
+    hoverValid: false,
+    updateContinueAction() {
+      const enabled = {{ 'true' if draft.is_completed else 'false' }};
+      document.dispatchEvent(
+        new CustomEvent('continue:update', {
+          detail: {
+            label: 'Start Simulation',
+            href: '',
+            enabled: enabled,
+            tooltip: enabled ? '' : 'Complete the draft to continue.',
+            onClick: enabled ? 'startSimulation' : ''
+          }
+        })
+      );
+    },
+    matchesRole(champion, role) {
+      if (!champion || !role) return false;
+      const target = role.toLowerCase();
+      const primary = (champion.primaryRole || '').toLowerCase();
+      const secondary = (champion.secondaryRole || '').toLowerCase();
+      return target === primary || target === secondary;
+    },
+    teamPlayerIds() {
+      if (this.currentTurn === 'blue') return this.bluePlayerIds;
+      if (this.currentTurn === 'red') return this.redPlayerIds;
+      return [];
+    },
+    getMastery(playerId, championId) {
+      return this.playerMasteries?.[playerId]?.[championId] || null;
+    },
+    getBestMastery(championId) {
+      const playerIds = this.teamPlayerIds();
+      let best = null;
+      for (const playerId of playerIds) {
+        const mastery = this.getMastery(playerId, championId);
+        if (!mastery) continue;
+        if (!best) {
+          best = mastery;
+          continue;
+        }
+        const bestRank = this.masteryRanks[best.tier] || 0;
+        const rank = this.masteryRanks[mastery.tier] || 0;
+        if (rank > bestRank || (rank === bestRank && mastery.points > best.points)) {
+          best = mastery;
+        }
+      }
+      return best;
+    },
+    canDropOnSlot(teamSide, slotOpen, slotEmpty) {
+      if (!this.draggingChampion) return false;
+      if (this.draggingChampion.source === 'grid') {
+        return this.isPick && this.currentTurn === teamSide && slotOpen;
+      }
+      return slotEmpty && this.draggingChampion.teamSide === teamSide;
+    },
+    submitAction(payload) {
+      if (!payload || !payload.champion_id) return;
+      if (window.htmx) {
+        htmx.ajax('POST', `/api/moba/draft/session/${this.draftId}/action`, {
+          values: payload,
+          target: '#draft-root',
+          swap: 'outerHTML'
+        });
+        return;
+      }
+      fetch(`/api/moba/draft/session/${this.draftId}/action`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(() => location.reload());
+    },
+    selectChampion(id) {
+      this.selectedChampion = id;
+    },
+    startDrag(champion, event) {
+      this.draggingChampion = { ...champion, source: 'grid', teamSide: this.currentTurn };
+      this.hoverSlot = '';
+      this.hoverValid = false;
+      if (event && event.dataTransfer) {
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', String(champion.id));
+      }
+    },
+    startPickDrag(pick, event) {
+      this.draggingChampion = { id: pick.championId, ...pick, source: 'unassigned' };
+      this.hoverSlot = '';
+      this.hoverValid = false;
+      if (event && event.dataTransfer) {
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', String(pick.championId));
+      }
+    },
+    clearDrag() {
+      this.draggingChampion = null;
+      this.hoverSlot = '';
+      this.hoverValid = false;
+    },
+    setHover(slotRole, assignedRole, teamSide, slotEmpty, slotOpen) {
+      if (!this.draggingChampion || !this.canDropOnSlot(teamSide, slotOpen, slotEmpty)) return;
+      this.hoverSlot = slotRole;
+      this.hoverValid = this.matchesRole(this.draggingChampion, assignedRole);
+    },
+    handleDrop(slotRole, assignedRole, teamSide, slotEmpty, slotOpen) {
+      if (!this.draggingChampion || !this.canDropOnSlot(teamSide, slotOpen, slotEmpty)) {
+        this.clearDrag();
+        return;
+      }
+      if (!this.matchesRole(this.draggingChampion, assignedRole)) {
+        this.clearDrag();
+        return;
+      }
+      const championId = this.draggingChampion.championId || this.draggingChampion.id;
+      this.submitAction({
+        champion_id: championId,
+        player_slot: slotRole
+      });
+      this.clearDrag();
+    },
+    autoAction() {
+      const cards = Array.from(
+        this.$refs.championGrid?.querySelectorAll('[data-champion-id]') || []
+      ).filter((card) => card.offsetParent !== null);
+      if (!cards.length) return;
+
+      if (!this.isPick) {
+        const card = cards[0];
+        this.submitAction({ champion_id: Number(card.dataset.championId) });
+        return;
+      }
+
+      const openSlots = Array.from(
+        this.$el.querySelectorAll('[data-slot-open=true]')
+      );
+      let slot = null;
+      if (this.selectedSlot) {
+        slot = openSlots.find(
+          (item) => item.dataset.slotRole === this.selectedSlot.toLowerCase()
+        );
+      }
+      if (!slot) {
+        slot = openSlots[0] || null;
+      }
+
+      if (slot) {
+        const assignedRole = slot.dataset.assignedRole;
+        const slotRole = slot.dataset.slotRole;
+        const matchCard = cards.find((card) =>
+          this.matchesRole(
+            {
+              primaryRole: card.dataset.role,
+              secondaryRole: card.dataset.secondaryRole
+            },
+            assignedRole
+          )
+        );
+        if (matchCard) {
+          this.submitAction({
+            champion_id: Number(matchCard.dataset.championId),
+            player_slot: slotRole
+          });
+          return;
+        }
+      }
+
+      const fallback = cards[0];
+      this.submitAction({ champion_id: Number(fallback.dataset.championId) });
+    }
+  }"
+  x-init="updateContinueAction()">
+  <h1 class="text-3xl font-bold mb-6 dark:text-white">Champion Select</h1>
+  
+  <!-- Phase and Turn Indicator -->
+  <div class="text-white rounded-lg p-4 mb-6
+    {% if current_turn and current_turn.value == 'blue' %}
+    bg-gradient-to-r from-blue-600 to-sky-700
+    {% elif current_turn and current_turn.value == 'red' %}
+    bg-gradient-to-r from-red-600 to-rose-700
+    {% else %}
+    bg-gradient-to-r from-slate-600 to-slate-700
+    {% endif %}
+    ">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="text-sm opacity-80">Current Phase</div>
+        <div class="text-2xl font-bold">{{ draft.current_phase.value.replace('_', ' ').title() }}</div>
+      </div>
+      <div class="text-center">
+        <div class="text-sm opacity-80">Turn</div>
+        <div class="text-2xl font-bold">
+          {% if current_turn %}
+          {{ current_turn.value.title() }} - {{ current_action.value.title() }}
+          {% elif draft.is_completed %}
+          Draft Complete
+          {% else %}
+          Waiting...
+          {% endif %}
+        </div>
+        {% if current_turn %}
+        <span class="mt-2 inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide
+          {% if current_turn.value == 'blue' %}
+          bg-blue-500/20 text-blue-100
+          {% else %}
+          bg-red-500/20 text-red-100
+          {% endif %}
+          ">
+          On the clock
+        </span>
+        {% endif %}
+      </div>
+      <div class="text-right">
+        <div class="text-sm opacity-80">Status</div>
+        <div class="text-xl font-bold">
+          {% if draft.is_completed %}
+          ✓ Ready to Start
+          {% else %}
+          In Progress
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Blue Team Picks -->
+    <div class="col-span-12 lg:col-span-3 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold dark:text-white flex items-center gap-2">
+          <span class="w-3 h-3 bg-blue-600 rounded-full"></span>
+          {{ blue_team.name }}
+        </h2>
+        {% if blue_active %}
+        <span class="text-[10px] uppercase tracking-wide px-2 py-1 rounded-full bg-blue-600/20 text-blue-100">
+          {{ current_action.value.title() }} Turn
+        </span>
+        {% endif %}
+      </div>
+      {% if blue_unassigned_picks %}
+      <div class="rounded-lg border border-blue-100/80 dark:border-blue-900/40 bg-blue-50/60 dark:bg-blue-900/20 px-3 py-2">
+        <div class="text-[10px] uppercase tracking-wide text-blue-700 dark:text-blue-200 font-semibold">
+          Unassigned Picks
+        </div>
+        <div class="mt-2 flex flex-wrap gap-2">
+          {% for pick in blue_unassigned_picks %}
+          {% set pick_tier = pick.champion.champion_tier.value|lower if pick.champion else 'c' %}
+          <div
+            class="flex items-center gap-2 rounded-lg border border-blue-200/70 dark:border-blue-900/50 bg-white/80 dark:bg-slate-800 px-2 py-1 shadow-sm"
+            draggable="true"
+            @dragstart="startPickDrag({ championId: {{ pick.champion_id }}, primaryRole: '{{ pick.champion.primary_role.value if pick.champion else '' }}', secondaryRole: '{{ pick.champion.secondary_role.value if pick.champion and pick.champion.secondary_role else '' }}', teamSide: '{{ pick.team_side.value }}' }, $event)"
+            @dragend="clearDrag()"
+          >
+            <img
+              src="{{ pick.champion.image_path if pick.champion else '/static/img/placeholders/champion_default.webp' }}"
+              alt="{{ pick.champion.name if pick.champion else 'Champion' }}"
+              class="h-8 w-8 rounded-md object-cover"
+            />
+            <div>
+              <div class="text-xs font-semibold text-gray-800 dark:text-gray-100">
+                {{ pick.champion.name if pick.champion else 'Champion' }}
+              </div>
+              <div class="text-[10px] text-gray-500 dark:text-gray-400">
+                Tier {{ pick.champion.champion_tier.value|upper if pick.champion else '' }}
+              </div>
+            </div>
+            <span class="ml-auto {{ tier_colors[pick_tier] }} text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
+              {{ pick.champion.champion_tier.value|upper if pick.champion else '' }}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% for slot in blue_slots %}
+      {% set slot_open = is_pick and current_turn and current_turn.value == slot.team_side.value and not slot.pick %}
+      {% set slot_empty = not slot.pick %}
+      <div
+        class="rounded-lg p-3 shadow border border-blue-100/80 dark:border-blue-900/40 bg-white/90 dark:bg-slate-800 transition
+        {% if not slot.pick %}border-dashed{% endif %}
+        {% if blue_active and is_pick and not slot.pick %}ring-2 ring-blue-300/70{% endif %}
+        "
+        data-slot-role="{{ slot.slot_role }}"
+        data-assigned-role="{{ (slot.assigned_role or slot.slot_role)|lower }}"
+        data-team-side="{{ slot.team_side.value }}"
+        data-slot-open="{{ 'true' if slot_open else 'false' }}"
+        data-slot-empty="{{ 'true' if slot_empty else 'false' }}"
+        @dragenter.prevent="setHover('{{ slot.slot_role }}', '{{ (slot.assigned_role or slot.slot_role)|lower }}', '{{ slot.team_side.value }}', {{ 'true' if slot_empty else 'false' }}, {{ 'true' if slot_open else 'false' }})"
+        @dragover.prevent="setHover('{{ slot.slot_role }}', '{{ (slot.assigned_role or slot.slot_role)|lower }}', '{{ slot.team_side.value }}', {{ 'true' if slot_empty else 'false' }}, {{ 'true' if slot_open else 'false' }})"
+        @dragleave="if (hoverSlot === '{{ slot.slot_role }}') { hoverSlot = ''; hoverValid = false; }"
+        @drop.prevent="handleDrop('{{ slot.slot_role }}', '{{ (slot.assigned_role or slot.slot_role)|lower }}', '{{ slot.team_side.value }}', {{ 'true' if slot_empty else 'false' }}, {{ 'true' if slot_open else 'false' }})"
+        :class="{
+          'ring-2 ring-emerald-400/80 bg-emerald-50/60 dark:bg-emerald-500/10': hoverSlot === '{{ slot.slot_role }}' && hoverValid,
+          'ring-2 ring-rose-400/80 bg-rose-50/60 dark:bg-rose-500/10': hoverSlot === '{{ slot.slot_role }}' && !hoverValid
+        }"
+      >
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] uppercase tracking-wide px-2 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-200">
+            {{ slot.assigned_role|upper }}
+          </span>
+          <div class="text-right">
+            <div class="text-xs text-gray-500 dark:text-gray-400">
+              {{ slot.player.nick_name if slot.player else 'Unassigned' }}
+            </div>
+            {% if slot.player %}
+            <div class="text-[10px] font-semibold text-gray-400 dark:text-gray-500">
+              OVR {{ slot.player.overall }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        {% if slot.pick and slot.pick.champion %}
+        <div class="flex items-center gap-3 mt-3">
+          <div class="relative">
+            <img
+              src="{{ slot.pick.champion.image_path or '/static/img/placeholders/champion_default.webp' }}"
+              alt="{{ slot.pick.champion.name }}"
+              class="h-12 w-12 rounded-lg object-cover"
+            />
+            {% set pick_tier = slot.pick.champion.champion_tier.value|lower %}
+            <span class="absolute -top-1 -left-1 {{ tier_colors[pick_tier] }} text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow">
+              {{ slot.pick.champion.champion_tier.value|upper }}
+            </span>
+          </div>
+          <div>
+            <div class="font-semibold dark:text-white">{{ slot.pick.champion.name }}</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">
+              {{ slot.pick.champion.primary_role.value|upper }}{% if slot.pick.champion.secondary_role %} / {{ slot.pick.champion.secondary_role.value|upper }}{% endif %}
+            </div>
+            <div class="text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500">
+              Tier {{ slot.pick.champion.champion_tier.value|upper }}
+            </div>
+            {% if slot.player %}
+            {% set mastery = player_masteries.get(slot.player.id, {}).get(slot.pick.champion.id) %}
+            {% if mastery %}
+            <div class="text-[10px] uppercase tracking-wide text-emerald-600 dark:text-emerald-300">
+              Mastery {{ mastery.tier|upper }} • {{ mastery.points }} pts
+            </div>
+            {% endif %}
+            {% endif %}
+          </div>
+        </div>
+        {% else %}
+        <div class="mt-3 text-xs uppercase tracking-wide text-gray-400">
+          {% if slot_open %}
+          Drop champion here
+          {% else %}
+          Awaiting pick
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Champion Grid -->
+    <div class="col-span-12 lg:col-span-6">
+      <div class="mb-4 space-y-3">
+        <input 
+          type="text" 
+          x-model="searchQuery"
+          placeholder="Search champions..."
+          class="w-full px-4 py-2 border dark:border-slate-600 rounded-lg dark:bg-slate-700 dark:text-white">
+        <div class="flex flex-wrap gap-2">
+          {% for role in role_filters %}
+          <button
+            type="button"
+            @click="selectedRole = '{{ role }}'"
+            :class="selectedRole === '{{ role }}' ? 'bg-purple-600 text-white shadow' : 'bg-white/80 dark:bg-slate-700 text-gray-600 dark:text-gray-200 border border-gray-200 dark:border-slate-600'"
+            class="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide transition">
+            {% if role == 'all' %}All{% else %}{{ role|upper }}{% endif %}
+          </button>
+          {% endfor %}
+        </div>
+        <div class="text-[11px] text-gray-500 dark:text-gray-400">
+          Sorted by strength. Highlighted badges show the best mastery for the current team.
+        </div>
+      </div>
+      
+      <div class="bg-white dark:bg-slate-700 rounded-lg p-4 shadow-lg">
+        {% if is_pick and current_turn %}
+        <div class="mb-4">
+          <label class="block text-xs uppercase tracking-wide text-gray-500 dark:text-gray-300 mb-2">
+            Assign Pick Slot (Optional • {{ current_turn.value.title() }})
+          </label>
+          <select
+            x-model="selectedSlot"
+            class="w-full px-3 py-2 border dark:border-slate-600 rounded dark:bg-slate-700 dark:text-white text-sm">
+            <option value="">Pick now, assign later</option>
+            {% for slot in current_team_slots %}
+            <option value="{{ slot.slot_role }}">
+              {{ slot.slot_role|title }} • {{ slot.player.nick_name if slot.player else 'Unassigned' }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        {% endif %}
+        <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-3 max-h-[28rem] overflow-y-auto" x-ref="championGrid">
+          {% for champion in available_champions %}
+          <div 
+            data-name="{{ champion.name|lower }}"
+            data-role="{{ champion.primary_role.value }}"
+            data-champion-id="{{ champion.id }}"
+            data-secondary-role="{{ champion.secondary_role.value if champion.secondary_role else '' }}"
+            @click="selectChampion({{ champion.id }})"
+            @dragstart="startDrag({ id: {{ champion.id }}, primaryRole: '{{ champion.primary_role.value }}', secondaryRole: '{{ champion.secondary_role.value if champion.secondary_role else '' }}' }, $event)"
+            @dragend="clearDrag()"
+            :class="{ 'ring-2 ring-purple-500 shadow-lg': selectedChampion === {{ champion.id }} }"
+            x-show="(selectedRole === 'all' || $el.dataset.role === selectedRole || $el.dataset.secondaryRole === selectedRole) && $el.dataset.name.includes(searchQuery.toLowerCase())"
+            title="{{ champion.name }} • Tier {{ champion.champion_tier.value|upper }}"
+            draggable="true"
+            class="relative group cursor-grab active:cursor-grabbing transition border-2 border-transparent rounded-xl overflow-hidden hover:shadow-lg hover:scale-105">
+            {% set champion_tier = champion.champion_tier.value|lower %}
+            <div class="aspect-square bg-gradient-to-br from-purple-900 to-blue-900 flex items-center justify-center">
+              <img
+                src="{{ champion.image_path or '/static/img/placeholders/champion_default.webp' }}"
+                alt="{{ champion.name }}"
+                class="h-full w-full object-cover"
+              />
+            </div>
+            <div class="absolute top-2 left-2 px-2 py-1 rounded-full text-[10px] font-bold text-white shadow {{ tier_colors[champion_tier] }}">
+              {{ champion.champion_tier.value|upper }}
+            </div>
+            <div
+              class="absolute top-2 right-2 px-2 py-1 rounded-full text-[9px] font-bold text-white shadow bg-emerald-500/90"
+              x-show="getBestMastery({{ champion.id }})"
+              x-text="(() => { const m = getBestMastery({{ champion.id }}); return m ? m.tier.slice(0, 3).toUpperCase() : ''; })()"
+            ></div>
+            <div class="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs text-center py-1">
+              <div class="text-[11px] font-semibold">{{ champion.name }}</div>
+              <div class="text-[10px] opacity-80">
+                {{ champion.primary_role.value|upper }}{% if champion.secondary_role %} / {{ champion.secondary_role.value|upper }}{% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        
+        {% if current_turn and not draft.is_completed %}
+        <div class="mt-4 pt-4 border-t dark:border-slate-600 space-y-3">
+          <div class="flex flex-col sm:flex-row gap-3">
+            <button 
+              :disabled="!selectedChampion"
+              @click="
+                const payload = { champion_id: selectedChampion };
+                if (isPick && selectedSlot) {
+                  payload.player_slot = selectedSlot;
+                }
+                submitAction(payload);
+              "
+              class="flex-1 py-3 bg-purple-600 text-white rounded-lg font-bold hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed">
+              Confirm {{ current_action.value.title() if current_action else 'Selection' }}
+            </button>
+            <button
+              type="button"
+              @click="autoAction()"
+              class="flex-1 sm:flex-none px-4 py-3 rounded-lg font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 dark:bg-slate-600 dark:text-slate-100 dark:hover:bg-slate-500">
+              Auto {{ current_action.value.title() if current_action else 'Action' }}
+            </button>
+          </div>
+          <div class="text-xs text-gray-500 dark:text-gray-400">
+            Tip: drag a champion onto a slot or move unassigned picks to a player when ready.
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Red Team Picks -->
+    <div class="col-span-12 lg:col-span-3 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold dark:text-white flex items-center gap-2">
+          <span class="w-3 h-3 bg-red-600 rounded-full"></span>
+          {{ red_team.name }}
+        </h2>
+        {% if red_active %}
+        <span class="text-[10px] uppercase tracking-wide px-2 py-1 rounded-full bg-red-600/20 text-red-100">
+          {{ current_action.value.title() }} Turn
+        </span>
+        {% endif %}
+      </div>
+      {% if red_unassigned_picks %}
+      <div class="rounded-lg border border-red-100/80 dark:border-red-900/40 bg-red-50/60 dark:bg-red-900/20 px-3 py-2">
+        <div class="text-[10px] uppercase tracking-wide text-red-700 dark:text-red-200 font-semibold">
+          Unassigned Picks
+        </div>
+        <div class="mt-2 flex flex-wrap gap-2">
+          {% for pick in red_unassigned_picks %}
+          {% set pick_tier = pick.champion.champion_tier.value|lower if pick.champion else 'c' %}
+          <div
+            class="flex items-center gap-2 rounded-lg border border-red-200/70 dark:border-red-900/50 bg-white/80 dark:bg-slate-800 px-2 py-1 shadow-sm"
+            draggable="true"
+            @dragstart="startPickDrag({ championId: {{ pick.champion_id }}, primaryRole: '{{ pick.champion.primary_role.value if pick.champion else '' }}', secondaryRole: '{{ pick.champion.secondary_role.value if pick.champion and pick.champion.secondary_role else '' }}', teamSide: '{{ pick.team_side.value }}' }, $event)"
+            @dragend="clearDrag()"
+          >
+            <img
+              src="{{ pick.champion.image_path if pick.champion else '/static/img/placeholders/champion_default.webp' }}"
+              alt="{{ pick.champion.name if pick.champion else 'Champion' }}"
+              class="h-8 w-8 rounded-md object-cover"
+            />
+            <div>
+              <div class="text-xs font-semibold text-gray-800 dark:text-gray-100">
+                {{ pick.champion.name if pick.champion else 'Champion' }}
+              </div>
+              <div class="text-[10px] text-gray-500 dark:text-gray-400">
+                Tier {{ pick.champion.champion_tier.value|upper if pick.champion else '' }}
+              </div>
+            </div>
+            <span class="ml-auto {{ tier_colors[pick_tier] }} text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
+              {{ pick.champion.champion_tier.value|upper if pick.champion else '' }}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% for slot in red_slots %}
+      {% set slot_open = is_pick and current_turn and current_turn.value == slot.team_side.value and not slot.pick %}
+      {% set slot_empty = not slot.pick %}
+      <div
+        class="rounded-lg p-3 shadow border border-red-100/80 dark:border-red-900/40 bg-white/90 dark:bg-slate-800 transition
+        {% if not slot.pick %}border-dashed{% endif %}
+        {% if red_active and is_pick and not slot.pick %}ring-2 ring-red-300/70{% endif %}
+        "
+        data-slot-role="{{ slot.slot_role }}"
+        data-assigned-role="{{ (slot.assigned_role or slot.slot_role)|lower }}"
+        data-team-side="{{ slot.team_side.value }}"
+        data-slot-open="{{ 'true' if slot_open else 'false' }}"
+        data-slot-empty="{{ 'true' if slot_empty else 'false' }}"
+        @dragenter.prevent="setHover('{{ slot.slot_role }}', '{{ (slot.assigned_role or slot.slot_role)|lower }}', '{{ slot.team_side.value }}', {{ 'true' if slot_empty else 'false' }}, {{ 'true' if slot_open else 'false' }})"
+        @dragover.prevent="setHover('{{ slot.slot_role }}', '{{ (slot.assigned_role or slot.slot_role)|lower }}', '{{ slot.team_side.value }}', {{ 'true' if slot_empty else 'false' }}, {{ 'true' if slot_open else 'false' }})"
+        @dragleave="if (hoverSlot === '{{ slot.slot_role }}') { hoverSlot = ''; hoverValid = false; }"
+        @drop.prevent="handleDrop('{{ slot.slot_role }}', '{{ (slot.assigned_role or slot.slot_role)|lower }}', '{{ slot.team_side.value }}', {{ 'true' if slot_empty else 'false' }}, {{ 'true' if slot_open else 'false' }})"
+        :class="{
+          'ring-2 ring-emerald-400/80 bg-emerald-50/60 dark:bg-emerald-500/10': hoverSlot === '{{ slot.slot_role }}' && hoverValid,
+          'ring-2 ring-rose-400/80 bg-rose-50/60 dark:bg-rose-500/10': hoverSlot === '{{ slot.slot_role }}' && !hoverValid
+        }"
+      >
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] uppercase tracking-wide px-2 py-1 rounded-full bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200">
+            {{ slot.assigned_role|upper }}
+          </span>
+          <div class="text-right">
+            <div class="text-xs text-gray-500 dark:text-gray-400">
+              {{ slot.player.nick_name if slot.player else 'Unassigned' }}
+            </div>
+            {% if slot.player %}
+            <div class="text-[10px] font-semibold text-gray-400 dark:text-gray-500">
+              OVR {{ slot.player.overall }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        {% if slot.pick and slot.pick.champion %}
+        <div class="flex items-center gap-3 mt-3">
+          <div class="relative">
+            <img
+              src="{{ slot.pick.champion.image_path or '/static/img/placeholders/champion_default.webp' }}"
+              alt="{{ slot.pick.champion.name }}"
+              class="h-12 w-12 rounded-lg object-cover"
+            />
+            {% set pick_tier = slot.pick.champion.champion_tier.value|lower %}
+            <span class="absolute -top-1 -left-1 {{ tier_colors[pick_tier] }} text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow">
+              {{ slot.pick.champion.champion_tier.value|upper }}
+            </span>
+          </div>
+          <div>
+            <div class="font-semibold dark:text-white">{{ slot.pick.champion.name }}</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">
+              {{ slot.pick.champion.primary_role.value|upper }}{% if slot.pick.champion.secondary_role %} / {{ slot.pick.champion.secondary_role.value|upper }}{% endif %}
+            </div>
+            <div class="text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500">
+              Tier {{ slot.pick.champion.champion_tier.value|upper }}
+            </div>
+            {% if slot.player %}
+            {% set mastery = player_masteries.get(slot.player.id, {}).get(slot.pick.champion.id) %}
+            {% if mastery %}
+            <div class="text-[10px] uppercase tracking-wide text-emerald-600 dark:text-emerald-300">
+              Mastery {{ mastery.tier|upper }} • {{ mastery.points }} pts
+            </div>
+            {% endif %}
+            {% endif %}
+          </div>
+        </div>
+        {% else %}
+        <div class="mt-3 text-xs uppercase tracking-wide text-gray-400">
+          {% if slot_open %}
+          Drop champion here
+          {% else %}
+          Awaiting pick
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Bans -->
+  <div class="mt-6">
+    <h3 class="text-lg font-bold mb-3 dark:text-white">Banned Champions</h3>
+    {% if banned_champions %}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div>
+        <div class="text-xs uppercase tracking-wide font-semibold text-blue-600 dark:text-blue-300">Blue Bans</div>
+        <div class="mt-2 flex flex-wrap gap-3">
+          {% if blue_bans %}
+          {% for ban in blue_bans %}
+          <div class="group relative flex items-center justify-center">
+            <img
+              src="{{ ban.champion.image_path if ban.champion else '/static/img/placeholders/champion_default.webp' }}"
+              alt="{{ ban.champion.name if ban.champion else 'Champion' }}"
+              class="h-12 w-12 rounded-lg object-cover grayscale ring-2 ring-blue-400/70"
+            />
+            <div class="pointer-events-none absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-900/80 px-2 py-0.5 text-[10px] font-semibold text-white opacity-0 transition group-hover:opacity-100">
+              {{ ban.champion.name if ban.champion else 'Champion ' ~ ban.champion_id }}
+            </div>
+          </div>
+          {% endfor %}
+          {% else %}
+          <div class="text-xs text-gray-400">No bans yet.</div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="lg:text-right">
+        <div class="text-xs uppercase tracking-wide font-semibold text-red-600 dark:text-red-300">Red Bans</div>
+        <div class="mt-2 flex flex-wrap gap-3 lg:justify-end">
+          {% if red_bans %}
+          {% for ban in red_bans %}
+          <div class="group relative flex items-center justify-center">
+            <img
+              src="{{ ban.champion.image_path if ban.champion else '/static/img/placeholders/champion_default.webp' }}"
+              alt="{{ ban.champion.name if ban.champion else 'Champion' }}"
+              class="h-12 w-12 rounded-lg object-cover grayscale ring-2 ring-red-400/70"
+            />
+            <div class="pointer-events-none absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-900/80 px-2 py-0.5 text-[10px] font-semibold text-white opacity-0 transition group-hover:opacity-100">
+              {{ ban.champion.name if ban.champion else 'Champion ' ~ ban.champion_id }}
+            </div>
+          </div>
+          {% endfor %}
+          {% else %}
+          <div class="text-xs text-gray-400 lg:text-right">No bans yet.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="text-sm text-gray-400">No bans yet.</div>
+    {% endif %}
+  </div>
+
+  {% if draft.is_completed %}
+  <div class="mt-6 text-center">
+    <button 
+      onclick="startSimulation()"
+      class="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 text-lg font-bold">
+      Start Match Simulation →
+    </button>
+  </div>
+  <script>
+    async function startSimulation() {
+      const root = document.getElementById('draft-root');
+      const draftId = root?.dataset.draftId;
+      const blueTeamId = Number(root?.dataset.blueTeamId);
+      const redTeamId = Number(root?.dataset.redTeamId);
+      const composition = await fetch(`/api/moba/draft/session/${draftId}/composition`).then(r => r.json());
+      
+      const payload = {
+        team1_id: blueTeamId,
+        team2_id: redTeamId,
+        team1_roster: composition.blue_team,
+        team2_roster: composition.red_team
+      };
+      
+      const response = await fetch('/api/moba/simulation/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await response.json();
+      window.location.href = `/api/moba/simulation/view/${data.sim_id}`;
+    }
+  </script>
+  {% endif %}
+</div>

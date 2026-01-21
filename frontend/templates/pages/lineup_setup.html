@@ -1,0 +1,431 @@
+<div
+  id="lineup-container"
+  class="py-6"
+  data-lineup-ready="{{ 'true' if lineup.blue_team_status.value == 'confirmed' and lineup.red_team_status.value == 'confirmed' else 'false' }}"
+  data-match-id="{{ match.id }}"
+  x-data="lineupBoard({
+    blueTeamId: {{ blue_team.id }},
+    redTeamId: {{ red_team.id }},
+    blueEditable: {{ 'true' if lineup.blue_team_status.value == 'draft' else 'false' }},
+    redEditable: {{ 'true' if lineup.red_team_status.value == 'draft' else 'false' }},
+    matchId: {{ match.id }},
+    lineupReady: {{ 'true' if lineup.blue_team_status.value == 'confirmed' and lineup.red_team_status.value == 'confirmed' else 'false' }}
+  })"
+  x-init="updateContinueAction()"
+  @htmx:responseError.window="handleError($event)"
+  @htmx:beforeRequest.window="clearError()"
+>
+  <div class="flex flex-col gap-2 mb-6">
+    <h1 class="text-3xl font-bold dark:text-white">Lineup Setup</h1>
+    <p class="text-sm text-gray-500 dark:text-gray-300">
+      Drag players into their roles. The system pre-fills based on role and warns about off-role picks.
+    </p>
+    <div class="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-300" x-show="dragging" x-cloak>
+      <span
+        class="px-2 py-1 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-600 dark:text-slate-100"
+        x-text="dragging ? 'Dragging ' + dragging.label : ''"
+      ></span>
+      <span>Drop into a slot or the bench.</span>
+    </div>
+  </div>
+
+  <template x-if="alertMessage">
+    <div
+      class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-200"
+      role="alert"
+      aria-live="polite"
+    >
+      <div class="font-semibold">Action blocked</div>
+      <div x-text="alertMessage"></div>
+    </div>
+  </template>
+
+  <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+    <!-- Blue Team -->
+    <section class="bg-white dark:bg-slate-700/80 rounded-2xl shadow-lg border border-slate-200/70 dark:border-slate-600/60 p-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 bg-blue-600/10 text-blue-700 rounded-xl flex items-center justify-center">
+            <i class="bi bi-shield-fill text-2xl"></i>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold dark:text-white">{{ blue_team.name }}</h2>
+            <span class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-300">Blue Side</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          {% if lineup.blue_team_status.value == "draft" %}
+          <button
+            hx-post="/api/moba/lineup/match/{{ match.id }}/team/{{ blue_team.id }}/confirm"
+            hx-target="#lineup-container"
+            hx-swap="outerHTML"
+            class="px-4 py-2 rounded-lg font-semibold text-white transition bg-blue-600 hover:bg-blue-700 {% if not blue_summary.can_confirm %}opacity-50 cursor-not-allowed{% endif %}"
+            {% if not blue_summary.can_confirm %}disabled title="Assign all roles before confirming."{% endif %}
+          >
+            Confirm Lineup
+          </button>
+          {% else %}
+          <span class="px-3 py-1 bg-emerald-500 text-white rounded-full text-xs font-semibold">Confirmed</span>
+          <button
+            hx-post="/api/moba/lineup/match/{{ match.id }}/team/{{ blue_team.id }}/unlock"
+            hx-target="#lineup-container"
+            hx-swap="outerHTML"
+            class="px-3 py-1 bg-slate-500 text-white rounded-full text-xs hover:bg-slate-600"
+          >
+            Unlock
+          </button>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold uppercase">
+        <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-200">
+          Assigned {{ blue_summary.assigned_count }}/{{ blue_summary.total_slots }}
+        </span>
+        <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200">
+          On-role {{ blue_summary.on_role_count }}
+        </span>
+        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200">
+          Off-role {{ blue_summary.off_role_count }}
+        </span>
+        <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-600 dark:text-slate-200">
+          Missing {{ blue_summary.missing_count }}
+        </span>
+      </div>
+
+      {% if blue_summary.missing_count > 0 or blue_summary.off_role_count > 0 or blue_summary.duplicate_players %}
+      <div class="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-200">
+        <ul class="space-y-1">
+          {% if blue_summary.missing_count > 0 %}
+          <li>Missing roles: {{ blue_summary.missing_roles|join(', ') }}</li>
+          {% endif %}
+          {% if blue_summary.off_role_count > 0 %}
+          <li>Off-role picks detected. Confirm only if intentional.</li>
+          {% endif %}
+          {% if blue_summary.duplicate_players %}
+          <li>Duplicate players detected.</li>
+          {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <div class="mt-6 grid grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] gap-4">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200">Lineup Slots</h3>
+            <span class="text-xs text-gray-500 dark:text-gray-300">Drop players here</span>
+          </div>
+          <div class="space-y-3">
+            {% for slot in blue_slots %}
+            <div
+              class="rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/60 p-4 transition {% if lineup.blue_team_status.value == 'draft' and slot.player %}cursor-grab active:cursor-grabbing{% endif %}"
+              :class="{ 'ring-2 ring-blue-400/70 border-blue-300/80': dragTarget === 'blue-{{ slot.id }}' }"
+              {% if lineup.blue_team_status.value == "draft" %}
+              @dragenter.prevent="dragTarget = 'blue-{{ slot.id }}'"
+              @dragleave.prevent="if (dragTarget === 'blue-{{ slot.id }}') dragTarget = null"
+              @dragover.prevent
+              @drop.prevent="dropOnSlot({{ slot.id }}, '{{ slot.slot_role }}', {{ blue_team.id }})"
+              {% if slot.player %}
+              draggable="true"
+              @dragstart="startDrag({
+                playerId: {{ slot.player.id }},
+                teamId: {{ blue_team.id }},
+                fromSlotId: {{ slot.id }},
+                slotRole: '{{ slot.slot_role }}',
+                label: '{{ slot.player.nick_name }}'
+              }, $event)"
+              @dragend="dragging = null; dragTarget = null"
+              {% endif %}
+              {% endif %}
+            >
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-11 h-11 rounded-xl bg-blue-600/10 text-blue-700 flex items-center justify-center text-xs font-bold uppercase">
+                    {{ slot.slot_role }}
+                  </div>
+                  <div>
+                    {% if slot.player %}
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ slot.player.nick_name }}</span>
+                      {% if slot.player.role == slot.assigned_role %}
+                      <span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200">
+                        On-role
+                      </span>
+                      {% else %}
+                      <span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200">
+                        Off-role
+                      </span>
+                      {% endif %}
+                    </div>
+                    <div class="text-xs text-gray-500 dark:text-gray-300">
+                      Main: {{ slot.player.role|upper }} - Assigned: {{ slot.assigned_role|upper }} - OVR {{ slot.player.overall }}
+                    </div>
+                    {% else %}
+                    <div class="text-sm text-gray-500 dark:text-gray-300 italic">Drop a player here</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Prefers {{ slot.slot_role|title }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+                {% if lineup.blue_team_status.value == "draft" and slot.player %}
+                <button
+                  type="button"
+                  class="text-xs text-gray-500 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                  @click="clearSlot({{ slot.id }}, '{{ slot.slot_role }}', {{ blue_team.id }})"
+                >
+                  Clear
+                </button>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200">Bench</h3>
+            <span class="text-xs text-gray-500 dark:text-gray-300">Drag to slot</span>
+          </div>
+          {% if lineup.blue_team_status.value == "draft" %}
+          <div
+            class="rounded-xl border border-dashed border-slate-300 dark:border-slate-600 p-3 text-xs text-gray-500 dark:text-gray-300"
+            @dragover.prevent
+            @drop.prevent="dropOnBench({{ blue_team.id }})"
+          >
+            Drop here to remove a player from the lineup.
+          </div>
+          <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {% set unassigned = namespace(count=0) %}
+            {% for player in blue_roster %}
+              {% if player.id not in blue_assigned_ids %}
+                {% set unassigned.count = unassigned.count + 1 %}
+                <div
+                  class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 p-3 shadow-sm hover:shadow-md transition cursor-grab active:cursor-grabbing"
+                  draggable="true"
+                  @dragstart="startDrag({
+                    playerId: {{ player.id }},
+                    teamId: {{ blue_team.id }},
+                    fromSlotId: null,
+                    slotRole: '{{ player.role.value }}',
+                    label: '{{ player.nick_name }}'
+                  }, $event)"
+                  @dragend="dragging = null; dragTarget = null"
+                >
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ player.nick_name }}</span>
+                    <span class="text-[11px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-200">
+                      {{ player.role.value|upper }}
+                    </span>
+                  </div>
+                  <div class="text-xs text-gray-500 dark:text-gray-300">OVR {{ player.overall }}</div>
+                </div>
+              {% endif %}
+            {% endfor %}
+            {% if unassigned.count == 0 %}
+              <div class="text-sm text-gray-500 dark:text-gray-300">All players are assigned.</div>
+            {% endif %}
+          </div>
+          {% else %}
+          <div class="rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/60 p-4 text-sm text-gray-500 dark:text-gray-300">
+            Lineup locked. Unlock to make changes.
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Red Team -->
+    <section class="bg-white dark:bg-slate-700/80 rounded-2xl shadow-lg border border-slate-200/70 dark:border-slate-600/60 p-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 bg-red-600/10 text-red-700 rounded-xl flex items-center justify-center">
+            <i class="bi bi-shield-fill text-2xl"></i>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold dark:text-white">{{ red_team.name }}</h2>
+            <span class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-300">Red Side</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          {% if lineup.red_team_status.value == "draft" %}
+          <button
+            hx-post="/api/moba/lineup/match/{{ match.id }}/team/{{ red_team.id }}/confirm"
+            hx-target="#lineup-container"
+            hx-swap="outerHTML"
+            class="px-4 py-2 rounded-lg font-semibold text-white transition bg-red-600 hover:bg-red-700 {% if not red_summary.can_confirm %}opacity-50 cursor-not-allowed{% endif %}"
+            {% if not red_summary.can_confirm %}disabled title="Assign all roles before confirming."{% endif %}
+          >
+            Confirm Lineup
+          </button>
+          {% else %}
+          <span class="px-3 py-1 bg-emerald-500 text-white rounded-full text-xs font-semibold">Confirmed</span>
+          <button
+            hx-post="/api/moba/lineup/match/{{ match.id }}/team/{{ red_team.id }}/unlock"
+            hx-target="#lineup-container"
+            hx-swap="outerHTML"
+            class="px-3 py-1 bg-slate-500 text-white rounded-full text-xs hover:bg-slate-600"
+          >
+            Unlock
+          </button>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold uppercase">
+        <span class="px-3 py-1 rounded-full bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200">
+          Assigned {{ red_summary.assigned_count }}/{{ red_summary.total_slots }}
+        </span>
+        <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200">
+          On-role {{ red_summary.on_role_count }}
+        </span>
+        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200">
+          Off-role {{ red_summary.off_role_count }}
+        </span>
+        <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-600 dark:text-slate-200">
+          Missing {{ red_summary.missing_count }}
+        </span>
+      </div>
+
+      {% if red_summary.missing_count > 0 or red_summary.off_role_count > 0 or red_summary.duplicate_players %}
+      <div class="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-200">
+        <ul class="space-y-1">
+          {% if red_summary.missing_count > 0 %}
+          <li>Missing roles: {{ red_summary.missing_roles|join(', ') }}</li>
+          {% endif %}
+          {% if red_summary.off_role_count > 0 %}
+          <li>Off-role picks detected. Confirm only if intentional.</li>
+          {% endif %}
+          {% if red_summary.duplicate_players %}
+          <li>Duplicate players detected.</li>
+          {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <div class="mt-6 grid grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] gap-4">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200">Lineup Slots</h3>
+            <span class="text-xs text-gray-500 dark:text-gray-300">Drop players here</span>
+          </div>
+          <div class="space-y-3">
+            {% for slot in red_slots %}
+            <div
+              class="rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/60 p-4 transition {% if lineup.red_team_status.value == 'draft' and slot.player %}cursor-grab active:cursor-grabbing{% endif %}"
+              :class="{ 'ring-2 ring-red-400/70 border-red-300/80': dragTarget === 'red-{{ slot.id }}' }"
+              {% if lineup.red_team_status.value == "draft" %}
+              @dragenter.prevent="dragTarget = 'red-{{ slot.id }}'"
+              @dragleave.prevent="if (dragTarget === 'red-{{ slot.id }}') dragTarget = null"
+              @dragover.prevent
+              @drop.prevent="dropOnSlot({{ slot.id }}, '{{ slot.slot_role }}', {{ red_team.id }})"
+              {% if slot.player %}
+              draggable="true"
+              @dragstart="startDrag({
+                playerId: {{ slot.player.id }},
+                teamId: {{ red_team.id }},
+                fromSlotId: {{ slot.id }},
+                slotRole: '{{ slot.slot_role }}',
+                label: '{{ slot.player.nick_name }}'
+              }, $event)"
+              @dragend="dragging = null; dragTarget = null"
+              {% endif %}
+              {% endif %}
+            >
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-11 h-11 rounded-xl bg-red-600/10 text-red-700 flex items-center justify-center text-xs font-bold uppercase">
+                    {{ slot.slot_role }}
+                  </div>
+                  <div>
+                    {% if slot.player %}
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ slot.player.nick_name }}</span>
+                      {% if slot.player.role == slot.assigned_role %}
+                      <span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200">
+                        On-role
+                      </span>
+                      {% else %}
+                      <span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200">
+                        Off-role
+                      </span>
+                      {% endif %}
+                    </div>
+                    <div class="text-xs text-gray-500 dark:text-gray-300">
+                      Main: {{ slot.player.role|upper }} - Assigned: {{ slot.assigned_role|upper }} - OVR {{ slot.player.overall }}
+                    </div>
+                    {% else %}
+                    <div class="text-sm text-gray-500 dark:text-gray-300 italic">Drop a player here</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Prefers {{ slot.slot_role|title }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+                {% if lineup.red_team_status.value == "draft" and slot.player %}
+                <button
+                  type="button"
+                  class="text-xs text-gray-500 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                  @click="clearSlot({{ slot.id }}, '{{ slot.slot_role }}', {{ red_team.id }})"
+                >
+                  Clear
+                </button>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200">Bench</h3>
+            <span class="text-xs text-gray-500 dark:text-gray-300">Drag to slot</span>
+          </div>
+          {% if lineup.red_team_status.value == "draft" %}
+          <div
+            class="rounded-xl border border-dashed border-slate-300 dark:border-slate-600 p-3 text-xs text-gray-500 dark:text-gray-300"
+            @dragover.prevent
+            @drop.prevent="dropOnBench({{ red_team.id }})"
+          >
+            Drop here to remove a player from the lineup.
+          </div>
+          <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {% set unassigned = namespace(count=0) %}
+            {% for player in red_roster %}
+              {% if player.id not in red_assigned_ids %}
+                {% set unassigned.count = unassigned.count + 1 %}
+                <div
+                  class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 p-3 shadow-sm hover:shadow-md transition cursor-grab active:cursor-grabbing"
+                  draggable="true"
+                  @dragstart="startDrag({
+                    playerId: {{ player.id }},
+                    teamId: {{ red_team.id }},
+                    fromSlotId: null,
+                    slotRole: '{{ player.role.value }}',
+                    label: '{{ player.nick_name }}'
+                  }, $event)"
+                  @dragend="dragging = null; dragTarget = null"
+                >
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ player.nick_name }}</span>
+                    <span class="text-[11px] px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200">
+                      {{ player.role.value|upper }}
+                    </span>
+                  </div>
+                  <div class="text-xs text-gray-500 dark:text-gray-300">OVR {{ player.overall }}</div>
+                </div>
+              {% endif %}
+            {% endfor %}
+            {% if unassigned.count == 0 %}
+              <div class="text-sm text-gray-500 dark:text-gray-300">All players are assigned.</div>
+            {% endif %}
+          </div>
+          {% else %}
+          <div class="rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/60 p-4 text-sm text-gray-500 dark:text-gray-300">
+            Lineup locked. Unlock to make changes.
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+  </div>
+
+</div>

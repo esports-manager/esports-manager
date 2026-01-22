@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional, TYPE_CHECKING
 
 from sqlmodel import SQLModel, Field, Column, DateTime, Relationship
@@ -12,7 +12,11 @@ if TYPE_CHECKING:
 
 class MobaGameSessionBase(SQLModel):
     name: str
-    manager_name: str
+    manager_first_name: str
+    manager_last_name: str
+    manager_nickname: Optional[str] = None
+    manager_birthdate: Optional[date] = None
+    manager_nationality: Optional[str] = None
     team_id: int = Field(foreign_key="moba_teams.id")
     base_database_url: str
     session_database_url: Optional[str] = Field(default=None)
@@ -34,7 +38,11 @@ class MobaGameSession(MobaGameSessionBase, table=True):
 
 
 class MobaGameSessionCreate(SQLModel):
-    manager_name: str
+    manager_first_name: str
+    manager_last_name: str
+    manager_nickname: Optional[str] = None
+    manager_birthdate: Optional[date] = None
+    manager_nationality: Optional[str] = None
     team_id: int
     name: Optional[str] = None
     seed: Optional[int] = Field(default=None, ge=0)
@@ -45,11 +53,19 @@ class MobaGameSessionPublic(MobaGameSessionBase):
     id: int
     created_at: datetime
     updated_at: Optional[datetime] = None
+    manager_display_name: Optional[str] = None
+    team_name: Optional[str] = None
+    team_logo_url: Optional[str] = None
+    team_banner_url: Optional[str] = None
 
 
 class MobaGameSessionUpdate(SQLModel):
     name: Optional[str] = None
-    manager_name: Optional[str] = None
+    manager_first_name: Optional[str] = None
+    manager_last_name: Optional[str] = None
+    manager_nickname: Optional[str] = None
+    manager_birthdate: Optional[date] = None
+    manager_nationality: Optional[str] = None
     team_id: Optional[int] = None
     current_day: Optional[int] = Field(default=None, ge=1)
     seed: Optional[int] = Field(default=None, ge=0)

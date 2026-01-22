@@ -47,7 +47,11 @@ async def test_create_session_copies_base_db(
     response = await client.post(
         "/api/moba/sessions",
         json={
-            "manager_name": "Alex",
+            "manager_first_name": "Alex",
+            "manager_last_name": "Stone",
+            "manager_nickname": "Ace",
+            "manager_birthdate": "1995-04-12",
+            "manager_nationality": "Brazil",
             "team_id": team.id,
             "base_database_url": base_db_url,
         },
@@ -56,8 +60,13 @@ async def test_create_session_copies_base_db(
     assert response.status_code == 201
     payload = response.json()
     assert payload["base_database_url"] == base_db_url
-    assert payload["manager_name"] == "Alex"
-    assert payload["name"] == "Alex's Career"
+    assert payload["manager_first_name"] == "Alex"
+    assert payload["manager_last_name"] == "Stone"
+    assert payload["manager_nickname"] == "Ace"
+    assert payload["manager_birthdate"] == "1995-04-12"
+    assert payload["manager_nationality"] == "Brazil"
+    assert payload["manager_display_name"] == "Ace"
+    assert payload["name"] == "Ace's Career"
 
     game_session = await session.get(MobaGameSession, payload["id"])
     assert game_session is not None
@@ -100,7 +109,8 @@ async def test_list_sessions(
     create_response = await client.post(
         "/api/moba/sessions",
         json={
-            "manager_name": "Riley",
+            "manager_first_name": "Riley",
+            "manager_last_name": "Quinn",
             "team_id": team.id,
             "base_database_url": base_db_url,
             "name": "Riley Save",
@@ -113,6 +123,7 @@ async def test_list_sessions(
     sessions = list_response.json()
     assert len(sessions) == 1
     assert sessions[0]["name"] == "Riley Save"
+    assert sessions[0]["manager_display_name"] == "Riley Quinn"
 
     session_db_url = sessions[0]["session_database_url"]
     session_db_path = sqlite_path_from_url(session_db_url)

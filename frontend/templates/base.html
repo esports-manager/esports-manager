@@ -68,6 +68,156 @@
       });
     };
 
+    window.sessionState = {
+      data: null,
+      status: "idle",
+    };
+
+    window.resolveSessionId = function () {
+      const params = new URLSearchParams(window.location.search);
+      const urlSessionId = params.get("session_id");
+      if (urlSessionId) {
+        localStorage.setItem("activeSessionId", urlSessionId);
+        return urlSessionId;
+      }
+      return localStorage.getItem("activeSessionId");
+    };
+
+    window.getTeamInitials = function (name) {
+      if (!name) {
+        return "TEAM";
+      }
+      const words = name.split(" ").filter(Boolean);
+      if (words.length === 1) {
+        return words[0].slice(0, 3).toUpperCase();
+      }
+      return words
+        .slice(0, 3)
+        .map((word) => word[0])
+        .join("")
+        .toUpperCase();
+    };
+
+    window.applySessionBindings = function (session) {
+      document.querySelectorAll("[data-session-team-name]").forEach((el) => {
+        const fallback = el.dataset.sessionDefault || "Your Team";
+        el.textContent = session?.team_name || fallback;
+      });
+
+      document.querySelectorAll("[data-session-manager-name]").forEach((el) => {
+        const fallback = el.dataset.sessionDefault || "Manager";
+        el.textContent = session?.manager_display_name || fallback;
+      });
+
+      document.querySelectorAll("[data-session-save-name]").forEach((el) => {
+        const fallback = el.dataset.sessionDefault || "Active save";
+        el.textContent = session?.name || fallback;
+      });
+
+      document.querySelectorAll("[data-session-current-day]").forEach((el) => {
+        if (session?.current_day !== undefined && session?.current_day !== null) {
+          el.textContent = session.current_day;
+        }
+      });
+
+      document.querySelectorAll("[data-session-team-short]").forEach((el) => {
+        const fallback = el.dataset.sessionDefault || "TEAM";
+        const shortName = session?.team_name
+          ? window.getTeamInitials(session.team_name)
+          : fallback;
+        el.textContent = shortName;
+      });
+
+      document.querySelectorAll("[data-session-team-logo]").forEach((img) => {
+        const fallback = img.dataset.sessionTeamFallback || img.src;
+        if (session?.team_logo_url) {
+          img.src = session.team_logo_url;
+          return;
+        }
+        if (fallback) {
+          img.src = fallback;
+        }
+      });
+    };
+
+    window.updateSaveButton = function (enabled) {
+      const saveButton = document.getElementById("session-save-button");
+      if (!saveButton) {
+        return;
+      }
+      saveButton.disabled = !enabled;
+      saveButton.classList.toggle("opacity-60", !enabled);
+      saveButton.classList.toggle("cursor-not-allowed", !enabled);
+    };
+
+    window.setSessionMissing = function () {
+      window.sessionState = { data: null, status: "missing" };
+      window.applySessionBindings(null);
+      window.updateSaveButton(false);
+      document.dispatchEvent(new CustomEvent("session:missing"));
+    };
+
+    window.setSessionActive = function (session) {
+      window.sessionState = { data: session, status: "ready" };
+      window.applySessionBindings(session);
+      window.updateSaveButton(true);
+      document.dispatchEvent(new CustomEvent("session:updated", { detail: session }));
+    };
+
+    window.loadActiveSession = async function () {
+      const sessionId = window.resolveSessionId();
+      if (!sessionId) {
+        window.setSessionMissing();
+        return null;
+      }
+      try {
+        const response = await fetch(`/api/moba/sessions/${sessionId}`);
+        if (!response.ok) {
+          throw new Error("Session not found");
+        }
+        const data = await response.json();
+        window.setSessionActive(data);
+        return data;
+      } catch (error) {
+        localStorage.removeItem("activeSessionId");
+        window.setSessionMissing();
+        return null;
+      }
+    };
+
+    window.saveActiveSession = async function () {
+      const sessionId = window.resolveSessionId();
+      const statusEl = document.getElementById("session-save-status");
+      if (!sessionId) {
+        return null;
+      }
+      if (statusEl) {
+        statusEl.textContent = "Saving...";
+      }
+      try {
+        const response = await fetch(`/api/moba/sessions/${sessionId}/save`, {
+          method: "POST",
+        });
+        if (!response.ok) {
+          throw new Error("Save failed");
+        }
+        const data = await response.json();
+        window.setSessionActive(data);
+        if (statusEl) {
+          statusEl.textContent = "Saved";
+          setTimeout(() => {
+            statusEl.textContent = "";
+          }, 2500);
+        }
+        return data;
+      } catch (error) {
+        if (statusEl) {
+          statusEl.textContent = "Save failed";
+        }
+        return null;
+      }
+    };
+
     window.lineupBoard = function ({
       blueTeamId,
       redTeamId,
@@ -222,6 +372,9 @@
     document.addEventListener("DOMContentLoaded", () => {
       if (typeof window.applyContinueAction === "function") {
         window.applyContinueAction();
+      }
+      if (typeof window.loadActiveSession === "function") {
+        window.loadActiveSession();
       }
     });
   </script>

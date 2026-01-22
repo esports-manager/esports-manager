@@ -24,14 +24,21 @@
   </div>
 
   <div
-    class="flex flex-row items-center font-bold text-3xl text-center px-4 self-center"
+    class="flex flex-row items-center font-bold text-2xl text-center px-4 self-center"
   >
-    <img
-      class="w-14"
-      src="{{ url_for('static', path='img/g2-logo-clear.webp') }}"
-    />
+    <div
+      class="w-12 h-12 rounded-full bg-white/70 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center shadow"
+    >
+      <img
+        class="w-10 h-10 object-contain"
+        src="{{ url_for('static', path='img/g2-logo-clear.webp') }}"
+        data-session-team-logo
+        data-session-team-fallback="{{ url_for('static', path='img/g2-logo-clear.webp') }}"
+        alt="Team logo"
+      />
+    </div>
     <div class="ml-4 place-self-center text-gray-600 dark:text-gray-300">
-      G2 Esports
+      <span data-session-team-name data-session-default="Your Team">Your Team</span>
     </div>
   </div>
 
@@ -78,15 +85,31 @@
     </div>
   </div>
 
-  <div class="flex items-center space-x-6 gap-4">
-    <!-- Date and Week Information -->
-    <div class="block sm:hidden items-end justify-center mr-2">
-      <div class="text-sm font-medium text-gray-800 dark:text-gray-200">
-        November 15, 2025
-      </div>
-      <div class="text-xs text-gray-500 dark:text-gray-400">
-        Week 25 - World Championship
-      </div>
+  <div class="flex items-center space-x-5 gap-4">
+    <div class="hidden lg:flex flex-col text-right text-xs text-gray-500 dark:text-gray-400">
+      <span
+        class="font-semibold text-gray-700 dark:text-gray-200"
+        data-session-save-name
+        data-session-default="No active save"
+        >No active save</span
+      >
+      <span>
+        Day <span data-session-current-day data-session-default="1">1</span> •
+        <span data-session-manager-name data-session-default="Manager">Manager</span>
+      </span>
+    </div>
+    <div class="flex flex-col items-end">
+      <button
+        id="session-save-button"
+        type="button"
+        class="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold bg-emerald-500 hover:bg-emerald-400 text-white transition opacity-60 cursor-not-allowed"
+        @click="window.saveActiveSession()"
+        disabled
+      >
+        <i class="bi bi-cloud-arrow-up-fill"></i>
+        Save Game
+      </button>
+      <span id="session-save-status" class="text-[11px] text-gray-500"></span>
     </div>
     <button
       @click="darkMode = !darkMode"

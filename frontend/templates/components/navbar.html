@@ -98,22 +98,21 @@
         <span data-session-manager-name data-session-default="Manager">Manager</span>
       </span>
     </div>
-    <div class="flex flex-col items-end">
+    <div class="flex flex-col items-center">
       <button
         id="session-save-button"
         type="button"
-        class="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold bg-emerald-500 hover:bg-emerald-400 text-white transition opacity-60 cursor-not-allowed"
+        class="rounded-full px-5 py-4 mx-1 bg-slate-200 hover:bg-gray-100 dark:bg-slate-600 dark:hover:bg-slate-500"
         @click="window.saveActiveSession()"
         disabled
       >
-        <i class="bi bi-cloud-arrow-up-fill"></i>
-        Save Game
+        <i class="bi bi-floppy-fill text-lg"></i>
       </button>
       <span id="session-save-status" class="text-[11px] text-gray-500"></span>
     </div>
     <button
       @click="darkMode = !darkMode"
-      class="rounded-full px-5 py-4 mx-1 bg-slate-200 hover:bg-gray-100 dark:bg-slate-600 dark:hover:bg-slate-500"
+      class="rounded-full px-5 py-4 bg-slate-200 hover:bg-gray-100 dark:bg-slate-600 dark:hover:bg-slate-500"
     >
       <span x-show="darkMode !== true">
         <i class="bi bi-moon-fill text-lg"></i>

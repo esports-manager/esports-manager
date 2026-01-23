@@ -4,7 +4,9 @@
 from datetime import date
 from esm.db import get_session
 from fastapi import Request, Depends, APIRouter, HTTPException, status
-from sqlmodel import Session
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 from fastapi.templating import Jinja2Templates
 from esm.models.moba.player import MobaPlayer, MobaPlayerPublic
 from esm.models.moba.team import MobaTeamPublic, MobaTeam
@@ -50,14 +52,22 @@ async def players(request: Request):
 
 @player_routes.get("/players/{player_id}")
 async def player(
-    request: Request, player_id: int, session: Session = Depends(get_session)
+    request: Request, player_id: int, session: AsyncSession = Depends(get_session)
 ):
     global current_page
     global sidebar
     current_page = "players"
     contentview = "components/players/player_info.html"
 
-    player = session.get(MobaPlayer, player_id)
+    result = await session.execute(
+        select(MobaPlayer)
+        .where(MobaPlayer.id == player_id)
+        .options(
+            selectinload(MobaPlayer.contracts),
+            selectinload(MobaPlayer.champion_pool),
+        )
+    )
+    player = result.scalars().first()
     if not player:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Player not found"
@@ -66,7 +76,7 @@ async def player(
     player_data = player.model_dump()
     team_data = None
     if player.current_contract and player.current_contract.team_id:
-        team_data = session.get(MobaTeam, player.current_contract.team_id)
+        team_data = await session.get(MobaTeam, player.current_contract.team_id)
         player_data["team"] = MobaTeamPublic.model_validate(team_data.model_dump())
 
     if player.current_contract:
@@ -75,7 +85,9 @@ async def player(
     if player.champion_pool:
         champions = []
         for champion_mastery in player.champion_pool:
-            champion = session.get(MobaChampion, champion_mastery.champion_id)
+            champion = await session.get(MobaChampion, champion_mastery.champion_id)
+            if not champion:
+                continue
             champion_data = champion.model_dump()
             champion_data["tier"] = champion_mastery.tier
             champion_data["points"] = champion_mastery.points

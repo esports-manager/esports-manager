@@ -5,7 +5,8 @@ from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.templating import Jinja2Templates
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from esm.config import FRONTEND_DIR
 from esm.db import get_session
@@ -23,13 +24,13 @@ templates = Jinja2Templates(directory=templates_dir)
 
 @tournament_routes.get("/tournaments/{id}")
 async def get_tournament_page(
-    *, request: Request, session: Session = Depends(get_session), id: int
+    *, request: Request, session: AsyncSession = Depends(get_session), id: int
 ):
     global sidebar  # used by layout
     current_page = "tournaments"
     contentview = "components/tournaments/tournament_info.html"
 
-    tournament = session.get(MobaTournament, id)
+    tournament = await session.get(MobaTournament, id)
     if not tournament:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Tournament not found"
@@ -38,17 +39,18 @@ async def get_tournament_page(
     tournament_public = MobaTournamentPublic.model_validate(tournament.model_dump())
 
     # Fetch participating teams via association table
-    team_ids = [
-        tp.team_id
-        for tp in session.exec(
-            select(MobaTournamentParticipant).where(
-                MobaTournamentParticipant.tournament_id == id
-            )
-        ).all()
-    ]
+    participant_result = await session.execute(
+        select(MobaTournamentParticipant).where(
+            MobaTournamentParticipant.tournament_id == id
+        )
+    )
+    team_ids = [tp.team_id for tp in participant_result.scalars().all()]
     teams = []
     if team_ids:
-        teams = session.exec(select(MobaTeam).where(MobaTeam.id.in_(team_ids))).all()
+        team_result = await session.execute(
+            select(MobaTeam).where(MobaTeam.id.in_(team_ids))
+        )
+        teams = team_result.scalars().all()
     participating_teams: List[MobaTeamPublic] = [
         MobaTeamPublic.model_validate(t.model_dump()) for t in teams
     ]

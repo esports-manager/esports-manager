@@ -185,39 +185,6 @@
       }
     };
 
-    window.saveActiveSession = async function () {
-      const sessionId = window.resolveSessionId();
-      const statusEl = document.getElementById("session-save-status");
-      if (!sessionId) {
-        return null;
-      }
-      if (statusEl) {
-        statusEl.textContent = "Saving...";
-      }
-      try {
-        const response = await fetch(`/api/moba/sessions/${sessionId}/save`, {
-          method: "POST",
-        });
-        if (!response.ok) {
-          throw new Error("Save failed");
-        }
-        const data = await response.json();
-        window.setSessionActive(data);
-        if (statusEl) {
-          statusEl.textContent = "Saved";
-          setTimeout(() => {
-            statusEl.textContent = "";
-          }, 2500);
-        }
-        return data;
-      } catch (error) {
-        if (statusEl) {
-          statusEl.textContent = "Save failed";
-        }
-        return null;
-      }
-    };
-
     window.lineupBoard = function ({
       blueTeamId,
       redTeamId,

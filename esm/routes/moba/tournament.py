@@ -16,6 +16,7 @@ from esm.models.moba.tournament import (
     MobaTournamentUpdate,
     MobaTournamentPublic,
 )
+from esm.models.tournament import TournamentType
 from esm.models.moba.tournament_participant import MobaTournamentParticipant
 from esm.models.moba.team import MobaTeam, MobaTeamPublic
 
@@ -55,13 +56,28 @@ async def get_tournaments(
             MobaTournament.format == request.query_params.get("format")
         )
     # Optional location filter (maps from frontend region/location controls)
-    if request.query_params.get("location"):
-        query = query.where(
-            MobaTournament.location == request.query_params.get("location")
-        )
-        count_query = count_query.where(
-            MobaTournament.location == request.query_params.get("location")
-        )
+    location_param = request.query_params.get("location")
+    if location_param:
+        location_key = location_param.strip().lower()
+        if location_key == "international":
+            query = query.where(MobaTournament.type == TournamentType.INTERNATIONAL)
+            count_query = count_query.where(
+                MobaTournament.type == TournamentType.INTERNATIONAL
+            )
+        else:
+            location_map = {
+                "korea": ["South Korea", "Korea"],
+                "china": ["China"],
+                "europe": ["Europe"],
+                "north_america": ["United States", "Canada"],
+            }
+            locations = location_map.get(location_key, [location_param])
+            if len(locations) == 1:
+                query = query.where(MobaTournament.location == locations[0])
+                count_query = count_query.where(MobaTournament.location == locations[0])
+            else:
+                query = query.where(MobaTournament.location.in_(locations))
+                count_query = count_query.where(MobaTournament.location.in_(locations))
     if request.query_params.get("search"):
         search = request.query_params.get("search")
         query = query.where(MobaTournament.name.icontains(search))

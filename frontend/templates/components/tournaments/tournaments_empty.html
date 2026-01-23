@@ -14,10 +14,8 @@
       criteria or clear filters to see all available tournaments.
     </p>
     <button
-      hx-get="/api/moba/tournaments"
-      hx-trigger="click"
-      hx-target="#tournaments-container"
-      hx-swap="innerHTML"
+      type="button"
+      @click="regionFilter = ''; tierFilter = ''; searchQuery = ''; onControlsChanged()"
       class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-150 mb-8"
     >
       Reset Filters

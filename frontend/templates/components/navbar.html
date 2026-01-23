@@ -101,13 +101,15 @@
     <div class="flex flex-col items-center">
       <button
         id="session-save-button"
-        type="button"
+        hx-post="/api/moba/sessions/{{ session_id }}/save"
+        hx-target="#session-save-status"
+        hx-swap="innerHTML"
+        hx-indicator="#save-indicator"
         class="rounded-full px-5 py-4 mx-1 bg-slate-200 hover:bg-gray-100 dark:bg-slate-600 dark:hover:bg-slate-500"
-        @click="window.saveActiveSession()"
-        disabled
       >
         <i class="bi bi-floppy-fill text-lg"></i>
       </button>
+      <span id="save-indicator" class="text-[11px] text-gray-500 htmx-indicator">Saving...</span>
       <span id="session-save-status" class="text-[11px] text-gray-500"></span>
     </div>
     <button

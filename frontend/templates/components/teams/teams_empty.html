@@ -23,12 +23,9 @@
     <div class="flex flex-wrap gap-3 justify-center">
       <!-- Reset Filters -->
       <button
+        type="button"
         class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-        hx-get="/api/moba/teams"
-        hx-include="#team-filters-form"
-        hx-vals='{"reset": true}'
-        hx-target="#teams-list"
-        hx-swap="innerHTML"
+        @click="selectedLeague = ''; selectedRegion = ''; selectedTier = ''; searchQuery = ''; $nextTick(() => htmx.trigger('#team-filters-form','submit'))"
       >
         <i class="bi bi-arrow-repeat mr-2"></i>
         Reset Filters

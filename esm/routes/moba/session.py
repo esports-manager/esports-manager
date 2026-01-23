@@ -5,7 +5,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi.responses import HTMLResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
@@ -154,14 +155,30 @@ async def create_session(
     "/{session_id}/save", response_model=MobaGameSessionPublic
 )
 async def save_session(
-    session_id: int, session: AsyncSession = Depends(get_session)
+    session_id: int,
+    request: Request,
+    session: AsyncSession = Depends(get_session)
 ):
     game_session = await session.get(MobaGameSession, session_id)
     if not game_session:
         raise HTTPException(status_code=404, detail="Session not found")
     game_session.updated_at = datetime.now()
     session.add(game_session)
+    
     await session.commit()
     await session.refresh(game_session)
+    
     team = await session.get(MobaTeam, game_session.team_id)
-    return build_session_public(game_session, team)
+    public = build_session_public(game_session, team)
+
+    if request.headers.get("HX-Request") == "true":
+        html = f"""
+        <span
+            hx-trigger="load delay:2.5s"
+            hx-get="/_empty"
+            hx-swap="outerHTML"
+        >Saved</span>
+        """
+        return HTMLResponse(content=html)
+    
+    return public

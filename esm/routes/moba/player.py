@@ -49,23 +49,19 @@ async def get_players(
     session: AsyncSession = Depends(get_session),
 ):
     # Base queries with eager loading
+    active_contract_join = (
+        (MobaPlayerContract.player_id == MobaPlayer.id)
+        & (MobaPlayerContract.is_active.is_(True))
+    )
     query = (
         select(MobaPlayer)
         .options(selectinload(MobaPlayer.contracts))
-        .join(
-            MobaPlayerContract,
-            MobaPlayerContract.player_id == MobaPlayer.id,
-            isouter=True,
-        )
+        .join(MobaPlayerContract, active_contract_join, isouter=True)
         .join(MobaTeam, MobaTeam.id == MobaPlayerContract.team_id, isouter=True)
     )
     count_query = (
         select(MobaPlayer)
-        .join(
-            MobaPlayerContract,
-            MobaPlayerContract.player_id == MobaPlayer.id,
-            isouter=True,
-        )
+        .join(MobaPlayerContract, active_contract_join, isouter=True)
         .join(MobaTeam, MobaTeam.id == MobaPlayerContract.team_id, isouter=True)
     )
 
@@ -90,6 +86,7 @@ async def get_players(
     search = request.query_params.get("search")
     sort = request.query_params.get("sort")
     sort_direction = request.query_params.get("direction", "asc")
+    manual_sort = sort == "overall"
     sort_map = {
         "name": MobaPlayer.nick_name,
         "role": MobaPlayer.role,
@@ -116,17 +113,22 @@ async def get_players(
         count_query = count_query.where(MobaPlayer.nationality == nationality)
     if region:
         # Filter by the region of the player's current team (if any)
-        query = query.where(MobaTeam.region == region)
-        count_query = count_query.where(MobaTeam.region == region)
+        region_key = region.strip().lower()
+        region_map = {
+            "eu": "LEC",
+            "na": "LCS",
+            "kr": "LCK",
+            "cn": "LPL",
+            "other": "PCS",
+        }
+        mapped_region = region_map.get(region_key, region.upper())
+        query = query.where(MobaTeam.region == mapped_region)
+        count_query = count_query.where(MobaTeam.region == mapped_region)
     if team_id:
         try:
             tid = int(team_id)
-            query = query.where(
-                MobaPlayerContract.is_active is True, MobaPlayerContract.team_id == tid
-            )
-            count_query = count_query.where(
-                MobaPlayerContract.is_active is True, MobaPlayerContract.team_id == tid
-            )
+            query = query.where(MobaPlayerContract.team_id == tid)
+            count_query = count_query.where(MobaPlayerContract.team_id == tid)
         except ValueError:
             pass
     if search:
@@ -135,24 +137,17 @@ async def get_players(
     if status:
         status_lc = status.lower()
         if status_lc == "signed":
-            query = query.where(MobaPlayerContract.is_active is True)
-            count_query = count_query.where(MobaPlayerContract.is_active is True)
+            query = query.where(MobaPlayerContract.id.is_not(None))
+            count_query = count_query.where(MobaPlayerContract.id.is_not(None))
         elif status_lc == "free":
             # No active contract
-            query = query.where(
-                (MobaPlayerContract.id is None)
-                | (MobaPlayerContract.is_active is False)
-            )
-            count_query = count_query.where(
-                (MobaPlayerContract.id is None)
-                | (MobaPlayerContract.is_active is False)
-            )
-    if sort and sort_direction:
+            query = query.where(MobaPlayerContract.id.is_(None))
+            count_query = count_query.where(MobaPlayerContract.id.is_(None))
+    if sort and sort_direction and not manual_sort:
         sort_map = {
             "name": MobaPlayer.nick_name,
             "role": MobaPlayer.role,
             "nationality": MobaPlayer.nationality,
-            "overall": MobaPlayer.overall,
             "value": MobaPlayer.value,
         }
         if sort in sort_map:
@@ -166,12 +161,23 @@ async def get_players(
     query = query.distinct(MobaPlayer.id)
     count_query = count_query.distinct(MobaPlayer.id)
 
-    count_result = await session.execute(count_query)
-    total_players = len(count_result.scalars().all())
-    total_pages = (total_players + per_page - 1) // per_page
+    if manual_sort:
+        result_query = await session.execute(query)
+        players = result_query.scalars().all()
+        players.sort(
+            key=lambda player: player.overall,
+            reverse=sort_direction == "desc",
+        )
+        total_players = len(players)
+        total_pages = (total_players + per_page - 1) // per_page
+        players = players[skip : skip + per_page]
+    else:
+        count_result = await session.execute(count_query)
+        total_players = len(count_result.scalars().all())
+        total_pages = (total_players + per_page - 1) // per_page
 
-    result_query = await session.execute(query.offset(skip).limit(per_page))
-    players = result_query.scalars().all()
+        result_query = await session.execute(query.offset(skip).limit(per_page))
+        players = result_query.scalars().all()
 
     result = []
     for player in players:

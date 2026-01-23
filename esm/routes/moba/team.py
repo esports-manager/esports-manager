@@ -85,44 +85,38 @@ async def get_teams(request: Request, session: AsyncSession = Depends(get_sessio
     league = request.query_params.get("league")
     tier_param = request.query_params.get("tier")
 
+    region_aliases = {
+        "europe": "LEC",
+        "north america": "LCS",
+        "north_america": "LCS",
+        "korea": "LCK",
+        "china": "LPL",
+        "southeast asia": "PCS",
+        "southeast_asia": "PCS",
+    }
+    league_codes = {"lec", "lcs", "lck", "lpl", "pcs"}
+
+    def normalize_region(value: str) -> str:
+        region_key = value.strip().lower()
+        if region_key in region_aliases:
+            return region_aliases[region_key]
+        if region_key in league_codes:
+            return region_key.upper()
+        return value
+
     if region:
-        query = query.where(MobaTeam.region == region)
-        count_query = count_query.where(MobaTeam.region == region)
+        mapped_region = normalize_region(region)
+        query = query.where(MobaTeam.region == mapped_region)
+        count_query = count_query.where(MobaTeam.region == mapped_region)
 
     if search:
         query = query.where(MobaTeam.name.icontains(search))
         count_query = count_query.where(MobaTeam.name.icontains(search))
 
     if league:
-        query = query.where(MobaTeam.league == league)
-        count_query = count_query.where(MobaTeam.league == league)
-
-    # Tier filter based on overall thresholds mirroring MobaTeamWithPlayers.tier logic
-    if tier_param:
-        tier_param = tier_param.lower()
-        lower_bound = None
-        if tier_param == "sp":
-            lower_bound = 95
-        elif tier_param == "s":
-            lower_bound = 90
-        elif tier_param == "a":
-            lower_bound = 85
-        elif tier_param == "b":
-            lower_bound = 80
-        elif tier_param == "c":
-            lower_bound = 75
-        elif tier_param == "d":
-            lower_bound = 70
-
-        if lower_bound is not None:
-            # Approximate using stored overall if present; if overall is not a stored column,
-            # we fall back to name-only filters and leave tier as UI-only. Here we assume
-            # teams have a numeric 'overall' field; if not, remove this or replace with a join/aggregate.
-            try:
-                query = query.where(MobaTeam.overall >= lower_bound)
-                count_query = count_query.where(MobaTeam.overall >= lower_bound)
-            except AttributeError:
-                pass
+        mapped_league = normalize_region(league)
+        query = query.where(MobaTeam.region == mapped_league)
+        count_query = count_query.where(MobaTeam.region == mapped_league)
 
     sort_by = request.query_params.get("sort")
     sort_direction = request.query_params.get("direction", "asc")
@@ -131,19 +125,69 @@ async def get_teams(request: Request, session: AsyncSession = Depends(get_sessio
         "region": MobaTeam.region,
     }
 
-    if sort_by in sort_map:
+    tier_key = None
+    if tier_param:
+        tier_key = tier_param.strip().lower()
+        if tier_key == "s+":
+            tier_key = "sp"
+        if tier_key not in {"sp", "s", "a", "b", "c", "d", "f"}:
+            tier_key = None
+
+    if sort_by in sort_map and tier_key is None:
         sort_field = sort_map[sort_by]
         if sort_direction == "desc":
             query = query.order_by(sort_field.desc())
         else:
             query = query.order_by(sort_field.asc())
 
-    count_result = await session.execute(count_query)
-    total_teams = len(count_result.scalars().all())
-    total_pages = (total_teams + per_page - 1) // per_page
+    if tier_key:
+        result_query = await session.execute(query)
+        teams = result_query.scalars().all()
 
-    result_query = await session.execute(query.offset(skip).limit(per_page))
-    teams = result_query.scalars().all()
+        def team_overall(team: MobaTeam) -> int:
+            players = team.current_players
+            if not players:
+                return 0
+            return sum(player.overall for player in players) // len(players)
+
+        def team_tier(overall: int) -> str:
+            if overall >= 95:
+                return "sp"
+            if overall >= 90:
+                return "s"
+            if overall >= 85:
+                return "a"
+            if overall >= 80:
+                return "b"
+            if overall >= 75:
+                return "c"
+            if overall >= 70:
+                return "d"
+            return "f"
+
+        teams = [
+            team
+            for team in teams
+            if team_tier(team_overall(team)) == tier_key
+        ]
+
+        if sort_by in sort_map:
+            reverse = sort_direction == "desc"
+            if sort_by == "name":
+                teams.sort(key=lambda team: team.name or "", reverse=reverse)
+            elif sort_by == "region":
+                teams.sort(key=lambda team: team.region or "", reverse=reverse)
+
+        total_teams = len(teams)
+        total_pages = (total_teams + per_page - 1) // per_page
+        teams = teams[skip : skip + per_page]
+    else:
+        count_result = await session.execute(count_query)
+        total_teams = len(count_result.scalars().all())
+        total_pages = (total_teams + per_page - 1) // per_page
+
+        result_query = await session.execute(query.offset(skip).limit(per_page))
+        teams = result_query.scalars().all()
 
     result = []
     for team in teams:

@@ -1,7 +1,8 @@
 <!-- Champions Skeleton/Loading State -->
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
 <div
   id="champions-loading-skeleton"
-  hx-get="/api/moba/champions"
+  hx-get="/api/moba/champions{{ session_query }}"
   hx-trigger="load"
   hx-swap="innerHTML"
 >

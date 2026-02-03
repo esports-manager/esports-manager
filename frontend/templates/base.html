@@ -37,6 +37,36 @@
   <script defer src="{{ url_for('static', path='js/alpine.persist.min.js') }}"></script>
   <script defer src="{{ url_for('static', path='js/alpine.min.js') }}"></script>
   <script>
+    window.initialSessionId = {{ session_id|default('', true)|tojson }};
+
+    window.normalizeSessionId = function (value) {
+      if (value === null || value === undefined) {
+        return "";
+      }
+      const raw = String(value).trim();
+      if (!raw) {
+        return "";
+      }
+      const lowered = raw.toLowerCase();
+      if (["none", "null", "undefined"].includes(lowered)) {
+        return "";
+      }
+      const numeric = Number(raw);
+      if (!Number.isFinite(numeric) || numeric <= 0) {
+        return "";
+      }
+      return String(Math.trunc(numeric));
+    };
+
+    window.getSessionQuery = function () {
+      const resolved = window.resolveSessionId ? window.resolveSessionId() : "";
+      const fallback = window.normalizeSessionId
+        ? window.normalizeSessionId(window.initialSessionId)
+        : window.initialSessionId || "";
+      const sessionId = resolved || fallback || "";
+      return sessionId ? `?session_id=${sessionId}` : "";
+    };
+
     window.continueActionState = {
       label: "Continue",
       href: "",
@@ -75,12 +105,22 @@
 
     window.resolveSessionId = function () {
       const params = new URLSearchParams(window.location.search);
-      const urlSessionId = params.get("session_id");
+      const urlSessionId = window.normalizeSessionId
+        ? window.normalizeSessionId(params.get("session_id"))
+        : params.get("session_id");
       if (urlSessionId) {
         localStorage.setItem("activeSessionId", urlSessionId);
         return urlSessionId;
       }
-      return localStorage.getItem("activeSessionId");
+      const storedSessionId = window.normalizeSessionId
+        ? window.normalizeSessionId(localStorage.getItem("activeSessionId"))
+        : localStorage.getItem("activeSessionId");
+      if (storedSessionId) {
+        localStorage.setItem("activeSessionId", storedSessionId);
+        return storedSessionId;
+      }
+      localStorage.removeItem("activeSessionId");
+      return "";
     };
 
     window.getTeamInitials = function (name) {
@@ -150,10 +190,32 @@
       saveButton.classList.toggle("cursor-not-allowed", !enabled);
     };
 
+    window.updateSaveAction = function (sessionId) {
+      const saveButton = document.getElementById("session-save-button");
+      if (!saveButton) {
+        return;
+      }
+      const normalized = window.normalizeSessionId
+        ? window.normalizeSessionId(sessionId)
+        : sessionId || "";
+      if (!normalized) {
+        saveButton.removeAttribute("hx-post");
+        if (window.htmx) {
+          window.htmx.process(saveButton);
+        }
+        return;
+      }
+      saveButton.setAttribute("hx-post", `/api/moba/sessions/${normalized}/save`);
+      if (window.htmx) {
+        window.htmx.process(saveButton);
+      }
+    };
+
     window.setSessionMissing = function () {
       window.sessionState = { data: null, status: "missing" };
       window.applySessionBindings(null);
       window.updateSaveButton(false);
+      window.updateSaveAction("");
       document.dispatchEvent(new CustomEvent("session:missing"));
     };
 
@@ -161,6 +223,7 @@
       window.sessionState = { data: session, status: "ready" };
       window.applySessionBindings(session);
       window.updateSaveButton(true);
+      window.updateSaveAction(session?.id);
       document.dispatchEvent(new CustomEvent("session:updated", { detail: session }));
     };
 
@@ -204,9 +267,10 @@
           const resolvedMatchId =
             this.matchId || document.getElementById("lineup-container")?.dataset.matchId;
           if (window.setContinueAction && resolvedMatchId) {
+            const sessionQuery = window.getSessionQuery ? window.getSessionQuery() : "";
             window.setContinueAction({
               label: "Champion Selection",
-              href: `/api/moba/draft/match/${resolvedMatchId}`,
+              href: `/api/moba/draft/match/${resolvedMatchId}${sessionQuery}`,
               enabled: ready,
               tooltip: ready ? "" : "Confirm both lineups to continue.",
             });
@@ -276,7 +340,8 @@
             payload.from_slot_id = this.dragging.fromSlotId;
           }
           this.dragTarget = null;
-          htmx.ajax("POST", `/api/moba/lineup/slot/${slotId}/assign`, {
+          const sessionQuery = window.getSessionQuery ? window.getSessionQuery() : "";
+          htmx.ajax("POST", `/api/moba/lineup/slot/${slotId}/assign${sessionQuery}`, {
             target: "#lineup-container",
             swap: "outerHTML",
             values: payload,
@@ -298,9 +363,10 @@
             from_slot_id: this.dragging.fromSlotId,
           };
           this.dragTarget = null;
+          const sessionQuery = window.getSessionQuery ? window.getSessionQuery() : "";
           htmx.ajax(
             "POST",
-            `/api/moba/lineup/slot/${this.dragging.fromSlotId}/assign`,
+            `/api/moba/lineup/slot/${this.dragging.fromSlotId}/assign${sessionQuery}`,
             {
               target: "#lineup-container",
               swap: "outerHTML",

@@ -1,3 +1,4 @@
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
 <div class="lg:col-span-1">
   <div class="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden">
     <!-- Player Info Header Section -->
@@ -112,7 +113,7 @@
             class="flex items-center font-medium text-gray-800 dark:text-gray-200"
           >
             {% if player.team %}
-            <a href="/teams/{{ player.team.id }}">
+            <a href="/teams/{{ player.team.id }}{{ session_query }}">
               <img
                 src="/api/moba/teams/images/{{ player.team.logo_path }}"
                 alt="{{ player.team.name }}"

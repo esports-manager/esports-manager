@@ -1,5 +1,6 @@
 <!-- Tournaments List Partial -->
 {% if tournaments %}
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
 <h3 class="text-xl font-semibold mb-4 mt-2 text-slate-800 dark:text-white">
   Current Season Tournaments
 </h3>
@@ -30,7 +31,7 @@
       {% for tournament in tournaments %}
       <tr class="hover:bg-gray-50 dark:hover:bg-slate-600">
         <td class="px-6 py-4 whitespace-nowrap">
-          <a href="/tournaments/{{ tournament.id }}">
+          <a href="/tournaments/{{ tournament.id }}{{ session_query }}">
             <div class="flex items-center">
               <div class="flex-shrink-0 h-10 w-10">
                 {% if tournament.logo_path %}
@@ -63,7 +64,7 @@
 <!-- Grid view -->
 <div x-show="view === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-8 p-2">
   {% for tournament in tournaments %}
-  <a href="/tournaments/{{ tournament.id }}" class="group transition-all duration-200 hover:shadow-xl hover:scale-[1.1] cursor-pointer">
+  <a href="/tournaments/{{ tournament.id }}{{ session_query }}" class="group transition-all duration-200 hover:shadow-xl hover:scale-[1.1] cursor-pointer">
     <div class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden border border-gray-100 dark:border-slate-600 transition-shadow duration-300 flex flex-col">
       <div class="relative h-32">
         {% if tournament.banner_path %}
@@ -129,7 +130,7 @@
   {% if pagination.total_pages > 1 %}
   <div class="flex flex-wrap justify-center gap-1">
     <!-- Previous Button -->
-    <button {% if pagination.has_prev %} hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": {{ pagination.page - 1 }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}" }' hx-target="#tournaments-container" hx-swap="innerHTML"
+    <button {% if pagination.has_prev %} hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": {{ pagination.page - 1 }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}", "session_id": "{{ session_id|default('', true) }}" }' hx-target="#tournaments-container" hx-swap="innerHTML"
       class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
       {% else %} disabled
       class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500 text-sm cursor-not-allowed"
@@ -139,7 +140,7 @@
 
     <!-- First Page (if not near the beginning) -->
     {% if pagination.page > 3 %}
-    <button hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": 1, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}" }' hx-target="#tournaments-container" hx-swap="innerHTML" class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150">
+    <button hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": 1, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}", "session_id": "{{ session_id|default('', true) }}" }' hx-target="#tournaments-container" hx-swap="innerHTML" class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150">
       1
     </button>
 
@@ -154,7 +155,7 @@
     {% set end_page = [pagination.page + 2, pagination.total_pages]|min %}
     {% for page_num in range(start_page, end_page + 1) %}
     <button {% if page_num==pagination.page %} class="px-3 py-1 rounded-md bg-blue-500 text-white text-sm" disabled {% else %}
-      hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": {{ page_num }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}" }' hx-target="#tournaments-container" hx-swap="innerHTML" class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
+      hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": {{ page_num }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}", "session_id": "{{ session_id|default('', true) }}" }' hx-target="#tournaments-container" hx-swap="innerHTML" class="px-3 py-1 rounded-md bg-gray-200 hover-bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
       {% endif %}>
       {{ page_num }}
     </button>
@@ -163,13 +164,13 @@
     <!-- Ellipsis if needed and Last Page -->
     {% if pagination.page < pagination.total_pages - 3 %}
     <span class="px-3 py-1 text-gray-500 dark:text-gray-400 text-sm">...</span>
-    <button hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": {{ pagination.total_pages }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}" }' hx-target="#tournaments-container" hx-swap="innerHTML" class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150">
+    <button hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": {{ pagination.total_pages }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}", "session_id": "{{ session_id|default('', true) }}" }' hx-target="#tournaments-container" hx-swap="innerHTML" class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150">
       {{ pagination.total_pages }}
     </button>
     {% endif %}
 
     <!-- Next Button -->
-    <button {% if pagination.has_next %} hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": {{ pagination.page + 1 }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}" }' hx-target="#tournaments-container" hx-swap="innerHTML"
+    <button {% if pagination.has_next %} hx-get="/api/moba/tournaments" hx-include="#tournament-filters-form" hx-vals='{"page": {{ pagination.page + 1 }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "tier": "{{ current_filters.tier }}", "type": "{{ current_filters.type }}", "format": "{{ current_filters.format }}", "location": "{{ current_filters.location }}", "search": "{{ current_filters.search }}", "session_id": "{{ session_id|default('', true) }}" }' hx-target="#tournaments-container" hx-swap="innerHTML"
       class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
       {% else %} disabled
       class="px-3 py-1 rounded-md bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500 text-sm cursor-not-allowed"

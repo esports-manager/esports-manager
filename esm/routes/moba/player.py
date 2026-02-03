@@ -48,6 +48,7 @@ async def get_players(
     request: Request,
     session: AsyncSession = Depends(get_session),
 ):
+    session_id = request.query_params.get("session_id")
     # Base queries with eager loading
     active_contract_join = (
         (MobaPlayerContract.player_id == MobaPlayer.id)
@@ -208,6 +209,7 @@ async def get_players(
             {
                 "request": request,
                 "players": result,
+                "session_id": session_id,
                 "pagination": pagination,
                 "current_filters": {
                     "role": request.query_params.get("role", ""),
@@ -239,6 +241,7 @@ async def create_player(
 async def get_player(
     *, session: AsyncSession = Depends(get_session), id: int, request: Request
 ):
+    session_id = request.query_params.get("session_id")
     result = await session.execute(
         select(MobaPlayer)
         .where(MobaPlayer.id == id)
@@ -262,6 +265,7 @@ async def get_player(
             {
                 "request": request,
                 "player": player_with_team,
+                "session_id": session_id,
             },
         )
 

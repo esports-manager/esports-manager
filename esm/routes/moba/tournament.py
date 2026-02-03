@@ -36,6 +36,7 @@ async def get_tournaments(
     request: Request,
     session: AsyncSession = Depends(get_session),
 ):
+    session_id = request.query_params.get("session_id")
     query = select(MobaTournament)
     count_query = select(MobaTournament)
 
@@ -141,6 +142,7 @@ async def get_tournaments(
             {
                 "request": request,
                 "tournaments": tournaments,
+                "session_id": session_id,
                 "pagination": pagination,
                 "current_filters": {
                     "tier": request.query_params.get("tier", ""),

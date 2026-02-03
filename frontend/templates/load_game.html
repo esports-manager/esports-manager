@@ -15,6 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
 <!DOCTYPE html>
 <html lang="en" x-data="{
     darkMode: $persist(localStorage.getItem('darkMode')
@@ -31,6 +32,7 @@
   <link rel="stylesheet" href="{{ url_for('static', path='css/tailwind.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', path='img/icons/bootstrap-icons.min.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', path='css/imgblur.css') }}" />
+  <script src="{{ url_for('static', path='js/htmx.min.js') }}"></script>
   <script defer src="{{ url_for('static', path='js/alpine.persist.min.js') }}"></script>
   <script defer src="{{ url_for('static', path='js/alpine.min.js') }}"></script>
 </head>
@@ -63,7 +65,7 @@
     <div
       class="w-full max-w-3xl bg-slate-100/80 text-slate-900 dark:bg-slate-900/80 dark:text-slate-100 rounded-2xl shadow-2xl p-8 backdrop-blur">
       <div class="relative flex items-center justify-center mb-6">
-        <a href="/"
+        <a href="/{{ session_query }}"
           class="absolute left-0 text-sm font-semibold bg-slate-200 hover:bg-slate-100 dark:bg-slate-800 dark:text-blue-200 border border-slate-200 dark:border-slate-700 dark:hover:bg-slate-700 px-3 py-2 rounded-full text-blue-600 hover:text-blue-500"><i
             class="bi bi-arrow-left"></i></a>
         <div class="flex flex-col text-center">
@@ -72,134 +74,32 @@
         </div>
       </div>
 
-      <div id="sessions-container" class="space-y-5"></div>
-
-      <p id="load-game-empty" class="text-sm text-slate-500 dark:text-slate-400 hidden">
-        No saved sessions yet. Start a new game to create one.
-      </p>
-      <p id="load-game-error" class="text-sm text-red-600"></p>
+      <div
+        id="sessions-container"
+        class="space-y-5"
+        hx-get="/api/moba/sessions{{ session_query }}"
+        hx-trigger="load"
+        hx-swap="innerHTML"
+      >
+        <p class="text-sm text-slate-500 dark:text-slate-400">Loading saves...</p>
+      </div>
 
       <div class="flex items-center justify-between mt-6">
-        <a href="/new_game"
+        <a href="/new_game{{ session_query }}"
           class="text-sm font-semibold text-blue-500 hover:text-blue-400 dark:text-blue-400 dark:hover:text-blue-300">Create
           a new save</a>
-        <button id="refresh-sessions" type="button"
-          class="px-4 py-2 rounded-xl text-white bg-blue-600 hover:bg-blue-500 text-sm font-semibold">
+        <button
+          type="button"
+          hx-get="/api/moba/sessions{{ session_query }}"
+          hx-target="#sessions-container"
+          hx-swap="innerHTML"
+          class="px-4 py-2 rounded-xl text-white bg-blue-600 hover:bg-blue-500 text-sm font-semibold"
+        >
           Refresh list
         </button>
       </div>
     </div>
   </div>
-
-  <script>
-    const sessionsContainer = document.getElementById("sessions-container");
-    const emptyEl = document.getElementById("load-game-empty");
-    const errorEl = document.getElementById("load-game-error");
-    const refreshBtn = document.getElementById("refresh-sessions");
-
-    function getTeamInitials(name) {
-      if (!name) return "TEAM";
-      const parts = name.split(" ").filter(Boolean);
-      if (parts.length === 1) {
-        return parts[0].slice(0, 3).toUpperCase();
-      }
-      return parts
-        .slice(0, 3)
-        .map((part) => part[0])
-        .join("")
-        .toUpperCase();
-    }
-
-    function buildTeamBadge(session) {
-      const teamName = session.team_name || `Team ${session.team_id}`;
-      const initials = getTeamInitials(teamName);
-      if (session.team_logo_url) {
-        return `
-            <div class="w-12 h-12 rounded-full bg-white border border-slate-200 dark:bg-slate-800 dark:border-slate-700 flex items-center justify-center shadow">
-              <img
-                src="${session.team_logo_url}"
-                alt="${teamName}"
-                class="w-8 h-8 object-contain"
-                onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
-              />
-              <span class="hidden team-fallback text-xs font-semibold text-slate-500 dark:text-slate-200">${initials}</span>
-            </div>
-          `;
-      }
-      return `
-          <div class="w-12 h-12 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 flex items-center justify-center shadow">
-            <span class="text-xs font-semibold text-slate-500 dark:text-slate-200">${initials}</span>
-          </div>
-        `;
-    }
-
-    function renderSessions(sessions) {
-      sessionsContainer.innerHTML = "";
-      if (!sessions.length) {
-        emptyEl.classList.remove("hidden");
-        return;
-      }
-      emptyEl.classList.add("hidden");
-      sessions.forEach((session) => {
-        const teamName = session.team_name || `Team ${session.team_id}`;
-        const managerName = session.manager_display_name || "Manager";
-        const saveName = session.name || "Untitled Save";
-        const currentDay = session.current_day ?? 1;
-        const teamBadge = buildTeamBadge(session);
-        const card = document.createElement("div");
-        card.className =
-          "border border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-900/60 rounded-xl p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between";
-
-        card.innerHTML = `
-            <div class="flex items-center gap-4">
-              ${teamBadge}
-              <div>
-                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">${saveName}</h3>
-                <p class="text-sm text-slate-500 dark:text-slate-300">Manager: ${managerName}</p>
-                <p class="text-xs text-slate-400 dark:text-slate-500">Team: ${teamName} • Day ${currentDay}</p>
-              </div>
-            </div>
-            <div class="flex flex-col sm:flex-row gap-2">
-              <button
-                data-session-id="${session.id}"
-                class="load-session-btn px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-500"
-              >
-                Continue
-              </button>
-            </div>
-          `;
-
-        sessionsContainer.appendChild(card);
-      });
-
-      document.querySelectorAll(".load-session-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const sessionId = btn.dataset.sessionId;
-          localStorage.setItem("activeSessionId", sessionId);
-          window.location.href = `/home?session_id=${sessionId}`;
-        });
-      });
-    }
-
-    async function loadSessions() {
-      errorEl.textContent = "";
-      try {
-        const response = await fetch("/api/moba/sessions");
-        if (!response.ok) {
-          throw new Error("Unable to load saved sessions.");
-        }
-        const sessions = await response.json();
-        renderSessions(sessions);
-      } catch (error) {
-        errorEl.textContent = error.message;
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      loadSessions();
-      refreshBtn.addEventListener("click", loadSessions);
-    });
-  </script>
 </body>
 
 </html>

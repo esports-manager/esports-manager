@@ -1,9 +1,10 @@
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
 <div class="m-8">
   <!-- Header / Breadcrumbs -->
   <div class="flex items-center justify-between mb-4">
     <div class="text-lg">
       <a
-        href="/page/tournaments"
+        href="/page/tournaments{{ session_query }}"
         class="text-blue-600 dark:text-blue-400 hover:underline"
         >Tournaments</a
       >
@@ -178,7 +179,7 @@
     <div class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {% for team in teams %}
       <a
-        href="/teams/{{ team.id }}"
+        href="/teams/{{ team.id }}{{ session_query }}"
         class="group block bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-4 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 transition"
       >
         <div class="flex items-center">

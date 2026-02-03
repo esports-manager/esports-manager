@@ -1,3 +1,4 @@
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
 <div class="m-8">
   <!-- Section Header -->
   <div class="flex justify-between items-center mb-6">
@@ -43,7 +44,7 @@
         </div>
         <div class="flex flex-wrap gap-2">
           <a
-            href="/load_game"
+            href="/load_game{{ session_query }}"
             class="text-sm bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md"
           >
             Switch save
@@ -76,13 +77,13 @@
         </div>
         <div class="flex flex-wrap gap-2">
           <a
-            href="/new_game"
+            href="/new_game{{ session_query }}"
             class="text-sm bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
           >
             New game
           </a>
           <a
-            href="/load_game"
+            href="/load_game{{ session_query }}"
             class="text-sm bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md"
           >
             Load save

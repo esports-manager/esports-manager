@@ -62,6 +62,7 @@ class MobaTeamWithPlayers(MobaTeamPublic):
 
 @team_routes.get("/", response_model=list[MobaTeamWithPlayers])
 async def get_teams(request: Request, session: AsyncSession = Depends(get_session)):
+    session_id = request.query_params.get("session_id")
     query = select(MobaTeam).options(
         selectinload(MobaTeam.contracts).selectinload(MobaPlayerContract.player)
     )
@@ -224,6 +225,7 @@ async def get_teams(request: Request, session: AsyncSession = Depends(get_sessio
             {
                 "request": request,
                 "teams": result,
+                "session_id": session_id,
                 "pagination": pagination,
                 "current_filters": {
                     "region": request.query_params.get("region", ""),
@@ -275,6 +277,7 @@ async def create_team(
 async def get_team(
     *, request: Request, session: AsyncSession = Depends(get_session), id: int
 ):
+    session_id = request.query_params.get("session_id")
     team = await session.get(MobaTeam, id)
     if not team:
         raise HTTPException(
@@ -302,6 +305,7 @@ async def get_team(
             {
                 "request": request,
                 "team": team_public,
+                "session_id": session_id,
             },
         )
 
@@ -329,6 +333,7 @@ async def update_team(
 async def get_team_players(
     *, request: Request, session: AsyncSession = Depends(get_session), id: int
 ):
+    session_id = request.query_params.get("session_id")
     result = await session.execute(
         select(MobaTeam)
         .where(MobaTeam.id == id)
@@ -354,6 +359,7 @@ async def get_team_players(
                 "request": request,
                 "players": players,
                 "team": team,
+                "session_id": session_id,
             },
         )
     return players

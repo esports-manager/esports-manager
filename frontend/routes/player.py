@@ -37,6 +37,7 @@ async def players(request: Request):
     global sidebar
     current_page = "players"
     contentview = "components/players/players_list.html"
+    session_id = request.query_params.get("session_id")
 
     return templates.TemplateResponse(
         request,
@@ -46,6 +47,7 @@ async def players(request: Request):
             "content": contentview,
             "sidebar": sidebar,
             "current_page": current_page,
+            "session_id": session_id,
         },
     )
 
@@ -58,6 +60,7 @@ async def player(
     global sidebar
     current_page = "players"
     contentview = "components/players/player_info.html"
+    session_id = request.query_params.get("session_id")
 
     result = await session.execute(
         select(MobaPlayer)
@@ -104,5 +107,6 @@ async def player(
             "content": contentview,
             "sidebar": sidebar,
             "current_page": current_page,
+            "session_id": session_id,
         },
     )

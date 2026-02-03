@@ -1,7 +1,8 @@
 <!-- Players Skeleton/Loading State -->
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
 <div
   id="players-loading-skeleton"
-  hx-get="/api/moba/players"
+  hx-get="/api/moba/players{{ session_query }}"
   hx-trigger="load"
   hx-target="#players-list"
   hx-swap="innerHTML"

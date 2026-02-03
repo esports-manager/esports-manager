@@ -289,6 +289,7 @@ async def get_draft(
         "request": request,
         "match": match,
         "draft": draft,
+        "session_id": session_id,
         "blue_team": blue_team,
         "red_team": red_team,
         "actions": actions,

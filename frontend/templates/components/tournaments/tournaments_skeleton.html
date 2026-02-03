@@ -4,6 +4,7 @@
   hx-get="/api/moba/tournaments"
   hx-trigger="load"
   hx-swap="innerHTML"
+  hx-vals='{"session_id": "{{ session_id|default('', true) }}"}'
 >
   <!-- Grid View Skeleton -->
   <div

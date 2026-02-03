@@ -94,6 +94,11 @@
         hx-swap="innerHTML"
         hx-target="#players-list"
       >
+        <input
+          type="hidden"
+          name="session_id"
+          value="{{ session_id|default('', true) }}"
+        />
         <!-- Search Bar (Full Width) with Filter Toggle -->
         <div class="relative w-full mb-3">
           <div

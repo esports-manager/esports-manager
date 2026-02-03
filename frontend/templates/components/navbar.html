@@ -60,6 +60,7 @@
         @focus="searchOpen = true"
         @keydown.escape="searchOpen = false; searchQuery='';"
         hx-get="/api/moba/search"
+        hx-vals="js:{session_id: window.resolveSessionId ? window.resolveSessionId() : ''}"
         hx-target="#omni-results"
         hx-swap="innerHTML"
         hx-trigger="keyup changed delay:300ms"

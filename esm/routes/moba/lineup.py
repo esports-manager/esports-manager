@@ -136,6 +136,7 @@ async def _build_lineup_context(
     match = await session.get(MobaMatch, match_id)
     if not match:
         raise HTTPException(status_code=404, detail="Match not found")
+    session_id = request.query_params.get("session_id")
 
     lineup_result = await session.execute(
         select(MobaMatchLineup).where(MobaMatchLineup.match_id == match_id)
@@ -217,6 +218,7 @@ async def _build_lineup_context(
         "lineup": lineup,
         "blue_team": blue_team,
         "red_team": red_team,
+        "session_id": session_id,
         "blue_slots": blue_slots,
         "red_slots": red_slots,
         "blue_roster": blue_roster,

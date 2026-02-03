@@ -55,6 +55,11 @@
       hx-trigger="submit"
       hx-indicator="#loading-indicator"
     >
+      <input
+        type="hidden"
+        name="session_id"
+        value="{{ session_id|default('', true) }}"
+      />
       <div class="flex flex-col lg:flex-row gap-4">
         <!-- Search -->
         <div class="relative flex-grow min-w-0">

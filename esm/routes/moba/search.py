@@ -27,6 +27,7 @@ async def omni_search(
     request: Request,
     session: AsyncSession = Depends(get_session),
 ):
+    session_id = request.query_params.get("session_id")
     q = (request.query_params.get("q") or "").strip()
     results: Dict[str, Any] = {
         "players": [],
@@ -79,7 +80,11 @@ async def omni_search(
         return templates.TemplateResponse(
             request,
             "components/search_results.html",
-            {"request": request, "results": results},
+            {
+                "request": request,
+                "results": results,
+                "session_id": session_id,
+            },
         )
 
     return results

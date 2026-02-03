@@ -1,16 +1,17 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
-from datetime import datetime
+from datetime import datetime, date
 from pathlib import Path
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status, Request
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Form
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
-from esm.config import Config
+from esm.config import Config, FRONTEND_DIR
 from esm.db import get_session
 from esm.models.moba import (
     MobaGameSession,
@@ -26,6 +27,9 @@ session_routes = APIRouter(
     tags=["moba_sessions"],
     responses={404: {"description": "Session not found"}},
 )
+
+templates_dir = FRONTEND_DIR / "templates"
+templates = Jinja2Templates(directory=templates_dir)
 
 
 def build_display_name(
@@ -58,7 +62,10 @@ def build_session_public(
 
 
 @session_routes.get("/", response_model=List[MobaGameSessionPublic])
-async def list_sessions(session: AsyncSession = Depends(get_session)):
+async def list_sessions(
+    request: Request, session: AsyncSession = Depends(get_session)
+):
+    session_id = request.query_params.get("session_id")
     result = await session.execute(
         select(MobaGameSession).order_by(MobaGameSession.created_at.desc())
     )
@@ -71,10 +78,23 @@ async def list_sessions(session: AsyncSession = Depends(get_session)):
     )
     teams = team_result.scalars().all()
     team_map = {team.id: team for team in teams}
-    return [
+    public_sessions = [
         build_session_public(game_session, team_map.get(game_session.team_id))
         for game_session in sessions
     ]
+
+    if request.headers.get("HX-Request"):
+        return templates.TemplateResponse(
+            request,
+            "components/sessions/sessions_list.html",
+            {
+                "request": request,
+                "sessions": public_sessions,
+                "session_id": session_id,
+            },
+        )
+
+    return public_sessions
 
 
 @session_routes.get("/{session_id}", response_model=MobaGameSessionPublic)
@@ -86,6 +106,60 @@ async def get_session_by_id(
         raise HTTPException(status_code=404, detail="Session not found")
     team = await session.get(MobaTeam, game_session.team_id)
     return build_session_public(game_session, team)
+
+
+@session_routes.post("/form", response_class=HTMLResponse)
+async def create_session_form(
+    request: Request,
+    session: AsyncSession = Depends(get_session),
+    manager_first_name: str = Form(...),
+    manager_last_name: str = Form(...),
+    team_id: int = Form(...),
+    manager_nickname: Optional[str] = Form(None),
+    manager_birthdate: Optional[date] = Form(None),
+    manager_nationality: Optional[str] = Form(None),
+    name: Optional[str] = Form(None),
+    seed: Optional[int] = Form(None),
+    base_database_url: Optional[str] = Form(None),
+):
+    payload = MobaGameSessionCreate(
+        manager_first_name=manager_first_name,
+        manager_last_name=manager_last_name,
+        manager_nickname=manager_nickname or None,
+        manager_birthdate=manager_birthdate or None,
+        manager_nationality=manager_nationality or None,
+        team_id=team_id,
+        name=name or None,
+        seed=seed,
+        base_database_url=base_database_url or None,
+    )
+
+    try:
+        created_session = await create_session(
+            payload=payload,
+            session=session,
+        )
+    except HTTPException as exc:
+        if request.headers.get("HX-Request"):
+            return HTMLResponse(
+                content=str(exc.detail),
+                status_code=status.HTTP_200_OK,
+            )
+        raise
+
+    redirect_url = f"/home?session_id={created_session.id}"
+    if request.headers.get("HX-Request"):
+        response = HTMLResponse(
+            content="",
+            status_code=status.HTTP_201_CREATED,
+            headers={"HX-Redirect": redirect_url},
+        )
+        return response
+
+    return RedirectResponse(
+        url=redirect_url,
+        status_code=status.HTTP_303_SEE_OTHER,
+    )
 
 
 @session_routes.post(

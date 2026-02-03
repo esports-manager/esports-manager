@@ -57,6 +57,7 @@ async def get_team(
     global sidebar
     current_page = "teams"
     contentview = "components/teams/team_info.html"
+    session_id = request.query_params.get("session_id")
     result = await session.execute(
         select(MobaTeam)
         .where(MobaTeam.id == id)
@@ -89,5 +90,6 @@ async def get_team(
             "content": contentview,
             "request": request,
             "team": team_public,
+            "session_id": session_id,
         },
     )

@@ -29,6 +29,7 @@ async def get_tournament_page(
     global sidebar  # used by layout
     current_page = "tournaments"
     contentview = "components/tournaments/tournament_info.html"
+    session_id = request.query_params.get("session_id")
 
     tournament = await session.get(MobaTournament, id)
     if not tournament:
@@ -65,5 +66,6 @@ async def get_tournament_page(
             "current_page": current_page,
             "tournament": tournament_public,
             "teams": participating_teams,
+            "session_id": session_id,
         },
     )

@@ -1,4 +1,5 @@
 <!-- Player List Component - Receives data from /api/moba/players endpoint -->
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
 {% if players %}
 <!-- Grid View -->
 <div
@@ -7,7 +8,7 @@
 >
   {% for player in players %}
   <a
-    href="/players/{{ player.id }}"
+    href="/players/{{ player.id }}{{ session_query }}"
     class="group bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden flex flex-col border border-gray-100 dark:border-slate-600 transition-all duration-200 hover:shadow-xl hover:scale-[1.1] cursor-pointer"
   >
     <!-- Player Image -->
@@ -217,7 +218,7 @@
       {% for player in players %}
       <tr class="hover:bg-gray-50 dark:hover:bg-slate-600 cursor-pointer">
         <td class="px-6 py-4 whitespace-nowrap">
-          <a href="/players/{{ player.id }}">
+          <a href="/players/{{ player.id }}{{ session_query }}">
             <div class="flex items-center">
               <div
                 class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-600"
@@ -243,7 +244,7 @@
           </a>
         </td>
         <td class="px-6 py-4 whitespace-nowrap">
-          <a href="/players/{{ player.id }}">
+          <a href="/players/{{ player.id }}{{ session_query }}">
             <div class="flex flex-col">
               <div class="flex items-center">
                 {% include "components/players/player_role_component.html" %}
@@ -252,7 +253,7 @@
           </a>
         </td>
         <td class="px-6 py-4 whitespace-nowrap">
-          <a href="/players/{{ player.id }}">
+          <a href="/players/{{ player.id }}{{ session_query }}">
             <div class="flex items-center">
               {% if player.team %}
               <img
@@ -273,7 +274,7 @@
           </a>
         </td>
         <td class="px-6 py-4 whitespace-nowrap">
-          <a href="/players/{{ player.id }}">
+          <a href="/players/{{ player.id }}{{ session_query }}">
             <div class="flex items-center">
               <i class="fi fi-{{ player.get_country_code() }}"></i>
               <span class="text-sm text-gray-900 dark:text-gray-100"
@@ -283,7 +284,7 @@
           </a>
         </td>
         <td class="px-6 py-4 whitespace-nowrap">
-          <a href="/players/{{ player.id }}">
+          <a href="/players/{{ player.id }}{{ session_query }}">
             <div class="flex items-center">
               <div
                 class="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5 mr-2"
@@ -325,7 +326,7 @@
           {{ player.get_value()|default('$850K') }}
         </td>
         <td class="px-6 py-4 whitespace-nowrap">
-          <a href="/players/{{ player.id }}">
+          <a href="/players/{{ player.id }}{{ session_query }}">
             <span
               class="px-2 py-1 text-xs rounded-full {% if player.contract_status == 'free_agent' %} bg-green-500 text-white {% elif player.contract_status == 'transfer_listed' %} bg-yellow-500 text-black {% else %} bg-gray-600 text-white {% endif %}"
             >

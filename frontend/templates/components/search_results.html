@@ -1,4 +1,5 @@
 <!-- Omni-search Results Partial -->
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
 <div>
   <!-- Players -->
   {% if results.players %}
@@ -10,7 +11,7 @@
     </div>
     {% for p in results.players %}
     <a
-      href="/players/{{ p.id }}"
+      href="/players/{{ p.id }}{{ session_query }}"
       class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
     >
       {% if p.image_path %}
@@ -45,7 +46,7 @@
     </div>
     {% for t in results.teams %}
     <a
-      href="/teams/{{ t.id }}"
+      href="/teams/{{ t.id }}{{ session_query }}"
       class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
     >
       {% if t.logo_path %}

@@ -15,6 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
 <!DOCTYPE html>
 <html lang="en" x-data="{
     darkMode: $persist(localStorage.getItem('darkMode')
@@ -31,6 +32,7 @@
   <link rel="stylesheet" href="{{ url_for('static', path='css/tailwind.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', path='img/icons/bootstrap-icons.min.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', path='css/imgblur.css') }}" />
+  <script src="{{ url_for('static', path='js/htmx.min.js') }}"></script>
   <script defer src="{{ url_for('static', path='js/alpine.persist.min.js') }}"></script>
   <script defer src="{{ url_for('static', path='js/alpine.min.js') }}"></script>
 
@@ -65,7 +67,7 @@
       class="w-full max-w-2xl bg-slate-100/80 text-slate-900 dark:bg-slate-900/80 dark:text-slate-100 rounded-2xl shadow-2xl p-8 backdrop-blur">
 
       <div class="relative flex items-center justify-center mb-6">
-        <a href="/"
+        <a href="/{{ session_query }}"
           class="absolute left-0 text-sm font-semibold bg-slate-200 hover:bg-slate-100 dark:bg-slate-800 dark:text-blue-200 border border-slate-200 dark:border-slate-700 dark:hover:bg-slate-700 px-3 py-2 rounded-full text-blue-600 hover:text-blue-500"><i
             class="bi bi-arrow-left"></i></a>
         <div class="flex flex-col text-center px-8">
@@ -75,7 +77,13 @@
         </div>
       </div>
 
-      <form id="new-game-form" class="space-y-5">
+      <form
+        id="new-game-form"
+        class="space-y-5"
+        hx-post="/api/moba/sessions/form"
+        hx-target="#new-game-error"
+        hx-swap="innerHTML"
+      >
         <div class="rounded-2xl bg-slate-50 border border-slate-200/80 dark:bg-slate-800 dark:border-slate-700 p-5">
 
           <div class="flex items-center justify-between">
@@ -145,9 +153,16 @@
         <div>
           <label for="team-select" class="text-sm font-semibold text-slate-700 dark:text-slate-200">Choose your
             team</label>
-          <select id="team-select" name="team_id"
+          <select
+            id="team-select"
+            name="team_id"
             class="mt-2 w-full rounded-xl bg-white border border-slate-200 px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
-            required>
+            required
+            hx-get="/api/moba/teams/options{{ session_query }}"
+            hx-trigger="load"
+            hx-target="this"
+            hx-swap="innerHTML"
+          >
 
             <option value="">Loading teams...</option>
           </select>
@@ -193,7 +208,7 @@
         <p id="new-game-error" class="text-sm text-red-600"></p>
 
         <div class="flex items-center justify-between gap-3">
-          <a href="/load_game"
+          <a href="/load_game{{ session_query }}"
             class="text-sm font-semibold text-blue-500 hover:text-blue-400 dark:text-blue-400 dark:hover:text-blue-300">Already
             have a save?</a>
 
@@ -202,118 +217,9 @@
             Create save
           </button>
         </div>
-        <p id="new-game-loading" class="text-xs text-slate-500 dark:text-slate-400 hidden">
-          Creating session...
-        </p>
-
       </form>
     </div>
   </div>
-
-  <script>
-    const teamSelect = document.getElementById("team-select");
-    const form = document.getElementById("new-game-form");
-    const errorEl = document.getElementById("new-game-error");
-    const submitBtn = document.getElementById("new-game-submit");
-    const loadingEl = document.getElementById("new-game-loading");
-
-    function setLoading(isLoading) {
-      submitBtn.disabled = isLoading;
-      submitBtn.classList.toggle("opacity-60", isLoading);
-      submitBtn.classList.toggle("cursor-not-allowed", isLoading);
-      loadingEl.classList.toggle("hidden", !isLoading);
-    }
-
-    async function loadTeams() {
-      try {
-        const response = await fetch("/api/moba/teams/options");
-        if (!response.ok) {
-          throw new Error("Unable to load teams.");
-        }
-        const teams = await response.json();
-        teamSelect.innerHTML = "<option value=\"\">Select a team</option>";
-        teams.forEach((team) => {
-          const option = document.createElement("option");
-          option.value = team.id;
-          option.textContent = team.name;
-          teamSelect.appendChild(option);
-        });
-      } catch (error) {
-        teamSelect.innerHTML = "<option value=\"\">No teams available</option>";
-        errorEl.textContent = error.message;
-      }
-    }
-
-    async function submitNewGame(event) {
-      event.preventDefault();
-      errorEl.textContent = "";
-
-      const managerFirstName = document
-        .getElementById("manager-first-name")
-        .value.trim();
-      const managerLastName = document
-        .getElementById("manager-last-name")
-        .value.trim();
-      const managerNickname = document
-        .getElementById("manager-nickname")
-        .value.trim();
-      const managerNationality = document
-        .getElementById("manager-nationality")
-        .value.trim();
-      const managerBirthdate = document
-        .getElementById("manager-birthdate")
-        .value;
-      const teamId = Number(teamSelect.value || 0);
-      const saveName = document.getElementById("save-name").value.trim();
-      const seedValue = document.getElementById("seed").value;
-      const baseDb = document.getElementById("base-db").value.trim();
-
-      if (!managerFirstName || !managerLastName) {
-        errorEl.textContent = "First and last name are required.";
-        return;
-      }
-      if (!teamId) {
-        errorEl.textContent = "Please select a team.";
-        return;
-      }
-
-      const payload = {
-        manager_first_name: managerFirstName,
-        manager_last_name: managerLastName,
-        team_id: teamId,
-      };
-      if (managerNickname) payload.manager_nickname = managerNickname;
-      if (managerNationality) payload.manager_nationality = managerNationality;
-      if (managerBirthdate) payload.manager_birthdate = managerBirthdate;
-      if (saveName) payload.name = saveName;
-      if (seedValue) payload.seed = Number(seedValue);
-      if (baseDb) payload.base_database_url = baseDb;
-
-      setLoading(true);
-      try {
-        const response = await fetch("/api/moba/sessions", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data?.detail || "Unable to create a new save.");
-        }
-        localStorage.setItem("activeSessionId", String(data.id));
-        window.location.href = `/home?session_id=${data.id}`;
-      } catch (error) {
-        errorEl.textContent = error.message;
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      loadTeams();
-      form.addEventListener("submit", submitNewGame);
-    });
-  </script>
 </body>
 
 </html>

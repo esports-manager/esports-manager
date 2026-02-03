@@ -257,10 +257,12 @@ async def get_state(sim_id: str):
 @simulation_routes.get("/view/{sim_id}")
 async def view_simulation(sim_id: str, request: Request):
     _get_session_or_404(sim_id)
+    session_id = request.query_params.get("session_id")
 
     context = {
         "request": request,
         "sim_id": sim_id,
+        "session_id": session_id,
     }
 
     if request.headers.get("HX-Request"):

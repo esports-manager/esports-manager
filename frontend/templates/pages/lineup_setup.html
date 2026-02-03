@@ -1,3 +1,4 @@
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
 <div
   id="lineup-container"
   class="py-6"
@@ -56,7 +57,7 @@
         <div class="flex items-center gap-3">
           {% if lineup.blue_team_status.value == "draft" %}
           <button
-            hx-post="/api/moba/lineup/match/{{ match.id }}/team/{{ blue_team.id }}/confirm"
+            hx-post="/api/moba/lineup/match/{{ match.id }}/team/{{ blue_team.id }}/confirm{{ session_query }}"
             hx-target="#lineup-container"
             hx-swap="outerHTML"
             class="px-4 py-2 rounded-lg font-semibold text-white transition bg-blue-600 hover:bg-blue-700 {% if not blue_summary.can_confirm %}opacity-50 cursor-not-allowed{% endif %}"
@@ -67,7 +68,7 @@
           {% else %}
           <span class="px-3 py-1 bg-emerald-500 text-white rounded-full text-xs font-semibold">Confirmed</span>
           <button
-            hx-post="/api/moba/lineup/match/{{ match.id }}/team/{{ blue_team.id }}/unlock"
+            hx-post="/api/moba/lineup/match/{{ match.id }}/team/{{ blue_team.id }}/unlock{{ session_query }}"
             hx-target="#lineup-container"
             hx-swap="outerHTML"
             class="px-3 py-1 bg-slate-500 text-white rounded-full text-xs hover:bg-slate-600"
@@ -249,7 +250,7 @@
         <div class="flex items-center gap-3">
           {% if lineup.red_team_status.value == "draft" %}
           <button
-            hx-post="/api/moba/lineup/match/{{ match.id }}/team/{{ red_team.id }}/confirm"
+            hx-post="/api/moba/lineup/match/{{ match.id }}/team/{{ red_team.id }}/confirm{{ session_query }}"
             hx-target="#lineup-container"
             hx-swap="outerHTML"
             class="px-4 py-2 rounded-lg font-semibold text-white transition bg-red-600 hover:bg-red-700 {% if not red_summary.can_confirm %}opacity-50 cursor-not-allowed{% endif %}"
@@ -260,7 +261,7 @@
           {% else %}
           <span class="px-3 py-1 bg-emerald-500 text-white rounded-full text-xs font-semibold">Confirmed</span>
           <button
-            hx-post="/api/moba/lineup/match/{{ match.id }}/team/{{ red_team.id }}/unlock"
+            hx-post="/api/moba/lineup/match/{{ match.id }}/team/{{ red_team.id }}/unlock{{ session_query }}"
             hx-target="#lineup-container"
             hx-swap="outerHTML"
             class="px-3 py-1 bg-slate-500 text-white rounded-full text-xs hover:bg-slate-600"

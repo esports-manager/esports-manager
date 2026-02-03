@@ -113,12 +113,14 @@ async def get_match(
 
     blue_team = await session.get(MobaTeam, match.blue_team_id)
     red_team = await session.get(MobaTeam, match.red_team_id)
+    session_id = request.query_params.get("session_id")
 
     context = {
         "request": request,
         "match": match,
         "blue_team": blue_team,
         "red_team": red_team,
+        "session_id": session_id,
     }
 
     if request.headers.get("HX-Request"):

@@ -1,0 +1,63 @@
+{% if sessions %}
+<div class="space-y-5">
+  {% for session in sessions %}
+  {% set team_name = session.team_name or ('Team ' ~ session.team_id) %}
+  {% set manager_name = session.manager_display_name or 'Manager' %}
+  {% set save_name = session.name or 'Untitled Save' %}
+  {% if session.current_day is not none %}
+  {% set current_day = session.current_day %}
+  {% else %}
+  {% set current_day = 1 %}
+  {% endif %}
+  {% set initials = team_name[:3]|upper %}
+  <div
+    class="border border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-900/60 rounded-xl p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+  >
+    <div class="flex items-center gap-4">
+      {% if session.team_logo_url %}
+      <div
+        class="w-12 h-12 rounded-full bg-white border border-slate-200 dark:bg-slate-800 dark:border-slate-700 flex items-center justify-center shadow"
+      >
+        <img
+          src="{{ session.team_logo_url }}"
+          alt="{{ team_name }}"
+          class="w-8 h-8 object-contain"
+        />
+      </div>
+      {% else %}
+      <div
+        class="w-12 h-12 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 flex items-center justify-center shadow"
+      >
+        <span class="text-xs font-semibold text-slate-500 dark:text-slate-200"
+          >{{ initials }}</span
+        >
+      </div>
+      {% endif %}
+      <div>
+        <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">
+          {{ save_name }}
+        </h3>
+        <p class="text-sm text-slate-500 dark:text-slate-300">
+          Manager: {{ manager_name }}
+        </p>
+        <p class="text-xs text-slate-400 dark:text-slate-500">
+          Team: {{ team_name }} • Day {{ current_day }}
+        </p>
+      </div>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-2">
+      <a
+        href="/home?session_id={{ session.id }}"
+        class="px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-500"
+      >
+        Continue
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="text-sm text-slate-500 dark:text-slate-400">
+  No saved sessions yet. Start a new game to create one.
+</p>
+{% endif %}

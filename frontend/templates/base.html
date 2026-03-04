@@ -16,7 +16,9 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <!DOCTYPE html>
-<html lang="en" x-data="{
+<html lang="en"
+  data-initial-session-id="{{ session_id|default('', true) }}"
+  x-data="{
     darkMode: $persist(localStorage.getItem('darkMode')
       ? JSON.parse(localStorage.getItem('darkMode'))
       : window.matchMedia('(prefers-color-scheme: dark)').matches).using(sessionStorage),
@@ -37,7 +39,7 @@
   <script defer src="{{ url_for('static', path='js/alpine.persist.min.js') }}"></script>
   <script defer src="{{ url_for('static', path='js/alpine.min.js') }}"></script>
   <script>
-    window.initialSessionId = {{ session_id|default('', true)|tojson }};
+    window.initialSessionId = document.documentElement.dataset.initialSessionId || "";
 
     window.normalizeSessionId = function (value) {
       if (value === null || value === undefined) {
@@ -51,11 +53,10 @@
       if (["none", "null", "undefined"].includes(lowered)) {
         return "";
       }
-      const numeric = Number(raw);
-      if (!Number.isFinite(numeric) || numeric <= 0) {
+      if (!/^[A-Za-z0-9_-]+$/.test(raw)) {
         return "";
       }
-      return String(Math.trunc(numeric));
+      return raw;
     };
 
     window.getSessionQuery = function () {
@@ -67,19 +68,27 @@
       return sessionId ? `?session_id=${sessionId}` : "";
     };
 
-    window.continueActionState = {
+    window.defaultContinueActionState = {
       label: "Continue",
       href: "",
       enabled: false,
       tooltip: "Complete the current step to continue.",
       onClick: "",
+      hxPost: "",
+      hxSwap: "",
+      hxTarget: "",
+    };
+
+    window.continueActionState = {
+      ...window.defaultContinueActionState,
     };
 
     window.setContinueAction = function (action) {
       window.continueActionState = {
-        ...window.continueActionState,
+        ...window.defaultContinueActionState,
         ...action,
       };
+
       if (document.readyState === "loading") {
         return;
       }
@@ -89,13 +98,7 @@
     };
 
     window.resetContinueAction = function () {
-      window.setContinueAction({
-        label: "Continue",
-        href: "",
-        enabled: false,
-        tooltip: "Complete the current step to continue.",
-        onClick: "",
-      });
+      window.setContinueAction({});
     };
 
     window.sessionState = {
@@ -234,7 +237,13 @@
         return null;
       }
       try {
-        const response = await fetch(`/api/moba/sessions/${sessionId}`);
+        const sessionQuery = window.getSessionQuery
+          ? window.getSessionQuery()
+          : `?session_id=${sessionId}`;
+        const response = await fetch(
+          `/api/moba/sessions/current${sessionQuery}`
+        );
+
         if (!response.ok) {
           throw new Error("Session not found");
         }

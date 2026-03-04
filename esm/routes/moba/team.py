@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
+import logging
+
 from fastapi import APIRouter, status, Request
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
@@ -31,6 +33,8 @@ team_routes = APIRouter(
 
 templates_dir = FRONTEND_DIR / "templates"
 templates = Jinja2Templates(directory=templates_dir)
+
+logger = logging.getLogger("esm.routes.moba.team")
 
 
 class MobaTeamWithPlayers(MobaTeamPublic):
@@ -63,6 +67,7 @@ class MobaTeamWithPlayers(MobaTeamPublic):
 @team_routes.get("/", response_model=list[MobaTeamWithPlayers])
 async def get_teams(request: Request, session: AsyncSession = Depends(get_session)):
     session_id = request.query_params.get("session_id")
+    logger.debug("Listing teams session_id=%s", session_id)
     query = select(MobaTeam).options(
         selectinload(MobaTeam.contracts).selectinload(MobaPlayerContract.player)
     )
@@ -207,6 +212,8 @@ async def get_teams(request: Request, session: AsyncSession = Depends(get_sessio
 
         result.append(MobaTeamWithPlayers.model_validate(team_data))
 
+    logger.debug("Teams fetched count=%s page=%s", len(result), page)
+
     pagination = {
         "page": page,
         "per_page": per_page,
@@ -247,6 +254,7 @@ async def get_team_options(
 ):
     result = await session.execute(select(MobaTeam).order_by(MobaTeam.name))
     teams = result.scalars().all()
+    logger.debug("Team options loaded count=%s", len(teams))
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
             request,
@@ -270,6 +278,7 @@ async def create_team(
     session.add(db_team)
     await session.commit()
     await session.refresh(db_team)
+    logger.info("Team created team_id=%s name=%s", db_team.id, db_team.name)
     return db_team
 
 
@@ -280,6 +289,7 @@ async def get_team(
     session_id = request.query_params.get("session_id")
     team = await session.get(MobaTeam, id)
     if not team:
+        logger.warning("Team not found team_id=%s", id)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Team not found"
         )
@@ -308,7 +318,7 @@ async def get_team(
                 "session_id": session_id,
             },
         )
-
+    logger.debug("Fetched team team_id=%s", id)
     return team_public
 
 
@@ -318,6 +328,7 @@ async def update_team(
 ):
     db_team = await session.get(MobaTeam, id)
     if not db_team:
+        logger.warning("Team not found team_id=%s", id)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Team not found"
         )
@@ -326,6 +337,7 @@ async def update_team(
     session.add(db_team)
     await session.commit()
     await session.refresh(db_team)
+    logger.info("Team updated team_id=%s", id)
     return db_team
 
 
@@ -343,6 +355,7 @@ async def get_team_players(
     )
     team = result.scalars().first()
     if not team:
+        logger.warning("Team not found team_id=%s", id)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Team not found"
         )
@@ -362,6 +375,7 @@ async def get_team_players(
                 "session_id": session_id,
             },
         )
+    logger.debug("Team players loaded team_id=%s count=%s", id, len(players))
     return players
 
 
@@ -369,11 +383,13 @@ async def get_team_players(
 async def delete_team(*, session: AsyncSession = Depends(get_session), id: int):
     team = await session.get(MobaTeam, id)
     if not team:
+        logger.warning("Team not found team_id=%s", id)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Team not found"
         )
     await session.delete(team)
     await session.commit()
+    logger.info("Team deleted team_id=%s", id)
     return None
 
 
@@ -398,6 +414,7 @@ async def add_player_to_team(
     )
     team = result.scalars().first()
     if not team:
+        logger.warning("Team not found team_id=%s", request.contract.team_id)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Team not found"
         )
@@ -408,6 +425,7 @@ async def add_player_to_team(
     )
     player = player_result.scalars().first()
     if not player:
+        logger.warning("Player not found player_id=%s", request.contract.player_id)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Player not found"
         )
@@ -418,6 +436,11 @@ async def add_player_to_team(
     team.add_player(player, contract)
     await session.refresh(team, ["contracts"])
     await session.refresh(player)
+    logger.info(
+        "Player added to team team_id=%s player_id=%s",
+        request.contract.team_id,
+        request.contract.player_id,
+    )
     return team
 
 

@@ -17,6 +17,7 @@ class MobaGameSessionBase(SQLModel):
     manager_nickname: Optional[str] = None
     manager_birthdate: Optional[date] = None
     manager_nationality: Optional[str] = None
+    season: int = Field(default=2025, ge=2010)
     team_id: int = Field(foreign_key="moba_teams.id")
     base_database_url: str
     session_database_url: Optional[str] = Field(default=None)
@@ -43,6 +44,7 @@ class MobaGameSessionCreate(SQLModel):
     manager_nickname: Optional[str] = None
     manager_birthdate: Optional[date] = None
     manager_nationality: Optional[str] = None
+    season: int = Field(default=2025, ge=2010)
     team_id: int
     name: Optional[str] = None
     seed: Optional[int] = Field(default=None, ge=0)
@@ -50,7 +52,7 @@ class MobaGameSessionCreate(SQLModel):
 
 
 class MobaGameSessionPublic(MobaGameSessionBase):
-    id: int
+    id: str
     created_at: datetime
     updated_at: Optional[datetime] = None
     manager_display_name: Optional[str] = None
@@ -66,6 +68,7 @@ class MobaGameSessionUpdate(SQLModel):
     manager_nickname: Optional[str] = None
     manager_birthdate: Optional[date] = None
     manager_nationality: Optional[str] = None
+    season: Optional[int] = Field(default=None, ge=2010)
     team_id: Optional[int] = None
     current_day: Optional[int] = Field(default=None, ge=1)
     seed: Optional[int] = Field(default=None, ge=0)

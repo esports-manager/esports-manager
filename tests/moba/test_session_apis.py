@@ -12,7 +12,9 @@ from esm.models.moba.team import MobaTeam
 from esm.services.game_session import sqlite_path_from_url
 
 
-async def _create_base_database(base_path: Path) -> str:
+async def _create_base_database(
+    base_path: Path, team_name: str = "Base Team"
+) -> tuple[str, int]:
     base_url = f"sqlite+aiosqlite:///{base_path.as_posix()}"
     engine = create_async_engine(
         base_url,
@@ -25,24 +27,21 @@ async def _create_base_database(base_path: Path) -> str:
         engine, class_=AsyncSession, expire_on_commit=False
     )
     async with async_session_maker() as session:
-        base_team = MobaTeam(name="Base Team")
+        base_team = MobaTeam(name=team_name)
         session.add(base_team)
         await session.commit()
+        await session.refresh(base_team)
+        team_id = base_team.id
 
     await engine.dispose()
-    return base_url
+    return base_url, team_id
 
 
 async def test_create_session_copies_base_db(
-    client: AsyncClient, session: AsyncSession, tmp_path: Path
+    client: AsyncClient, tmp_path: Path
 ):
     base_db_path = tmp_path / "base.db"
-    base_db_url = await _create_base_database(base_db_path)
-
-    team = MobaTeam(name="Meta Team")
-    session.add(team)
-    await session.commit()
-    await session.refresh(team)
+    base_db_url, base_team_id = await _create_base_database(base_db_path)
 
     response = await client.post(
         "/api/moba/sessions",
@@ -52,7 +51,7 @@ async def test_create_session_copies_base_db(
             "manager_nickname": "Ace",
             "manager_birthdate": "1995-04-12",
             "manager_nationality": "Brazil",
-            "team_id": team.id,
+            "team_id": base_team_id,
             "base_database_url": base_db_url,
         },
     )
@@ -68,9 +67,7 @@ async def test_create_session_copies_base_db(
     assert payload["manager_display_name"] == "Ace"
     assert payload["name"] == "Ace's Career"
 
-    game_session = await session.get(MobaGameSession, payload["id"])
-    assert game_session is not None
-    assert game_session.team_id == team.id
+    assert payload["id"]
 
     session_db_url = payload["session_database_url"]
     session_db_path = sqlite_path_from_url(session_db_url)
@@ -84,6 +81,11 @@ async def test_create_session_copies_base_db(
         engine, class_=AsyncSession, expire_on_commit=False
     )
     async with async_session_maker() as session_db:
+        result = await session_db.execute(select(MobaGameSession))
+        game_session = result.scalars().first()
+        assert game_session is not None
+        assert game_session.team_id == base_team_id
+
         result = await session_db.execute(
             select(MobaTeam).where(MobaTeam.name == "Base Team")
         )
@@ -95,23 +97,18 @@ async def test_create_session_copies_base_db(
         session_db_path.unlink()
 
 
-async def test_list_sessions(
-    client: AsyncClient, session: AsyncSession, tmp_path: Path
-):
+async def test_list_sessions(client: AsyncClient, tmp_path: Path):
     base_db_path = tmp_path / "base_list.db"
-    base_db_url = await _create_base_database(base_db_path)
-
-    team = MobaTeam(name="Roster Team")
-    session.add(team)
-    await session.commit()
-    await session.refresh(team)
+    base_db_url, base_team_id = await _create_base_database(
+        base_db_path, team_name="Roster Team"
+    )
 
     create_response = await client.post(
         "/api/moba/sessions",
         json={
             "manager_first_name": "Riley",
             "manager_last_name": "Quinn",
-            "team_id": team.id,
+            "team_id": base_team_id,
             "base_database_url": base_db_url,
             "name": "Riley Save",
         },
@@ -126,6 +123,38 @@ async def test_list_sessions(
     assert sessions[0]["manager_display_name"] == "Riley Quinn"
 
     session_db_url = sessions[0]["session_database_url"]
+    session_db_path = sqlite_path_from_url(session_db_url)
+    if session_db_path.exists():
+        session_db_path.unlink()
+
+
+async def test_get_current_session(client: AsyncClient, tmp_path: Path):
+    base_db_path = tmp_path / "base_current.db"
+    base_db_url, base_team_id = await _create_base_database(
+        base_db_path, team_name="Current Team"
+    )
+
+    create_response = await client.post(
+        "/api/moba/sessions",
+        json={
+            "manager_first_name": "Jordan",
+            "manager_last_name": "Lane",
+            "team_id": base_team_id,
+            "base_database_url": base_db_url,
+        },
+    )
+    assert create_response.status_code == 201
+    payload = create_response.json()
+    session_id = payload["id"]
+
+    current_response = await client.get(
+        f"/api/moba/sessions/current?session_id={session_id}"
+    )
+    assert current_response.status_code == 200
+    current_payload = current_response.json()
+    assert current_payload["id"] == session_id
+
+    session_db_url = payload["session_database_url"]
     session_db_path = sqlite_path_from_url(session_db_url)
     if session_db_path.exists():
         session_db_path.unlink()

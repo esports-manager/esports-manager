@@ -134,6 +134,13 @@
       :title="continueAction.enabled ? '' : continueAction.tooltip"
       @click="
         if (!continueAction.enabled) { return; }
+        if (continueAction.hxPost && window.htmx) {
+          htmx.ajax('POST', continueAction.hxPost, {
+            swap: continueAction.hxSwap || 'none',
+            target: continueAction.hxTarget || undefined
+          });
+          return;
+        }
         if (continueAction.onClick) {
           const handler = typeof continueAction.onClick === 'function'
             ? continueAction.onClick

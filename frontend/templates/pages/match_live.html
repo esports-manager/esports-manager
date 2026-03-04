@@ -4,20 +4,31 @@
   simId: '{{ sim_id }}',
   state: null,
   commentary: [],
+  commentaryTotal: 0,
   lastCommentaryIndex: 0
 }" x-init="
   setInterval(async () => {
-    const response = await fetch(`/api/moba/simulation/state/${simId}`);
-    state = await response.json();
-    if (state.commentary.length > lastCommentaryIndex) {
-      commentary = state.commentary.slice(lastCommentaryIndex);
-      lastCommentaryIndex = state.commentary.length;
-      if (autoScroll) {
+    const response = await fetch(
+      `/api/moba/simulation/state/${simId}?commentary_from=${lastCommentaryIndex}`
+    );
+    const data = await response.json();
+    state = data;
+    const newCommentary = Array.isArray(data.commentary) ? data.commentary : [];
+    if (newCommentary.length) {
+      commentary = commentary.concat(newCommentary);
+    }
+    if (typeof data.commentary_total === 'number') {
+      commentaryTotal = data.commentary_total;
+      lastCommentaryIndex = data.commentary_total;
+    } else {
+      commentaryTotal = commentary.length;
+      lastCommentaryIndex = commentary.length;
+    }
+    if (autoScroll && newCommentary.length) {
         $nextTick(() => {
           const feed = document.getElementById('event-feed');
           if (feed) feed.scrollTop = feed.scrollHeight;
         });
-      }
     }
   }, 1000);
 ">
@@ -101,15 +112,19 @@
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
       <div class="flex flex-wrap items-center gap-3">
         <template x-if="state && state.paused">
-          <button 
-            @click="fetch(`/api/moba/simulation/resume/${simId}`, { method: 'POST' })"
+          <button
+            x-init="if (window.htmx) { htmx.process($el); }"
+            hx-post="/api/moba/simulation/resume/{{ sim_id }}"
+            hx-swap="none"
             class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2">
             <i class="bi bi-play-fill"></i> Resume
           </button>
         </template>
         <template x-if="state && !state.paused">
-          <button 
-            @click="fetch(`/api/moba/simulation/pause/${simId}`, { method: 'POST' })"
+          <button
+            x-init="if (window.htmx) { htmx.process($el); }"
+            hx-post="/api/moba/simulation/pause/{{ sim_id }}"
+            hx-swap="none"
             class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 flex items-center gap-2">
             <i class="bi bi-pause-fill"></i> Pause
           </button>
@@ -126,9 +141,12 @@
         <div class="flex items-center gap-2">
           <span class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-300">Speed</span>
           <template x-if="state">
-            <select 
+            <select
+              x-init="if (window.htmx) { htmx.process($el); }"
               x-model="state.speed"
-              @change="fetch(`/api/moba/simulation/speed/${simId}?speed=${state.speed}`, { method: 'POST' })"
+              :hx-post="`/api/moba/simulation/speed/${simId}?speed=${state.speed}`"
+              hx-trigger="change"
+              hx-swap="none"
               class="px-3 py-1 border dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 dark:text-white text-sm">
               <option value="0.5">0.5x</option>
               <option value="1">1x</option>
@@ -244,12 +262,12 @@
             <p class="text-xs text-slate-500 dark:text-slate-400">Auto-updating feed</p>
           </div>
           <template x-if="state">
-            <span class="text-[10px] uppercase tracking-wide text-slate-400" x-text="`Events: ${state.commentary.length}`"></span>
+            <span class="text-[10px] uppercase tracking-wide text-slate-400" x-text="`Events: ${commentaryTotal || commentary.length}`"></span>
           </template>
         </div>
         <div id="event-feed" class="h-[32rem] overflow-y-auto p-4 space-y-3" :class="{ 'space-y-2': compactView }">
           <template x-if="state">
-            <template x-for="(event, index) in state.commentary" :key="index">
+            <template x-for="(event, index) in commentary" :key="index">
               <div 
                 class="p-3 rounded-lg border-l-4 transition-all bg-white/80 dark:bg-slate-700/70 hover:bg-slate-50 dark:hover:bg-slate-600"
                 :class="{

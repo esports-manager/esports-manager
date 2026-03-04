@@ -303,114 +303,58 @@
   <!--Team stats section-->
   <div class="mb-6">
     <!-- Stats Overview Cards -->
+    {% set stats_cards = [
+      {
+        "label": "Standings",
+        "value": "4th",
+        "delta_text": "+2 ↑",
+        "delta_class": "text-green-500 dark:text-green-400",
+        "footer": "LEC Summer Split",
+        "footer_class": "text-xs text-gray-500 dark:text-gray-400"
+      },
+      {
+        "label": "Record",
+        "value": "72%",
+        "value_suffix": "win rate",
+        "tag_text": "13-9",
+        "tag_class": "bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100",
+        "footer": "<span class='flex items-center text-green-500 dark:text-green-400 mr-2'><i class='bi bi-arrow-up-right mr-0.5'></i> W3</span><span class='text-gray-500 dark:text-gray-400'>Last: vs. MAD Lions</span>",
+        "footer_class": "mt-1 flex items-center text-xs"
+      },
+      {
+        "label": "Finances",
+        "value": "$253,500",
+        "tag_text": "Balance",
+        "tag_class": "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300",
+        "footer": "<span class='text-orange-500 dark:text-orange-400'><i class='bi bi-dash-circle mr-0.5'></i> -$12,000/week</span><span class='text-gray-400 ml-1'>(burn rate)</span>",
+        "footer_class": "mt-1 flex items-center text-xs"
+      },
+      {
+        "label": "Popularity",
+        "value": "1.4M",
+        "value_suffix": "followers",
+        "tag_text": "Fanbase",
+        "tag_class": "bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-100",
+        "footer": "<i class='bi bi-graph-up mr-0.5'></i> +3.2% this month",
+        "footer_class": "mt-1 flex items-center text-xs text-green-500 dark:text-green-400"
+      }
+    ] %}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-      <!-- Standing Stats -->
-      <div
-        class="bg-white rounded-lg shadow p-3 dark:bg-slate-700 dark:border dark:border-gray-600 flex flex-col"
-      >
-        <div class="flex justify-between items-start mb-1">
-          <span
-            class="text-xs text-gray-500 dark:text-gray-400 uppercase font-medium"
-            >Standings</span
-          >
-        </div>
-        <div class="flex items-baseline">
-          <span class="text-2xl font-bold text-gray-800 dark:text-gray-100"
-            >4th</span
-          >
-          <span class="ml-1 text-xs text-green-500 dark:text-green-400"
-            >+2 ↑</span
-          >
-        </div>
-        <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-          LEC Summer Split
-        </div>
-      </div>
-
-      <!-- Record Stats -->
-      <div
-        class="bg-white rounded-lg shadow p-3 dark:bg-slate-700 dark:border dark:border-gray-600 flex flex-col"
-      >
-        <div class="flex justify-between items-start mb-1">
-          <span
-            class="text-xs text-gray-500 dark:text-gray-400 uppercase font-medium"
-            >Record</span
-          >
-          <span
-            class="text-xs px-1.5 py-0.5 rounded bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 font-medium"
-            >13-9</span
-          >
-        </div>
-        <div class="flex items-baseline">
-          <span class="text-2xl font-bold text-gray-800 dark:text-gray-100"
-            >72%</span
-          >
-          <span class="ml-1 text-xs">win rate</span>
-        </div>
-        <div class="mt-1 flex items-center text-xs">
-          <span
-            class="flex items-center text-green-500 dark:text-green-400 mr-2"
-            ><i class="bi bi-arrow-up-right mr-0.5"></i> W3</span
-          >
-          <span class="text-gray-500 dark:text-gray-400"
-            >Last: vs. MAD Lions</span
-          >
-        </div>
-      </div>
-
-      <!-- Treasury Stats -->
-      <div
-        class="bg-white rounded-lg shadow p-3 dark:bg-slate-700 dark:border dark:border-gray-600 flex flex-col"
-      >
-        <div class="flex justify-between items-start mb-1">
-          <span
-            class="text-xs text-gray-500 dark:text-gray-400 uppercase font-medium"
-            >Finances</span
-          >
-          <span
-            class="text-xs px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 font-medium"
-            >Balance</span
-          >
-        </div>
-        <div class="flex items-baseline">
-          <span class="text-2xl font-bold text-gray-800 dark:text-gray-100"
-            >$253,500</span
-          >
-        </div>
-        <div class="mt-1 flex items-center text-xs">
-          <span class="text-orange-500 dark:text-orange-400"
-            ><i class="bi bi-dash-circle mr-0.5"></i> -$12,000/week</span
-          >
-          <span class="text-gray-400 ml-1">(burn rate)</span>
-        </div>
-      </div>
-
-      <!-- Popularity Stats -->
-      <div
-        class="bg-white rounded-lg shadow p-3 dark:bg-slate-700 dark:border dark:border-gray-600 flex flex-col"
-      >
-        <div class="flex justify-between items-start mb-1">
-          <span
-            class="text-xs text-gray-500 dark:text-gray-400 uppercase font-medium"
-            >Popularity</span
-          >
-          <span
-            class="text-xs px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-100 font-medium"
-            >Fanbase</span
-          >
-        </div>
-        <div class="flex items-baseline">
-          <span class="text-2xl font-bold text-gray-800 dark:text-gray-100"
-            >1.4M</span
-          >
-          <span class="ml-1 text-xs">followers</span>
-        </div>
-        <div
-          class="mt-1 flex items-center text-xs text-green-500 dark:text-green-400"
-        >
-          <i class="bi bi-graph-up mr-0.5"></i> +3.2% this month
-        </div>
-      </div>
+      {% for card in stats_cards %}
+        {% with
+          label=card.label,
+          value=card.value,
+          value_suffix=card.value_suffix,
+          delta_text=card.delta_text,
+          delta_class=card.delta_class,
+          tag_text=card.tag_text,
+          tag_class=card.tag_class,
+          footer=card.footer,
+          footer_class=card.footer_class
+        %}
+          {% include "components/ui/stat_card.html" %}
+        {% endwith %}
+      {% endfor %}
     </div>
   </div>
 

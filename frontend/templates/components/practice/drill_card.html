@@ -1,0 +1,57 @@
+<div
+  {% if drill.clickable %}@click="showDrillModal = true"{% endif %}
+  class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow{% if drill.clickable %} cursor-pointer{% endif %}"
+>
+  <div class="h-4 {{ drill.accent_class }}"></div>
+  <div class="p-4">
+    <div class="flex justify-between">
+      <h3 class="font-semibold text-gray-800 dark:text-gray-100">
+        {{ drill.title }}
+      </h3>
+      <span class="px-2 py-1 rounded-full text-xs {{ drill.type_class }}">
+        {{ drill.type_label }}
+      </span>
+    </div>
+    <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">
+      {{ drill.description }}
+    </p>
+
+    <div class="grid grid-cols-2 gap-2 mt-3">
+      <div class="bg-gray-50 dark:bg-slate-600 p-2 rounded">
+        <span class="block text-xs text-gray-500 dark:text-gray-400">
+          Difficulty
+        </span>
+        <div class="flex mt-1">
+          {% for i in range(5) %}
+          {% if i < drill.difficulty %}
+          <i class="bi bi-star-fill text-yellow-500"></i>
+          {% else %}
+          <i class="bi bi-star text-gray-300 dark:text-gray-500"></i>
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      <div class="bg-gray-50 dark:bg-slate-600 p-2 rounded">
+        <span class="block text-xs text-gray-500 dark:text-gray-400">Focus</span>
+        <div class="flex items-center mt-1">
+          <span class="text-xs font-medium text-gray-700 dark:text-gray-200">
+            {{ drill.focus }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-between mt-4">
+      <div class="flex items-center">
+        <span class="text-xs rounded-full px-2 py-1 flex items-center {{ drill.effectiveness_class }}">
+          <i class="bi {{ drill.trend_icon }} mr-1"></i> {{ drill.effectiveness }}
+        </span>
+      </div>
+      <button
+        class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium"
+      >
+        <i class="bi bi-eye mr-1"></i> Details
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
-from fastapi import Request, FastAPI
+from fastapi import Request, FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -27,6 +27,10 @@ def create_frontend(app: FastAPI) -> FastAPI:
     @app.get("/")
     async def index(request: Request):
         return templates.TemplateResponse("index.html", {"request": request})
+
+    @app.get("/_empty")
+    async def empty():
+        return Response(content="")
 
     @app.get("/home")
     async def home(request: Request):

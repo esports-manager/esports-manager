@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -39,6 +41,8 @@ draft_routes = APIRouter(
 
 templates_dir = FRONTEND_DIR / "templates"
 templates = Jinja2Templates(directory=templates_dir)
+
+logger = logging.getLogger("esm.routes.moba.draft")
 
 
 DRAFT_ORDER = {
@@ -95,6 +99,7 @@ async def initialize_draft(
 ):
     match = await session.get(MobaMatch, match_id)
     if not match:
+        logger.warning("Draft match not found match_id=%s", match_id)
         raise HTTPException(status_code=404, detail="Match not found")
 
     lineup_result = await session.execute(
@@ -103,24 +108,29 @@ async def initialize_draft(
     lineup = lineup_result.scalars().first()
 
     if not lineup:
+        logger.warning("Draft lineup not initialized match_id=%s", match_id)
         raise HTTPException(status_code=404, detail="Lineup not initialized")
 
     if (
         lineup.blue_team_status != LineupStatus.CONFIRMED
         or lineup.red_team_status != LineupStatus.CONFIRMED
     ):
+        logger.warning("Draft lineups not confirmed match_id=%s", match_id)
         raise HTTPException(status_code=400, detail="Both lineups must be confirmed")
 
     existing = await session.execute(
         select(MobaMatchDraftSession).where(MobaMatchDraftSession.match_id == match_id)
     )
     if existing.scalars().first():
+        logger.warning("Draft already initialized match_id=%s", match_id)
         raise HTTPException(status_code=400, detail="Draft already initialized")
 
     draft = MobaMatchDraftSession(match_id=match_id)
     session.add(draft)
     await session.commit()
     await session.refresh(draft)
+
+    logger.info("Draft initialized draft_id=%s match_id=%s", draft.id, match_id)
 
     return MobaMatchDraftSessionPublic.model_validate(draft)
 
@@ -133,6 +143,7 @@ async def get_draft(
 ):
     match = await session.get(MobaMatch, match_id)
     if not match:
+        logger.warning("Draft match not found match_id=%s", match_id)
         raise HTTPException(status_code=404, detail="Match not found")
 
     draft_result = await session.execute(
@@ -142,6 +153,7 @@ async def get_draft(
 
     if not draft:
         draft = await initialize_draft(match_id, session)
+        logger.info("Draft auto-initialized draft_id=%s match_id=%s", draft.id, match_id)
 
     actions_result = await session.execute(
         select(MobaMatchDraftAction)
@@ -149,6 +161,12 @@ async def get_draft(
         .order_by(MobaMatchDraftAction.order_index)
     )
     actions = actions_result.scalars().all()
+    logger.debug(
+        "Draft loaded draft_id=%s match_id=%s actions=%s",
+        draft.id,
+        match_id,
+        len(actions),
+    )
 
     blue_team = await session.get(MobaTeam, match.blue_team_id)
     red_team = await session.get(MobaTeam, match.red_team_id)
@@ -352,10 +370,12 @@ async def submit_draft_action(
 
     draft = await session.get(MobaMatchDraftSession, draft_id)
     if not draft:
+        logger.warning("Draft session not found draft_id=%s", draft_id)
         raise HTTPException(status_code=404, detail="Draft session not found")
 
     champion_id = payload.get("champion_id")
     if champion_id is None:
+        logger.warning("Draft action missing champion_id draft_id=%s", draft_id)
         raise HTTPException(status_code=400, detail="champion_id required")
     try:
         champion_id = int(champion_id)
@@ -364,6 +384,11 @@ async def submit_draft_action(
 
     champion = await session.get(MobaChampion, champion_id)
     if not champion:
+        logger.warning(
+            "Draft action champion not found draft_id=%s champion_id=%s",
+            draft_id,
+            champion_id,
+        )
         raise HTTPException(status_code=404, detail="Champion not found")
 
     player_slot = payload.get("player_slot")
@@ -379,23 +404,45 @@ async def submit_draft_action(
     existing_action = existing_actions.scalars().first()
     if existing_action:
         if existing_action.action_type != DraftActionType.PICK:
+            logger.warning(
+                "Draft action duplicate non-pick draft_id=%s champion_id=%s",
+                draft_id,
+                champion_id,
+            )
             raise HTTPException(
                 status_code=400, detail="Champion already banned or picked"
             )
         if not player_slot:
+            logger.warning(
+                "Draft action missing player_slot draft_id=%s champion_id=%s",
+                draft_id,
+                champion_id,
+            )
             raise HTTPException(
                 status_code=400, detail="player_slot required to assign pick"
             )
         if existing_action.player_slot:
+            logger.warning(
+                "Draft action slot already assigned draft_id=%s champion_id=%s slot=%s",
+                draft_id,
+                champion_id,
+                existing_action.player_slot,
+            )
             raise HTTPException(
                 status_code=400, detail="Champion already assigned to slot"
             )
         player_slot = str(player_slot).lower()
         if player_slot not in ROLES:
+            logger.warning(
+                "Draft action invalid player slot draft_id=%s slot=%s",
+                draft_id,
+                player_slot,
+            )
             raise HTTPException(status_code=400, detail="Invalid player slot")
 
         match = await session.get(MobaMatch, draft.match_id)
         if not match:
+            logger.warning("Draft match not found match_id=%s", draft.match_id)
             raise HTTPException(status_code=404, detail="Match not found")
         team_id = (
             match.blue_team_id
@@ -411,6 +458,11 @@ async def submit_draft_action(
         )
         slot = slot_result.scalars().first()
         if not slot:
+            logger.warning(
+                "Draft slot not found match_id=%s slot=%s",
+                draft.match_id,
+                player_slot,
+            )
             raise HTTPException(status_code=400, detail="Invalid player slot")
 
         existing_slot_pick = await session.execute(
@@ -422,6 +474,11 @@ async def submit_draft_action(
             )
         )
         if existing_slot_pick.scalars().first():
+            logger.warning(
+                "Draft slot already picked draft_id=%s slot=%s",
+                draft_id,
+                player_slot,
+            )
             raise HTTPException(status_code=400, detail="Player slot already picked")
 
         assigned_role = (slot.assigned_role or slot.slot_role).lower()
@@ -429,6 +486,13 @@ async def submit_draft_action(
         if champion.secondary_role:
             champion_roles.add(champion.secondary_role.value)
         if assigned_role not in champion_roles:
+            logger.warning(
+                "Draft role mismatch draft_id=%s slot=%s assigned_role=%s champion_id=%s",
+                draft_id,
+                player_slot,
+                assigned_role,
+                champion_id,
+            )
             raise HTTPException(
                 status_code=400,
                 detail="Champion role does not match assigned role",
@@ -441,27 +505,42 @@ async def submit_draft_action(
         await session.commit()
         await session.refresh(existing_action)
 
+        logger.info(
+            "Draft pick assigned draft_id=%s champion_id=%s slot=%s",
+            draft_id,
+            champion_id,
+            player_slot,
+        )
+
         if request.headers.get("HX-Request"):
             return await get_draft(draft.match_id, request, session)
 
         return MobaMatchDraftActionPublic.model_validate(existing_action)
 
     if draft.is_completed:
+        logger.warning("Draft already completed draft_id=%s", draft_id)
         raise HTTPException(status_code=400, detail="Draft already completed")
 
     current_turn, current_action = get_current_turn_info(draft)
 
     if not current_turn or not current_action:
+        logger.warning("Draft no valid turn draft_id=%s", draft_id)
         raise HTTPException(status_code=400, detail="No valid turn available")
 
     if current_action == DraftActionType.PICK:
         if player_slot:
             player_slot = str(player_slot).lower()
             if player_slot not in ROLES:
+                logger.warning(
+                    "Draft invalid player slot draft_id=%s slot=%s",
+                    draft_id,
+                    player_slot,
+                )
                 raise HTTPException(status_code=400, detail="Invalid player slot")
 
             match = await session.get(MobaMatch, draft.match_id)
             if not match:
+                logger.warning("Draft match not found match_id=%s", draft.match_id)
                 raise HTTPException(status_code=404, detail="Match not found")
             team_id = (
                 match.blue_team_id
@@ -477,6 +556,11 @@ async def submit_draft_action(
             )
             slot = slot_result.scalars().first()
             if not slot:
+                logger.warning(
+                    "Draft slot not found match_id=%s slot=%s",
+                    draft.match_id,
+                    player_slot,
+                )
                 raise HTTPException(status_code=400, detail="Invalid player slot")
 
             existing_slot_pick = await session.execute(
@@ -488,6 +572,11 @@ async def submit_draft_action(
                 )
             )
             if existing_slot_pick.scalars().first():
+                logger.warning(
+                    "Draft slot already picked draft_id=%s slot=%s",
+                    draft_id,
+                    player_slot,
+                )
                 raise HTTPException(
                     status_code=400, detail="Player slot already picked"
                 )
@@ -497,6 +586,13 @@ async def submit_draft_action(
             if champion.secondary_role:
                 champion_roles.add(champion.secondary_role.value)
             if assigned_role not in champion_roles:
+                logger.warning(
+                    "Draft role mismatch draft_id=%s slot=%s assigned_role=%s champion_id=%s",
+                    draft_id,
+                    player_slot,
+                    assigned_role,
+                    champion_id,
+                )
                 raise HTTPException(
                     status_code=400,
                     detail="Champion role does not match assigned role",
@@ -550,6 +646,15 @@ async def submit_draft_action(
     await session.commit()
     await session.refresh(action)
 
+    logger.info(
+        "Draft action recorded draft_id=%s action=%s team=%s champion_id=%s slot=%s",
+        draft_id,
+        current_action.value,
+        current_turn.value,
+        champion_id,
+        player_slot,
+    )
+
     if request.headers.get("HX-Request"):
         return await get_draft(draft.match_id, request, session)
 
@@ -563,9 +668,11 @@ async def get_draft_composition(
 ):
     draft = await session.get(MobaMatchDraftSession, draft_id)
     if not draft:
+        logger.warning("Draft session not found draft_id=%s", draft_id)
         raise HTTPException(status_code=404, detail="Draft session not found")
 
     if not draft.is_completed:
+        logger.warning("Draft not completed draft_id=%s", draft_id)
         raise HTTPException(status_code=400, detail="Draft not completed yet")
 
     actions_result = await session.execute(
@@ -625,4 +732,10 @@ async def get_draft_composition(
         else:
             composition["red_team"].append(pick_data)
 
+    logger.info(
+        "Draft composition built draft_id=%s blue_picks=%s red_picks=%s",
+        draft_id,
+        len(composition["blue_team"]),
+        len(composition["red_team"]),
+    )
     return composition

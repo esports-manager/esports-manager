@@ -16,8 +16,6 @@
   id="draft-root"
   class="py-6"
   data-draft-id="{{ draft.id }}"
-  data-blue-team-id="{{ match.blue_team_id }}"
-  data-red-team-id="{{ match.red_team_id }}"
   x-data="{
     selectedChampion: null,
     selectedSlot: '',
@@ -51,7 +49,8 @@
             href: '',
             enabled: enabled,
             tooltip: enabled ? '' : 'Complete the draft to continue.',
-            onClick: enabled ? 'startSimulationWithSession' : ''
+            hxPost: enabled ? '/api/moba/simulation/from-draft/{{ draft.id }}{{ session_query }}' : '',
+            hxSwap: enabled ? 'none' : ''
           }
         })
       );
@@ -98,21 +97,15 @@
     },
     submitAction(payload) {
       if (!payload || !payload.champion_id) return;
-      const sessionId = (window.resolveSessionId && window.resolveSessionId()) || {{ session_id|default('', true)|tojson }};
-      const sessionQuery = sessionId ? `?session_id=${sessionId}` : '';
-      if (window.htmx) {
-        htmx.ajax('POST', `/api/moba/draft/session/${this.draftId}/action${sessionQuery}`, {
-          values: payload,
-          target: '#draft-root',
-          swap: 'outerHTML'
-        });
+      const sessionQuery = window.getSessionQuery ? window.getSessionQuery() : '';
+      if (!window.htmx) {
         return;
       }
-      fetch(`/api/moba/draft/session/${this.draftId}/action${sessionQuery}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }).then(() => location.reload());
+      htmx.ajax('POST', `/api/moba/draft/session/${this.draftId}/action${sessionQuery}`, {
+        values: payload,
+        target: '#draft-root',
+        swap: 'outerHTML'
+      });
     },
     selectChampion(id) {
       this.selectedChampion = id;
@@ -693,37 +686,12 @@
 
   {% if draft.is_completed %}
   <div class="mt-6 text-center">
-    <button 
-      onclick="startSimulationWithSession()"
+    <button
+      hx-post="/api/moba/simulation/from-draft/{{ draft.id }}{{ session_query }}"
+      hx-swap="none"
       class="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 text-lg font-bold">
       Start Match Simulation →
     </button>
   </div>
-  <script>
-    async function startSimulationWithSession() {
-      const root = document.getElementById('draft-root');
-      const draftId = root?.dataset.draftId;
-      const blueTeamId = Number(root?.dataset.blueTeamId);
-      const redTeamId = Number(root?.dataset.redTeamId);
-      const sessionId = (window.resolveSessionId && window.resolveSessionId()) || '{{ session_id|default('', true) }}';
-      const sessionQuery = sessionId ? `?session_id=${sessionId}` : '';
-      const composition = await fetch(`/api/moba/draft/session/${draftId}/composition${sessionQuery}`).then(r => r.json());
-
-      const payload = {
-        team1_id: blueTeamId,
-        team2_id: redTeamId,
-        team1_roster: composition.blue_team,
-        team2_roster: composition.red_team
-      };
-
-      const response = await fetch(`/api/moba/simulation/create${sessionQuery}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const data = await response.json();
-      window.location.href = `/api/moba/simulation/view/${data.sim_id}${sessionQuery}`;
-    }
-  </script>
   {% endif %}
 </div>

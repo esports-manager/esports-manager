@@ -1,4 +1,5 @@
 <!-- Champions Empty State -->
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
 <div
   class="text-center py-12 bg-white dark:bg-slate-700 rounded-lg shadow mb-8"
 >
@@ -30,7 +31,7 @@
     or clear filters to see all available champions.
   </p>
   <button
-    hx-get="/api/moba/champions"
+    hx-get="/api/moba/champions{{ session_query }}"
     hx-trigger="click"
     hx-target="#champions-container"
     hx-swap="innerHTML"

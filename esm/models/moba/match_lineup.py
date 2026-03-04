@@ -14,7 +14,7 @@ class LineupStatus(enum.Enum):
 
 class MobaMatchLineupSlot(SQLModel, table=True):
     __tablename__ = "moba_match_lineup_slots"
-    
+
     id: Optional[int] = Field(default=None, primary_key=True)
     match_id: int = Field(foreign_key="moba_games.id")
     team_id: int = Field(foreign_key="moba_teams.id")
@@ -28,7 +28,7 @@ class MobaMatchLineupSlot(SQLModel, table=True):
 
 class MobaMatchLineup(SQLModel, table=True):
     __tablename__ = "moba_match_lineups"
-    
+
     id: Optional[int] = Field(default=None, primary_key=True)
     match_id: int = Field(foreign_key="moba_games.id", unique=True)
     blue_team_status: LineupStatus = Field(

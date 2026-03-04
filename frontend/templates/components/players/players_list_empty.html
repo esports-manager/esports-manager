@@ -14,12 +14,9 @@
       for different results.
     </p>
     <button
+      type="button"
       class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-      hx-get="/api/players"
-      hx-include="#player-filters-form"
-      hx-vals='{"reset": true}'
-      hx-target="#players-list"
-      hx-swap="innerHTML"
+      @click="selectedTeam = ''; selectedRegion = ''; selectedRole = ''; selectedStatus = ''; searchQuery = ''; updatePlayersList()"
     >
       <i class="bi bi-arrow-repeat mr-2"></i>
       Reset Filters

@@ -1,0 +1,45 @@
+{% if matches %}
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
+{% for match in matches %}
+<div class="bg-white dark:bg-slate-700 rounded-lg shadow p-6 hover:shadow-lg transition">
+  <div class="flex items-center justify-between flex-wrap gap-4">
+    <div class="flex-1">
+      <div class="flex items-center gap-4 mb-2">
+        <span class="text-lg font-bold text-blue-600 dark:text-blue-400">
+          {{ match.blue_team.name if match.blue_team else 'Team 1' }}
+        </span>
+        <span class="text-gray-400">vs</span>
+        <span class="text-lg font-bold text-red-600 dark:text-red-400">
+          {{ match.red_team.name if match.red_team else 'Team 2' }}
+        </span>
+      </div>
+      <div class="text-sm text-gray-500 dark:text-gray-400">
+        Status:
+        <span class="capitalize">{{ match.status|replace('_', ' ')|title }}</span>
+      </div>
+    </div>
+
+    <div class="flex gap-2">
+      <a
+        href="/api/moba/match/{{ match.id }}{{ session_query }}"
+        class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded"
+      >
+        Open Match
+      </a>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="bg-white dark:bg-slate-700 rounded-lg shadow p-12 text-center">
+  <i class="bi bi-inbox text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
+  <p class="text-gray-500 dark:text-gray-400 mb-4">No matches yet</p>
+  <button
+    type="button"
+    @click="showCreateModal = true"
+    class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+  >
+    Create Your First Match
+  </button>
+</div>
+{% endif %}

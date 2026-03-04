@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
-from fastapi import Request, FastAPI
+from fastapi import Request, FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -28,12 +28,17 @@ def create_frontend(app: FastAPI) -> FastAPI:
     async def index(request: Request):
         return templates.TemplateResponse("index.html", {"request": request})
 
+    @app.get("/_empty")
+    async def empty():
+        return Response(content="")
+
     @app.get("/home")
     async def home(request: Request):
         global current_page
         global sidebar
         current_page = "home"
         contentview = "pages/home.html"
+        session_id = request.query_params.get("session_id")
         return templates.TemplateResponse(
             "layout.html",
             {
@@ -41,8 +46,35 @@ def create_frontend(app: FastAPI) -> FastAPI:
                 "content": contentview,
                 "sidebar": sidebar,
                 "current_page": current_page,
+                "session_id": session_id,
             },
         )
+
+    @app.get("/new_game")
+    async def new_game(request: Request):
+        session_id = request.query_params.get("session_id")
+        return templates.TemplateResponse(
+            "new_game.html",
+            {
+                "request": request,
+                "session_id": session_id,
+            },
+        )
+
+    @app.get("/load_game")
+    async def load_game(request: Request):
+        session_id = request.query_params.get("session_id")
+        return templates.TemplateResponse(
+            "load_game.html",
+            {
+                "request": request,
+                "session_id": session_id,
+            },
+        )
+
+    @app.get("/settings")
+    async def settings(request: Request):
+        return templates.TemplateResponse("settings.html", {"request": request})
 
     @app.get("/page/{page}")
     async def page(request: Request, page: str):
@@ -50,6 +82,7 @@ def create_frontend(app: FastAPI) -> FastAPI:
         global sidebar
         current_page = page
         contentview = f"pages/{current_page}.html"
+        session_id = request.query_params.get("session_id")
         return templates.TemplateResponse(
             "layout.html",
             {
@@ -57,6 +90,7 @@ def create_frontend(app: FastAPI) -> FastAPI:
                 "content": contentview,
                 "sidebar": sidebar,
                 "current_page": current_page,
+                "session_id": session_id,
             },
         )
 

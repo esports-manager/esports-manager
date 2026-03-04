@@ -87,9 +87,7 @@ async def test_assign_lineup_rejects_wrong_team(
 ) -> None:
     match, blue_team, _, _, red_players = await _initialize_match(session)
 
-    response = await client.post(
-        f"/api/moba/lineup/match/{match.id}/initialize"
-    )
+    response = await client.post(f"/api/moba/lineup/match/{match.id}/initialize")
     assert response.status_code == 200
 
     blue_slots = await _get_team_slots(session, match.id, blue_team.id)
@@ -108,9 +106,7 @@ async def test_confirm_lineup_rejects_duplicate_roles(
 ) -> None:
     match, blue_team, _, blue_players, _ = await _initialize_match(session)
 
-    response = await client.post(
-        f"/api/moba/lineup/match/{match.id}/initialize"
-    )
+    response = await client.post(f"/api/moba/lineup/match/{match.id}/initialize")
     assert response.status_code == 200
 
     blue_slots = await _get_team_slots(session, match.id, blue_team.id)
@@ -137,9 +133,7 @@ async def test_confirm_lineup_success(
 ) -> None:
     match, blue_team, _, blue_players, _ = await _initialize_match(session)
 
-    response = await client.post(
-        f"/api/moba/lineup/match/{match.id}/initialize"
-    )
+    response = await client.post(f"/api/moba/lineup/match/{match.id}/initialize")
     assert response.status_code == 200
 
     blue_slots = await _get_team_slots(session, match.id, blue_team.id)

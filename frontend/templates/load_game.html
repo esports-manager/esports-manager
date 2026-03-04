@@ -1,0 +1,105 @@
+<!--
+  ~ eSports Manager - free and open source eSports Management game
+  ~ Copyright (C) 2020-2024  Pedrenrique G. Guimarães
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
+<!DOCTYPE html>
+<html lang="en" x-data="{
+    darkMode: $persist(localStorage.getItem('darkMode')
+      ? JSON.parse(localStorage.getItem('darkMode'))
+      : window.matchMedia('(prefers-color-scheme: dark)').matches).using(sessionStorage),
+  }" x-init="$watch('darkMode', value => document.documentElement.classList.toggle('dark', value))"
+  :class="{ 'dark' : darkMode }">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>eSports Manager - Load Game</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='css/tailwind.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', path='img/icons/bootstrap-icons.min.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', path='css/imgblur.css') }}" />
+  <script src="{{ url_for('static', path='js/htmx.min.js') }}"></script>
+  <script defer src="{{ url_for('static', path='js/alpine.persist.min.js') }}"></script>
+  <script defer src="{{ url_for('static', path='js/alpine.min.js') }}"></script>
+</head>
+
+<body class="text-white">
+  <div class="bg-blur"></div>
+
+  <button type="button" @click="darkMode = !darkMode"
+    class="fixed z-20 top-4 right-4 rounded-full px-4 py-3 bg-slate-200/90 text-slate-700 hover:bg-slate-100 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600"
+    aria-label="Toggle dark mode">
+    <span x-show="darkMode !== true">
+      <i class="bi bi-moon-fill text-lg"></i>
+    </span>
+    <span x-show="darkMode === true">
+      <i class="bi bi-sun-fill text-lg"></i>
+    </span>
+  </button>
+
+  <div class="relative min-h-screen flex flex-col items-center justify-center px-6 py-12">
+    <div class="flex flex-col items-center gap-4 mb-8">
+      <img id="logo" class="w-20 h-20" src="{{ url_for('static', path='img/trophy.svg') }}" alt="eSports Manager" />
+      <div class="text-center">
+        <h1 class="text-3xl font-semibold">Load a Career</h1>
+        <p class="text-sm text-white/70">
+          Pick a saved session to continue your season.
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="w-full max-w-3xl bg-slate-100/80 text-slate-900 dark:bg-slate-900/80 dark:text-slate-100 rounded-2xl shadow-2xl p-8 backdrop-blur">
+      <div class="relative flex items-center justify-center mb-6">
+        <a href="/{{ session_query }}"
+          class="absolute left-0 text-sm font-semibold bg-slate-200 hover:bg-slate-100 dark:bg-slate-800 dark:text-blue-200 border border-slate-200 dark:border-slate-700 dark:hover:bg-slate-700 px-3 py-2 rounded-full text-blue-600 hover:text-blue-500"><i
+            class="bi bi-arrow-left"></i></a>
+        <div class="flex flex-col text-center">
+          <h2 class="text-xl font-semibold">Saved Sessions</h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400">Select a save to jump back in.</p>
+        </div>
+      </div>
+
+      <div
+        id="sessions-container"
+        class="space-y-5"
+        hx-get="/api/moba/sessions{{ session_query }}"
+        hx-trigger="load"
+        hx-swap="innerHTML"
+      >
+        <p class="text-sm text-slate-500 dark:text-slate-400">Loading saves...</p>
+      </div>
+
+      <div class="flex items-center justify-between mt-6">
+        <a href="/new_game{{ session_query }}"
+          class="text-sm font-semibold text-blue-500 hover:text-blue-400 dark:text-blue-400 dark:hover:text-blue-300">Create
+          a new save</a>
+        <button
+          type="button"
+          hx-get="/api/moba/sessions{{ session_query }}"
+          hx-target="#sessions-container"
+          hx-swap="innerHTML"
+          class="px-4 py-2 rounded-xl text-white bg-blue-600 hover:bg-blue-500 text-sm font-semibold"
+        >
+          Refresh list
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

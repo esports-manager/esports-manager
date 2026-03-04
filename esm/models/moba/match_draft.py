@@ -27,7 +27,7 @@ class DraftActionType(enum.Enum):
 
 class MobaMatchDraftSession(SQLModel, table=True):
     __tablename__ = "moba_match_draft_sessions"
-    
+
     id: Optional[int] = Field(default=None, primary_key=True)
     match_id: int = Field(foreign_key="moba_games.id", unique=True)
     current_phase: DraftPhase = Field(
@@ -44,7 +44,7 @@ class MobaMatchDraftSession(SQLModel, table=True):
 
 class MobaMatchDraftAction(SQLModel, table=True):
     __tablename__ = "moba_match_draft_actions"
-    
+
     id: Optional[int] = Field(default=None, primary_key=True)
     draft_session_id: int = Field(foreign_key="moba_match_draft_sessions.id")
     action_type: DraftActionType = Field(sa_column=Column(Enum(DraftActionType)))

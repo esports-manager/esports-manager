@@ -27,9 +27,9 @@ class MobaNexusEvent(MobaEventBase):
         # Advance time and end
         state.time += self.duration
         state.status = MobaMatchStatus.COMPLETED
-        
+
         winner_team = self.team1 if winner_idx == 1 else self.team2
         text, severity = narrate_nexus(winner_team)
         self.commentary.append(text)
-        
+
         return state

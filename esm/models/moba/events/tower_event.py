@@ -38,20 +38,18 @@ class MobaTowerEvent(MobaEventBase):
         if taken:
             tower = random.choice(defending_team.get_remaining_towers())
             is_first_tower = not self.state.first_tower
-            is_nexus = (tower == "base")
-            
+            is_nexus = tower == "base"
+
             defending_team.take_tower(tower)
-            
+
             if is_first_tower:
                 self.state.first_tower = True
                 acting_team.state.first_tower = True
-            
+
             text, severity = narrate_tower(acting_team, tower, is_first_tower, is_nexus)
             self.commentary.append(text)
         else:
-            self.commentary.append(
-                f"{defending_team.team.name} defends their tower!"
-            )
+            self.commentary.append(f"{defending_team.team.name} defends their tower!")
 
         # Advance clock
         state.time += self.duration

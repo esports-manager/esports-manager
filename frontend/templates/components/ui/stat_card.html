@@ -1,0 +1,30 @@
+<div class="bg-white rounded-lg shadow p-3 dark:bg-slate-700 dark:border dark:border-gray-600 flex flex-col">
+  <div class="flex justify-between items-start mb-1">
+    <span class="text-xs text-gray-500 dark:text-gray-400 uppercase font-medium">
+      {{ label }}
+    </span>
+    {% if tag_text %}
+    <span class="text-xs px-1.5 py-0.5 rounded {{ tag_class }} font-medium">
+      {{ tag_text }}
+    </span>
+    {% endif %}
+  </div>
+  <div class="flex items-baseline">
+    <span class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+      {{ value }}
+    </span>
+    {% if value_suffix %}
+    <span class="ml-1 text-xs">{{ value_suffix }}</span>
+    {% endif %}
+    {% if delta_text %}
+    <span class="ml-1 text-xs {{ delta_class|default('text-green-500 dark:text-green-400') }}">
+      {{ delta_text }}
+    </span>
+    {% endif %}
+  </div>
+  {% if footer %}
+  <div class="mt-1 {{ footer_class|default('text-xs text-gray-500 dark:text-gray-400') }}">
+    {{ footer | safe }}
+  </div>
+  {% endif %}
+</div>

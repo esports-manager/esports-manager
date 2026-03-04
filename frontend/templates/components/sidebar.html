@@ -15,6 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
 <aside
   class="fixed left-0 items-stretch inset-y-0 min-h-screen h-full bg-slate-50 dark:bg-slate-900 text-black dark:text-white shadow-md border-r border-slate-300 dark:border-slate-600 transition-all overflow-y-auto"
   :class="{ 'w-64': expanded, 'w-16': !expanded }">
@@ -35,10 +36,10 @@
   <nav class="px-3">
     {% for key, page in sidebar.items() %}
     {% if key == current_page %}
-    <a href="/page/{{ page.url }}" x-on:click="page = '{{ key }}'"
+    <a href="/page/{{ page.url }}{{ session_query }}" x-on:click="page = '{{ key }}'"
       class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-200 dark:hover:bg-gray-700 bg-gradient-to-br from-blue-600 to-blue-400 text-white font-bold dark:from-blue-800 dark:to-blue-500">
       {% else %}
-      <a href="/page/{{ page.url }}" x-on:click="page = '{{ key }}'"
+      <a href="/page/{{ page.url }}{{ session_query }}" x-on:click="page = '{{ key }}'"
         class="relative rounded-xl flex items-center py-2 px-3 my-1 cursor-pointer transition-colors group hover:bg-gray-200 dark:hover:bg-gray-700">
         {% endif %}
         <i class="bi {{ page.icon }} text-xl"></i>

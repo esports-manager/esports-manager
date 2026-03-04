@@ -1,0 +1,25 @@
+<div class="bg-white dark:bg-slate-700 rounded-lg shadow p-8 text-center">
+  <div class="flex flex-col items-center justify-center py-6">
+    <div class="bg-gray-100 dark:bg-slate-600 rounded-full p-6 mb-4">
+      <i class="bi {{ icon|default('bi-inbox') }} text-4xl text-gray-400 dark:text-gray-500"></i>
+    </div>
+
+    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+      {{ title }}
+    </h3>
+    <p class="text-gray-500 dark:text-gray-400 mb-6 max-w-md">
+      {{ message }}
+    </p>
+
+    {% if action_label %}
+    <button
+      type="button"
+      class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+      {{ action_attrs|default('')|safe }}
+    >
+      {% if action_icon %}<i class="bi {{ action_icon }} mr-2"></i>{% endif %}
+      {{ action_label }}
+    </button>
+    {% endif %}
+  </div>
+</div>

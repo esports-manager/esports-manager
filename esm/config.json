@@ -1,0 +1,7 @@
+{
+    "database_url": "sqlite+aiosqlite:///app.db",
+    "port": 8122,
+    "api_url": "http://localhost:8122",
+    "log_level": "INFO",
+    "log_file": "esm/logs/esm.log"
+}

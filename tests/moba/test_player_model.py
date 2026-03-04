@@ -63,7 +63,9 @@ async def test_moba_player_role_assignment(player: MobaPlayerBase):
         assert player.role == role
 
 
-async def test_create_moba_player_instance(player_instance: MobaPlayer, session: AsyncSession):
+async def test_create_moba_player_instance(
+    player_instance: MobaPlayer, session: AsyncSession
+):
     session.add(player_instance)
     await session.commit()
     await session.refresh(player_instance)
@@ -119,7 +121,9 @@ async def test_add_more_than_one_active_contract(
     assert contract2.is_active
 
 
-async def test_moba_player_contract_history(player_instance: MobaPlayer, session: AsyncSession):
+async def test_moba_player_contract_history(
+    player_instance: MobaPlayer, session: AsyncSession
+):
     contract1 = MobaPlayerContract(
         player_id=player_instance.id,
         team_id=1,
@@ -178,7 +182,9 @@ async def test_raises_error_end_date_before_start_date(
         await session.refresh(player_instance)
 
 
-async def test_raises_error_salary_negative(player_instance: MobaPlayer, session: AsyncSession):
+async def test_raises_error_salary_negative(
+    player_instance: MobaPlayer, session: AsyncSession
+):
     contract = MobaPlayerContract(
         player_id=player_instance.id,
         team_id=1,

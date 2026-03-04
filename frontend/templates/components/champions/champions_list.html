@@ -1,4 +1,5 @@
 <!-- Champions List View Partial -->
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
 {% if champions %}
 <div x-show="view === 'list'" class="bg-white dark:bg-slate-700 rounded-lg shadow overflow-x-auto mb-6">
   <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
@@ -267,7 +268,7 @@
   {% if pagination.total_pages > 1 %}
   <div class="flex flex-wrap justify-center gap-1">
     <!-- Previous Button -->
-    <button {% if pagination.has_prev %} hx-get="/api/moba/champions" hx-include="#champion-filters-form"
+    <button {% if pagination.has_prev %} hx-get="/api/moba/champions{{ session_query }}" hx-include="#champion-filters-form"
       hx-vals='{"page": {{ pagination.page - 1 }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "role": "{{ current_filters.role }}", "difficulty": "{{ current_filters.difficulty }}", "tier": "{{ current_filters.tier }}", "search": "{{ current_filters.search }}" }' hx-target="#champ-list" hx-swap="innerHTML"
       class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
       {% else %} disabled
@@ -278,7 +279,7 @@
 
     <!-- First Page (if not near the beginning) -->
     {% if pagination.page > 3 %}
-    <button hx-get="/api/moba/champions" hx-include="#champion-filters-form" hx-vals='{"page": 1, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "role": "{{ current_filters.role }}", "difficulty": "{{ current_filters.difficulty }}", "tier": "{{ current_filters.tier }}", "search": "{{ current_filters.search }}" }'
+    <button hx-get="/api/moba/champions{{ session_query }}" hx-include="#champion-filters-form" hx-vals='{"page": 1, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "role": "{{ current_filters.role }}", "difficulty": "{{ current_filters.difficulty }}", "tier": "{{ current_filters.tier }}", "search": "{{ current_filters.search }}" }'
       hx-target="#champ-list" hx-swap="innerHTML"
       class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150">
       1
@@ -296,7 +297,7 @@
 
     {% for page_num in range(start_page, end_page + 1) %}
     <button {% if page_num==pagination.page %} class="px-3 py-1 rounded-md bg-blue-500 text-white text-sm" disabled {%
-      else %} hx-get="/api/moba/champions" hx-include="#champion-filters-form" hx-vals='{"page": {{ page_num }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "role": "{{ current_filters.role }}", "difficulty": "{{ current_filters.difficulty }}", "tier": "{{ current_filters.tier }}", "search": "{{ current_filters.search }}" }'
+      else %} hx-get="/api/moba/champions{{ session_query }}" hx-include="#champion-filters-form" hx-vals='{"page": {{ page_num }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "role": "{{ current_filters.role }}", "difficulty": "{{ current_filters.difficulty }}", "tier": "{{ current_filters.tier }}", "search": "{{ current_filters.search }}" }'
       hx-target="#champ-list" hx-swap="innerHTML"
       class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
       {% endif %}>
@@ -309,7 +310,7 @@
       class="px-3 py-1 text-gray-500 dark:text-gray-400 text-sm">...</span>
 
       <!-- Last Page -->
-      <button hx-get="/api/moba/champions" hx-include="#champion-filters-form"
+      <button hx-get="/api/moba/champions{{ session_query }}" hx-include="#champion-filters-form"
         hx-vals='{"page": {{ pagination.total_pages }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "role": "{{ current_filters.role }}", "difficulty": "{{ current_filters.difficulty }}", "tier": "{{ current_filters.tier }}", "search": "{{ current_filters.search }}" }' hx-target="#champ-list" hx-swap="innerHTML"
         class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150">
         {{ pagination.total_pages }}
@@ -317,7 +318,7 @@
       {% endif %}
 
       <!-- Next Button -->
-      <button {% if pagination.has_next %} hx-get="/api/moba/champions" hx-include="#champion-filters-form"
+      <button {% if pagination.has_next %} hx-get="/api/moba/champions{{ session_query }}" hx-include="#champion-filters-form"
         hx-vals='{"page": {{ pagination.page + 1 }}, "direction": "{{ current_filters.direction }}", "sort": "{{ current_filters.sort }}", "per_page": {{ pagination.per_page }}, "role": "{{ current_filters.role }}", "difficulty": "{{ current_filters.difficulty }}", "tier": "{{ current_filters.tier }}", "search": "{{ current_filters.search }}" }' hx-target="#champ-list" hx-swap="innerHTML"
         class="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-150"
         {% else %} disabled

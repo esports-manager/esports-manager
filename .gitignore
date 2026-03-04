@@ -146,6 +146,9 @@ node_modules/
 # Ignore potential save files
 /esm/res/save/*
 
+# Session database copies
+/esm/sessions/*
+
 # ignore config file
 /esm/config.yaml
 

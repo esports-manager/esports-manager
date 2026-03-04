@@ -93,7 +93,9 @@ async def test_moba_champion_get_tier(champion: MobaChampionBase):
     assert champion.champion_tier == MobaChampionTier.D
 
 
-async def test_moba_champion_instance(session: AsyncSession, champion_instance: MobaChampion):
+async def test_moba_champion_instance(
+    session: AsyncSession, champion_instance: MobaChampion
+):
     session.add(champion_instance)
     await session.commit()
     await session.refresh(champion_instance)

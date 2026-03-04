@@ -41,6 +41,11 @@
       hx-target="#tournaments-container"
       class="flex flex-col md:flex-row gap-4 items-start w-full"
     >
+      <input
+        type="hidden"
+        name="session_id"
+        value="{{ session_id|default('', true) }}"
+      />
       <!-- Search -->
       <div class="relative flex-grow">
         <div

@@ -3,10 +3,13 @@
 # License-Filename: LICENSES/GPL-3.0-or-later
 from esm.db import get_session
 from fastapi import Request, Depends, APIRouter, HTTPException, status
-from sqlmodel import Session, Field
+from sqlmodel import Field, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 from fastapi.templating import Jinja2Templates
 from esm.models.moba.player import MobaPlayerPublic
 from esm.models.moba.team import MobaTeamPublic, MobaTeam, MobaTeamTier
+from esm.models.moba.player_contract import MobaPlayerContract
 from esm.config import FRONTEND_DIR
 from frontend.sidebar import sidebar
 
@@ -48,13 +51,23 @@ class MobaTeamWithPlayers(MobaTeamPublic):
 
 @team_routes.get("/teams/{id}")
 async def get_team(
-    *, request: Request, session: Session = Depends(get_session), id: int
+    *, request: Request, session: AsyncSession = Depends(get_session), id: int
 ):
     global current_page
     global sidebar
     current_page = "teams"
     contentview = "components/teams/team_info.html"
-    team = session.get(MobaTeam, id)
+    session_id = request.query_params.get("session_id")
+    result = await session.execute(
+        select(MobaTeam)
+        .where(MobaTeam.id == id)
+        .options(
+            selectinload(MobaTeam.contracts).selectinload(
+                MobaPlayerContract.player
+            )
+        )
+    )
+    team = result.scalars().first()
     if not team:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Team not found"
@@ -77,5 +90,6 @@ async def get_team(
             "content": contentview,
             "request": request,
             "team": team_public,
+            "session_id": session_id,
         },
     )

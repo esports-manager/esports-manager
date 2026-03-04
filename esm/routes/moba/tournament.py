@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
+import logging
+
 from fastapi import APIRouter, status, Depends, HTTPException, Request
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
@@ -16,6 +18,7 @@ from esm.models.moba.tournament import (
     MobaTournamentUpdate,
     MobaTournamentPublic,
 )
+from esm.models.tournament import TournamentType
 from esm.models.moba.tournament_participant import MobaTournamentParticipant
 from esm.models.moba.team import MobaTeam, MobaTeamPublic
 
@@ -29,12 +32,16 @@ tournament_routes = APIRouter(
 templates_dir = FRONTEND_DIR / "templates"
 templates = Jinja2Templates(directory=templates_dir)
 
+logger = logging.getLogger("esm.routes.moba.tournament")
+
 
 @tournament_routes.get("/", response_model=list[MobaTournamentPublic])
 async def get_tournaments(
     request: Request,
     session: AsyncSession = Depends(get_session),
 ):
+    session_id = request.query_params.get("session_id")
+    logger.debug("Listing tournaments session_id=%s", session_id)
     query = select(MobaTournament)
     count_query = select(MobaTournament)
 
@@ -55,13 +62,28 @@ async def get_tournaments(
             MobaTournament.format == request.query_params.get("format")
         )
     # Optional location filter (maps from frontend region/location controls)
-    if request.query_params.get("location"):
-        query = query.where(
-            MobaTournament.location == request.query_params.get("location")
-        )
-        count_query = count_query.where(
-            MobaTournament.location == request.query_params.get("location")
-        )
+    location_param = request.query_params.get("location")
+    if location_param:
+        location_key = location_param.strip().lower()
+        if location_key == "international":
+            query = query.where(MobaTournament.type == TournamentType.INTERNATIONAL)
+            count_query = count_query.where(
+                MobaTournament.type == TournamentType.INTERNATIONAL
+            )
+        else:
+            location_map = {
+                "korea": ["South Korea", "Korea"],
+                "china": ["China"],
+                "europe": ["Europe"],
+                "north_america": ["United States", "Canada"],
+            }
+            locations = location_map.get(location_key, [location_param])
+            if len(locations) == 1:
+                query = query.where(MobaTournament.location == locations[0])
+                count_query = count_query.where(MobaTournament.location == locations[0])
+            else:
+                query = query.where(MobaTournament.location.in_(locations))
+                count_query = count_query.where(MobaTournament.location.in_(locations))
     if request.query_params.get("search"):
         search = request.query_params.get("search")
         query = query.where(MobaTournament.name.icontains(search))
@@ -100,6 +122,8 @@ async def get_tournaments(
     result_query = await session.execute(query.offset(skip).limit(per_page))
     tournaments = result_query.scalars().all()
 
+    logger.debug("Tournaments fetched count=%s page=%s", len(tournaments), page)
+
     # Pagination metadata
     count_result = await session.execute(count_query)
     total_tournaments = len(count_result.scalars().all())
@@ -125,6 +149,7 @@ async def get_tournaments(
             {
                 "request": request,
                 "tournaments": tournaments,
+                "session_id": session_id,
                 "pagination": pagination,
                 "current_filters": {
                     "tier": request.query_params.get("tier", ""),
@@ -153,6 +178,7 @@ async def create_tournament(
     session.add(db_tournament)
     await session.commit()
     await session.refresh(db_tournament)
+    logger.info("Tournament created tournament_id=%s", db_tournament.id)
     return db_tournament
 
 
@@ -160,16 +186,21 @@ async def create_tournament(
 async def get_tournament(*, session: AsyncSession = Depends(get_session), id: int):
     tournament = await session.get(MobaTournament, id)
     if not tournament:
+        logger.warning("Tournament not found tournament_id=%s", id)
         raise HTTPException(status_code=404, detail="Tournament not found")
+    logger.debug("Fetched tournament tournament_id=%s", id)
     tournament = MobaTournamentPublic.model_validate(tournament.model_dump())
     return tournament
 
 
 @tournament_routes.get("/{id}/teams", response_model=list[MobaTeamPublic])
-async def get_tournament_teams(*, session: AsyncSession = Depends(get_session), id: int):
+async def get_tournament_teams(
+    *, session: AsyncSession = Depends(get_session), id: int
+):
     # Ensure tournament exists
     tournament = await session.get(MobaTournament, id)
     if not tournament:
+        logger.warning("Tournament not found tournament_id=%s", id)
         raise HTTPException(status_code=404, detail="Tournament not found")
 
     result = await session.execute(
@@ -180,8 +211,11 @@ async def get_tournament_teams(*, session: AsyncSession = Depends(get_session), 
     team_ids = [tp.team_id for tp in result.scalars().all()]
     if not team_ids:
         return []
-    teams_result = await session.execute(select(MobaTeam).where(MobaTeam.id.in_(team_ids)))
+    teams_result = await session.execute(
+        select(MobaTeam).where(MobaTeam.id.in_(team_ids))
+    )
     teams = teams_result.scalars().all()
+    logger.debug("Tournament teams loaded tournament_id=%s count=%s", id, len(teams))
     return [MobaTeamPublic.model_validate(t.model_dump()) for t in teams]
 
 
@@ -195,9 +229,11 @@ async def add_tournament_team(
 ):
     tournament = await session.get(MobaTournament, id)
     if not tournament:
+        logger.warning("Tournament not found tournament_id=%s", id)
         raise HTTPException(status_code=404, detail="Tournament not found")
     team = await session.get(MobaTeam, link.team_id)
     if not team:
+        logger.warning("Team not found team_id=%s", link.team_id)
         raise HTTPException(status_code=404, detail="Team not found")
     # avoid duplicates
     result = await session.execute(
@@ -208,10 +244,16 @@ async def add_tournament_team(
     )
     existing = result.scalars().first()
     if existing:
+        logger.debug(
+            "Tournament team already linked tournament_id=%s team_id=%s",
+            id,
+            link.team_id,
+        )
         return None
     assoc = MobaTournamentParticipant(tournament_id=id, team_id=link.team_id)
     session.add(assoc)
     await session.commit()
+    logger.info("Tournament team added tournament_id=%s team_id=%s", id, link.team_id)
     return None
 
 
@@ -229,9 +271,15 @@ async def remove_tournament_team(
     )
     assoc = result.scalars().first()
     if not assoc:
+        logger.warning(
+            "Tournament team link not found tournament_id=%s team_id=%s",
+            id,
+            team_id,
+        )
         return None
     await session.delete(assoc)
     await session.commit()
+    logger.info("Tournament team removed tournament_id=%s team_id=%s", id, team_id)
     return None
 
 
@@ -244,12 +292,14 @@ async def update_tournament(
 ):
     db_tournament = await session.get(MobaTournament, id)
     if not db_tournament:
+        logger.warning("Tournament not found tournament_id=%s", id)
         raise HTTPException(status_code=404, detail="Tournament not found")
     tournament_data = tournament.model_dump(exclude_unset=True)
     db_tournament.sqlmodel_update(tournament_data)
     session.add(db_tournament)
     await session.commit()
     await session.refresh(db_tournament)
+    logger.info("Tournament updated tournament_id=%s", id)
     return db_tournament
 
 
@@ -257,9 +307,11 @@ async def update_tournament(
 async def delete_tournament(*, session: AsyncSession = Depends(get_session), id: int):
     tournament = await session.get(MobaTournament, id)
     if not tournament:
+        logger.warning("Tournament not found tournament_id=%s", id)
         raise HTTPException(status_code=404, detail="Tournament not found")
     await session.delete(tournament)
     await session.commit()
+    logger.info("Tournament deleted tournament_id=%s", id)
     return None
 
 

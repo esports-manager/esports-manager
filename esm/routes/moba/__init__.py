@@ -13,6 +13,7 @@ from .staff import staff_routes
 from .lineup import lineup_routes
 from .draft import draft_routes
 from .match import match_routes
+from .session import session_routes
 
 moba_router = APIRouter(
     prefix="/moba",
@@ -31,3 +32,4 @@ moba_router.include_router(simulation_routes)
 moba_router.include_router(lineup_routes)
 moba_router.include_router(draft_routes)
 moba_router.include_router(match_routes)
+moba_router.include_router(session_routes)

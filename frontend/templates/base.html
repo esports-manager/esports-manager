@@ -16,7 +16,9 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <!DOCTYPE html>
-<html lang="en" x-data="{
+<html lang="en"
+  data-initial-session-id="{{ session_id|default('', true) }}"
+  x-data="{
     darkMode: $persist(localStorage.getItem('darkMode')
       ? JSON.parse(localStorage.getItem('darkMode'))
       : window.matchMedia('(prefers-color-scheme: dark)').matches).using(sessionStorage),
@@ -37,19 +39,56 @@
   <script defer src="{{ url_for('static', path='js/alpine.persist.min.js') }}"></script>
   <script defer src="{{ url_for('static', path='js/alpine.min.js') }}"></script>
   <script>
-    window.continueActionState = {
+    window.initialSessionId = document.documentElement.dataset.initialSessionId || "";
+
+    window.normalizeSessionId = function (value) {
+      if (value === null || value === undefined) {
+        return "";
+      }
+      const raw = String(value).trim();
+      if (!raw) {
+        return "";
+      }
+      const lowered = raw.toLowerCase();
+      if (["none", "null", "undefined"].includes(lowered)) {
+        return "";
+      }
+      if (!/^[A-Za-z0-9_-]+$/.test(raw)) {
+        return "";
+      }
+      return raw;
+    };
+
+    window.getSessionQuery = function () {
+      const resolved = window.resolveSessionId ? window.resolveSessionId() : "";
+      const fallback = window.normalizeSessionId
+        ? window.normalizeSessionId(window.initialSessionId)
+        : window.initialSessionId || "";
+      const sessionId = resolved || fallback || "";
+      return sessionId ? `?session_id=${sessionId}` : "";
+    };
+
+    window.defaultContinueActionState = {
       label: "Continue",
       href: "",
       enabled: false,
       tooltip: "Complete the current step to continue.",
       onClick: "",
+      hxPost: "",
+      hxSwap: "",
+      hxTarget: "",
+    };
+
+    window.continueActionState = {
+      ...window.defaultContinueActionState,
     };
 
     window.setContinueAction = function (action) {
       window.continueActionState = {
-        ...window.continueActionState,
+        ...window.defaultContinueActionState,
         ...action,
       };
+
       if (document.readyState === "loading") {
         return;
       }
@@ -59,13 +98,163 @@
     };
 
     window.resetContinueAction = function () {
-      window.setContinueAction({
-        label: "Continue",
-        href: "",
-        enabled: false,
-        tooltip: "Complete the current step to continue.",
-        onClick: "",
+      window.setContinueAction({});
+    };
+
+    window.sessionState = {
+      data: null,
+      status: "idle",
+    };
+
+    window.resolveSessionId = function () {
+      const params = new URLSearchParams(window.location.search);
+      const urlSessionId = window.normalizeSessionId
+        ? window.normalizeSessionId(params.get("session_id"))
+        : params.get("session_id");
+      if (urlSessionId) {
+        localStorage.setItem("activeSessionId", urlSessionId);
+        return urlSessionId;
+      }
+      const storedSessionId = window.normalizeSessionId
+        ? window.normalizeSessionId(localStorage.getItem("activeSessionId"))
+        : localStorage.getItem("activeSessionId");
+      if (storedSessionId) {
+        localStorage.setItem("activeSessionId", storedSessionId);
+        return storedSessionId;
+      }
+      localStorage.removeItem("activeSessionId");
+      return "";
+    };
+
+    window.getTeamInitials = function (name) {
+      if (!name) {
+        return "TEAM";
+      }
+      const words = name.split(" ").filter(Boolean);
+      if (words.length === 1) {
+        return words[0].slice(0, 3).toUpperCase();
+      }
+      return words
+        .slice(0, 3)
+        .map((word) => word[0])
+        .join("")
+        .toUpperCase();
+    };
+
+    window.applySessionBindings = function (session) {
+      document.querySelectorAll("[data-session-team-name]").forEach((el) => {
+        const fallback = el.dataset.sessionDefault || "Your Team";
+        el.textContent = session?.team_name || fallback;
       });
+
+      document.querySelectorAll("[data-session-manager-name]").forEach((el) => {
+        const fallback = el.dataset.sessionDefault || "Manager";
+        el.textContent = session?.manager_display_name || fallback;
+      });
+
+      document.querySelectorAll("[data-session-save-name]").forEach((el) => {
+        const fallback = el.dataset.sessionDefault || "Active save";
+        el.textContent = session?.name || fallback;
+      });
+
+      document.querySelectorAll("[data-session-current-day]").forEach((el) => {
+        if (session?.current_day !== undefined && session?.current_day !== null) {
+          el.textContent = session.current_day;
+        }
+      });
+
+      document.querySelectorAll("[data-session-team-short]").forEach((el) => {
+        const fallback = el.dataset.sessionDefault || "TEAM";
+        const shortName = session?.team_name
+          ? window.getTeamInitials(session.team_name)
+          : fallback;
+        el.textContent = shortName;
+      });
+
+      document.querySelectorAll("[data-session-team-logo]").forEach((img) => {
+        const fallback = img.dataset.sessionTeamFallback || img.src;
+        if (session?.team_logo_url) {
+          img.src = session.team_logo_url;
+          return;
+        }
+        if (fallback) {
+          img.src = fallback;
+        }
+      });
+    };
+
+    window.updateSaveButton = function (enabled) {
+      const saveButton = document.getElementById("session-save-button");
+      if (!saveButton) {
+        return;
+      }
+      saveButton.disabled = !enabled;
+      saveButton.classList.toggle("opacity-60", !enabled);
+      saveButton.classList.toggle("cursor-not-allowed", !enabled);
+    };
+
+    window.updateSaveAction = function (sessionId) {
+      const saveButton = document.getElementById("session-save-button");
+      if (!saveButton) {
+        return;
+      }
+      const normalized = window.normalizeSessionId
+        ? window.normalizeSessionId(sessionId)
+        : sessionId || "";
+      if (!normalized) {
+        saveButton.removeAttribute("hx-post");
+        if (window.htmx) {
+          window.htmx.process(saveButton);
+        }
+        return;
+      }
+      saveButton.setAttribute("hx-post", `/api/moba/sessions/${normalized}/save`);
+      if (window.htmx) {
+        window.htmx.process(saveButton);
+      }
+    };
+
+    window.setSessionMissing = function () {
+      window.sessionState = { data: null, status: "missing" };
+      window.applySessionBindings(null);
+      window.updateSaveButton(false);
+      window.updateSaveAction("");
+      document.dispatchEvent(new CustomEvent("session:missing"));
+    };
+
+    window.setSessionActive = function (session) {
+      window.sessionState = { data: session, status: "ready" };
+      window.applySessionBindings(session);
+      window.updateSaveButton(true);
+      window.updateSaveAction(session?.id);
+      document.dispatchEvent(new CustomEvent("session:updated", { detail: session }));
+    };
+
+    window.loadActiveSession = async function () {
+      const sessionId = window.resolveSessionId();
+      if (!sessionId) {
+        window.setSessionMissing();
+        return null;
+      }
+      try {
+        const sessionQuery = window.getSessionQuery
+          ? window.getSessionQuery()
+          : `?session_id=${sessionId}`;
+        const response = await fetch(
+          `/api/moba/sessions/current${sessionQuery}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Session not found");
+        }
+        const data = await response.json();
+        window.setSessionActive(data);
+        return data;
+      } catch (error) {
+        localStorage.removeItem("activeSessionId");
+        window.setSessionMissing();
+        return null;
+      }
     };
 
     window.lineupBoard = function ({
@@ -87,9 +276,10 @@
           const resolvedMatchId =
             this.matchId || document.getElementById("lineup-container")?.dataset.matchId;
           if (window.setContinueAction && resolvedMatchId) {
+            const sessionQuery = window.getSessionQuery ? window.getSessionQuery() : "";
             window.setContinueAction({
               label: "Champion Selection",
-              href: `/api/moba/draft/match/${resolvedMatchId}`,
+              href: `/api/moba/draft/match/${resolvedMatchId}${sessionQuery}`,
               enabled: ready,
               tooltip: ready ? "" : "Confirm both lineups to continue.",
             });
@@ -159,7 +349,8 @@
             payload.from_slot_id = this.dragging.fromSlotId;
           }
           this.dragTarget = null;
-          htmx.ajax("POST", `/api/moba/lineup/slot/${slotId}/assign`, {
+          const sessionQuery = window.getSessionQuery ? window.getSessionQuery() : "";
+          htmx.ajax("POST", `/api/moba/lineup/slot/${slotId}/assign${sessionQuery}`, {
             target: "#lineup-container",
             swap: "outerHTML",
             values: payload,
@@ -181,9 +372,10 @@
             from_slot_id: this.dragging.fromSlotId,
           };
           this.dragTarget = null;
+          const sessionQuery = window.getSessionQuery ? window.getSessionQuery() : "";
           htmx.ajax(
             "POST",
-            `/api/moba/lineup/slot/${this.dragging.fromSlotId}/assign`,
+            `/api/moba/lineup/slot/${this.dragging.fromSlotId}/assign${sessionQuery}`,
             {
               target: "#lineup-container",
               swap: "outerHTML",
@@ -222,6 +414,9 @@
     document.addEventListener("DOMContentLoaded", () => {
       if (typeof window.applyContinueAction === "function") {
         window.applyContinueAction();
+      }
+      if (typeof window.loadActiveSession === "function") {
+        window.loadActiveSession();
       }
     });
   </script>

@@ -36,6 +36,7 @@ async def get_champions(
     request: Request,
     session: AsyncSession = Depends(get_session),
 ):
+    session_id = request.query_params.get("session_id")
     query = select(MobaChampion)
     count_query = select(MobaChampion)
 
@@ -181,6 +182,7 @@ async def get_champions(
                 "request": request,
                 "champions": champions,
                 "pagination": pagination,
+                "session_id": session_id,
                 "current_filters": {
                     "role": request.query_params.get("role", ""),
                     "difficulty": request.query_params.get("difficulty", ""),
@@ -228,7 +230,10 @@ async def get_champion(*, session: AsyncSession = Depends(get_session), id: int)
 
 @champion_routes.patch("/{id}", response_model=MobaChampionPublic)
 async def update_champion(
-    *, session: AsyncSession = Depends(get_session), id: int, champion: MobaChampionUpdate
+    *,
+    session: AsyncSession = Depends(get_session),
+    id: int,
+    champion: MobaChampionUpdate,
 ):
     db_champion = await session.get(MobaChampion, id)
     if not db_champion:
@@ -257,6 +262,7 @@ async def get_champion_meta(
     role: Optional[str] = None,
     session: AsyncSession = Depends(get_session),
 ):
+    session_id = request.query_params.get("session_id")
     """
     Get meta statistics and information for champions.
     If role is specified, return meta data for that specific role.
@@ -400,6 +406,7 @@ async def get_champion_meta(
                 "request": request,
                 "meta_data": meta_data,
                 "selected_role": selected_role,
+                "session_id": session_id,
             },
         )
 

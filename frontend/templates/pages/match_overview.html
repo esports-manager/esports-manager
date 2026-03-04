@@ -1,6 +1,9 @@
-<div class="py-6" x-data="{ status: null }" x-init="
-  fetch('/api/moba/match/{{ match.id }}/status').then(r => r.json()).then(data => status = data)
-">
+{% set session_query = '?session_id=' ~ session_id if session_id else '' %}
+<div
+  id="match-overview"
+  class="py-6"
+  x-data="{ status: {{ status|tojson }} }"
+>
   <h1 class="text-3xl font-bold mb-6 dark:text-white">Match Setup</h1>
   
   <div class="bg-white dark:bg-slate-700 rounded-lg shadow-lg p-6 mb-6">
@@ -31,7 +34,7 @@
           </div>
         </div>
         <template x-if="status && !status.lineup_confirmed">
-          <a href="/api/moba/lineup/match/{{ match.id }}" 
+          <a href="/api/moba/lineup/match/{{ match.id }}{{ session_query }}" 
              class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-medium">
             Configure Lineup
           </a>
@@ -58,7 +61,7 @@
           </div>
         </div>
         <template x-if="status && status.lineup_confirmed && !status.draft_completed">
-          <a href="/api/moba/draft/match/{{ match.id }}" 
+          <a href="/api/moba/draft/match/{{ match.id }}{{ session_query }}" 
              class="px-6 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 font-medium">
             Start Draft
           </a>
@@ -90,8 +93,9 @@
           </div>
         </div>
         <template x-if="status && status.ready_for_simulation">
-          <button 
-            @click="startSimulation()"
+          <button
+            hx-post="/api/moba/simulation/from-draft/{{ status.draft_id }}{{ session_query }}"
+            hx-swap="none"
             class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 font-medium">
             Start Match
           </button>
@@ -105,25 +109,4 @@
     </div>
   </div>
 
-  <script>
-    async function startSimulation() {
-      const composition = await fetch('/api/moba/draft/session/{{ match.id }}/composition').then(r => r.json());
-      
-      const payload = {
-        team1_id: {{ match.blue_team_id }},
-        team2_id: {{ match.red_team_id }},
-        team1_roster: composition.blue_team,
-        team2_roster: composition.red_team
-      };
-      
-      const response = await fetch('/api/moba/simulation/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      
-      const data = await response.json();
-      window.location.href = `/api/moba/simulation/view/${data.sim_id}`;
-    }
-  </script>
 </div>

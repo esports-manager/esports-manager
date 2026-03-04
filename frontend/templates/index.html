@@ -17,61 +17,45 @@
   -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>eSports Manager</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='css/tailwind.css') }}"/>
-    <link rel="stylesheet" href="{{ url_for('static', path='img/icons/bootstrap-icons.min.css') }}" />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', path='css/imgblur.css') }}"
-    />
-    <script src="{{ url_for('static', path='js/htmx.min.js') }}"></script>
-  </head>
-  <body>
-    <div class="bg-blur"></div>
 
-    <div
-      class="relative z-10 flex flex-col justify-items-center items-center justify-center min-h-screen"
-    >
-      <img
-        id="logo"
-        class="mb-8"
-        src="{{ url_for('static', path='img/logo.svg') }}"
-        alt="eSports Manager"
-      />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>eSports Manager</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='css/tailwind.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', path='img/icons/bootstrap-icons.min.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', path='css/imgblur.css') }}" />
+  <script src="{{ url_for('static', path='js/htmx.min.js') }}"></script>
+</head>
 
-      <div class="flex flex-col space-y-4 justify-center items-center">
-        <a href="/home">
-          <button
-            class="px-6 py-5 rounded-xl text-white bg-blue-600 hover:bg-blue-500 text-2xl w-72"
-          >
-            New Game
-          </button>
-        </a>
-        <a href="/load_game">
-          <button
-            class="px-6 py-5 rounded-xl text-white bg-blue-600 hover:bg-blue-500 text-2xl w-72"
-          >
-            Load Game
-          </button>
-        </a>
-        <a href="/debug_mode">
-          <button
-            class="px-6 py-5 rounded-xl text-white bg-blue-600 hover:bg-blue-500 text-2xl w-72"
-          >
-            Debug Mode
-          </button>
-        </a>
-      </div>
-    </div>
+<body>
+  <div class="bg-blur"></div>
 
-    <div class="absolute top-4 right-4 text-white text-3xl cursor-pointer">
-      <a href="/settings">
-        <i class="bi bi-gear-fill"></i>
+  <div class="relative flex flex-col justify-items-center items-center justify-center min-h-screen">
+    <img id="logo" class="mb-8" src="{{ url_for('static', path='img/logo.svg') }}" alt="eSports Manager" />
+
+    <div class="flex flex-col space-y-4 justify-center items-center">
+      <a href="/new_game">
+        <button class="px-6 py-5 rounded-xl text-white bg-blue-500 hover:bg-blue-400 text-2xl w-72">
+          New Game
+        </button>
+      </a>
+      <a href="/load_game">
+        <button class="px-6 py-5 rounded-xl text-white bg-blue-500 hover:bg-blue-400 text-2xl w-72">
+          Load Game
+        </button>
       </a>
     </div>
-  </body>
+  </div>
+
+  <a
+    class="fixed z-20 bg-slate-500 rounded-full px-5 py-4 top-4 right-4 text-white text-3xl"
+    href="/settings"
+    aria-label="Settings"
+  >
+    <i class="bi bi-gear-fill"></i>
+  </a>
+</body>
+
 </html>

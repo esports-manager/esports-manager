@@ -1,0 +1,15 @@
+{
+  "$schema": "../../schemas/competition.schema.json",
+  "id": "competition:lpd",
+  "region": "region:pindorama",
+  "teams": [
+    "team:onca_gaming",
+    "team:tempestade",
+    "team:arara_esports",
+    "team:ipe_roxo",
+    "team:mare_alta",
+    "team:capivara_club",
+    "team:raio_verde",
+    "team:sertao_kings"
+  ]
+}

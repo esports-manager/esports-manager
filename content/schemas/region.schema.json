@@ -1,0 +1,55 @@
+{
+  "$defs": {
+    "RegionDef": {
+      "additionalProperties": false,
+      "description": "A region, in `regions/`.",
+      "properties": {
+        "$schema": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "pattern": "^[a-z_]+:[a-z0-9_]+$",
+          "type": "string"
+        },
+        "level": {
+          "description": "Added to every team's mean strength in this region.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "nationalities": {
+          "additionalProperties": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "description": "Nationality ids and their weights. The total must be positive.",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "level",
+        "nationalities"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/RegionDef"
+    },
+    {
+      "items": {
+        "$ref": "#/$defs/RegionDef"
+      },
+      "type": "array"
+    }
+  ],
+  "description": "A region, in `regions/`.",
+  "title": "RegionDef"
+}

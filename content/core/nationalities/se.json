@@ -1,0 +1,6 @@
+{
+  "$schema": "../../schemas/nationality.schema.json",
+  "id": "nationality:se",
+  "code": "SE",
+  "name_order": "given_first"
+}

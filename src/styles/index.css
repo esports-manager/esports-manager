@@ -1,0 +1,35 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+@import "tailwindcss";
+@import "./tokens.css";
+
+/* Expose the tokens to Tailwind utilities: bg-surface-panel, text-muted… */
+@theme inline {
+  --color-surface-base: var(--surface-base);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-panel: var(--surface-panel);
+  --color-primary: var(--text-primary);
+  --color-muted: var(--text-muted);
+  --color-accent-text: var(--text-accent);
+  --color-on-accent: var(--text-on-accent);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-hover: var(--accent-hover);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --font-sans: var(--font-sans);
+}
+
+body {
+  background: var(--surface-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}

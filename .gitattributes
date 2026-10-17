@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Keep LF everywhere so generated files (src/bindings.ts) compare equal on
+# every OS (ADR 0006).
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.icns binary
+*.esmsave binary

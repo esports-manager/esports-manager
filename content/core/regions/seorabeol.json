@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schemas/region.schema.json",
+  "id": "region:seorabeol",
+  "level": 4,
+  "nationalities": {
+    "nationality:kr": 94,
+    "nationality:cn": 3,
+    "nationality:vn": 3
+  }
+}

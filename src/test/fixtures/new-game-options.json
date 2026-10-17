@@ -1,0 +1,218 @@
+{
+  "regions": [
+    {
+      "id": "region:pindorama",
+      "leagueId": "competition:lpd",
+      "leagueMessage": "competition-lpd",
+      "nameMessage": "region-pindorama",
+      "teams": [
+        {
+          "crest": {
+            "border": "#1D7874",
+            "fill": "#E63946",
+            "tag": "ARA",
+            "text": "#000000"
+          },
+          "id": "team:arara_esports",
+          "nameMessage": "team-arara_esports",
+          "strength": 4
+        },
+        {
+          "crest": {
+            "border": "#F2E8CF",
+            "fill": "#8C5A3C",
+            "tag": "CAP",
+            "text": "#FFFFFF"
+          },
+          "id": "team:capivara_club",
+          "nameMessage": "team-capivara_club",
+          "strength": 3
+        },
+        {
+          "crest": {
+            "border": "#F4E04D",
+            "fill": "#7B2D8E",
+            "tag": "IPR",
+            "text": "#FFFFFF"
+          },
+          "id": "team:ipe_roxo",
+          "nameMessage": "team-ipe_roxo",
+          "strength": 4
+        },
+        {
+          "crest": {
+            "border": "#FFFFFF",
+            "fill": "#0077B6",
+            "tag": "MAR",
+            "text": "#FFFFFF"
+          },
+          "id": "team:mare_alta",
+          "nameMessage": "team-mare_alta",
+          "strength": 3
+        },
+        {
+          "crest": {
+            "border": "#1A1A1A",
+            "fill": "#D9A21B",
+            "tag": "ONC",
+            "text": "#000000"
+          },
+          "id": "team:onca_gaming",
+          "nameMessage": "team-onca_gaming",
+          "strength": 5
+        },
+        {
+          "crest": {
+            "border": "#F7F7F7",
+            "fill": "#1B9E4B",
+            "tag": "RVD",
+            "text": "#000000"
+          },
+          "id": "team:raio_verde",
+          "nameMessage": "team-raio_verde",
+          "strength": 2
+        },
+        {
+          "crest": {
+            "border": "#F6BD60",
+            "fill": "#C1440E",
+            "tag": "STK",
+            "text": "#FFFFFF"
+          },
+          "id": "team:sertao_kings",
+          "nameMessage": "team-sertao_kings",
+          "strength": 2
+        },
+        {
+          "crest": {
+            "border": "#9AD0EC",
+            "fill": "#2D3E8C",
+            "tag": "TMP",
+            "text": "#FFFFFF"
+          },
+          "id": "team:tempestade",
+          "nameMessage": "team-tempestade",
+          "strength": 4
+        }
+      ]
+    },
+    {
+      "id": "region:seorabeol",
+      "leagueId": "competition:spl",
+      "leagueMessage": "competition-spl",
+      "nameMessage": "region-seorabeol",
+      "teams": [
+        {
+          "crest": {
+            "border": "#F2C14E",
+            "fill": "#1E5AA8",
+            "tag": "AZT",
+            "text": "#FFFFFF"
+          },
+          "id": "team:azure_tigers",
+          "nameMessage": "team-azure_tigers",
+          "strength": 5
+        },
+        {
+          "crest": {
+            "border": "#D9C38A",
+            "fill": "#1F3B2D",
+            "tag": "BPN",
+            "text": "#FFFFFF"
+          },
+          "id": "team:black_pine",
+          "nameMessage": "team-black_pine",
+          "strength": 3
+        },
+        {
+          "crest": {
+            "border": "#1C1C1C",
+            "fill": "#B3122E",
+            "tag": "CDY",
+            "text": "#FFFFFF"
+          },
+          "id": "team:crimson_dynasty",
+          "nameMessage": "team-crimson_dynasty",
+          "strength": 5
+        },
+        {
+          "crest": {
+            "border": "#5B2A86",
+            "fill": "#F28C28",
+            "tag": "EPX",
+            "text": "#000000"
+          },
+          "id": "team:echo_phoenix",
+          "nameMessage": "team-echo_phoenix",
+          "strength": 2
+        },
+        {
+          "crest": {
+            "border": "#2F80ED",
+            "fill": "#6E6E6E",
+            "tag": "GRW",
+            "text": "#FFFFFF"
+          },
+          "id": "team:granite_wolves",
+          "nameMessage": "team-granite_wolves",
+          "strength": 3
+        },
+        {
+          "crest": {
+            "border": "#FFFFFF",
+            "fill": "#4FA3D9",
+            "tag": "HNL",
+            "text": "#000000"
+          },
+          "id": "team:haneul_esports",
+          "nameMessage": "team-haneul_esports",
+          "strength": 4
+        },
+        {
+          "crest": {
+            "border": "#E03A3E",
+            "fill": "#5A6470",
+            "tag": "ICR",
+            "text": "#FFFFFF"
+          },
+          "id": "team:iron_cranes",
+          "nameMessage": "team-iron_cranes",
+          "strength": 4
+        },
+        {
+          "crest": {
+            "border": "#E8E4F2",
+            "fill": "#3B2F6B",
+            "tag": "MRG",
+            "text": "#FFFFFF"
+          },
+          "id": "team:moonrise_gaming",
+          "nameMessage": "team-moonrise_gaming",
+          "strength": 5
+        },
+        {
+          "crest": {
+            "border": "#29335C",
+            "fill": "#E4572E",
+            "tag": "PLS",
+            "text": "#000000"
+          },
+          "id": "team:pulse_seven",
+          "nameMessage": "team-pulse_seven",
+          "strength": 4
+        },
+        {
+          "crest": {
+            "border": "#F5D547",
+            "fill": "#0B1D3A",
+            "tag": "SFL",
+            "text": "#FFFFFF"
+          },
+          "id": "team:starfall",
+          "nameMessage": "team-starfall",
+          "strength": 3
+        }
+      ]
+    }
+  ]
+}

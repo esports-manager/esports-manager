@@ -1,0 +1,64 @@
+# SPDX-FileCopyrightText: 2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Enforced quality configuration, read by `cargo xtask`.
+#
+# These numbers and lists are the gates described in the ADRs. Weakening one
+# (lowering a threshold, allowing a new dependency edge, removing a denied
+# word) must happen in a PR that also updates the ADR it comes from.
+
+# Minimum line coverage per crate, in percent (ADR 0008).
+# A crate with no instrumented lines yet is reported and skipped.
+[coverage]
+domain = 90
+esports = 90
+app = 90
+packages = 80
+db = 80
+cli = 60
+# The desktop adapter in src-tauri/.
+esports-manager = 60
+
+# Allowed workspace dependencies for each crate (ADR 0001). Every workspace
+# member except `xtask` must appear here; a new crate needs an ADR change.
+[architecture.allowed]
+domain = []
+esports = ["domain"]
+app = ["domain", "esports"]
+packages = ["domain", "esports", "app"]
+db = ["domain", "esports", "app"]
+cli = ["app", "packages", "db"]
+esports-manager = ["app", "packages", "db"]
+
+# External crates that must not appear anywhere in the normal dependency tree
+# of these crates (ADR 0001 rule 1).
+[architecture.banned]
+domain = ["diesel", "libsqlite3-sys", "rusqlite", "sqlx", "tauri", "tokio"]
+esports = ["diesel", "libsqlite3-sys", "rusqlite", "sqlx", "tauri", "tokio"]
+
+# Words that must not appear in the genre-agnostic core (ADR 0002).
+# Matched case-insensitively as whole words in every file under the crate.
+[vocabulary]
+crate = "domain"
+denied = [
+    "baron",
+    "champion",
+    "champions",
+    "dragon",
+    "herald",
+    "inhibitor",
+    "jungle",
+    "jungler",
+    "lane",
+    "lanes",
+    "minion",
+    "minions",
+    "moba",
+    "nexus",
+]
+
+# Modules converting package types to domain types (ADR 0005). Rest patterns
+# are banned in them, so every field must be bound.
+[packages]
+conversion = ["crates/packages/src/convert.rs"]

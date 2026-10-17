@@ -1,0 +1,17 @@
+{
+  "$schema": "../../schemas/competition.schema.json",
+  "id": "competition:spl",
+  "region": "region:seorabeol",
+  "teams": [
+    "team:azure_tigers",
+    "team:crimson_dynasty",
+    "team:moonrise_gaming",
+    "team:iron_cranes",
+    "team:haneul_esports",
+    "team:pulse_seven",
+    "team:black_pine",
+    "team:starfall",
+    "team:granite_wolves",
+    "team:echo_phoenix"
+  ]
+}

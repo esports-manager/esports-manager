@@ -1,0 +1,67 @@
+{
+  "$defs": {
+    "TeamDef": {
+      "additionalProperties": false,
+      "description": "A team, in `teams/`.",
+      "properties": {
+        "$schema": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "colours": {
+          "description": "Two `#RRGGBB` colours: the crest's fill and its border.",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^[a-z_]+:[a-z0-9_]+$",
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "reputation": {
+          "description": "1 to 100.",
+          "format": "uint32",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "tag": {
+          "description": "Three uppercase letters or digits.",
+          "pattern": "^[A-Z0-9]{3}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "region",
+        "tag",
+        "colours",
+        "reputation"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/TeamDef"
+    },
+    {
+      "items": {
+        "$ref": "#/$defs/TeamDef"
+      },
+      "type": "array"
+    }
+  ],
+  "description": "A team, in `teams/`.",
+  "title": "TeamDef"
+}

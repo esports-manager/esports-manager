@@ -1,0 +1,38 @@
+# SPDX-FileCopyrightText: 2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+[package]
+name = "esports-manager"
+description = "eSports Manager desktop app: a thin Tauri adapter over the `app` crate (ADR 0001)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[lib]
+name = "esports_manager_lib"
+# staticlib and cdylib are what Tauri's mobile targets link against.
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build.workspace = true
+
+[dependencies]
+app.workspace = true
+db.workspace = true
+packages.workspace = true
+serde.workspace = true
+specta.workspace = true
+specta-typescript.workspace = true
+tauri.workspace = true
+tauri-specta.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
+tauri = { workspace = true, features = ["test"] }
+
+[lints]
+workspace = true

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ManifestDef",
+  "description": "`manifest.json`.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null
+    },
+    "authors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "genre": {
+      "description": "The genre, such as `moba`.",
+      "type": "string"
+    },
+    "id": {
+      "description": "The package id: `a-z`, `0-9` and `_`.",
+      "type": "string"
+    },
+    "license": {
+      "description": "An SPDX licence expression.",
+      "type": "string"
+    },
+    "locales": {
+      "description": "The locales the package's text covers. The first one is the fallback.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "title": {
+      "type": "string"
+    },
+    "version": {
+      "description": "`major.minor.patch`.",
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "version",
+    "title",
+    "license",
+    "authors",
+    "genre",
+    "locales"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:capivara_club",
+  "region": "region:pindorama",
+  "tag": "CAP",
+  "colours": [
+    "#8C5A3C",
+    "#F2E8CF"
+  ],
+  "reputation": 46
+}

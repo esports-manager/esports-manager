@@ -1,0 +1,15 @@
+{
+  "$schema": "../schemas/manifest.schema.json",
+  "id": "core",
+  "version": "0.1.0",
+  "title": "eSports Manager",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    "eSports Manager contributors"
+  ],
+  "genre": "moba",
+  "locales": [
+    "en",
+    "pt-BR"
+  ]
+}

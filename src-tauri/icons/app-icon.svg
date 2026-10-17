@@ -1,0 +1,17 @@
+<!--
+SPDX-FileCopyrightText: 2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- Placeholder app icon (ADR 0010): an "E" monogram on the current palette. -->
+  <rect width="1024" height="1024" rx="224" fill="#0f172a"/>
+  <rect x="96" y="96" width="832" height="832" rx="176" fill="none" stroke="#1e293b" stroke-width="32"/>
+  <g fill="#3b82f6">
+    <rect x="312" y="248" width="400" height="104" rx="24"/>
+    <rect x="312" y="460" width="320" height="104" rx="24"/>
+    <rect x="312" y="672" width="400" height="104" rx="24"/>
+    <rect x="312" y="248" width="112" height="528" rx="24"/>
+  </g>
+  <rect x="680" y="460" width="104" height="104" rx="24" fill="#60a5fa"/>
+</svg>

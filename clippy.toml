@@ -1,0 +1,21 @@
+# SPDX-FileCopyrightText: 2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Workspace-wide clippy configuration. See ADR 0003 and ADR 0008.
+allow-unwrap-in-tests = true
+allow-expect-in-tests = true
+allow-panic-in-tests = true
+
+# Determinism (ADR 0003). Adapters that genuinely need one of these (an
+# autosave timestamp, say) allow it at the call site with a comment.
+disallowed-methods = [
+    { path = "rand::rng", reason = "ADR 0003: take an RNG stream from app::RngProvider", allow-invalid = true },
+    { path = "rand::thread_rng", reason = "ADR 0003: take an RNG stream from app::RngProvider", allow-invalid = true },
+    { path = "std::time::SystemTime::now", reason = "ADR 0003: no wall-clock outside adapters" },
+    { path = "std::time::Instant::now", reason = "ADR 0003: no wall-clock outside adapters" },
+]
+disallowed-types = [
+    { path = "std::collections::HashMap", reason = "ADR 0003: iteration order must be deterministic; use BTreeMap or IndexMap" },
+    { path = "std::collections::HashSet", reason = "ADR 0003: iteration order must be deterministic; use BTreeSet or IndexSet" },
+]

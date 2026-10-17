@@ -1,0 +1,145 @@
+{
+  "$defs": {
+    "GenerationDef": {
+      "additionalProperties": false,
+      "description": "The generator's constants, in `generation/`. A package defines exactly\none. See the world generation spec for what each one does.",
+      "properties": {
+        "$schema": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "age_max": {
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "age_mean": {
+          "format": "double",
+          "type": "number"
+        },
+        "age_min": {
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "age_spread": {
+          "format": "double",
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "attribute_spread": {
+          "format": "double",
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "bias_scale": {
+          "format": "double",
+          "type": "number"
+        },
+        "consistency_mean": {
+          "format": "double",
+          "type": "number"
+        },
+        "consistency_spread": {
+          "format": "double",
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "id": {
+          "pattern": "^[a-z_]+:[a-z0-9_]+$",
+          "type": "string"
+        },
+        "mu_base": {
+          "format": "double",
+          "type": "number"
+        },
+        "mu_per_reputation": {
+          "format": "double",
+          "type": "number"
+        },
+        "nickname_pool_factor": {
+          "format": "uint32",
+          "minimum": 1,
+          "type": "integer"
+        },
+        "potential_peak_age": {
+          "format": "double",
+          "type": "number"
+        },
+        "potential_per_year": {
+          "format": "double",
+          "type": "number"
+        },
+        "potential_spread": {
+          "format": "double",
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "sigma_base": {
+          "format": "double",
+          "type": "number"
+        },
+        "sigma_min": {
+          "format": "double",
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "sigma_per_reputation": {
+          "format": "double",
+          "type": "number"
+        },
+        "style_mean": {
+          "format": "double",
+          "type": "number"
+        },
+        "style_spread": {
+          "format": "double",
+          "minimum": 0.0,
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "mu_base",
+        "mu_per_reputation",
+        "sigma_base",
+        "sigma_per_reputation",
+        "sigma_min",
+        "attribute_spread",
+        "bias_scale",
+        "style_mean",
+        "style_spread",
+        "consistency_mean",
+        "consistency_spread",
+        "potential_peak_age",
+        "potential_per_year",
+        "potential_spread",
+        "age_mean",
+        "age_spread",
+        "age_min",
+        "age_max",
+        "nickname_pool_factor"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/GenerationDef"
+    },
+    {
+      "items": {
+        "$ref": "#/$defs/GenerationDef"
+      },
+      "type": "array"
+    }
+  ],
+  "description": "The generator's constants, in `generation/`. A package defines exactly\none. See the world generation spec for what each one does.",
+  "title": "GenerationDef"
+}

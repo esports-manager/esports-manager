@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:onca_gaming",
+  "region": "region:pindorama",
+  "tag": "ONC",
+  "colours": [
+    "#D9A21B",
+    "#1A1A1A"
+  ],
+  "reputation": 85
+}

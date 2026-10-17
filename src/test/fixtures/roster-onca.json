@@ -1,0 +1,130 @@
+{
+  "starters": [
+    {
+      "age": 25,
+      "familyName": "Andrade",
+      "givenName": "Igor",
+      "id": "player:onca_gaming.1",
+      "nameOrder": "given-first",
+      "nationality": {
+        "code": "BR",
+        "id": "nationality:br",
+        "nameMessage": "nationality-br"
+      },
+      "nickname": "Zinc",
+      "overall": 67,
+      "roleId": "role:top",
+      "roleMessage": "role-top"
+    },
+    {
+      "age": 23,
+      "familyName": "Ferreira",
+      "givenName": "Yasmin",
+      "id": "player:onca_gaming.2",
+      "nameOrder": "given-first",
+      "nationality": {
+        "code": "BR",
+        "id": "nationality:br",
+        "nameMessage": "nationality-br"
+      },
+      "nickname": "Torque",
+      "overall": 61,
+      "roleId": "role:jungle",
+      "roleMessage": "role-jungle"
+    },
+    {
+      "age": 24,
+      "familyName": "Nunes",
+      "givenName": "Letícia",
+      "id": "player:onca_gaming.3",
+      "nameOrder": "given-first",
+      "nationality": {
+        "code": "BR",
+        "id": "nationality:br",
+        "nameMessage": "nationality-br"
+      },
+      "nickname": "Cache",
+      "overall": 62,
+      "roleId": "role:mid",
+      "roleMessage": "role-mid"
+    },
+    {
+      "age": 17,
+      "familyName": "Ribeiro",
+      "givenName": "Caio",
+      "id": "player:faisca",
+      "nameOrder": "given-first",
+      "nationality": {
+        "code": "BR",
+        "id": "nationality:br",
+        "nameMessage": "nationality-br"
+      },
+      "nickname": "Faisca",
+      "overall": 70,
+      "roleId": "role:bot",
+      "roleMessage": "role-bot"
+    },
+    {
+      "age": 24,
+      "familyName": "Barbieri",
+      "givenName": "Edoardo",
+      "id": "player:onca_gaming.4",
+      "nameOrder": "given-first",
+      "nationality": {
+        "code": "IT",
+        "id": "nationality:it",
+        "nameMessage": "nationality-it"
+      },
+      "nickname": "Ocelot",
+      "overall": 66,
+      "roleId": "role:support",
+      "roleMessage": "role-support"
+    }
+  ],
+  "subs": [
+    {
+      "age": 23,
+      "familyName": "Nunes",
+      "givenName": "Gustavo",
+      "id": "player:onca_gaming.6",
+      "nameOrder": "given-first",
+      "nationality": {
+        "code": "BR",
+        "id": "nationality:br",
+        "nameMessage": "nationality-br"
+      },
+      "nickname": "Gable",
+      "overall": 63,
+      "roleId": "role:bot",
+      "roleMessage": "role-bot"
+    },
+    {
+      "age": 25,
+      "familyName": "Moreira",
+      "givenName": "Miguel",
+      "id": "player:onca_gaming.5",
+      "nameOrder": "given-first",
+      "nationality": {
+        "code": "BR",
+        "id": "nationality:br",
+        "nameMessage": "nationality-br"
+      },
+      "nickname": "Zipline",
+      "overall": 55,
+      "roleId": "role:support",
+      "roleMessage": "role-support"
+    }
+  ],
+  "team": {
+    "crest": {
+      "border": "#1A1A1A",
+      "fill": "#D9A21B",
+      "tag": "ONC",
+      "text": "#000000"
+    },
+    "id": "team:onca_gaming",
+    "leagueMessage": "competition-lpd",
+    "nameMessage": "team-onca_gaming",
+    "regionMessage": "region-pindorama"
+  }
+}

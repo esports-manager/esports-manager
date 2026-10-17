@@ -1,0 +1,57 @@
+{
+  "$defs": {
+    "NamePoolDef": {
+      "additionalProperties": false,
+      "description": "Given and family names of one nationality, in `name-pools/`.",
+      "properties": {
+        "$schema": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "family": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "given": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^[a-z_]+:[a-z0-9_]+$",
+          "type": "string"
+        },
+        "nationality": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "nationality",
+        "given",
+        "family"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/NamePoolDef"
+    },
+    {
+      "items": {
+        "$ref": "#/$defs/NamePoolDef"
+      },
+      "type": "array"
+    }
+  ],
+  "description": "Given and family names of one nationality, in `name-pools/`.",
+  "title": "NamePoolDef"
+}

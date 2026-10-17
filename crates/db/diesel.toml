@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Diesel CLI configuration. `just db-schema` regenerates src/schema.rs from
+# the migrations, and CI fails if the committed copy differs (ADR 0004).
+[print_schema]
+file = "src/schema.rs"
+custom_type_derives = ["diesel::query_builder::QueryId", "Clone"]
+
+[migrations_directory]
+dir = "migrations"

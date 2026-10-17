@@ -1,0 +1,16 @@
+{
+  "$schema": "../../schemas/player.schema.json",
+  "id": "player:monsoon",
+  "team": "team:tempestade",
+  "role": "role:support",
+  "nickname": "Monsoon",
+  "given_name": "Ji-hoon",
+  "family_name": "Park",
+  "nationality": "nationality:kr",
+  "birth_date": "1998-11-02",
+  "attributes": {
+    "shotcalling": 90,
+    "teamwork": 88,
+    "mechanics": 62
+  }
+}

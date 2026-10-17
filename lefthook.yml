@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Fast pre-commit checks (ADR 0008). Install with `just hooks`.
+# The full gate set is `just check`, which CI runs on every PR.
+pre-commit:
+  parallel: true
+  jobs:
+    - name: rust format
+      glob: "*.rs"
+      run: cargo fmt --all --check
+    - name: biome
+      glob: "*.{ts,tsx,json,css}"
+      run: pnpm exec biome check --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+    - name: bindings up to date
+      glob: "{crates,src-tauri}/**/*.rs"
+      run: cargo test --locked --quiet -p esports-manager typescript_bindings_are_up_to_date

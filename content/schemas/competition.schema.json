@@ -1,0 +1,50 @@
+{
+  "$defs": {
+    "CompetitionDef": {
+      "additionalProperties": false,
+      "description": "A league, in `competitions/`.",
+      "properties": {
+        "$schema": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "pattern": "^[a-z_]+:[a-z0-9_]+$",
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "teams": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "region",
+        "teams"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/CompetitionDef"
+    },
+    {
+      "items": {
+        "$ref": "#/$defs/CompetitionDef"
+      },
+      "type": "array"
+    }
+  ],
+  "description": "A league, in `competitions/`.",
+  "title": "CompetitionDef"
+}

@@ -1,0 +1,46 @@
+# SPDX-FileCopyrightText: 2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# cargo-deny configuration (ADR 0008).
+
+[graph]
+all-features = true
+
+[advisories]
+# Advisories run on a weekly schedule (see .github/workflows/weekly.yml) so a
+# new upstream advisory doesn't block unrelated PRs.
+yanked = "deny"
+
+[licenses]
+# Licences compatible with distributing the game under GPL-3.0-or-later.
+allow = [
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "CC0-1.0",
+    "GPL-3.0-or-later",
+    "ISC",
+    "MIT",
+    "MPL-2.0",
+    "Unicode-3.0",
+    "Zlib",
+]
+confidence-threshold = 0.9
+# The allow-list is a policy, not an inventory: licences we accept but no
+# current dependency uses are fine.
+unused-allowed-license = "allow"
+
+[licenses.private]
+ignore = true
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+allow-wildcard-paths = true
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]

@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:black_pine",
+  "region": "region:seorabeol",
+  "tag": "BPN",
+  "colours": [
+    "#1F3B2D",
+    "#D9C38A"
+  ],
+  "reputation": 54
+}

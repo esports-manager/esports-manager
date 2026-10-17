@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:moonrise_gaming",
+  "region": "region:seorabeol",
+  "tag": "MRG",
+  "colours": [
+    "#3B2F6B",
+    "#E8E4F2"
+  ],
+  "reputation": 82
+}

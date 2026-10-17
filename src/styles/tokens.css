@@ -1,0 +1,42 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/*
+ * Design tokens: the only place colours and sizes are defined (ADR 0006).
+ * Components use them through the Tailwind theme in index.css. Every
+ * --text-* colour must reach WCAG AA (4.5:1) on every --surface-* colour;
+ * tools/design/contrast.test.ts enforces it.
+ *
+ * Values follow the current visual direction (dark slate, blue accent) until
+ * the design exploration picks a final one.
+ */
+:root {
+  color-scheme: dark;
+
+  --surface-base: #0b1120;
+  --surface-raised: #0f172a;
+  --surface-panel: #1e293b;
+
+  --text-primary: #e2e8f0;
+  --text-muted: #a3b2c6;
+  --text-accent: #7cb4fb;
+  /* Text on --accent-strong buttons (5.2:1) and their --accent-hover state (6.7:1). */
+  --text-on-accent: #ffffff;
+
+  --accent: #3b82f6;
+  --accent-strong: #2563eb;
+  --accent-hover: #1d4ed8;
+  --positive: #22c55e;
+  --negative: #ef4444;
+  --warning: #f59e0b;
+
+  --border: #334155;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}

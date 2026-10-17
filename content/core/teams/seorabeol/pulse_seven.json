@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:pulse_seven",
+  "region": "region:seorabeol",
+  "tag": "PLS",
+  "colours": [
+    "#E4572E",
+    "#29335C"
+  ],
+  "reputation": 61
+}

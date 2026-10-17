@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:granite_wolves",
+  "region": "region:seorabeol",
+  "tag": "GRW",
+  "colours": [
+    "#6E6E6E",
+    "#2F80ED"
+  ],
+  "reputation": 41
+}

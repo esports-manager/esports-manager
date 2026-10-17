@@ -1,0 +1,11 @@
+nationality-br = Brazil
+nationality-kr = South Korea
+nationality-cn = China
+nationality-us = United States
+nationality-ar = Argentina
+nationality-se = Sweden
+nationality-vn = Vietnam
+nationality-de = Germany
+nationality-fr = France
+nationality-es = Spain
+nationality-it = Italy

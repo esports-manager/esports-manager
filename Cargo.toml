@@ -1,0 +1,75 @@
+# SPDX-FileCopyrightText: 2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+[workspace]
+resolver = "3"
+members = [
+    "crates/domain",
+    "crates/esports",
+    "crates/app",
+    "crates/packages",
+    "crates/db",
+    "crates/cli",
+    "src-tauri",
+    "xtask",
+]
+
+[workspace.package]
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.99"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/esports-manager/esports-manager"
+publish = false
+
+[workspace.dependencies]
+domain = { path = "crates/domain" }
+esports = { path = "crates/esports" }
+app = { path = "crates/app" }
+packages = { path = "crates/packages" }
+db = { path = "crates/db" }
+
+anyhow = "1.0.104"
+cargo_metadata = "0.23.1"
+clap = { version = "4.6.7", features = ["derive"] }
+diesel = { version = "2.3.14", default-features = false, features = ["sqlite", "32-column-tables"] }
+diesel_migrations = { version = "2.3.2", features = ["sqlite"] }
+dirs = "7.0.0"
+fluent-bundle = "0.16.0"
+fluent-syntax = "0.12.0"
+getrandom = "0.4.3"
+# Pure-Rust maths, so floating-point results are the same on every OS (ADR 0003).
+libm = "0.2.16"
+rand_chacha = "0.10.0"
+rand_core = "0.10.1"
+schemars = "1.2.3"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = { version = "1.0", features = ["raw_value"] }
+serde_path_to_error = "0.1.20"
+sha2 = "0.10.9"
+# tauri-specta is a release candidate that pins specta exactly (ADR 0006).
+specta = { version = "=2.0.0-rc.25", features = ["derive"] }
+specta-typescript = "0.0.12"
+tauri = "2.12"
+tauri-build = "2.5"
+tauri-specta = { version = "=2.0.0-rc.25", features = ["derive", "typescript"] }
+thiserror = "2.0.21"
+toml = "1.1.8"
+unic-langid = "0.9.6"
+
+# Lint policy: ADR 0008. Every allow below needs a reason.
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+pedantic = { level = "deny", priority = -1 }
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+wildcard_enum_match_arm = "deny"
+# A clone whose original is never used again should be a move.
+redundant_clone = "deny"
+# Crate names are short (`domain`, `app`), so `domain::rng::RngProvider`-style
+# repetition is the clearest naming, not noise.
+module_name_repetitions = "allow"

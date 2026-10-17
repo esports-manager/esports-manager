@@ -1,0 +1,4 @@
+{
+  "$schema": "../schemas/world.schema.json",
+  "start_date": "2027-01-01"
+}

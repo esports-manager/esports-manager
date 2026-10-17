@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:arara_esports",
+  "region": "region:pindorama",
+  "tag": "ARA",
+  "colours": [
+    "#E63946",
+    "#1D7874"
+  ],
+  "reputation": 69
+}

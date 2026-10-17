@@ -1,0 +1,28 @@
+# SPDX-FileCopyrightText: 2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+[package]
+name = "esports"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[features]
+# A small valid world template for other crates' tests.
+test-support = ["dep:rand_chacha"]
+
+[dependencies]
+rand_chacha = { workspace = true, optional = true }
+domain.workspace = true
+rand_core.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+rand_chacha.workspace = true
+
+[lints]
+workspace = true

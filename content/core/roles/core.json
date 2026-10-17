@@ -1,0 +1,77 @@
+{
+  "$schema": "../../schemas/role-set.schema.json",
+  "id": "role_set:core",
+  "roles": [
+    {
+      "id": "role:top",
+      "weights": {
+        "mechanics": 16,
+        "laning": 18,
+        "game_sense": 14,
+        "awareness": 10,
+        "positioning": 12,
+        "champion_pool_breadth": 6,
+        "shotcalling": 4,
+        "teamwork": 10,
+        "composure": 10
+      }
+    },
+    {
+      "id": "role:jungle",
+      "weights": {
+        "mechanics": 14,
+        "laning": 6,
+        "game_sense": 20,
+        "awareness": 14,
+        "positioning": 8,
+        "champion_pool_breadth": 6,
+        "shotcalling": 14,
+        "teamwork": 10,
+        "composure": 8
+      }
+    },
+    {
+      "id": "role:mid",
+      "weights": {
+        "mechanics": 20,
+        "laning": 16,
+        "game_sense": 14,
+        "awareness": 10,
+        "positioning": 12,
+        "champion_pool_breadth": 8,
+        "shotcalling": 6,
+        "teamwork": 6,
+        "composure": 8
+      }
+    },
+    {
+      "id": "role:bot",
+      "weights": {
+        "mechanics": 20,
+        "laning": 18,
+        "game_sense": 10,
+        "awareness": 10,
+        "positioning": 16,
+        "champion_pool_breadth": 6,
+        "shotcalling": 4,
+        "teamwork": 8,
+        "composure": 8
+      }
+    },
+    {
+      "id": "role:support",
+      "weights": {
+        "mechanics": 10,
+        "laning": 12,
+        "game_sense": 14,
+        "awareness": 16,
+        "positioning": 12,
+        "champion_pool_breadth": 6,
+        "shotcalling": 14,
+        "teamwork": 10,
+        "composure": 6
+      }
+    }
+  ],
+  "subs": 2
+}

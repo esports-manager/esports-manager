@@ -1,0 +1,16 @@
+{
+  "$schema": "../../schemas/region.schema.json",
+  "id": "region:pindorama",
+  "level": -4,
+  "nationalities": {
+    "nationality:br": 79,
+    "nationality:ar": 8,
+    "nationality:kr": 4,
+    "nationality:us": 2,
+    "nationality:es": 2,
+    "nationality:it": 2,
+    "nationality:fr": 1,
+    "nationality:de": 1,
+    "nationality:se": 1
+  }
+}

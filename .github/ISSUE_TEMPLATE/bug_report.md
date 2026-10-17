@@ -34,9 +34,8 @@ assignees: ''
 ## Environment Details
 <!-- Please complete as much information as possible -->
  - OS & Version: <!-- e.g., Ubuntu 22.04, Windows 11, macOS 12.4 -->
- - Python Version: <!-- e.g., 3.10.4 -->
+ - Install source: <!-- e.g., GitHub release, built from source (commit hash) -->
  - Game Version: <!-- e.g., v0.5.2 -->
- - Installation Method: <!-- e.g., git clone, download zip, pip install -->
  - Dependencies: <!-- Any relevant dependency versions (if known) -->
 
 ## Console Output/Logs

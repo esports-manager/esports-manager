@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:mare_alta",
+  "region": "region:pindorama",
+  "tag": "MAR",
+  "colours": [
+    "#0077B6",
+    "#FFFFFF"
+  ],
+  "reputation": 53
+}

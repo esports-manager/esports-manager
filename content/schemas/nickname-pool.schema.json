@@ -1,0 +1,46 @@
+{
+  "$defs": {
+    "NicknamePoolDef": {
+      "additionalProperties": false,
+      "description": "Nicknames, in `nicknames/`. All pools are merged into one.",
+      "properties": {
+        "$schema": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "pattern": "^[a-z_]+:[a-z0-9_]+$",
+          "type": "string"
+        },
+        "nicknames": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "nicknames"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/NicknamePoolDef"
+    },
+    {
+      "items": {
+        "$ref": "#/$defs/NicknamePoolDef"
+      },
+      "type": "array"
+    }
+  ],
+  "description": "Nicknames, in `nicknames/`. All pools are merged into one.",
+  "title": "NicknamePoolDef"
+}

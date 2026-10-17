@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:tempestade",
+  "region": "region:pindorama",
+  "tag": "TMP",
+  "colours": [
+    "#2D3E8C",
+    "#9AD0EC"
+  ],
+  "reputation": 77
+}

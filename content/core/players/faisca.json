@@ -1,0 +1,14 @@
+{
+  "$schema": "../../schemas/player.schema.json",
+  "id": "player:faisca",
+  "team": "team:onca_gaming",
+  "role": "role:bot",
+  "nickname": "Faisca",
+  "given_name": "Caio",
+  "family_name": "Ribeiro",
+  "nationality": "nationality:br",
+  "birth_date": "2009-08-20",
+  "attributes": {
+    "potential": 94
+  }
+}

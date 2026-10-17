@@ -1,16 +1,41 @@
 version = 1
 
+# Every file that can hold a comment carries its own SPDX header (ADR 0012).
+# Only files that can't are annotated here, so `reuse lint` fails on a file
+# that has neither. `just annotate <files>` writes a header.
+
+# JSON has no comments: tool configuration, test fixtures, and the package
+# schemas generated from the Rust types.
 [[annotations]]
-path = "esm/**"
-SPDX-FileCopyrightText = "Pedrenrique G. Guimarães"
+path = [
+    "package.json",
+    "tsconfig.json",
+    "biome.json",
+    "knip.json",
+    "src-tauri/tauri.conf.json",
+    "src-tauri/capabilities/*.json",
+    "src/test/fixtures/*.json",
+    "content/schemas/*.json",
+]
+SPDX-FileCopyrightText = "2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>"
 SPDX-License-Identifier = "GPL-3.0-or-later"
 
+# Generated files whose generator would drop a header, and files with no
+# comment syntax.
 [[annotations]]
-path = "tests/**"
-SPDX-FileCopyrightText = "Pedrenrique G. Guimarães"
+path = ["Cargo.lock", "pnpm-lock.yaml", "crates/db/src/schema.rs", ".node-version"]
+SPDX-FileCopyrightText = "2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>"
 SPDX-License-Identifier = "GPL-3.0-or-later"
 
+# Binary files: the app icons and a save written by the first schema.
 [[annotations]]
-path = "frontend/**"
-SPDX-FileCopyrightText = "Pedrenrique G. Guimarães"
+path = ["src-tauri/icons/*.png", "src-tauri/icons/*.ico", "src-tauri/icons/*.icns", "crates/db/tests/fixtures/*.esmsave"]
+SPDX-FileCopyrightText = "2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+# A content package's licence is its manifest's `license` (ADR 0011), so
+# its files carry no headers. This must match content/core/manifest.json.
+[[annotations]]
+path = "content/core/**"
+SPDX-FileCopyrightText = "2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>"
 SPDX-License-Identifier = "GPL-3.0-or-later"

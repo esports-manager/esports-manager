@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:starfall",
+  "region": "region:seorabeol",
+  "tag": "SFL",
+  "colours": [
+    "#0B1D3A",
+    "#F5D547"
+  ],
+  "reputation": 47
+}

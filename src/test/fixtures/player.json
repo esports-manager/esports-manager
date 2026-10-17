@@ -1,0 +1,90 @@
+{
+  "birthDate": "1997-03-14",
+  "hidden": [
+    {
+      "nameMessage": "attribute-consistency",
+      "value": null
+    },
+    {
+      "nameMessage": "attribute-potential",
+      "value": null
+    }
+  ],
+  "player": {
+    "age": 29,
+    "familyName": "Han",
+    "givenName": "Do-yun",
+    "id": "player:kairos",
+    "nameOrder": "family-first",
+    "nationality": {
+      "code": "KR",
+      "id": "nationality:kr",
+      "nameMessage": "nationality-kr"
+    },
+    "nickname": "Kairos",
+    "overall": 96,
+    "roleId": "role:mid",
+    "roleMessage": "role-mid"
+  },
+  "skills": [
+    {
+      "nameMessage": "attribute-mechanics",
+      "value": 95
+    },
+    {
+      "nameMessage": "attribute-laning",
+      "value": 96
+    },
+    {
+      "nameMessage": "attribute-game-sense",
+      "value": 97
+    },
+    {
+      "nameMessage": "attribute-awareness",
+      "value": 97
+    },
+    {
+      "nameMessage": "attribute-positioning",
+      "value": 95
+    },
+    {
+      "nameMessage": "attribute-champion-pool-breadth",
+      "value": 98
+    },
+    {
+      "nameMessage": "attribute-shotcalling",
+      "value": 96
+    }
+  ],
+  "starter": true,
+  "team": {
+    "crest": {
+      "border": "#F2C14E",
+      "fill": "#1E5AA8",
+      "tag": "AZT",
+      "text": "#FFFFFF"
+    },
+    "id": "team:azure_tigers",
+    "leagueMessage": "competition-spl",
+    "nameMessage": "team-azure_tigers",
+    "regionMessage": "region-seorabeol"
+  },
+  "traits": [
+    {
+      "nameMessage": "attribute-teamwork",
+      "value": 95
+    },
+    {
+      "nameMessage": "attribute-aggression",
+      "value": 54
+    },
+    {
+      "nameMessage": "attribute-composure",
+      "value": 96
+    },
+    {
+      "nameMessage": "attribute-work-ethic",
+      "value": 54
+    }
+  ]
+}

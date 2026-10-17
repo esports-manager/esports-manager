@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:azure_tigers",
+  "region": "region:seorabeol",
+  "tag": "AZT",
+  "colours": [
+    "#1E5AA8",
+    "#F2C14E"
+  ],
+  "reputation": 95
+}

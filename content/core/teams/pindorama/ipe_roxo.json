@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:ipe_roxo",
+  "region": "region:pindorama",
+  "tag": "IPR",
+  "colours": [
+    "#7B2D8E",
+    "#F4E04D"
+  ],
+  "reputation": 61
+}

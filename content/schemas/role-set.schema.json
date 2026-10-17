@@ -1,0 +1,121 @@
+{
+  "$defs": {
+    "RoleDef": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z_]+:[a-z0-9_]+$",
+          "type": "string"
+        },
+        "weights": {
+          "additionalProperties": false,
+          "description": "The weight of every attribute that counts toward overall.",
+          "properties": {
+            "awareness": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "champion_pool_breadth": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "composure": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "game_sense": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "laning": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "mechanics": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "positioning": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "shotcalling": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "teamwork": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "weights"
+      ],
+      "type": "object"
+    },
+    "RoleSetDef": {
+      "additionalProperties": false,
+      "description": "The role set and roster shape, in `roles/`. A package defines exactly one.",
+      "properties": {
+        "$schema": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "pattern": "^[a-z_]+:[a-z0-9_]+$",
+          "type": "string"
+        },
+        "roles": {
+          "description": "The roles, in display order.",
+          "items": {
+            "$ref": "#/$defs/RoleDef"
+          },
+          "type": "array"
+        },
+        "subs": {
+          "description": "Players on a roster beyond one per role.",
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "roles",
+        "subs"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/RoleSetDef"
+    },
+    {
+      "items": {
+        "$ref": "#/$defs/RoleSetDef"
+      },
+      "type": "array"
+    }
+  ],
+  "description": "The role set and roster shape, in `roles/`. A package defines exactly one.",
+  "title": "RoleSetDef"
+}

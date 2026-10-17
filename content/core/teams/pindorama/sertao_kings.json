@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:sertao_kings",
+  "region": "region:pindorama",
+  "tag": "STK",
+  "colours": [
+    "#C1440E",
+    "#F6BD60"
+  ],
+  "reputation": 30
+}

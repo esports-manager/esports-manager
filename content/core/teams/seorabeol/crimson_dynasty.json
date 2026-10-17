@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:crimson_dynasty",
+  "region": "region:seorabeol",
+  "tag": "CDY",
+  "colours": [
+    "#B3122E",
+    "#1C1C1C"
+  ],
+  "reputation": 90
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:raio_verde",
+  "region": "region:pindorama",
+  "tag": "RVD",
+  "colours": [
+    "#1B9E4B",
+    "#F7F7F7"
+  ],
+  "reputation": 38
+}

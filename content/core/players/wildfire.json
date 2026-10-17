@@ -1,0 +1,16 @@
+{
+  "$schema": "../../schemas/player.schema.json",
+  "id": "player:wildfire",
+  "team": "team:crimson_dynasty",
+  "role": "role:bot",
+  "nickname": "Wildfire",
+  "given_name": "Min-jae",
+  "family_name": "Choi",
+  "nationality": "nationality:kr",
+  "birth_date": "2004-05-09",
+  "attributes": {
+    "aggression": 96,
+    "consistency": 25,
+    "mechanics": 88
+  }
+}

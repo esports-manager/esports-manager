@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: 2026 Pedrenrique G. Guimarães <admin@esportsmanager.net>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# cargo-mutants configuration (ADR 0008).
+test_tool = "cargo"
+
+# - xtask is development tooling, gated by its own tests but not by mutation.
+# - The desktop entry points start a GUI event loop, which tests can't run.
+#   Each is one call; everything they call is tested elsewhere.
+# - Test fixtures shared through the `test-support` feature aren't product
+#   code; the tests that use them live in other crates.
+exclude_globs = ["xtask/**", "src-tauri/src/main.rs", "crates/esports/src/moba/fixtures.rs"]
+exclude_re = ['src-tauri/src/lib\.rs.*replace run -> ']

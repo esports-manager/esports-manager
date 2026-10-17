@@ -1,0 +1,206 @@
+{
+  "$defs": {
+    "PinnedAttributesDef": {
+      "additionalProperties": false,
+      "description": "Attributes pinned on a player, in whole points from 1 to 99.",
+      "properties": {
+        "aggression": {
+          "format": "uint32",
+          "maximum": 99,
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "awareness": {
+          "format": "uint32",
+          "maximum": 99,
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "champion_pool_breadth": {
+          "format": "uint32",
+          "maximum": 99,
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "composure": {
+          "format": "uint32",
+          "maximum": 99,
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "consistency": {
+          "format": "uint32",
+          "maximum": 99,
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "game_sense": {
+          "format": "uint32",
+          "maximum": 99,
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "laning": {
+          "format": "uint32",
+          "maximum": 99,
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "mechanics": {
+          "format": "uint32",
+          "maximum": 99,
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "positioning": {
+          "format": "uint32",
+          "maximum": 99,
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "potential": {
+          "format": "uint32",
+          "maximum": 99,
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "shotcalling": {
+          "format": "uint32",
+          "maximum": 99,
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "teamwork": {
+          "format": "uint32",
+          "maximum": 99,
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "work_ethic": {
+          "format": "uint32",
+          "maximum": 99,
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "PlayerDef": {
+      "additionalProperties": false,
+      "description": "A player pinned by hand, in `players/`. Every field left out is\ngenerated.",
+      "properties": {
+        "$schema": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "attributes": {
+          "$ref": "#/$defs/PinnedAttributesDef"
+        },
+        "birth_date": {
+          "description": "`YYYY-MM-DD`.",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "family_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "given_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "pattern": "^[a-z_]+:[a-z0-9_]+$",
+          "type": "string"
+        },
+        "nationality": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nickname": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "role": {
+          "type": "string"
+        },
+        "team": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "team",
+        "role"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/PlayerDef"
+    },
+    {
+      "items": {
+        "$ref": "#/$defs/PlayerDef"
+      },
+      "type": "array"
+    }
+  ],
+  "description": "A player pinned by hand, in `players/`. Every field left out is\ngenerated.",
+  "title": "PlayerDef"
+}

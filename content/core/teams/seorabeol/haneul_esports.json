@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:haneul_esports",
+  "region": "region:seorabeol",
+  "tag": "HNL",
+  "colours": [
+    "#4FA3D9",
+    "#FFFFFF"
+  ],
+  "reputation": 68
+}

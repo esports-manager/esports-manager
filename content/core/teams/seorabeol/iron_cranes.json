@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:iron_cranes",
+  "region": "region:seorabeol",
+  "tag": "ICR",
+  "colours": [
+    "#5A6470",
+    "#E03A3E"
+  ],
+  "reputation": 75
+}

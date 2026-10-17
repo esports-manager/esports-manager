@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../schemas/team.schema.json",
+  "id": "team:echo_phoenix",
+  "region": "region:seorabeol",
+  "tag": "EPX",
+  "colours": [
+    "#F28C28",
+    "#5B2A86"
+  ],
+  "reputation": 35
+}

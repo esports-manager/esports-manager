@@ -1,0 +1,7 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignoreBinaries": ["tauri-driver"],
+  "ignoreIssues": {
+    "src/bindings.ts": ["types"]
+  }
+}

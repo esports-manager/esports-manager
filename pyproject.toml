@@ -23,6 +23,7 @@ dependencies = [
     "pycountry>=24.6.1",
     "aiofiles>=24.1.0",
     "aiosqlite>=0.21.0",
+    "python-multipart>=0.0.20",
 ]
 
 [dependency-groups]

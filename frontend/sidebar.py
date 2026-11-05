@@ -37,6 +37,11 @@ sidebar = {
         "icon": "bi bi-binoculars-fill",
         "url": "scout",
     },
+    "games": {
+        "name": "Games",
+        "icon": "bi bi-joystick",
+        "url": "games",
+    },
     "champions": {
         "name": "Champions",
         "icon": "bi bi-star-fill",

@@ -1,15 +1,25 @@
+<script>
+  window.__esmGameSystems = {{ (game_systems or {})|tojson }};
+  window.__esmDefaultGame = {{ (default_game_slug or "")|tojson }};
+</script>
+
 <div
   class="m-8"
   x-data="{
   activeTournamentsTab: $persist('current').using(sessionStorage),
   view: $persist('grid').using(sessionStorage),
+  showCreate: false,
+  gameSystems: window.__esmGameSystems,
+  selectedGame: window.__esmDefaultGame,
   searchQuery: '',
+  gameFilter: '',
   regionFilter: '',
   tierFilter: '',
   sortBy: 'start_date',
   sortDirection: 'asc',
   page: 1,
   perPage: '12',
+  get selectedSystem() { return this.gameSystems[this.selectedGame] || null },
   setView(v) { this.view = v },
   toggleSortDirection() { this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'; this.onControlsChanged(); },
   onControlsChanged() { this.page = 1; this.$nextTick(() => { htmx.trigger('#tournament-filters-form', 'submit'); }); },
@@ -25,16 +35,33 @@
         Tournaments
       </h1>
       <p class="text-sm text-gray-500 dark:text-gray-400">
-        Browse tournaments, standings, and tournament history
+        Browse tournaments from every game, create new competitions and manage
+        their participants
       </p>
     </div>
+    <button
+      type="button"
+      @click="showCreate = true"
+      class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 shadow transition-colors"
+    >
+      <i class="bi bi-plus-lg"></i>
+      New Tournament
+    </button>
   </div>
+
+  {% if error %}
+  <div
+    class="mb-6 rounded-lg border border-red-300 bg-red-50 dark:bg-red-900/40 dark:border-red-700 px-4 py-3 text-sm text-red-700 dark:text-red-200"
+  >
+    <i class="bi bi-exclamation-triangle-fill mr-2"></i>{{ error }}
+  </div>
+  {% endif %}
 
   <!-- Filters Section -->
   <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4 mb-6">
     <form
       id="tournament-filters-form"
-      hx-get="/api/moba/tournaments"
+      hx-get="/api/tournaments"
       hx-trigger="submit"
       hx-include="#tournament-filters-form"
       hx-swap="innerHTML"
@@ -60,6 +87,19 @@
 
       <!-- Filter Dropdowns -->
       <div class="flex flex-wrap gap-2">
+        <!-- Game Filter -->
+        <select
+          name="game"
+          x-model="gameFilter"
+          @change="onControlsChanged()"
+          class="bg-gray-100 dark:bg-slate-600 border-0 rounded-lg text-gray-800 dark:text-gray-200 text-sm px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        >
+          <option value="">All Games</option>
+          {% for game in games %}
+          <option value="{{ game.slug }}">{{ game.name }}</option>
+          {% endfor %}
+        </select>
+
         <!-- Region Filter -->
         <select
           name="location"
@@ -72,6 +112,7 @@
           <option value="china">LPL (China)</option>
           <option value="europe">LEC (Europe)</option>
           <option value="north_america">LCS (North America)</option>
+          <option value="india">India</option>
           <option value="international">International</option>
         </select>
 
@@ -150,11 +191,26 @@
     <!-- Active Filters Display -->
     <div
       class="mt-3 flex flex-wrap gap-2"
-      x-show="regionFilter !== '' || tierFilter !== '' || searchQuery !== ''"
+      x-show="gameFilter !== '' || regionFilter !== '' || tierFilter !== '' || searchQuery !== ''"
     >
       <span class="text-xs text-gray-500 dark:text-gray-400 self-center"
         >Active filters:</span
       >
+
+      <!-- Game Filter Tag -->
+      <div
+        x-show="gameFilter !== ''"
+        class="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 text-xs px-2 py-1 rounded-full flex items-center"
+      >
+        Game:
+        <span class="font-medium mx-1" x-text="gameFilter"></span>
+        <button
+          @click="gameFilter = ''; onControlsChanged()"
+          class="ml-1 hover:text-indigo-600 dark:hover:text-indigo-100"
+        >
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      </div>
 
       <!-- Region Filter Tag -->
       <div
@@ -269,6 +325,307 @@
     <div x-show="activeTournamentsTab === 'calendar'" class="space-y-6 py-6">
       <div class="bg-white dark:bg-slate-700 rounded-lg shadow p-4">
         Tournament calendar placeholder
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Tournament Modal -->
+  <div
+    x-show="showCreate"
+    x-cloak
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+    @keydown.escape.window="showCreate = false"
+    @click.self="showCreate = false"
+  >
+    <div
+      class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-gray-200 dark:border-slate-700"
+    >
+      <div
+        class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-slate-700 shrink-0"
+      >
+        <div>
+          <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
+            New Tournament
+          </h2>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            Pick the game first: BGMI tournaments use battle royale scoring
+          </p>
+        </div>
+        <button
+          type="button"
+          @click="showCreate = false"
+          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+          aria-label="Close"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <form
+        id="create-tournament-form"
+        method="post"
+        action="/tournaments"
+        class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto"
+      >
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Game <span class="text-red-500">*</span>
+          </label>
+          <select
+            name="game"
+            x-model="selectedGame"
+            required
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          >
+            {% for game in games %}
+            <option
+              value="{{ game.slug }}"
+              {% if not game.supports_tournaments %}disabled{% endif %}
+            >
+              {{ game.name }}{% if not game.supports_tournaments %} (no
+              tournament format yet){% endif %}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Name <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            name="name"
+            required
+            maxlength="120"
+            placeholder="e.g. Battlegrounds Mobile India Series 2025"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Abbreviation
+          </label>
+          <input
+            type="text"
+            name="abbreviation"
+            maxlength="32"
+            placeholder="e.g. BGIS 2025"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Location
+          </label>
+          <input
+            type="text"
+            name="location"
+            placeholder="e.g. India"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Type
+          </label>
+          <select
+            name="type"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          >
+            {% for option in tournament_types %}
+            <option value="{{ option.value }}" {% if option.value == 'regional' %}selected{% endif %}>{{ option.label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Format
+          </label>
+          <select
+            name="format"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          >
+            {% for option in tournament_formats %}
+            <option value="{{ option.value }}" {% if option.value == 'league' %}selected{% endif %}>{{ option.label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Tier
+          </label>
+          <select
+            name="tier"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          >
+            {% for option in tournament_tiers %}
+            <option value="{{ option.value }}" {% if option.value == 'league' %}selected{% endif %}>{{ option.label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Status
+          </label>
+          <select
+            name="status"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          >
+            {% for option in tournament_statuses %}
+            <option value="{{ option.value }}" {% if option.value == 'not_started' %}selected{% endif %}>{{ option.label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Start date
+          </label>
+          <input
+            type="date"
+            name="start_date"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            End date
+          </label>
+          <input
+            type="date"
+            name="end_date"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          />
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Description
+          </label>
+          <textarea
+            name="description"
+            rows="2"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          ></textarea>
+        </div>
+
+        <!-- BGMI specific rules -->
+        <div
+          x-show="selectedSystem === 'bgmi'"
+          x-cloak
+          class="md:col-span-2 rounded-lg border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20 p-4"
+        >
+          <h3
+            class="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-3"
+          >
+            <i class="bi bi-crosshair mr-2"></i>BGMI battle royale rules
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-amber-900 dark:text-amber-100 mb-1">
+                Squad mode
+              </label>
+              <select
+                name="game_mode"
+                class="w-full rounded-lg bg-white dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+              >
+                <option value="squad">Squad</option>
+                <option value="duo">Duo</option>
+                <option value="solo">Solo</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-amber-900 dark:text-amber-100 mb-1">
+                Points per kill
+              </label>
+              <input
+                type="number"
+                name="points_per_kill"
+                value="1"
+                min="0"
+                max="10"
+                class="w-full rounded-lg bg-white dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-amber-900 dark:text-amber-100 mb-1">
+                Teams per lobby
+              </label>
+              <input
+                type="number"
+                name="teams_per_lobby"
+                value="16"
+                min="2"
+                max="32"
+                class="w-full rounded-lg bg-white dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-amber-900 dark:text-amber-100 mb-1">
+                Matches in the series
+              </label>
+              <input
+                type="number"
+                name="match_count"
+                value="6"
+                min="1"
+                max="30"
+                class="w-full rounded-lg bg-white dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+              />
+            </div>
+            <div class="sm:col-span-2">
+              <span class="block text-xs font-medium text-amber-900 dark:text-amber-100 mb-1">
+                Map pool
+              </span>
+              <div class="flex flex-wrap gap-3">
+                {% for map_name in bgmi_maps %}
+                <label class="inline-flex items-center gap-2 text-sm text-amber-900 dark:text-amber-100">
+                  <input
+                    type="checkbox"
+                    name="map_pool"
+                    value="{{ map_name }}"
+                    {% if map_name in bgmi_default_maps %}checked{% endif %}
+                    class="rounded border-amber-400 text-amber-600 focus:ring-amber-500"
+                  />
+                  {{ map_name.title() }}
+                </label>
+                {% endfor %}
+              </div>
+            </div>
+            <p class="sm:col-span-2 text-xs text-amber-800 dark:text-amber-200">
+              Placement points default to the BGMI standard table (10/6/5/4/3/2/1/1)
+              and can be fine tuned through the API.
+            </p>
+          </div>
+        </div>
+
+      </form>
+
+      <div
+        class="px-6 py-4 border-t border-gray-200 dark:border-slate-700 flex justify-end gap-2 shrink-0"
+      >
+        <button
+          type="button"
+          @click="showCreate = false"
+          class="rounded-lg px-4 py-2 text-sm font-medium bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          form="create-tournament-form"
+          class="rounded-lg px-4 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          Create tournament
+        </button>
       </div>
     </div>
   </div>

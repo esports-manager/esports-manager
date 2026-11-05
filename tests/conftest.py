@@ -3,11 +3,14 @@
 # License-Filename: LICENSES/GPL-3.0-or-later
 from typing import AsyncGenerator
 from httpx import AsyncClient, ASGITransport
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, select
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 import pytest
 from esm.app import create_api
 from esm.db import get_session
+from esm.models import bgmi, moba  # noqa: F401  (register every table)
+from esm.models.game import Game
+from esm.services.games import ensure_default_games
 
 
 @pytest.fixture(name="session")
@@ -48,3 +51,11 @@ async def client_fixture(session: AsyncSession) -> AsyncGenerator[AsyncClient, N
         yield client
     
     app.dependency_overrides.clear()
+
+
+@pytest.fixture(name="default_games")
+async def default_games_fixture(session: AsyncSession) -> dict[str, Game]:
+    """Seed the built-in games (League of Legends, BGMI) and index by slug."""
+    await ensure_default_games(session)
+    result = await session.execute(select(Game))
+    return {game.slug: game for game in result.scalars().all()}

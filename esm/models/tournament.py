@@ -3,7 +3,7 @@
 # License-Filename: LICENSES/GPL-3.0-or-later
 import enum
 from typing import Optional
-from datetime import datetime
+from datetime import date, datetime
 
 from sqlmodel import SQLModel, Field, Column, Enum
 
@@ -98,3 +98,28 @@ class TournamentUpdate(SQLModel):
     default_color: Optional[str] = Field(default=None)
     logo_path: Optional[str] = Field(default=None)
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)
+
+
+class TournamentSummary(SQLModel):
+    """Game agnostic tournament representation used by listings and search."""
+
+    id: int
+    name: str
+    abbreviation: Optional[str] = None
+    type: TournamentType
+    format: TournamentFormat
+    tier: TournamentTier
+    status: TournamentStatus
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    location: Optional[str] = None
+    description: Optional[str] = None
+    banner_path: Optional[str] = None
+    default_color: Optional[str] = None
+    logo_path: Optional[str] = None
+    game_id: Optional[int] = None
+    game_slug: str
+    game_name: str
+    system: str
+    url: str
+    images_url: str

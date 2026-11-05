@@ -1,11 +1,15 @@
 # SPDX-FileCopyrightText: 2025 Pedrenrique G. Guimarães <admin@esportsmanager.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 # License-Filename: LICENSES/GPL-3.0-or-later
-from fastapi import Request, FastAPI
+from fastapi import Depends, Request, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from esm.config import FRONTEND_DIR
+from esm.db import get_session
+from frontend.context import page_context
 from frontend.sidebar import sidebar
 
 
@@ -26,7 +30,7 @@ def create_frontend(app: FastAPI) -> FastAPI:
 
     @app.get("/")
     async def index(request: Request):
-        return templates.TemplateResponse("index.html", {"request": request})
+        return templates.TemplateResponse(request, "index.html", {})
 
     @app.get("/home")
     async def home(request: Request):
@@ -35,6 +39,7 @@ def create_frontend(app: FastAPI) -> FastAPI:
         current_page = "home"
         contentview = "pages/home.html"
         return templates.TemplateResponse(
+            request,
             "layout.html",
             {
                 "request": request,
@@ -45,25 +50,29 @@ def create_frontend(app: FastAPI) -> FastAPI:
         )
 
     @app.get("/page/{page}")
-    async def page(request: Request, page: str):
-        global current_page
-        global sidebar
+    async def page(
+        request: Request,
+        page: str,
+        session: AsyncSession = Depends(get_session),
+    ):
         current_page = page
         contentview = f"pages/{current_page}.html"
-        return templates.TemplateResponse(
-            "layout.html",
+        context = await page_context(session)
+        context.update(
             {
                 "request": request,
                 "content": contentview,
-                "sidebar": sidebar,
                 "current_page": current_page,
-            },
+            }
         )
+        return templates.TemplateResponse(request, "layout.html", context)
 
+    from frontend.routes.game import game_routes
     from frontend.routes.player import player_routes
     from frontend.routes.team import team_routes
     from frontend.routes.tournament import tournament_routes
 
+    app.include_router(game_routes)
     app.include_router(player_routes)
     app.include_router(team_routes)
     app.include_router(tournament_routes)

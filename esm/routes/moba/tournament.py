@@ -18,6 +18,20 @@ from esm.models.moba.tournament import (
 )
 from esm.models.moba.tournament_participant import MobaTournamentParticipant
 from esm.models.moba.team import MobaTeam, MobaTeamPublic
+from esm.models.game import LEAGUE_OF_LEGENDS_SLUG, Game, TournamentSystem
+from esm.models.tournament import TournamentSummary
+from esm.services.games import (
+    GameError,
+    resolve_optional_tournament_game,
+    resolve_tournament_game,
+)
+from esm.services.tournaments import (
+    InvalidFilterError,
+    filters_from_query,
+    list_tournament_summaries,
+    pagination_from_query,
+    sort_from_query,
+)
 
 
 tournament_routes = APIRouter(
@@ -30,95 +44,45 @@ templates_dir = FRONTEND_DIR / "templates"
 templates = Jinja2Templates(directory=templates_dir)
 
 
-@tournament_routes.get("/", response_model=list[MobaTournamentPublic])
+@tournament_routes.get("/", response_model=list[TournamentSummary])
 async def get_tournaments(
     request: Request,
     session: AsyncSession = Depends(get_session),
 ):
-    query = select(MobaTournament)
-    count_query = select(MobaTournament)
+    """List MOBA tournaments.
 
-    # Filtering
-    if request.query_params.get("tier"):
-        query = query.where(MobaTournament.tier == request.query_params.get("tier"))
-        count_query = count_query.where(
-            MobaTournament.tier == request.query_params.get("tier")
-        )
-    if request.query_params.get("type"):
-        query = query.where(MobaTournament.type == request.query_params.get("type"))
-        count_query = count_query.where(
-            MobaTournament.type == request.query_params.get("type")
-        )
-    if request.query_params.get("format"):
-        query = query.where(MobaTournament.format == request.query_params.get("format"))
-        count_query = count_query.where(
-            MobaTournament.format == request.query_params.get("format")
-        )
-    # Optional location filter (maps from frontend region/location controls)
-    if request.query_params.get("location"):
-        query = query.where(
-            MobaTournament.location == request.query_params.get("location")
-        )
-        count_query = count_query.where(
-            MobaTournament.location == request.query_params.get("location")
-        )
-    if request.query_params.get("search"):
-        search = request.query_params.get("search")
-        query = query.where(MobaTournament.name.icontains(search))
-        count_query = count_query.where(MobaTournament.name.icontains(search))
+    Filtering, sorting and pagination are shared with the game agnostic
+    listing so every eSport behaves the same way.
+    """
+    try:
+        filters = filters_from_query(request.query_params)
+    except InvalidFilterError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
 
-    # Sorting
-    sort_by = (request.query_params.get("sort", "start_date") or "start_date").lower()
-    sort_direction = (request.query_params.get("direction", "desc") or "desc").lower()
+    sort_by, direction = sort_from_query(request.query_params)
+    page, per_page = pagination_from_query(
+        request.query_params.get("page"), request.query_params.get("per_page")
+    )
 
-    sort_map = {
-        "name": MobaTournament.name,
-        "start_date": MobaTournament.start_date,
-        "end_date": MobaTournament.end_date,
-        "tier": MobaTournament.tier,
-    }
-
-    if sort_by in sort_map:
-        sort_field = sort_map[sort_by]
-        if sort_direction == "desc":
-            query = query.order_by(sort_field.desc(), MobaTournament.id.desc())
-        else:
-            query = query.order_by(sort_field.asc(), MobaTournament.id.asc())
-
-    # Pagination
-    page = 1
-    per_page = 20
-    if request.query_params.get("page") and request.query_params.get("page").isdigit():
-        page = max(1, int(request.query_params.get("page")))
-    if (
-        request.query_params.get("per_page")
-        and request.query_params.get("per_page").isdigit()
-    ):
-        per_page = min(100, max(1, int(request.query_params.get("per_page"))))
-    skip = (page - 1) * per_page
-
-    result_query = await session.execute(query.offset(skip).limit(per_page))
-    tournaments = result_query.scalars().all()
-
-    # Pagination metadata
-    count_result = await session.execute(count_query)
-    total_tournaments = len(count_result.scalars().all())
-    total_pages = (total_tournaments + per_page - 1) // per_page
-    pagination = {
-        "page": page,
-        "per_page": per_page,
-        "total_tournaments": total_tournaments,
-        "total_pages": total_pages,
-        "has_next": page < total_pages,
-        "has_prev": page > 1,
-        "showing_start": min(skip + 1, total_tournaments)
-        if total_tournaments > 0
-        else 0,
-        "showing_end": min(skip + per_page, total_tournaments),
-    }
+    tournaments, pagination = await list_tournament_summaries(
+        session,
+        system=TournamentSystem.MOBA,
+        sort_by=sort_by,
+        direction=direction,
+        page=page,
+        per_page=per_page,
+        **filters,
+    )
 
     # HTMX partial rendering support
     if request.headers.get("HX-Request"):
+        games = (
+            await session.execute(
+                select(Game)
+                .where(Game.is_active == True)  # noqa: E712
+                .order_by(Game.name)
+            )
+        ).scalars().all()
         return templates.TemplateResponse(
             request,
             "components/tournaments/tournaments_list.html",
@@ -126,14 +90,16 @@ async def get_tournaments(
                 "request": request,
                 "tournaments": tournaments,
                 "pagination": pagination,
+                "games": games,
                 "current_filters": {
+                    "game": LEAGUE_OF_LEGENDS_SLUG,
                     "tier": request.query_params.get("tier", ""),
                     "type": request.query_params.get("type", ""),
                     "format": request.query_params.get("format", ""),
                     "location": request.query_params.get("location", ""),
                     "search": request.query_params.get("search", ""),
                     "sort": sort_by,
-                    "direction": sort_direction,
+                    "direction": direction,
                 },
             },
         )
@@ -149,7 +115,16 @@ async def create_tournament(
     session: AsyncSession = Depends(get_session),
     tournament: MobaTournamentCreate,
 ):
+    try:
+        game = await resolve_optional_tournament_game(
+            session, tournament.game_id, TournamentSystem.MOBA
+        )
+    except GameError as exc:
+        raise HTTPException(status_code=exc.status_code, detail=str(exc))
+
     db_tournament = MobaTournament.model_validate(tournament)
+    if game is not None:
+        db_tournament.game_id = game.id
     session.add(db_tournament)
     await session.commit()
     await session.refresh(db_tournament)
@@ -246,6 +221,14 @@ async def update_tournament(
     if not db_tournament:
         raise HTTPException(status_code=404, detail="Tournament not found")
     tournament_data = tournament.model_dump(exclude_unset=True)
+    if tournament_data.get("game_id") is not None:
+        try:
+            game = await resolve_tournament_game(
+                session, tournament_data["game_id"], TournamentSystem.MOBA
+            )
+        except GameError as exc:
+            raise HTTPException(status_code=exc.status_code, detail=str(exc))
+        tournament_data["game_id"] = game.id
     db_tournament.sqlmodel_update(tournament_data)
     session.add(db_tournament)
     await session.commit()

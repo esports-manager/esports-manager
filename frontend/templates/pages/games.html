@@ -1,0 +1,310 @@
+<div
+  class="m-8"
+  x-data="{ showAddGame: false }"
+>
+  <div
+    class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6"
+  >
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Games</h1>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        Every eSport title available in this save. Register a game once, then
+        create tournaments for it.
+      </p>
+    </div>
+    <button
+      type="button"
+      @click="showAddGame = true"
+      class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 shadow transition-colors"
+    >
+      <i class="bi bi-plus-lg"></i>
+      Add Game
+    </button>
+  </div>
+
+  {% if error %}
+  <div
+    class="mb-6 rounded-lg border border-red-300 bg-red-50 dark:bg-red-900/40 dark:border-red-700 px-4 py-3 text-sm text-red-700 dark:text-red-200"
+  >
+    <i class="bi bi-exclamation-triangle-fill mr-2"></i>{{ error }}
+  </div>
+  {% endif %}
+
+  {% if games %}
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    {% for game in games %}
+    <div
+      class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm p-5 flex flex-col"
+    >
+      <div class="flex items-start justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <div
+            class="h-12 w-12 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-500 text-white flex items-center justify-center text-xl"
+          >
+            <i
+              class="bi {% if game.genre.value == 'battle_royale' %}bi-crosshair{% elif game.genre.value == 'moba' %}bi-diagram-3-fill{% elif game.genre.value == 'fps' %}bi-bullseye{% else %}bi-joystick{% endif %}"
+            ></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
+              {{ game.name }}
+            </h2>
+            <div class="text-xs text-gray-500 dark:text-gray-400">
+              {{ game.abbreviation or game.slug }}
+            </div>
+          </div>
+        </div>
+        {% if not game.is_active %}
+        <span
+          class="text-[10px] font-bold px-2 py-1 rounded bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-gray-300 uppercase"
+          >Inactive</span
+        >
+        {% endif %}
+      </div>
+
+      <div class="flex flex-wrap gap-2 mb-3">
+        <span
+          class="text-xs font-semibold px-2 py-1 rounded bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200"
+          >{{ game.genre.label }}</span
+        >
+        {% if game.tournament_system %}
+        <span
+          class="text-xs font-semibold px-2 py-1 rounded bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200"
+        >
+          {{ game.tournament_system.label }}
+        </span>
+        {% else %}
+        <span
+          class="text-xs font-semibold px-2 py-1 rounded bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
+        >
+          No tournament format yet
+        </span>
+        {% endif %}
+      </div>
+
+      {% if game.description %}
+      <p class="text-sm text-gray-600 dark:text-gray-300 mb-4 flex-1">
+        {{ game.description }}
+      </p>
+      {% else %}
+      <div class="flex-1"></div>
+      {% endif %}
+
+      <dl class="grid grid-cols-2 gap-2 text-xs text-gray-500 dark:text-gray-400">
+        <div>
+          <dt class="uppercase tracking-wide text-[10px]">Publisher</dt>
+          <dd class="text-gray-700 dark:text-gray-200">
+            {{ game.publisher or '—' }}
+          </dd>
+        </div>
+        <div>
+          <dt class="uppercase tracking-wide text-[10px]">Platform</dt>
+          <dd class="text-gray-700 dark:text-gray-200">
+            {{ game.platform or '—' }}
+          </dd>
+        </div>
+        <div>
+          <dt class="uppercase tracking-wide text-[10px]">Team size</dt>
+          <dd class="text-gray-700 dark:text-gray-200">
+            {{ game.team_size }} players
+          </dd>
+        </div>
+        <div>
+          <dt class="uppercase tracking-wide text-[10px]">Tournaments</dt>
+          <dd class="text-gray-700 dark:text-gray-200">
+            {% if game.tournament_system %}
+            <a
+              href="/page/tournaments"
+              class="text-blue-600 dark:text-blue-400 hover:underline"
+              >View</a
+            >
+            {% else %} — {% endif %}
+          </dd>
+        </div>
+      </dl>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="bg-white dark:bg-slate-800 rounded-lg shadow p-8 text-center">
+    <div class="flex flex-col items-center justify-center py-6">
+      <div class="bg-gray-100 dark:bg-slate-600 rounded-full p-6 mb-4">
+        <i class="bi bi-joystick text-4xl text-gray-400 dark:text-gray-500"></i>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+        No games registered yet
+      </h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-6">
+        Add a game such as BGMI to start creating tournaments for it.
+      </p>
+      <button
+        type="button"
+        @click="showAddGame = true"
+        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-150"
+      >
+        Add your first game
+      </button>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Add Game Modal -->
+  <div
+    x-show="showAddGame"
+    x-cloak
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+    @keydown.escape.window="showAddGame = false"
+    @click.self="showAddGame = false"
+  >
+    <div
+      class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-slate-700"
+    >
+      <div
+        class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-slate-700"
+      >
+        <div>
+          <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
+            Add Game
+          </h2>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            Register an eSport title. MOBA and battle royale games can host
+            tournaments.
+          </p>
+        </div>
+        <button
+          type="button"
+          @click="showAddGame = false"
+          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+          aria-label="Close"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <form
+        method="post"
+        action="/games"
+        class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4"
+      >
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Name <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            name="name"
+            required
+            maxlength="80"
+            placeholder="e.g. BGMI"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Slug
+          </label>
+          <input
+            type="text"
+            name="slug"
+            placeholder="bgmi (derived from the name when empty)"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Abbreviation
+          </label>
+          <input
+            type="text"
+            name="abbreviation"
+            maxlength="16"
+            placeholder="BGMI"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Genre <span class="text-red-500">*</span>
+          </label>
+          <select
+            name="genre"
+            required
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          >
+            {% for option in genre_options %}
+            <option value="{{ option.value }}">{{ option.label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Team size
+          </label>
+          <input
+            type="number"
+            name="team_size"
+            value="5"
+            min="1"
+            max="10"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Publisher
+          </label>
+          <input
+            type="text"
+            name="publisher"
+            placeholder="e.g. Krafton"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Platform
+          </label>
+          <input
+            type="text"
+            name="platform"
+            placeholder="e.g. Android / iOS"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          />
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            Description
+          </label>
+          <textarea
+            name="description"
+            rows="3"
+            class="w-full rounded-lg bg-gray-100 dark:bg-slate-700 border-0 text-sm px-3 py-2 text-gray-800 dark:text-gray-100"
+          ></textarea>
+        </div>
+
+        <div class="md:col-span-2 flex justify-end gap-2 pt-2">
+          <button
+            type="button"
+            @click="showAddGame = false"
+            class="rounded-lg px-4 py-2 text-sm font-medium bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="rounded-lg px-4 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            Add game
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

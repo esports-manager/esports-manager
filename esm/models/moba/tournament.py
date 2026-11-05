@@ -14,6 +14,7 @@ from esm.models.tournament import (
 
 class MobaTournamentBase(SQLModel):
     name: str = Field(index=True)
+    game_id: Optional[int] = Field(default=None, foreign_key="games.id", index=True)
     abbreviation: Optional[str] = Field(default=None)
     type: TournamentType = Field(sa_column=Column(Enum(TournamentType)))
     format: TournamentFormat = Field(sa_column=Column(Enum(TournamentFormat)))
@@ -51,6 +52,7 @@ class MobaTournamentCreate(MobaTournamentBase):
 
 class MobaTournamentUpdate(SQLModel):
     name: Optional[str] = None
+    game_id: Optional[int] = Field(default=None, foreign_key="games.id")
     abbreviation: Optional[str] = None
     type: Optional[TournamentType] = Field(
         default=None, sa_column=Column(Enum(TournamentType))

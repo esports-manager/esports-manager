@@ -24,3 +24,6 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+[x-cloak] {
+    display: none !important;
+}

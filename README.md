@@ -50,10 +50,13 @@ The game aims to provide an authentic and deep management experience for eSports
 - Match simulation engine with detailed statistics
 - Scouting system for discovering talent
 - Champions database with role-specific attributes
+- Game registry with League of Legends and BGMI available out of the box
+- BGMI battle royale tournaments with placement/kill scoring, map pools and squad modes
+- Tournament creation for any registered game, with a unified tournament browser
 
 ### Planned Features
 
-- Multiple game titles (MOBA, FPS, etc.) with unique mechanics
+- More game titles with unique mechanics (FPS, RTS, ...)
 - Complete career mode with goals and achievements
 - In-depth match tactics and strategy system
 - Media interaction and player psychology system
@@ -61,6 +64,53 @@ The game aims to provide an authentic and deep management experience for eSports
 - Realistic transfer market with negotiations
 
 For a more detailed breakdown of current and planned features, check the [FEATURES.md](FEATURES.md) document.
+
+## Adding a Game and BGMI Tournaments
+
+The game registry decides which eSports exist in a save. **League of Legends** and
+**BGMI** (Battlegrounds Mobile India) are registered automatically the first time
+the application starts, so a BGMI tournament can be created right away:
+
+1. Open **Games** in the sidebar to see every registered title, or use **Add Game**
+   to register another one (name, genre, publisher, platform and team size).
+2. Open **Tournaments** and click **New Tournament**. Pick *BGMI* as the game and
+   the form expands with the battle royale rules: squad mode, map pool, points per
+   kill, teams per lobby and number of matches.
+3. The tournament page shows the scoring table, the map pool and the registered
+   teams. Teams can be added straight from that page.
+
+Everything is also available through the API:
+
+```bash
+# List the registered games (BGMI is seeded on startup)
+curl http://localhost:8000/api/games
+
+# Register another game, e.g. VALORANT
+curl -X POST http://localhost:8000/api/games \
+  -H "Content-Type: application/json" \
+  -d '{"name": "VALORANT", "genre": "fps", "publisher": "Riot Games", "team_size": 5}'
+
+# Create a BGMI tournament (game_id is optional and defaults to BGMI)
+curl -X POST http://localhost:8000/api/bgmi/tournaments \
+  -H "Content-Type: application/json" \
+  -d '{
+        "name": "BGIS 2025",
+        "type": "national",
+        "format": "league",
+        "tier": "major",
+        "location": "India",
+        "game_mode": "squad",
+        "map_pool": ["erangel", "miramar", "sanhok"],
+        "points_per_kill": 1,
+        "teams_per_lobby": 25,
+        "match_count": 8
+      }'
+
+# Every tournament, from every game, in one list
+curl "http://localhost:8000/api/tournaments?game=bgmi"
+```
+
+See [docs/games.md](docs/games.md) for the full API reference and the scoring rules.
 
 ## Screenshots
 
